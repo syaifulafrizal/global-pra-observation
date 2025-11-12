@@ -1,0 +1,811 @@
+#!/usr/bin/env python3
+"""
+Nighttime PRA Detection for Multiple INTERMAGNET Stations
+Uses Multitaper + EVT + nZ z-score method for anomaly detection
+"""
+
+import os
+import sys
+import json
+from pathlib import Path
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+import warnings
+warnings.filterwarnings('ignore')
+
+import numpy as np
+import pandas as pd
+import requests
+from scipy import signal
+from scipy.stats import genpareto
+from scipy.signal import windows
+import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+# Configuration
+BASE_URL = 'https://imag-data.bgs.ac.uk:443/GIN_V1/GINServices'
+OMNI_BASE_URL = 'https://omniweb.gsfc.nasa.gov/cgi/nx1.cgi'
+TZ = ZoneInfo('Asia/Tokyo')  # Station timezone (can be made configurable per station)
+RUN_TIMEZONE = ZoneInfo('Asia/Singapore')  # GMT+8 for Singapore
+SAMPLE_RATE = 'second'
+FS = 1  # Hz
+WIN_LEN = 3600  # 1-hour window in seconds
+STEP = 3600  # 1-hour step
+F_LOW = 0.01  # Hz
+F_HIGH = 0.05  # Hz
+MT_NW = 3.5  # Multitaper time-half bandwidth product
+
+# Analysis options
+OPTS = {
+    'Fs': FS,           # Sampling frequency
+    'winLen': WIN_LEN,  # Window length
+    'useMT': True,
+    'mtNW': MT_NW,
+    'useEVT': True,
+    'tailQ': 0.75,
+    'fprTarget': 0.05,
+    'kSigma': 4.0,
+    'pFloor': 1.5,
+    'useNZz': True,
+    'NZzMin': 1.25,
+    'NZfixed': 2.5,
+    'usePersist': False,
+    'persistK': 2,
+    'persistDays': 2,
+    'quietTol': 0.05,
+    'tightQuiet': False,
+    'quietSymh': -30,
+    'quietTolTight': 0.02,
+    'quietGuardHrs': 0,
+    'ltStart': 20,  # Local time start (20:00)
+    'ltEnd': 4,     # Local time end (04:00)
+}
+
+# Default stations
+DEFAULT_STATIONS = ['KAK']
+
+def get_data_folder(station_code):
+    """Get data folder path for a station"""
+    return Path('INTERMAGNET_DOWNLOADS') / station_code
+
+def download_symh_data(start_date, end_date, cache_folder):
+    """Download SYM-H geomagnetic index data from OMNIWeb"""
+    from download_symh import download_symh_omniweb
+    
+    cache_file = cache_folder / f'SYMH_{start_date.strftime("%Y%m%d")}_{end_date.strftime("%Y%m%d")}.csv'
+    
+    # Check cache first
+    if cache_file.exists():
+        try:
+            df = pd.read_csv(cache_file, parse_dates=['Time'], index_col='Time')
+            if not df.empty:
+                return df
+        except:
+            pass
+    
+    # Download from OMNIWeb
+    try:
+        return download_symh_omniweb(start_date, end_date, cache_file)
+    except Exception as e:
+        print(f'Warning: SYM-H download failed: {e}')
+        # Return empty DataFrame - code will handle this gracefully
+        return pd.DataFrame(columns=['SYMH', 'Disturbed'])
+
+def download_data(station_code, date, out_folder):
+    """Download IAGA2002 data from INTERMAGNET for a specific date"""
+    date_str = date.strftime('%Y-%m-%d')
+    out_file = out_folder / f'{station_code}_{date.strftime("%Y%m%d")}.iaga2002'
+    
+    params = [
+        "Request=GetData",
+        f"observatoryIagaCode={station_code}",
+        f"samplesPerDay={SAMPLE_RATE}",
+        f"dataStartDate={date_str}",
+        "dataDuration=1",
+        "publicationState=adjusted",
+        "orientation=native",
+        "format=iaga2002"
+    ]
+    
+    url = BASE_URL + "?" + "&".join(params)
+    print(f'Downloading {station_code} data for: {date_str}')
+    
+    try:
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()
+        out_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_file, 'wb') as f:
+            f.write(response.content)
+        return out_file
+    except Exception as e:
+        print(f'Warning: Download failed for {date_str}: {e}')
+        return None
+
+def read_iaga2002(file_path):
+    """Read IAGA2002 format file and return DataFrame"""
+    try:
+        # Read header to get metadata
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            header_lines = [f.readline() for _ in range(26)]
+        
+        # Read data (skip 26 header lines)
+        df = pd.read_csv(
+            file_path,
+            skiprows=26,
+            delim_whitespace=True,
+            header=None,
+            names=['date', 'time', 'doy', 'X', 'Y', 'Z', 'F'],
+            usecols=['date', 'time', 'X', 'Y', 'Z']
+        )
+        
+        # Combine date and time
+        df['dt'] = pd.to_datetime(df['date'] + ' ' + df['time'], 
+                                  format='%Y-%m-%d %H:%M:%S.%f',
+                                  errors='coerce')
+        df['dt'] = df['dt'].dt.tz_localize('UTC').dt.tz_convert(TZ)
+        
+        # Keep only valid data
+        df = df[['dt', 'X', 'Y', 'Z']].copy()
+        df = df.dropna()
+        
+        return df
+    except Exception as e:
+        print(f'Error reading {file_path}: {e}')
+        return pd.DataFrame()
+
+def multitaper_psd(data, NW=3.5, Fs=1.0):
+    """Compute multitaper power spectral density"""
+    N = len(data)
+    nw = NW
+    k = int(2 * nw - 1)  # Number of tapers
+    
+    # Generate DPSS (Slepian) sequences
+    tapers, eigenvalues = windows.dpss(N, nw, k, return_ratios=True)
+    
+    # Compute multitaper estimate
+    psd = np.zeros(N)
+    for i in range(k):
+        tapered = data * tapers[i]
+        fft_tapered = np.fft.fft(tapered)
+        psd += np.abs(fft_tapered)**2 * eigenvalues[i]
+    
+    psd /= k
+    psd /= Fs  # Normalize by sampling frequency
+    
+    # Frequency vector
+    f = np.fft.fftfreq(N, 1/Fs)
+    
+    return psd, f
+
+def compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, f_low, f_high, opts):
+    """Compute P series per hour using multitaper method"""
+    Fs = opts['Fs']
+    winLen = opts['winLen']
+    step = winLen
+    N = winLen
+    
+    T_list = []
+    S_Z_list = []
+    S_G_list = []
+    
+    # Precompute disturbed mask
+    isDistMinute, tDist = disturbed_mask(GI, opts['tightQuiet'], opts['quietSymh'])
+    
+    if opts['quietGuardHrs'] > 0:
+        guardMin = opts['quietGuardHrs'] * 60
+        isDistMinute = apply_guard(isDistMinute, guardMin)
+    
+    for s in range(0, len(recXYZ) - winLen + 1, step):
+        e = s + winLen
+        mid_time_utc = tUTC_start + timedelta(seconds=(s+e)/2 - 1)
+        
+        if mid_time_utc < sUTC or mid_time_utc > eUTC:
+            continue
+        
+        # Local night gate
+        mid_time_local = tLocal_start + timedelta(seconds=(s+e)/2 - 1)
+        hr = mid_time_local.hour
+        
+        isNight = False
+        if opts['ltStart'] < opts['ltEnd']:
+            isNight = opts['ltStart'] <= hr < opts['ltEnd']
+        else:
+            isNight = hr >= opts['ltStart'] or hr < opts['ltEnd']
+        
+        if not isNight:
+            continue
+        
+        seg = recXYZ[s:e, :]
+        
+        # NaN handling
+        nanFrac = np.sum(np.isnan(seg)) / seg.size
+        if nanFrac > 0.05:
+            continue
+        elif nanFrac > 0:
+            for c in range(3):
+                seg[:, c] = pd.Series(seg[:, c]).interpolate(method='linear').bfill().ffill().values
+        
+        segZ = seg[:, 2]
+        segG = np.hypot(seg[:, 0], seg[:, 1])
+        
+        # Spectral estimation
+        if opts['useMT']:
+            try:
+                PZ, fZ = multitaper_psd(segZ, NW=opts['mtNW'], Fs=Fs)
+                PG, fG = multitaper_psd(segG, NW=opts['mtNW'], Fs=Fs)
+                
+                idxZ = (fZ >= f_low) & (fZ <= f_high) & (fZ >= 0)
+                idxG = (fG >= f_low) & (fG <= f_high) & (fG >= 0)
+                
+                # Integrate using trapezoidal rule
+                sz = np.trapz(PZ[idxZ], fZ[idxZ])
+                sg = np.trapz(PG[idxG], fG[idxG])
+            except:
+                # Fallback to FFT
+                Z = np.fft.fft(segZ, N)
+                G = np.fft.fft(segG, N)
+                halfIdx = np.arange(1, N//2 + 1)
+                PSDz = (np.abs(Z[halfIdx])**2) / N
+                PSDg = (np.abs(G[halfIdx])**2) / N
+                f = np.arange(N) * (Fs / N)
+                f = f[halfIdx]
+                idx = (f >= f_low) & (f <= f_high)
+                sz = np.sum(PSDz[idx])
+                sg = np.sum(PSDg[idx])
+        else:
+            # Standard FFT
+            Z = np.fft.fft(segZ, N)
+            G = np.fft.fft(segG, N)
+            halfIdx = np.arange(1, N//2 + 1)
+            PSDz = (np.abs(Z[halfIdx])**2) / N
+            PSDg = (np.abs(G[halfIdx])**2) / N
+            f = np.arange(N) * (Fs / N)
+            f = f[halfIdx]
+            idx = (f >= f_low) & (f <= f_high)
+            sz = np.sum(PSDz[idx])
+            sg = np.sum(PSDg[idx])
+        
+        T_list.append(mid_time_utc)
+        S_Z_list.append(sz)
+        S_G_list.append(sg)
+    
+    if len(S_Z_list) == 0:
+        return None, None, None, None, None, None
+    
+    S_Z = np.array(S_Z_list)
+    S_G = np.array(S_G_list)
+    T = pd.Series(T_list)
+    
+    # Normalize to nZ (1-3) and nG (1-2)
+    rangeZ = np.max(S_Z) - np.min(S_Z)
+    if rangeZ == 0:
+        rangeZ = np.finfo(float).eps
+    rangeG = np.max(S_G) - np.min(S_G)
+    if rangeG == 0:
+        rangeG = np.finfo(float).eps
+    
+    nZ = 1 + 2 * (S_Z - np.min(S_Z)) / rangeZ  # 1..3
+    nG = 1 + (S_G - np.min(S_G)) / rangeG      # 1..2
+    P = nZ / nG
+    
+    # Compute quiet flags
+    isQuiet, fracDist = compute_quiet_flags(T, GI, opts['quietTol'], opts['tightQuiet'], 
+                                           opts['quietTolTight'], opts['quietSymh'])
+    
+    return P, nZ, nG, T, isQuiet, fracDist
+
+def disturbed_mask(GI, tight, symhThr):
+    """Create disturbed mask from SYM-H index"""
+    if GI.empty:
+        return np.array([]), pd.DatetimeIndex([])
+    
+    tvec = GI.index
+    if tight:
+        mask = GI['SYMH'] < symhThr
+    else:
+        mask = GI['SYMH'] < -30
+    
+    return mask.values, tvec
+
+def apply_guard(mask, guardMin):
+    """Dilate disturbed minutes by ±guardMin"""
+    if guardMin <= 0:
+        return mask
+    
+    out = mask.copy()
+    idx = np.where(mask)[0]
+    
+    for k in idx:
+        a = max(0, k - guardMin)
+        b = min(len(mask), k + guardMin + 1)
+        out[a:b] = True
+    
+    return out
+
+def compute_quiet_flags(T, GI, tol, tightFlag, tolTight, symhThr):
+    """Compute quiet flags based on SYM-H disturbance fraction"""
+    isQuiet = np.zeros(len(T), dtype=bool)
+    fracDisturbed = np.full(len(T), np.nan)
+    
+    halfHour = timedelta(minutes=30)
+    
+    # If GI is empty, assume all periods are quiet (fallback)
+    if GI.empty:
+        print('Warning: No SYM-H data available. Assuming all periods are quiet.')
+        isQuiet[:] = True
+        fracDisturbed[:] = 0.0
+        return isQuiet, fracDisturbed
+    
+    for m in range(len(T)):
+        time_window_start = T.iloc[m] - halfHour
+        time_window_end = T.iloc[m] + halfHour
+        
+        # Get GI data in window
+        try:
+            mask = (GI.index >= time_window_start) & (GI.index <= time_window_end)
+            GI_subset = GI[mask]
+            
+            if len(GI_subset) > 0:
+                # Recompute disturbed using threshold
+                d = GI_subset['SYMH'] < symhThr
+                frac = d.mean()
+                fracDisturbed[m] = frac
+                
+                if tightFlag:
+                    isQuiet[m] = frac <= tolTight
+                else:
+                    isQuiet[m] = frac <= tol
+            else:
+                # No data in window - assume quiet
+                isQuiet[m] = True
+                fracDisturbed[m] = 0.0
+        except Exception as e:
+            # On error, assume quiet
+            isQuiet[m] = True
+            fracDisturbed[m] = 0.0
+    
+    return isQuiet, fracDisturbed
+
+def fit_evt_threshold(Pq, tailQ, fpr, pFloor, kSigma):
+    """Fit EVT (GPD) threshold"""
+    Pq = Pq[np.isfinite(Pq)]
+    
+    if len(Pq) < 20:
+        return fit_ksigma_threshold(Pq, kSigma, pFloor)
+    
+    # Tail over threshold
+    u = np.quantile(Pq, tailQ)
+    X = Pq[Pq > u] - u
+    
+    if len(X) < 30:
+        return fit_ksigma_threshold(Pq, kSigma, pFloor)
+    
+    # Fit GPD
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            k, sigma, loc = genpareto.fit(X, floc=0)
+        
+        # Guard bad shapes
+        if not (np.isfinite(k) and np.isfinite(sigma) and sigma > 0 and k > -0.5):
+            return fit_ksigma_threshold(Pq, kSigma, pFloor)
+        
+        # Target (1 - fpr) quantile in tail
+        qTail = genpareto.ppf(1 - fpr, k, scale=sigma, loc=0)
+        
+        if not (np.isfinite(qTail) and qTail >= 0):
+            return fit_ksigma_threshold(Pq, kSigma, pFloor)
+        
+        thr = u + qTail
+        thr = max(thr, pFloor)
+        return thr
+    except:
+        return fit_ksigma_threshold(Pq, kSigma, pFloor)
+
+def fit_ksigma_threshold(Pq, K, pFloor):
+    """Fit k-sigma threshold"""
+    Pq = Pq[np.isfinite(Pq)]
+    if len(Pq) == 0:
+        return pFloor
+    
+    mu = np.mean(Pq)
+    sd = np.std(Pq)
+    return max(mu + K * sd, pFloor)
+
+def nz_guard(nZ, station, stMap, useZ, zMin, fixedMin):
+    """Apply nZ z-score guard"""
+    if not useZ:
+        return nZ > fixedMin
+    
+    key = str(station)
+    if not stMap or key not in stMap:
+        return nZ > fixedMin
+    
+    mu, sd = stMap[key]
+    if sd <= 0:
+        sd = np.finfo(float).eps
+    
+    z = (nZ - mu) / sd
+    return z > zMin
+
+def persistence_rule(T, isAnomQuiet, eq_date, K, Ddays):
+    """Apply persistence rule"""
+    if not np.any(isAnomQuiet):
+        return False
+    
+    t0 = eq_date - timedelta(days=Ddays)
+    idx = (T >= t0) & (T <= eq_date)
+    return np.sum(isAnomQuiet & idx) >= K
+
+def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI, 
+                f_low, f_high, stationZstats, opts, station_code):
+    """Analyze a single row with new method"""
+    # Compute P series
+    result = compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, 
+                            f_low, f_high, opts)
+    
+    if result[0] is None:
+        return False, pd.DataFrame(), pd.DataFrame(), np.nan, 0
+    
+    P, nZ, nG, T, isQuiet, fracDist = result
+    
+    # Fit threshold from quiet samples
+    Pq = P[isQuiet & np.isfinite(P)]
+    
+    if len(Pq) == 0:
+        return False, pd.DataFrame(), pd.DataFrame(), np.nan, 0
+    
+    if opts['useEVT']:
+        thrEff = fit_evt_threshold(Pq, opts['tailQ'], opts['fprTarget'], 
+                                   opts['pFloor'], opts['kSigma'])
+    else:
+        thrEff = fit_ksigma_threshold(Pq, opts['kSigma'], opts['pFloor'])
+    
+    # nZ guard
+    nzOK = nz_guard(nZ, station_code, stationZstats, opts['useNZz'], 
+                   opts['NZzMin'], opts['NZfixed'])
+    
+    isAnomQuiet = (P > thrEff) & isQuiet & nzOK
+    
+    if opts['usePersist']:
+        ok = persistence_rule(T, isAnomQuiet, eq_date, opts['persistK'], opts['persistDays'])
+        is_anomalous = ok
+    else:
+        is_anomalous = np.any(isAnomQuiet)
+    
+    nAnomHours = np.sum(isAnomQuiet)
+    
+    # Create timetable
+    ts = pd.DataFrame({
+        'Time': T.values,
+        'P': P,
+        'nZ': nZ,
+        'nG': nG,
+        'isAnomalous': isAnomQuiet
+    })
+    ts['Time'] = pd.to_datetime(ts['Time'])
+    
+    # Anomaly table
+    idx = np.where(isAnomQuiet)[0]
+    if len(idx) == 0:
+        anom_table = pd.DataFrame()
+    else:
+        anom_times = T.iloc[idx]
+        anom_values = P[idx]
+        anom_nZ = nZ[idx]
+        anom_days = (anom_times - eq_date).dt.total_seconds() / 86400
+        
+        anom_table = pd.DataFrame({
+            'TimeOfAnomaly': anom_times.values,
+            'DayOfAnomaly': anom_days.values,
+            'AnomalyValue': anom_values,
+            'nZ': anom_nZ,
+            'ThresholdValue': thrEff
+        })
+    
+    return is_anomalous, anom_table, ts, thrEff, nAnomHours
+
+def cleanup_downloaded_files(out_folder):
+    """Delete downloaded IAGA2002 files after processing"""
+    iaga_files = list(out_folder.glob('*.iaga2002'))
+    for f in iaga_files:
+        try:
+            f.unlink()
+            print(f'Deleted: {f.name}')
+        except Exception as e:
+            print(f'Warning: Could not delete {f.name}: {e}')
+
+def process_station(station_code):
+    """Process a single station"""
+    print(f'\n{"="*60}')
+    print(f'Processing station: {station_code}')
+    print(f'{"="*60}')
+    
+    out_folder = get_data_folder(station_code)
+    out_folder.mkdir(parents=True, exist_ok=True)
+    cache_folder = Path('INTERMAGNET_DOWNLOADS') / '_cache'
+    
+    # Get dates (GMT+8 at 8am)
+    now = datetime.now(RUN_TIMEZONE)
+    today = now.date()
+    
+    if now.hour < 8:
+        today = today - timedelta(days=1)
+    
+    today_dt = datetime.combine(today, datetime.min.time()).replace(tzinfo=TZ)
+    yesterday_dt = today_dt - timedelta(days=1)
+    
+    # Check if already ran
+    json_file = out_folder / f'PRA_Night_{station_code}_{today_dt.strftime("%Y%m%d")}.json'
+    if json_file.exists():
+        print(f'[OK] Analysis already completed for {station_code} on {today_dt.date()}')
+        return True
+    
+    # Download SYM-H data (need wider range for quiet flag computation)
+    symh_start = yesterday_dt - timedelta(days=1)
+    symh_end = today_dt + timedelta(days=1)
+    GI = download_symh_data(symh_start, symh_end, cache_folder)
+    
+    # Download station data
+    dates_to_get = [yesterday_dt, today_dt]
+    data_all = pd.DataFrame()
+    downloaded_files = []
+    
+    for date_dt in dates_to_get:
+        file_path = download_data(station_code, date_dt, out_folder)
+        if file_path and file_path.exists():
+            downloaded_files.append(file_path)
+            df = read_iaga2002(file_path)
+            if not df.empty:
+                data_all = pd.concat([data_all, df], ignore_index=True)
+    
+    if data_all.empty:
+        print(f'[ERROR] No data available for {station_code}')
+        return False
+    
+    # Filter nighttime window
+    start_time = yesterday_dt.replace(hour=20, minute=0, second=0)
+    end_time = today_dt.replace(hour=4, minute=0, second=0)
+    
+    # Ensure timezone-aware for filtering
+    if start_time.tzinfo is None:
+        start_time = start_time.replace(tzinfo=TZ)
+    if end_time.tzinfo is None:
+        end_time = end_time.replace(tzinfo=TZ)
+    
+    night_data = data_all[(data_all['dt'] >= start_time) & (data_all['dt'] <= end_time)].copy()
+    
+    if len(night_data) < WIN_LEN:
+        print(f'[ERROR] Not enough nighttime data for {station_code}')
+        return False
+    
+    # Remove invalid data
+    night_data = night_data[
+        night_data['X'].notna() & 
+        night_data['Y'].notna() & 
+        night_data['Z'].notna()
+    ].copy()
+    
+    recXYZ = night_data[['X', 'Y', 'Z']].values
+    
+    # Convert times - ensure timezone-aware
+    # Data from read_iaga2002 should be timezone-aware, but check to be safe
+    if night_data['dt'].dtype.tz is None:
+        # Check if first element has timezone
+        if night_data['dt'].iloc[0].tzinfo is None:
+            night_data['dt'] = night_data['dt'].dt.tz_localize(TZ)
+        else:
+            # Series is naive but elements are aware - convert series
+            night_data['dt'] = pd.to_datetime(night_data['dt'], utc=True).dt.tz_convert(TZ)
+    else:
+        # Series is timezone-aware
+        night_data['dt'] = night_data['dt'].dt.tz_convert(TZ)
+    
+    # Now get UTC and local times (pandas Timestamp)
+    tUTC_start = pd.Timestamp(night_data['dt'].iloc[0]).tz_convert('UTC')
+    tLocal_start = pd.Timestamp(night_data['dt'].iloc[0])
+    
+    # Convert start/end times to UTC (using pandas for consistency)
+    sUTC = pd.Timestamp(start_time).tz_convert('UTC')
+    eUTC = pd.Timestamp(end_time).tz_convert('UTC')
+    eq_date = today_dt
+    
+    # Station stats (empty for now - can be computed from historical data)
+    stationZstats = {}
+    
+    # Analyze
+    is_anomalous, anom_table, ts, thrEff, nAnomHours = analyze_row(
+        recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
+        F_LOW, F_HIGH, stationZstats, OPTS, station_code
+    )
+    
+    if ts.empty:
+        print(f'[ERROR] No valid time series for {station_code}')
+        return False
+    
+    # Save results
+    results = {
+        'date': today_dt.date().isoformat(),
+        'station': station_code,
+        'timestamps': [t.isoformat() for t in ts['Time']],
+        'P': ts['P'].tolist(),
+        'nZ': ts['nZ'].tolist(),
+        'nG': ts['nG'].tolist(),
+        'isAnomalous': ts['isAnomalous'].tolist(),
+        'threshold': float(thrEff),
+        'nAnomHours': int(nAnomHours),
+        'is_anomalous': bool(is_anomalous)
+    }
+    
+    # Save JSON
+    with open(json_file, 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    # Save CSV
+    csv_file = out_folder / f'PRA_Night_{station_code}_{today_dt.strftime("%Y%m%d")}.csv'
+    ts.to_csv(csv_file, index=False)
+    
+    # Save plot
+    fig_file = save_plot(station_code, out_folder, ts, thrEff, today_dt)
+    
+    # Log anomalies
+    if is_anomalous and not anom_table.empty:
+        log_anomaly(station_code, out_folder, today_dt, yesterday_dt, thrEff,
+                   anom_table, ts, fig_file)
+    
+    # Cleanup downloaded files
+    cleanup_downloaded_files(out_folder)
+    
+    print(f'[OK] PRA Nighttime Analysis Completed for {station_code}')
+    return True
+
+def save_plot(station_code, out_folder, ts, thr, date):
+    """Generate and save PRA plot"""
+    fig_folder = out_folder / 'figures'
+    fig_folder.mkdir(parents=True, exist_ok=True)
+    
+    fig_file = fig_folder / f'PRA_{station_code}_{date.strftime("%Y%m%d")}.png'
+    
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
+    
+    t_utc = pd.to_datetime(ts['Time'])
+    P = ts['P'].values
+    nZ = ts['nZ'].values
+    nG = ts['nG'].values
+    anomaly_idx = ts['isAnomalous'].values
+    
+    # Plot 1: P
+    ax1.plot(t_utc, P, 'k-', linewidth=1.2, label='P')
+    ax1.axhline(y=thr, color='r', linestyle='--', label='Threshold')
+    ax1.scatter(t_utc[anomaly_idx], P[anomaly_idx], 
+               c='red', s=50, zorder=5, label='Anomaly')
+    ax1.set_xlabel('Time')
+    ax1.set_ylabel('P (nZ/nG)')
+    ax1.set_title(f'PRA - {station_code} Nighttime ({date.strftime("%Y-%m-%d")})')
+    ax1.legend()
+    ax1.grid(True)
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=TZ))
+    
+    # Plot 2: nZ and nG
+    ax2.plot(t_utc, nZ, 'b-', linewidth=1.2, label='nZ')
+    ax2.plot(t_utc, nG, 'g--', linewidth=1.2, label='nG')
+    ax2.set_xlabel('Time')
+    ax2.set_ylabel('Normalized Power')
+    ax2.legend()
+    ax2.grid(True)
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=TZ))
+    
+    plt.tight_layout()
+    plt.savefig(fig_file, dpi=150, bbox_inches='tight')
+    plt.close()
+    
+    return fig_file
+
+def log_anomaly(station_code, out_folder, date, yesterday, thr, anom_table, ts, fig_file):
+    """Log anomaly to master table"""
+    log_file = out_folder / 'anomaly_master_table.csv'
+    
+    # Group anomalies by hour
+    anom_times = pd.to_datetime(anom_table['TimeOfAnomaly'])
+    anom_hours = anom_times.dt.floor('H').unique()
+    time_blocks = []
+    for h in anom_hours:
+        h_str = h.strftime('%H:%M')
+        h_end = (h + pd.Timedelta(hours=1)).strftime('%H:%M')
+        time_blocks.append(f'{h_str}–{h_end}')
+    time_str = ', '.join(time_blocks)
+    
+    # Prepare row
+    range_str = f'{yesterday.strftime("%d/%m/%Y")} 20:00 - {date.strftime("%d/%m/%Y")} 04:00'
+    pra_vals = ', '.join([f'{p:.2f}' for p in anom_table['AnomalyValue'].values])
+    nz_vals = ', '.join([f'{nz:.2f}' for nz in anom_table['nZ'].values])
+    
+    # Get nG values for anomalies
+    anom_indices = ts['isAnomalous']
+    ng_vals = ', '.join([f'{ng:.2f}' for ng in ts.loc[anom_indices, 'nG'].values])
+    
+    new_row = {
+        'Range': range_str,
+        'Threshold': thr,
+        'PRA': pra_vals,
+        'nZ': nz_vals,
+        'nG': ng_vals,
+        'Remarks': 'Anomaly detected',
+        'Times': time_str,
+        'Plot': fig_file.name
+    }
+    
+    # Append to CSV
+    if log_file.exists():
+        df_log = pd.read_csv(log_file)
+        df_log = pd.concat([df_log, pd.DataFrame([new_row])], ignore_index=True)
+    else:
+        df_log = pd.DataFrame([new_row])
+    
+    df_log.to_csv(log_file, index=False)
+
+def get_all_stations():
+    """Get all available station codes from stations.json"""
+    try:
+        from load_stations import load_stations
+        stations_data = load_stations()
+        if stations_data:
+            return [s['code'] for s in stations_data]
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f'Warning: Could not load stations.json: {e}')
+    
+    # Fallback to default if stations.json not available
+    return DEFAULT_STATIONS
+
+def main():
+    """Main function"""
+    stations_env = os.getenv('INTERMAGNET_STATIONS', '')
+    
+    if stations_env:
+        # User specified stations
+        codes = [s.strip() for s in stations_env.split(',')]
+        # Optional: Validate station codes
+        try:
+            from load_stations import validate_station_codes
+            valid, invalid = validate_station_codes(codes)
+            if invalid:
+                print(f'[WARNING] Invalid station codes: {", ".join(invalid)}')
+            stations = valid if valid else codes
+        except ImportError:
+            # If load_stations.py not available, use codes as-is
+            stations = codes
+    else:
+        # Auto-detect: Use all stations from stations.json
+        print('No stations specified. Loading all available stations...')
+        stations = get_all_stations()
+        print(f'Found {len(stations)} stations to process')
+    
+    print(f'\n{"="*60}')
+    print(f'Starting PRA Nighttime Analysis (Multitaper + EVT Method)')
+    print(f'Stations ({len(stations)}): {", ".join(stations[:10])}{"..." if len(stations) > 10 else ""}')
+    print(f'Run time: {datetime.now(RUN_TIMEZONE)}')
+    print(f'{"="*60}\n')
+    
+    results = {}
+    for station in stations:
+        try:
+            success = process_station(station)
+            results[station] = 'success' if success else 'failed'
+        except Exception as e:
+            print(f'ERROR: Error processing {station}: {e}')
+            import traceback
+            traceback.print_exc()
+            results[station] = 'error'
+    
+    print(f'\n{"="*60}')
+    print('Summary:')
+    for station, status in results.items():
+        print(f'  {station}: {status}')
+    print(f'{"="*60}')
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,7 @@
+Range	Threshold	PRA	SZ	SG	Remarks	Times	x_2025_05_01_NoAnomalyDetected_
+							[2025-05-02] No anomaly detected.
+							[2025-05-03] No anomaly detected.
+							[2025-05-04] No anomaly detected.
+							[2025-05-05] Anomaly detected at: 04-May-2025 23:29:59
+							[2025-05-06] No anomaly detected.
+06/05/2025 20:00 - 07/05/2025 04:00	4.0552	5.60	8.60e+01	1.54e+01	Anomalies due to drop in S_G	22:00–23:00	
