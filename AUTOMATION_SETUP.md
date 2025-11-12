@@ -9,6 +9,10 @@ This guide shows how to set up automatic daily execution at 12:00 PM GMT+8.
 - ✅ **All stations**: The daily task will process every station in `stations.json`
 - ⚙️ **Specific stations**: If you need to limit to specific stations, you can modify the task action to include `$env:INTERMAGNET_STATIONS="KAK,HER"` before running the script
 
+## Optional: GitHub Pages Deployment
+
+If you want to automatically deploy the frontend to GitHub Pages after processing, set the `GITHUB_REPO` environment variable. See `GITHUB_PAGES_SETUP.md` for full instructions.
+
 ## Windows Server Setup
 
 ### Option 1: Automated Setup (Recommended)

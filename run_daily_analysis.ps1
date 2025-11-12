@@ -64,6 +64,19 @@ try {
     }
     Write-Log "Web files prepared successfully"
     
+    # Step 4: Deploy to GitHub Pages (optional)
+    if ($env:GITHUB_REPO) {
+        Write-Log "Step 4: Deploying to GitHub Pages..."
+        powershell.exe -ExecutionPolicy Bypass -File "deploy_to_github.ps1" 2>&1 | Tee-Object -FilePath $LogFile -Append
+        if ($LASTEXITCODE -ne 0) {
+            Write-Log "WARNING: GitHub deployment failed, but analysis completed"
+        } else {
+            Write-Log "GitHub Pages deployment completed"
+        }
+    } else {
+        Write-Log "Step 4: Skipping GitHub deployment (GITHUB_REPO not set)"
+    }
+    
     Write-Log "=========================================="
     Write-Log "Daily workflow completed successfully!"
     Write-Log "=========================================="

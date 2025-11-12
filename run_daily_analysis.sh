@@ -58,6 +58,19 @@ if [ $? -ne 0 ]; then
 fi
 log "Web files prepared successfully"
 
+# Step 4: Deploy to GitHub Pages (optional)
+if [ -n "$GITHUB_REPO" ]; then
+    log "Step 4: Deploying to GitHub Pages..."
+    bash deploy_to_github.sh >> "$LOG_FILE" 2>&1
+    if [ $? -ne 0 ]; then
+        log "WARNING: GitHub deployment failed, but analysis completed"
+    else
+        log "GitHub Pages deployment completed"
+    fi
+else
+    log "Step 4: Skipping GitHub deployment (GITHUB_REPO not set)"
+fi
+
 log "=========================================="
 log "Daily workflow completed successfully!"
 log "=========================================="

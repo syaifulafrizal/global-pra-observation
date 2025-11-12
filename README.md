@@ -86,7 +86,7 @@ Leave empty to process all stations from `stations.json`.
 - **Threshold**: Extreme Value Theory (Generalized Pareto Distribution)
 - **Filtering**: nZ z-score guard (station-specific)
 - **Time Window**: 20:00-04:00 Local Time
-- **Frequency Band**: 0.01-0.05 Hz
+- **Frequency Band**: 0.095-0.110 Hz
 
 ## Web Deployment
 

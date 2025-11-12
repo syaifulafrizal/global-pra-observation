@@ -33,8 +33,8 @@ SAMPLE_RATE = 'second'
 FS = 1  # Hz
 WIN_LEN = 3600  # 1-hour window in seconds
 STEP = 3600  # 1-hour step
-F_LOW = 0.01  # Hz
-F_HIGH = 0.05  # Hz
+F_LOW = 0.095  # Hz
+F_HIGH = 0.110  # Hz
 MT_NW = 3.5  # Multitaper time-half bandwidth product
 
 # Analysis options

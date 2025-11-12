@@ -140,7 +140,7 @@ def create_static_index(output_dir, stations, stations_data):
 
         <footer>
             <p>Method: Multitaper (NW=3.5) + EVT + nZ z-score | 
-               Frequency Band: 0.01-0.05 Hz | 
+               Frequency Band: 0.095-0.110 Hz | 
                Time Window: 20:00-04:00 Local Time</p>
             <p><a href="https://github.com/syaifulafrizal">Nur Syaiful Afrizal</a></p>
         </footer>
