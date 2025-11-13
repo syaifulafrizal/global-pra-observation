@@ -4,119 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRA Nighttime Detection - Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🌍 PRA Nighttime Detection Dashboard</h1>
-            <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
+            <h1>PRA Nighttime Detection Dashboard</h1>
+            <p class="subtitle">Polarization Ratio Analysis for Geomagnetic Anomaly Detection</p>
             <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
         </header>
 
-        <div class="stations-grid">
-            {% for station in stations %}
-            <div class="station-card">
-                <h2>Station: {{ station }}</h2>
-                
-                {% if station_data[station]['has_data'] %}
-                    {% set results = station_data[station]['results'] %}
-                    
-                    <div class="status-badge {% if results['is_anomalous'] %}anomaly{% else %}normal{% endif %}">
-                        {% if results['is_anomalous'] %}
-                            ⚠️ Anomaly Detected ({{ results['nAnomHours'] }} hours)
-                        {% else %}
-                            ✅ Normal
-                        {% endif %}
-                    </div>
-                    
-                    <div class="info-box">
-                        <p><strong>Date:</strong> {{ results['date'] }}</p>
-                        <p><strong>Threshold:</strong> {{ "%.2f"|format(results['threshold']) }}</p>
-                        <p><strong>Data Points:</strong> {{ results['P']|length }}</p>
-                    </div>
-                    
-                    {% if station_data[station]['figures'] %}
-                    <div class="figure-section">
-                        <h3>Latest Plot</h3>
-                        {% set latest_fig = station_data[station]['figures'][0] %}
-                        <img src="{{ url_for('serve_figure', station_code=station, filename=latest_fig) }}" 
-                             alt="PRA Plot for {{ station }}" 
-                             class="plot-image">
-                    </div>
-                    {% endif %}
-                    
-                    {% if station_data[station]['anomalies'] %}
-                    <div class="anomalies-section">
-                        <h3>Recent Anomalies (Last 10)</h3>
-                        <div class="table-container">
-                            <table class="anomaly-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date Range</th>
-                                        <th>Time</th>
-                                        <th>Threshold</th>
-                                        <th>PRA Values</th>
-                                        <th>nZ</th>
-                                        <th>nG</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for anomaly in station_data[station]['anomalies'] %}
-                                    <tr>
-                                        <td>{{ anomaly.get('Range', '-') }}</td>
-                                        <td>{{ anomaly.get('Times', '-') }}</td>
-                                        <td>{{ "%.2f"|format(anomaly.get('Threshold', 0)) }}</td>
-                                        <td>{{ anomaly.get('PRA', '-') }}</td>
-                                        <td>{{ anomaly.get('nZ', '-') }}</td>
-                                        <td>{{ anomaly.get('nG', '-') }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="no-anomalies">
-                        <p>No anomalies detected in recent data.</p>
-                    </div>
-                    {% endif %}
-                    
-                {% else %}
-                    <div class="no-data">
-                        <p>⚠️ No data available for this station yet.</p>
-                        <p>Run the analysis script to generate results.</p>
-                    </div>
-                {% endif %}
-            </div>
-            {% endfor %}
+        <div id="stations-container">
+            <p style="text-align: center; color: white; font-size: 1.1em;">Loading data...</p>
         </div>
 
         <footer>
-            <p>Method: Multitaper (NW=3.5) + EVT + nZ z-score | 
-               Frequency Band: 0.095-0.110 Hz | 
-               Time Window: 20:00-04:00 Local Time</p>
-            <p><a href="https://github.com/syaifulafrizal">Nur Syaiful Afrizal</a></p>
+            <p class="method-info">
+                Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT) + nZ Normalization<br>
+                Frequency Band: 0.095-0.110 Hz | Time Window: 20:00-04:00 Local Time
+            </p>
+            
+            <div class="acknowledgements">
+                <h3>Acknowledgements</h3>
+                <ul>
+                    <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a> (International Real-time Magnetic Observatory Network)</li>
+                    <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United States Geological Survey)</li>
+                    <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra Malaysia</a></li>
+                </ul>
+            </div>
+            
+            <div class="author">
+                <p>Developed by <a href="https://github.com/syaifulafrizal" target="_blank">Nur Syaiful Afrizal</a></p>
+            </div>
         </footer>
     </div>
 
-    <script>
-        // Update timestamp
-        document.getElementById('timestamp').textContent = new Date().toLocaleString('en-US', {
-            timeZone: 'Asia/Singapore',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        }) + ' GMT+8';
-        
-        // Auto-refresh every 5 minutes
-        setTimeout(function() {
-            location.reload();
-        }, 300000);
-    </script>
+    <script src="static/app.js"></script>
 </body>
 </html>
-
