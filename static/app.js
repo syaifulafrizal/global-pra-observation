@@ -289,14 +289,7 @@ function addEarthquakeMarkers(earthquakes) {
             </div>
         `;
         
-        // Add marker
-        const marker = L.marker([lat, lon], { icon })
-            .addTo(map)
-            .bindPopup(popupContent);
-        
-        console.log(`Added earthquake marker at [${lat}, ${lon}] with magnitude ${mag}`);
-        
-        // Add 200km radius circle around earthquake
+        // Create 200km radius circle (but don't add to map yet - only on click/hover)
         const circle = L.circle([lat, lon], {
             radius: 200000, // 200km in meters
             color: '#e74c3c',
@@ -304,10 +297,50 @@ function addEarthquakeMarkers(earthquakes) {
             fillOpacity: 0.1,
             weight: 2,
             dashArray: '5, 5'
-        }).addTo(map);
+        });
         
-        // Add popup to circle as well
-        circle.bindPopup(`200km radius from ${place}<br>M${mag.toFixed(1)}`);
+        // Add marker
+        const marker = L.marker([lat, lon], { icon })
+            .addTo(map)
+            .bindPopup(popupContent);
+        
+        // Show circle on click or hover
+        marker.on('click', function() {
+            if (!map.hasLayer(circle)) {
+                circle.addTo(map);
+            }
+        });
+        
+        marker.on('mouseover', function() {
+            if (!map.hasLayer(circle)) {
+                circle.addTo(map);
+            }
+        });
+        
+        marker.on('mouseout', function() {
+            // Keep circle visible on click, only hide on mouseout if not clicked
+            // We'll track if it was clicked
+            if (!marker._clicked) {
+                if (map.hasLayer(circle)) {
+                    map.removeLayer(circle);
+                }
+            }
+        });
+        
+        // Track click state
+        marker.on('click', function() {
+            marker._clicked = true;
+        });
+        
+        // Hide circle when popup closes
+        marker.on('popupclose', function() {
+            marker._clicked = false;
+            if (map.hasLayer(circle)) {
+                map.removeLayer(circle);
+            }
+        });
+        
+        console.log(`Added earthquake marker at [${lat}, ${lon}] with magnitude ${mag}`);
         
         // Store in a separate object for earthquakes
         if (!markers.earthquakes) {
@@ -444,10 +477,14 @@ async function renderDashboard() {
     html += '<div id="stations-list" class="stations-list hidden"></div>';
     html += '</div>';
     
-    // Bottom: Plot panel (full width)
+    // Station Analysis Panel (mobile-optimized)
     html += '<div class="plot-panel-section">';
     html += '<div class="plot-panel">';
+    html += '<div class="plot-panel-header">';
     html += '<h2 class="panel-title">📊 Station Analysis</h2>';
+    html += '<button id="toggle-plot-panel" class="toggle-plot-btn mobile-only" aria-label="Toggle plot panel">▼</button>';
+    html += '</div>';
+    html += '<div id="plot-panel-content" class="plot-panel-content">';
     html += '<div class="selector-container">';
     html += '<label for="station-selector" class="selector-label">Select Station:</label>';
     html += '<select id="station-selector" class="station-selector">';
@@ -472,8 +509,9 @@ async function renderDashboard() {
     html += '</select>';
     html += '</div>';
     html += '<div id="selected-station-plot" class="selected-station-plot"></div>';
-    html += '</div>';
-    html += '</div>';
+    html += '</div>'; // Close plot-panel-content
+    html += '</div>'; // Close plot-panel
+    html += '</div>'; // Close plot-panel-section
     html += '</div>'; // Close main-content-layout
     
     container.innerHTML = html;
@@ -510,7 +548,8 @@ async function renderDashboard() {
             if (selectedStation) {
                 await renderStationPlot(selectedStation);
             } else {
-                document.getElementById('selected-station-plot').innerHTML = '';
+                const plotDiv = document.getElementById('selected-station-plot');
+                if (plotDiv) plotDiv.innerHTML = '';
             }
         });
         
@@ -519,6 +558,55 @@ async function renderDashboard() {
             selector.value = anomalousStations[0];
             await renderStationPlot(anomalousStations[0]);
         }
+    }
+    
+    // Setup mobile plot panel toggle
+    const togglePlotBtn = document.getElementById('toggle-plot-panel');
+    const plotPanelContent = document.getElementById('plot-panel-content');
+    if (togglePlotBtn && plotPanelContent) {
+        // On mobile, start collapsed (but allow user to expand)
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // Set initial collapsed state
+            plotPanelContent.style.maxHeight = '0';
+            plotPanelContent.style.opacity = '0';
+            plotPanelContent.style.overflow = 'hidden';
+            togglePlotBtn.textContent = '▲';
+        }
+        
+        togglePlotBtn.addEventListener('click', () => {
+            const isCollapsed = plotPanelContent.style.maxHeight === '0px' || 
+                               plotPanelContent.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                // Expand
+                plotPanelContent.style.maxHeight = plotPanelContent.scrollHeight + 'px';
+                plotPanelContent.style.opacity = '1';
+                plotPanelContent.classList.remove('collapsed');
+                togglePlotBtn.textContent = '▼';
+            } else {
+                // Collapse
+                plotPanelContent.style.maxHeight = '0';
+                plotPanelContent.style.opacity = '0';
+                plotPanelContent.classList.add('collapsed');
+                togglePlotBtn.textContent = '▲';
+            }
+        });
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const isMobileNow = window.innerWidth <= 768;
+                if (!isMobileNow) {
+                    // Desktop: always show
+                    plotPanelContent.style.maxHeight = 'none';
+                    plotPanelContent.style.opacity = '1';
+                    plotPanelContent.classList.remove('collapsed');
+                }
+            }, 250);
+        });
     }
     
     // Setup toggle button

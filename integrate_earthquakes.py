@@ -7,6 +7,7 @@ Run this after pra_nighttime.py to add earthquake correlations
 import os
 from pathlib import Path
 from datetime import datetime
+import pandas as pd
 from load_stations import load_stations
 from earthquake_integration import (
     correlate_anomalies_with_earthquakes, 
@@ -78,10 +79,39 @@ def main():
     # Get recent earthquakes for map display (today only, ALL global earthquakes M>=5.5)
     print(f'\n{"="*60}')
     print('Fetching today\'s global earthquakes (M>=5.5) for map display...')
-    from earthquake_integration import get_global_earthquakes_today
+    from earthquake_integration import get_global_earthquakes_today, calculate_distance
     recent_eq = get_global_earthquakes_today(min_magnitude=5.5)
-    within_200km_count = len(recent_eq) if not recent_eq.empty else 0
-    print(f'  [INFO] Earthquakes (M>=5.5) globally today: {within_200km_count}')
+    
+    # Calculate which earthquakes are actually within 200km of any station
+    within_200km_count = 0
+    if not recent_eq.empty:
+        # Get all station coordinates
+        stations_with_coords = []
+        for station in stations_data:
+            lat = station.get('latitude')
+            lon = station.get('longitude')
+            if lat is not None and lon is not None:
+                stations_with_coords.append((lat, lon))
+        
+        # Check each earthquake against all stations
+        earthquakes_within_200km = set()
+        for _, eq in recent_eq.iterrows():
+            eq_lat = eq.get('latitude')
+            eq_lon = eq.get('longitude')
+            if pd.isna(eq_lat) or pd.isna(eq_lon):
+                continue
+            
+            # Check if earthquake is within 200km of any station
+            for st_lat, st_lon in stations_with_coords:
+                distance = calculate_distance(st_lat, st_lon, eq_lat, eq_lon)
+                if distance <= 200:
+                    earthquakes_within_200km.add(eq.get('id', f"{eq_lat}_{eq_lon}"))
+                    break  # Found one station, no need to check others
+        
+        within_200km_count = len(earthquakes_within_200km)
+    
+    print(f'  [INFO] Earthquakes (M>=5.5) globally today: {len(recent_eq) if not recent_eq.empty else 0}')
+    print(f'  [INFO] Earthquakes (M>=5.5) within 200km of stations: {within_200km_count}')
     
     # Always save to web_output for frontend (even if empty, so file exists)
     web_data_dir = Path('web_output') / 'data'
