@@ -216,6 +216,65 @@ header h1 {
     font-weight: 600;
 }
 
+/* Today's Earthquake Statistics */
+.today-eq-stats {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #3498db;
+}
+
+.today-eq-stats h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.eq-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.eq-stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+}
+
+.eq-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.eq-stat-value {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.eq-stat-label {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.eq-stats-note {
+    text-align: center;
+    font-style: italic;
+    margin-top: 10px;
+}
+
 /* Controls - Compact */
 .controls {
     margin: 20px 0;

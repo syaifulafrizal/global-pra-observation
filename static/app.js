@@ -333,6 +333,17 @@ async function renderDashboard() {
     
     let html = '';
     
+    // Load today's earthquake statistics
+    let todayEQStats = { global: 0, within200km: 0 };
+    try {
+        const statsResponse = await fetch('data/today_earthquake_stats.json');
+        if (statsResponse.ok) {
+            todayEQStats = await statsResponse.json();
+        }
+    } catch (error) {
+        console.warn('Could not load earthquake statistics:', error);
+    }
+    
     // Create summary stats first
     html += '<div class="summary-stats">';
     html += `<div class="stat-card"><div class="stat-value">${totalStations}</div><div class="stat-label">Total Stations</div></div>`;
@@ -340,6 +351,20 @@ async function renderDashboard() {
     html += `<div class="stat-card stat-eq-reliable"><div class="stat-value">${withEQ}</div><div class="stat-label">🌋 With EQ M≥5.5 (Reliable)</div></div>`;
     html += `<div class="stat-card stat-false-alarm"><div class="stat-value">${falseAlarms}</div><div class="stat-label">⚠️ False Alarms</div></div>`;
     html += `<div class="stat-card stat-false-negative"><div class="stat-value">${falseNegatives}</div><div class="stat-label">❌ False Negatives (M≥5.5)</div></div>`;
+    html += '</div>';
+    
+    // Add today's earthquake statistics
+    html += '<div class="today-eq-stats">';
+    html += `<h3>📊 Today's Earthquakes (M≥5.5) - ${new Date().toLocaleDateString()}</h3>`;
+    html += '<div class="eq-stats-grid">';
+    html += `<div class="eq-stat-card"><div class="eq-stat-value">${todayEQStats.global || 0}</div><div class="eq-stat-label">🌍 Global Count</div></div>`;
+    html += `<div class="eq-stat-card"><div class="eq-stat-value">${todayEQStats.within200km || 0}</div><div class="eq-stat-label">📍 Within 200km of Stations</div></div>`;
+    html += '</div>';
+    if (todayEQStats.global > 0 && todayEQStats.within200km === 0) {
+        html += '<p class="eq-stats-note" style="color: #f39c12; margin-top: 10px; font-size: 0.9em;">ℹ️ There are earthquakes globally, but none within 200km of any station.</p>';
+    } else if (todayEQStats.global === 0) {
+        html += '<p class="eq-stats-note" style="color: #95a5a6; margin-top: 10px; font-size: 0.9em;">ℹ️ No earthquakes (M≥5.5) detected globally today.</p>';
+    }
     html += '</div>';
     
     // Station list button
