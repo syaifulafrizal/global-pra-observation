@@ -27,8 +27,10 @@ import matplotlib.dates as mdates
 # Configuration
 BASE_URL = 'https://imag-data.bgs.ac.uk:443/GIN_V1/GINServices'
 OMNI_BASE_URL = 'https://omniweb.gsfc.nasa.gov/cgi/nx1.cgi'
-TZ = ZoneInfo('Asia/Tokyo')  # Station timezone (can be made configurable per station)
 RUN_TIMEZONE = ZoneInfo('Asia/Singapore')  # GMT+8 for Singapore
+
+# Station timezone cache (loaded from stations.json per station)
+_station_timezones = {}
 SAMPLE_RATE = 'second'
 FS = 1  # Hz
 WIN_LEN = 3600  # 1-hour window in seconds
@@ -69,6 +71,48 @@ DEFAULT_STATIONS = ['KAK']
 def get_data_folder(station_code):
     """Get data folder path for a station"""
     return Path('INTERMAGNET_DOWNLOADS') / station_code
+
+def get_station_timezone(station_code):
+    """Get timezone for a station from stations.json"""
+    global _station_timezones
+    
+    # Check cache first
+    if station_code in _station_timezones:
+        return _station_timezones[station_code]
+    
+    # Try to load from stations.json
+    stations_file = Path('stations.json')
+    if not stations_file.exists():
+        # Fallback to default
+        default_tz = ZoneInfo('UTC')
+        _station_timezones[station_code] = default_tz
+        print(f'[WARNING] stations.json not found, using UTC for {station_code}')
+        return default_tz
+    
+    try:
+        with open(stations_file, 'r') as f:
+            data = json.load(f)
+        
+        # Find station in list
+        stations = data.get('stations', [])
+        for station in stations:
+            if station.get('code') == station_code:
+                tz_str = station.get('timezone', 'UTC')
+                tz = ZoneInfo(tz_str)
+                _station_timezones[station_code] = tz
+                print(f'[INFO] Using timezone {tz_str} for station {station_code}')
+                return tz
+        
+        # Station not found, use UTC
+        default_tz = ZoneInfo('UTC')
+        _station_timezones[station_code] = default_tz
+        print(f'[WARNING] Station {station_code} not found in stations.json, using UTC')
+        return default_tz
+    except Exception as e:
+        print(f'[WARNING] Error loading timezone for {station_code}: {e}, using UTC')
+        default_tz = ZoneInfo('UTC')
+        _station_timezones[station_code] = default_tz
+        return default_tz
 
 def download_symh_data(start_date, end_date, cache_folder):
     """Download SYM-H geomagnetic index data from OMNIWeb"""
@@ -128,8 +172,13 @@ def download_data(station_code, date, out_folder):
         print(f'Warning: Download failed for {date_str}: {e}')
         return None
 
-def read_iaga2002(file_path):
-    """Read IAGA2002 format file and return DataFrame"""
+def read_iaga2002(file_path, station_timezone):
+    """Read IAGA2002 format file and return DataFrame
+    
+    Args:
+        file_path: Path to IAGA2002 file
+        station_timezone: ZoneInfo object for the station's local timezone
+    """
     try:
         # Read header to get metadata
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -149,7 +198,8 @@ def read_iaga2002(file_path):
         df['dt'] = pd.to_datetime(df['date'] + ' ' + df['time'], 
                                   format='%Y-%m-%d %H:%M:%S.%f',
                                   errors='coerce')
-        df['dt'] = df['dt'].dt.tz_localize('UTC').dt.tz_convert(TZ)
+        # Convert from UTC (data is always in UTC) to station's local timezone
+        df['dt'] = df['dt'].dt.tz_localize('UTC').dt.tz_convert(station_timezone)
         
         # Keep only valid data
         df = df[['dt', 'X', 'Y', 'Z']].copy()
@@ -537,25 +587,33 @@ def process_station(station_code):
     print(f'Processing station: {station_code}')
     print(f'{"="*60}')
     
+    # Get station's timezone from stations.json
+    station_tz = get_station_timezone(station_code)
+    
     out_folder = get_data_folder(station_code)
     out_folder.mkdir(parents=True, exist_ok=True)
     cache_folder = Path('INTERMAGNET_DOWNLOADS') / '_cache'
     
-    # Get dates (GMT+8 at 8am)
+    # Get dates (GMT+8 at 8am) - this is when we run the analysis
     now = datetime.now(RUN_TIMEZONE)
     today = now.date()
     
     if now.hour < 8:
         today = today - timedelta(days=1)
     
-    today_dt = datetime.combine(today, datetime.min.time()).replace(tzinfo=TZ)
+    # Create datetime objects in the station's local timezone
+    today_dt = datetime.combine(today, datetime.min.time()).replace(tzinfo=station_tz)
     yesterday_dt = today_dt - timedelta(days=1)
     
-    # Check if already ran
+    # Check if already ran (unless force rerun is requested)
     json_file = out_folder / f'PRA_Night_{station_code}_{today_dt.strftime("%Y%m%d")}.json'
-    if json_file.exists():
+    force_rerun = os.getenv('FORCE_RERUN', '').lower() in ('1', 'true', 'yes')
+    if json_file.exists() and not force_rerun:
         print(f'[OK] Analysis already completed for {station_code} on {today_dt.date()}')
+        print(f'      (Set FORCE_RERUN=1 to rerun)')
         return True
+    elif json_file.exists() and force_rerun:
+        print(f'[INFO] Force rerun enabled - reprocessing {station_code} on {today_dt.date()}')
     
     # Download SYM-H data (need wider range for quiet flag computation)
     symh_start = yesterday_dt - timedelta(days=1)
@@ -571,7 +629,7 @@ def process_station(station_code):
         file_path = download_data(station_code, date_dt, out_folder)
         if file_path and file_path.exists():
             downloaded_files.append(file_path)
-            df = read_iaga2002(file_path)
+            df = read_iaga2002(file_path, station_tz)
             if not df.empty:
                 data_all = pd.concat([data_all, df], ignore_index=True)
     
@@ -579,15 +637,15 @@ def process_station(station_code):
         print(f'[ERROR] No data available for {station_code}')
         return False
     
-    # Filter nighttime window
+    # Filter nighttime window (20:00-04:00 in station's LOCAL time)
     start_time = yesterday_dt.replace(hour=20, minute=0, second=0)
     end_time = today_dt.replace(hour=4, minute=0, second=0)
     
-    # Ensure timezone-aware for filtering
+    # Ensure timezone-aware for filtering (should already be, but double-check)
     if start_time.tzinfo is None:
-        start_time = start_time.replace(tzinfo=TZ)
+        start_time = start_time.replace(tzinfo=station_tz)
     if end_time.tzinfo is None:
-        end_time = end_time.replace(tzinfo=TZ)
+        end_time = end_time.replace(tzinfo=station_tz)
     
     night_data = data_all[(data_all['dt'] >= start_time) & (data_all['dt'] <= end_time)].copy()
     
@@ -604,18 +662,18 @@ def process_station(station_code):
     
     recXYZ = night_data[['X', 'Y', 'Z']].values
     
-    # Convert times - ensure timezone-aware
-    # Data from read_iaga2002 should be timezone-aware, but check to be safe
+    # Convert times - ensure timezone-aware in station's local timezone
+    # Data from read_iaga2002 should already be in station's local timezone, but check to be safe
     if night_data['dt'].dtype.tz is None:
         # Check if first element has timezone
         if night_data['dt'].iloc[0].tzinfo is None:
-            night_data['dt'] = night_data['dt'].dt.tz_localize(TZ)
+            night_data['dt'] = night_data['dt'].dt.tz_localize(station_tz)
         else:
             # Series is naive but elements are aware - convert series
-            night_data['dt'] = pd.to_datetime(night_data['dt'], utc=True).dt.tz_convert(TZ)
+            night_data['dt'] = pd.to_datetime(night_data['dt'], utc=True).dt.tz_convert(station_tz)
     else:
-        # Series is timezone-aware
-        night_data['dt'] = night_data['dt'].dt.tz_convert(TZ)
+        # Series is timezone-aware - ensure it's in station's timezone
+        night_data['dt'] = night_data['dt'].dt.tz_convert(station_tz)
     
     # Now get UTC and local times (pandas Timestamp)
     tUTC_start = pd.Timestamp(night_data['dt'].iloc[0]).tz_convert('UTC')
@@ -662,7 +720,7 @@ def process_station(station_code):
     ts.to_csv(csv_file, index=False)
     
     # Save plot
-    fig_file = save_plot(station_code, out_folder, ts, thrEff, today_dt)
+    fig_file = save_plot(station_code, out_folder, ts, thrEff, today_dt, station_tz)
     
     # Log anomalies
     if is_anomalous and not anom_table.empty:
@@ -675,8 +733,17 @@ def process_station(station_code):
     print(f'[OK] PRA Nighttime Analysis Completed for {station_code}')
     return True
 
-def save_plot(station_code, out_folder, ts, thr, date):
-    """Generate and save PRA plot"""
+def save_plot(station_code, out_folder, ts, thr, date, station_timezone):
+    """Generate and save PRA plot
+    
+    Args:
+        station_code: Station code
+        out_folder: Output folder
+        ts: Time series DataFrame
+        thr: Threshold value
+        date: Analysis date
+        station_timezone: ZoneInfo object for the station's local timezone
+    """
     fig_folder = out_folder / 'figures'
     fig_folder.mkdir(parents=True, exist_ok=True)
     
@@ -695,21 +762,21 @@ def save_plot(station_code, out_folder, ts, thr, date):
     ax1.axhline(y=thr, color='r', linestyle='--', label='Threshold')
     ax1.scatter(t_utc[anomaly_idx], P[anomaly_idx], 
                c='red', s=50, zorder=5, label='Anomaly')
-    ax1.set_xlabel('Time')
+    ax1.set_xlabel('Time (Local)')
     ax1.set_ylabel('P (nZ/nG)')
     ax1.set_title(f'PRA - {station_code} Nighttime ({date.strftime("%Y-%m-%d")})')
     ax1.legend()
     ax1.grid(True)
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=TZ))
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=station_timezone))
     
     # Plot 2: nZ and nG
     ax2.plot(t_utc, nZ, 'b-', linewidth=1.2, label='nZ')
     ax2.plot(t_utc, nG, 'g--', linewidth=1.2, label='nG')
-    ax2.set_xlabel('Time')
+    ax2.set_xlabel('Time (Local)')
     ax2.set_ylabel('Normalized Power')
     ax2.legend()
     ax2.grid(True)
-    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=TZ))
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=station_timezone))
     
     plt.tight_layout()
     plt.savefig(fig_file, dpi=150, bbox_inches='tight')

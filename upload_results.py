@@ -71,9 +71,15 @@ def get_stations():
         except Exception:
             pass
     
-    # Last resort: default to KAK
-    print('[WARNING] Only found 1 station (KAK) - this may indicate missing data')
-    return ['KAK']
+    # Last resort: raise error instead of defaulting
+    raise ValueError(
+        "ERROR: Could not detect any stations!\n"
+        "Please ensure:\n"
+        "  1. INTERMAGNET_DOWNLOADS/ contains processed station folders with PRA_Night_*.json files\n"
+        "  2. Or set INTERMAGNET_STATIONS environment variable\n"
+        "  3. Or ensure stations.json exists in the project root\n"
+        "This error prevents using a default station to avoid incorrect results."
+    )
 
 def prepare_web_output():
     """Prepare static files for web deployment"""

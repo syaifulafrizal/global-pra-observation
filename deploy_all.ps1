@@ -30,10 +30,25 @@ if (Test-Path Env:INTERMAGNET_STATIONS) {
     Write-Log "Note: INTERMAGNET_STATIONS was unset - processing ALL stations" "Yellow"
 }
 
+# Check if FORCE_RERUN is requested (from rerun_analysis.bat or manual setting)
+if (Test-Path Env:FORCE_RERUN) {
+    Write-Log "Note: FORCE_RERUN is enabled - will reprocess all stations" "Yellow"
+} else {
+    Write-Log "Note: Using cached results if available (set FORCE_RERUN=1 to force rerun)" "Gray"
+}
+
 # Step 1: Run PRA Analysis
 Write-Log "Step 1/4: Running PRA Analysis (pra_nighttime.py)..." "Yellow"
 Write-Log "This may take several minutes for all stations..." "Gray"
-python pra_nighttime.py
+
+# Detect Python with required packages
+$pythonExe = $null
+if (Test-Path "C:\Users\SYAIFUL\anaconda3\python.exe") {
+    $pythonExe = "C:\Users\SYAIFUL\anaconda3\python.exe"
+} else {
+    $pythonExe = "python"
+}
+& $pythonExe pra_nighttime.py
 if ($LASTEXITCODE -ne 0) {
     Write-Log "ERROR: PRA analysis failed!" "Red"
     Write-Log "Please check the error messages above" "Red"
@@ -45,7 +60,7 @@ Write-Log ""
 
 # Step 2: Integrate Earthquakes
 Write-Log "Step 2/4: Integrating Earthquake Data (integrate_earthquakes.py)..." "Yellow"
-python integrate_earthquakes.py
+& $pythonExe integrate_earthquakes.py
 if ($LASTEXITCODE -ne 0) {
     Write-Log "WARNING: Earthquake integration had issues, but continuing..." "Yellow"
 } else {
@@ -56,7 +71,7 @@ Write-Log ""
 # Step 3: Prepare Web Output (CRITICAL - This regenerates stations.json with all stations)
 Write-Log "Step 3/4: Preparing Web Output (upload_results.py)..." "Yellow"
 Write-Log "This step is CRITICAL - it regenerates stations.json with all processed stations" "Cyan"
-python upload_results.py
+& $pythonExe upload_results.py
 if ($LASTEXITCODE -ne 0) {
     Write-Log "ERROR: Web output preparation failed!" "Red"
     Write-Log "Please check the error messages above" "Red"
