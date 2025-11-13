@@ -71,6 +71,74 @@ Write-Log ""
 # Step 3: Prepare Web Output (CRITICAL - This regenerates stations.json with all stations)
 Write-Log "Step 3/4: Preparing Web Output (upload_results.py)..." "Yellow"
 Write-Log "This step is CRITICAL - it regenerates stations.json with all processed stations" "Cyan"
+
+# Check for merge conflicts in upload_results.py and clean them if found
+$uploadResultsPath = "upload_results.py"
+if (Test-Path $uploadResultsPath) {
+    $content = Get-Content $uploadResultsPath -Raw
+    # Only match actual Git conflict markers (not just any line with = signs)
+    if ($content -match "(?m)^[\s]*<<<<<<<|(?m)^[\s]*=======[\s]*$|(?m)^[\s]*>>>>>>>") {
+        Write-Log "WARNING: Merge conflicts detected in upload_results.py! Cleaning automatically..." "Yellow"
+        try {
+            # Read the file line by line and remove conflict markers
+            $lines = Get-Content $uploadResultsPath
+            $cleanLines = @()
+            $inConflict = $false
+            $keepSection = $false
+            
+            foreach ($line in $lines) {
+                if ($line -match "^<<<<<<<") {
+                    $inConflict = $true
+                    # If it says "Updated upstream", keep that section; otherwise keep first section by default
+                    $keepSection = $line -match "Updated upstream"
+                    if (-not $keepSection) {
+                        # Default: keep first section (before =======)
+                        $keepSection = $true
+                    }
+                    continue
+                }
+                if ($line -match "^=======") {
+                    # If we're keeping the first section, skip everything until >>>>>>>
+                    # If we're keeping the second section, start keeping lines now
+                    if ($keepSection) {
+                        # Skip the second section
+                        continue
+                    } else {
+                        # Start keeping the second section
+                        $keepSection = $true
+                        continue
+                    }
+                }
+                if ($line -match "^>>>>>>>") {
+                    $inConflict = $false
+                    $keepSection = $false
+                    continue
+                }
+                
+                # Add line if we're not in conflict, or if we're keeping this section
+                if (-not $inConflict -or $keepSection) {
+                    $cleanLines += $line
+                }
+            }
+            
+            # Write cleaned content
+            $cleanLines | Set-Content -Path $uploadResultsPath
+            Write-Log "Successfully cleaned merge conflicts in upload_results.py" "Green"
+            
+            # Verify it's clean
+            $verifyContent = Get-Content $uploadResultsPath -Raw
+            if ($verifyContent -match "<<<<<<<|=======|>>>>>>>") {
+                Write-Log "ERROR: Failed to clean all conflicts. Please resolve manually." "Red"
+                exit 1
+            }
+        } catch {
+            Write-Log "ERROR: Failed to clean merge conflicts: $_" "Red"
+            Write-Log "Please resolve merge conflicts manually in upload_results.py" "Red"
+            exit 1
+        }
+    }
+}
+
 & $pythonExe upload_results.py
 if ($LASTEXITCODE -ne 0) {
     Write-Log "ERROR: Web output preparation failed!" "Red"
@@ -104,6 +172,132 @@ Write-Log ""
 # Step 4: Deploy to GitHub Pages (if configured)
 $env:GITHUB_REPO = "syaifulafrizal/global-pra-observation"
 $env:GITHUB_BRANCH = "gh-pages"
+
+# Check for merge conflicts in deploy_to_github.ps1 and clean them if found
+$deployScriptPath = "deploy_to_github.ps1"
+if (Test-Path $deployScriptPath) {
+    $content = Get-Content $deployScriptPath -Raw
+    # Only match actual Git conflict markers (not just any line with = signs)
+    # Pattern: <<<<<<< at start of line, or ======= at start (with optional spaces), or >>>>>>> at start
+    if ($content -match "(?m)^[\s]*<<<<<<<|(?m)^[\s]*=======[\s]*$|(?m)^[\s]*>>>>>>>") {
+        Write-Log "WARNING: Merge conflicts detected in deploy_to_github.ps1! Cleaning automatically..." "Yellow"
+        try {
+            # Read the file line by line and remove conflict markers
+            $lines = Get-Content $deployScriptPath
+            $cleanLines = @()
+            $inConflict = $false
+            $keepSection = $false
+            
+            foreach ($line in $lines) {
+                if ($line -match "^<<<<<<<") {
+                    $inConflict = $true
+                    # If it says "Updated upstream", keep that section; otherwise keep first section by default
+                    $keepSection = $line -match "Updated upstream"
+                    if (-not $keepSection) {
+                        # Default: keep first section (before =======)
+                        $keepSection = $true
+                    }
+                    continue
+                }
+                if ($line -match "^=======") {
+                    # If we're keeping the first section, skip everything until >>>>>>>
+                    # If we're keeping the second section, start keeping lines now
+                    if ($keepSection) {
+                        # Skip the second section
+                        continue
+                    } else {
+                        # Start keeping the second section
+                        $keepSection = $true
+                        continue
+                    }
+                }
+                if ($line -match "^>>>>>>>") {
+                    $inConflict = $false
+                    $keepSection = $false
+                    continue
+                }
+                
+                # Add line if we're not in conflict, or if we're keeping this section
+                if (-not $inConflict -or $keepSection) {
+                    $cleanLines += $line
+                }
+            }
+            
+            # Write cleaned content
+            $cleanLines | Set-Content -Path $deployScriptPath
+            Write-Log "Successfully cleaned merge conflicts in deploy_to_github.ps1" "Green"
+            
+            # Verify it's clean - check multiple times with different patterns
+            $verifyContent = Get-Content $deployScriptPath -Raw
+            $verifyLines = Get-Content $deployScriptPath
+            
+            # Check for any remaining conflict markers (only actual Git markers, not code with = signs)
+            $hasConflicts = $false
+            foreach ($line in $verifyLines) {
+                # Only match actual Git conflict markers at start of line
+                if ($line -match "^[\s]*<<<<<<<|^[\s]*=======[\s]*$|^[\s]*>>>>>>>") {
+                    $hasConflicts = $true
+                    Write-Log "Found remaining conflict marker: $($line.Trim())" "Yellow"
+                    break
+                }
+            }
+            
+            if ($hasConflicts) {
+                # Try one more aggressive cleanup pass
+                Write-Log "Attempting second cleanup pass..." "Yellow"
+                $cleanLines2 = @()
+                $inConflict2 = $false
+                $keepSection2 = $true
+                
+                foreach ($line in $verifyLines) {
+                    if ($line -match "^[\s]*<<<<<<<") {
+                        $inConflict2 = $true
+                        $keepSection2 = $line -match "Updated upstream"
+                        if (-not $keepSection2) {
+                            $keepSection2 = $true
+                        }
+                        continue
+                    }
+                    if ($line -match "^[\s]*=======") {
+                        if ($keepSection2) {
+                            continue
+                        } else {
+                            $keepSection2 = $true
+                            continue
+                        }
+                    }
+                    if ($line -match "^[\s]*>>>>>>>") {
+                        $inConflict2 = $false
+                        $keepSection2 = $false
+                        continue
+                    }
+                    
+                    if (-not $inConflict2 -or $keepSection2) {
+                        $cleanLines2 += $line
+                    }
+                }
+                
+                $cleanLines2 | Set-Content -Path $deployScriptPath
+                
+                # Final verification (only check for actual Git conflict markers)
+                $finalCheck = Get-Content $deployScriptPath -Raw
+                if ($finalCheck -match "(?m)^[\s]*<<<<<<<|(?m)^[\s]*=======[\s]*$|(?m)^[\s]*>>>>>>>") {
+                    Write-Log "ERROR: Failed to clean all conflicts after second pass. Please resolve manually." "Red"
+                    Write-Log "You can manually edit deploy_to_github.ps1 and remove all lines containing: <<<<<<<, =======, >>>>>>>" "Yellow"
+                    exit 1
+                } else {
+                    Write-Log "Successfully cleaned conflicts on second pass" "Green"
+                }
+            } else {
+                Write-Log "Verification passed - file is clean" "Green"
+            }
+        } catch {
+            Write-Log "ERROR: Failed to clean merge conflicts: $_" "Red"
+            Write-Log "Please resolve merge conflicts manually in deploy_to_github.ps1" "Red"
+            exit 1
+        }
+    }
+}
 
 if ($env:GITHUB_REPO) {
     Write-Log "Step 4/4: Deploying to GitHub Pages..." "Yellow"

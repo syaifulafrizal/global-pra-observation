@@ -85,28 +85,76 @@ def main():
     # Calculate which earthquakes are actually within 200km of any station
     within_200km_count = 0
     if not recent_eq.empty:
-        # Get all station coordinates
+        # Get all station coordinates (ensure they're floats)
         stations_with_coords = []
         for station in stations_data:
-            lat = station.get('latitude')
-            lon = station.get('longitude')
-            if lat is not None and lon is not None:
-                stations_with_coords.append((lat, lon))
+            try:
+                lat = station.get('latitude')
+                lon = station.get('longitude')
+                if lat is not None and lon is not None:
+                    # Convert to float if needed
+                    lat = float(lat)
+                    lon = float(lon)
+                    if -90 <= lat <= 90 and -180 <= lon <= 180:
+                        stations_with_coords.append((lat, lon))
+            except (ValueError, TypeError):
+                continue
+        
+        print(f'  [DEBUG] Checking {len(recent_eq)} earthquakes against {len(stations_with_coords)} stations')
         
         # Check each earthquake against all stations
         earthquakes_within_200km = set()
-        for _, eq in recent_eq.iterrows():
-            eq_lat = eq.get('latitude')
-            eq_lon = eq.get('longitude')
-            if pd.isna(eq_lat) or pd.isna(eq_lon):
+        for idx, eq in recent_eq.iterrows():
+            try:
+                eq_lat = eq.get('latitude')
+                eq_lon = eq.get('longitude')
+                
+                # Convert to float and validate
+                if pd.isna(eq_lat) or pd.isna(eq_lon):
+                    continue
+                
+                eq_lat = float(eq_lat)
+                eq_lon = float(eq_lon)
+                
+                if not (-90 <= eq_lat <= 90 and -180 <= eq_lon <= 180):
+                    continue
+                
+                # Check if earthquake is within 200km of any station
+                found_within_200km = False
+                min_distance = float('inf')
+                closest_station = None
+                
+                for st_lat, st_lon in stations_with_coords:
+                    try:
+                        distance = calculate_distance(st_lat, st_lon, eq_lat, eq_lon)
+                        if distance < min_distance:
+                            min_distance = distance
+                            closest_station = (st_lat, st_lon)
+                        
+                        if distance <= 200:
+                            found_within_200km = True
+                            # Use earthquake ID if available, otherwise use coordinates
+                            eq_id = eq.get('id', '')
+                            if not eq_id or pd.isna(eq_id):
+                                eq_id = f"eq_{eq_lat:.3f}_{eq_lon:.3f}"
+                            earthquakes_within_200km.add(str(eq_id))
+                            break  # Found one station, no need to check others
+                    except Exception as e:
+                        print(f'  [WARNING] Error calculating distance: {e}')
+                        continue
+                
+                # Debug output for first few earthquakes
+                if idx < 3:
+                    place = eq.get('place', 'Unknown')
+                    mag = eq.get('magnitude', 0)
+                    if found_within_200km:
+                        print(f'  [DEBUG] EQ at {place} (M{mag:.1f}) - WITHIN 200km (min distance: {min_distance:.1f}km)')
+                    else:
+                        print(f'  [DEBUG] EQ at {place} (M{mag:.1f}) - NOT within 200km (closest: {min_distance:.1f}km)')
+                        
+            except Exception as e:
+                print(f'  [WARNING] Error processing earthquake: {e}')
                 continue
-            
-            # Check if earthquake is within 200km of any station
-            for st_lat, st_lon in stations_with_coords:
-                distance = calculate_distance(st_lat, st_lon, eq_lat, eq_lon)
-                if distance <= 200:
-                    earthquakes_within_200km.add(eq.get('id', f"{eq_lat}_{eq_lon}"))
-                    break  # Found one station, no need to check others
         
         within_200km_count = len(earthquakes_within_200km)
     
