@@ -140,8 +140,6 @@ if ($currentBranch -eq "main" -or $currentBranch -eq "master") {
                 Write-Log "Warning: Failed to push $currentBranch (continuing with deployment)" "Yellow"
             }
         }
-    } else {
-        Write-Log "No uncommitted changes on $currentBranch branch" "Green"
     }
 }
 
@@ -410,4 +408,3 @@ try {
     }
     exit 1
 }
-

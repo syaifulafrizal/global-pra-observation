@@ -72,6 +72,7 @@ fi
 
 # Save current branch
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+<<<<<<< Updated upstream
 
 # Step 1: Commit and push main branch changes first (if on main)
 if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
@@ -104,6 +105,8 @@ fi
 # Fetch latest from remote
 log "Fetching latest from remote..."
 git fetch origin >/dev/null 2>&1
+=======
+>>>>>>> Stashed changes
 
 # Push to GitHub
 log "Deploying to GitHub Pages..."
@@ -140,6 +143,7 @@ if [ "$GITHUB_BRANCH" = "gh-pages" ]; then
         git commit -m "Initial gh-pages commit" >/dev/null 2>&1
     else
         log "Switching to gh-pages branch..."
+<<<<<<< Updated upstream
         
         # Stash any uncommitted changes before switching
         HAS_CHANGES=$(git status --porcelain)
@@ -168,6 +172,9 @@ if [ "$GITHUB_BRANCH" = "gh-pages" ]; then
                 exit 1
             fi
         fi
+=======
+        git checkout gh-pages >/dev/null 2>&1 || git checkout -b gh-pages >/dev/null 2>&1
+>>>>>>> Stashed changes
         
         # Verify we're on gh-pages
         CHECK_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -200,10 +207,13 @@ if [ "$GITHUB_BRANCH" = "gh-pages" ]; then
     
 else
     git checkout "$GITHUB_BRANCH" >/dev/null 2>&1 || git checkout -b "$GITHUB_BRANCH" >/dev/null 2>&1
+<<<<<<< Updated upstream
     if [ $? -ne 0 ]; then
         log "ERROR: Failed to checkout $GITHUB_BRANCH branch"
         exit 1
     fi
+=======
+>>>>>>> Stashed changes
     # For non-gh-pages branches, just add web_output as-is
     git add -f web_output/ >/dev/null 2>&1
 fi
@@ -251,6 +261,7 @@ log "Note: It may take 1-2 minutes for GitHub Pages to update"
 if [ -n "$CURRENT_BRANCH" ] && [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
     log "Switching back to $CURRENT_BRANCH branch..."
     git checkout "$CURRENT_BRANCH" >/dev/null 2>&1 || true
+<<<<<<< Updated upstream
     
     # Restore stashed changes if any
     STASH_LIST=$(git stash list 2>&1)
@@ -260,3 +271,6 @@ if [ -n "$CURRENT_BRANCH" ] && [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
     fi
 fi
 
+=======
+fi
+>>>>>>> Stashed changes
