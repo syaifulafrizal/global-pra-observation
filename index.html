@@ -11,33 +11,20 @@
 <body>
     <div class="container">
         <header>
-            <h1>PRA Nighttime Detection Dashboard</h1>
-            <p class="subtitle">Polarization Ratio Analysis for Geomagnetic Anomaly Detection</p>
+            <h1>🌍 PRA Nighttime Detection Dashboard</h1>
+            <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
             <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
         </header>
 
         <div id="stations-container">
-            <p style="text-align: center; color: white; font-size: 1.1em;">Loading data...</p>
+            <p>Loading data...</p>
         </div>
 
         <footer>
-            <p class="method-info">
-                Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT) + nZ Normalization<br>
-                Frequency Band: 0.095-0.110 Hz | Time Window: 20:00-04:00 Local Time
-            </p>
-            
-            <div class="acknowledgements">
-                <h3>Acknowledgements</h3>
-                <ul>
-                    <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a> (International Real-time Magnetic Observatory Network)</li>
-                    <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United States Geological Survey)</li>
-                    <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra Malaysia</a></li>
-                </ul>
-            </div>
-            
-            <div class="author">
-                <p>Developed by <a href="https://github.com/syaifulafrizal" target="_blank">Nur Syaiful Afrizal</a></p>
-            </div>
+            <p>Method: Multitaper (NW=3.5) + EVT + nZ z-score | 
+               Frequency Band: 0.095-0.110 Hz | 
+               Time Window: 20:00-04:00 Local Time</p>
+            <p><a href="https://github.com/syaifulafrizal">Nur Syaiful Afrizal</a></p>
         </footer>
     </div>
 
