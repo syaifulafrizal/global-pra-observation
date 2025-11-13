@@ -36,6 +36,34 @@ async function loadEarthquakeCorrelations(station) {
             return [];
         }
         const text = await response.text();
+        const correlations = parseCSV(text);
+        // Filter by magnitude > 6 for reliability
+        return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) > 6.0);
+    } catch (error) {
+        return [];
+    }
+}
+
+async function loadFalseNegatives(station) {
+    try {
+        const response = await fetch(`data/${station}_false_negatives.csv`);
+        if (!response.ok) {
+            return [];
+        }
+        const text = await response.text();
+        return parseCSV(text);
+    } catch (error) {
+        return [];
+    }
+}
+
+async function loadRecentEarthquakes() {
+    try {
+        const response = await fetch('data/recent_earthquakes.csv');
+        if (!response.ok) {
+            return [];
+        }
+        const text = await response.text();
         return parseCSV(text);
     } catch (error) {
         return [];
@@ -184,6 +212,67 @@ function addStationToMap(stationCode, stationData, eqCorrelations) {
     markers[stationCode] = marker;
 }
 
+function addEarthquakeMarkers(earthquakes) {
+    if (!map || !earthquakes || earthquakes.length === 0) {
+        return;
+    }
+    
+    earthquakes.forEach(eq => {
+        const lat = parseFloat(eq.latitude || eq.earthquake_latitude);
+        const lon = parseFloat(eq.longitude || eq.earthquake_longitude);
+        const mag = parseFloat(eq.magnitude || eq.earthquake_magnitude || 0);
+        const place = eq.place || eq.earthquake_place || 'Unknown';
+        const time = eq.time || eq.earthquake_time || '';
+        
+        if (isNaN(lat) || isNaN(lon)) {
+            return;
+        }
+        
+        // Create earthquake icon (red triangle)
+        const icon = L.divIcon({
+            className: 'earthquake-marker',
+            html: `<div class="eq-marker" style="
+                width: ${Math.max(20, Math.min(40, mag * 5))}px;
+                height: ${Math.max(20, Math.min(40, mag * 5))}px;
+                background: #e74c3c;
+                border: 2px solid white;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: ${Math.max(10, Math.min(14, mag * 2))}px;
+            ">${mag.toFixed(1)}</div>`,
+            iconSize: [Math.max(20, Math.min(40, mag * 5)), Math.max(20, Math.min(40, mag * 5))],
+            iconAnchor: [Math.max(10, Math.min(20, mag * 2.5)), Math.max(10, Math.min(20, mag * 2.5))]
+        });
+        
+        // Create popup
+        const dateStr = time ? new Date(time).toLocaleString() : 'Unknown';
+        const popupContent = `
+            <div style="min-width: 200px; font-family: Arial, sans-serif;">
+                <strong style="color: #e74c3c; font-size: 1.2em;">🌋 Earthquake M${mag.toFixed(1)}</strong><br>
+                <span style="color: #555;">${place}</span><br>
+                <small>📅 ${dateStr}</small><br>
+                <small>📍 ${lat.toFixed(3)}, ${lon.toFixed(3)}</small>
+            </div>
+        `;
+        
+        // Add marker
+        const marker = L.marker([lat, lon], { icon })
+            .addTo(map)
+            .bindPopup(popupContent);
+        
+        // Store in a separate object for earthquakes
+        if (!markers.earthquakes) {
+            markers.earthquakes = [];
+        }
+        markers.earthquakes.push(marker);
+    });
+}
+
 async function renderDashboard() {
     const container = document.getElementById('stations-container');
     if (!container) return;
@@ -212,6 +301,7 @@ async function renderDashboard() {
     let anomalousCount = 0;
     let withEQ = 0;
     let falseAlarms = 0;
+    let falseNegatives = 0;
     
     const stationDataMap = {};
     for (const station of allStations) {
@@ -223,14 +313,19 @@ async function renderDashboard() {
             anomalousCount++;
             anomalousStations.push(station);
             const eqCorrelations = await loadEarthquakeCorrelations(station);
-            if (eqCorrelations.length > 0) {
+            // Filter by magnitude > 6 for reliability
+            const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) > 6.0);
+            if (reliableCorrelations.length > 0) {
                 withEQ++;
             } else {
                 falseAlarms++;
             }
-            stationDataMap[station] = { stationData, eqCorrelations };
+            stationDataMap[station] = { stationData, eqCorrelations: reliableCorrelations };
         } else {
-            stationDataMap[station] = { stationData: null, eqCorrelations: [] };
+            // Check for false negatives (EQ > 6 occurred but no anomaly)
+            const fn = await loadFalseNegatives(station);
+            falseNegatives += fn.length;
+            stationDataMap[station] = { stationData: null, eqCorrelations: [], falseNegatives: fn };
         }
     }
     
@@ -240,8 +335,9 @@ async function renderDashboard() {
     html += '<div class="summary-stats">';
     html += `<div class="stat-card"><div class="stat-value">${totalStations}</div><div class="stat-label">Total Stations</div></div>`;
     html += `<div class="stat-card stat-anomaly"><div class="stat-value">${anomalousCount}</div><div class="stat-label">Anomalies Detected</div></div>`;
-    html += `<div class="stat-card stat-eq-reliable"><div class="stat-value">${withEQ}</div><div class="stat-label">🌋 With EQ (Reliable)</div></div>`;
+    html += `<div class="stat-card stat-eq-reliable"><div class="stat-value">${withEQ}</div><div class="stat-label">🌋 With EQ M>6 (Reliable)</div></div>`;
     html += `<div class="stat-card stat-false-alarm"><div class="stat-value">${falseAlarms}</div><div class="stat-label">⚠️ False Alarms</div></div>`;
+    html += `<div class="stat-card stat-false-negative"><div class="stat-value">${falseNegatives}</div><div class="stat-label">❌ False Negatives (M>6)</div></div>`;
     html += '</div>';
     
     // Station list button
@@ -300,11 +396,15 @@ async function renderDashboard() {
                 initMap();
                 await new Promise(resolve => setTimeout(resolve, 200));
                 
-                // Add all markers
+                // Add all station markers
                 for (const station of allStations) {
                     const { stationData, eqCorrelations } = stationDataMap[station];
                     addStationToMap(station, stationData, eqCorrelations);
                 }
+                
+                // Add earthquake markers
+                const recentEarthquakes = await loadRecentEarthquakes();
+                addEarthquakeMarkers(recentEarthquakes);
             } catch (error) {
                 console.error('Error initializing map:', error);
             }
@@ -369,8 +469,11 @@ async function renderStationPlot(stationCode) {
     const stationData = allStationsData[stationCode];
     const metadata = stationMetadata[stationCode] || {};
     const eqCorrelations = await loadEarthquakeCorrelations(stationCode);
-    const hasEQ = eqCorrelations.length > 0;
+    // Filter by magnitude > 6 for reliability
+    const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) > 6.0);
+    const hasEQ = reliableCorrelations.length > 0;
     const hasAnomaly = stationData && stationData.is_anomalous;
+    const falseNegatives = await loadFalseNegatives(stationCode);
     
     let html = `<div class="station-plot-card">`;
     html += `<div class="plot-header">`;
@@ -379,10 +482,13 @@ async function renderStationPlot(stationCode) {
     
     if (hasAnomaly) {
         html += `<div class="plot-status ${hasEQ ? 'status-eq' : 'status-false'}">`;
-        html += hasEQ ? `🌋 EQ Correlation Found (${eqCorrelations.length})` : `⚠️ False Alarm (No EQ)`;
+        html += hasEQ ? `🌋 EQ Correlation Found (M>6): ${reliableCorrelations.length}` : `⚠️ False Alarm (No EQ M>6)`;
         html += `</div>`;
     } else {
         html += `<div class="plot-status status-normal">✅ Normal</div>`;
+        if (falseNegatives.length > 0) {
+            html += `<div class="plot-status status-false-negative" style="margin-top: 8px;">❌ False Negative: ${falseNegatives.length} EQ M>6 without anomaly</div>`;
+        }
     }
     html += `</div>`;
     
@@ -402,15 +508,32 @@ async function renderStationPlot(stationCode) {
         html += `<div class="info-row"><span class="info-label">Date:</span><span class="info-value">${formatDate(stationData.date)}</span></div>`;
         html += `<div class="info-row"><span class="info-label">Threshold:</span><span class="info-value">${parseFloat(stationData.threshold || 0).toFixed(2)}</span></div>`;
         html += `<div class="info-row"><span class="info-label">Anomaly Hours:</span><span class="info-value">${stationData.nAnomHours || 0}</span></div>`;
-        if (hasEQ && eqCorrelations.length > 0) {
+        // Show reliable correlations (M>6)
+        if (hasEQ && reliableCorrelations.length > 0) {
             html += `<div class="eq-info">`;
-            html += `<h4>🌋 Earthquake Correlations:</h4>`;
-            eqCorrelations.slice(0, 5).forEach((eq) => {
+            html += `<h4>🌋 Earthquake Correlations (M>6):</h4>`;
+            reliableCorrelations.slice(0, 5).forEach((eq) => {
                 const mag = eq.earthquake_magnitude || 'N/A';
                 const dist = parseFloat(eq.earthquake_distance_km || 0).toFixed(1);
                 const days = parseFloat(eq.days_before_anomaly || 0).toFixed(1);
                 html += `<div class="eq-item">M${mag} @ ${dist}km (${days} days before)</div>`;
             });
+            html += `</div>`;
+        }
+        
+        // Show false negatives if any
+        if (falseNegatives.length > 0) {
+            html += `<div class="fn-info">`;
+            html += `<h4>❌ False Negatives (M>6, no anomaly detected):</h4>`;
+            falseNegatives.slice(0, 3).forEach((fn) => {
+                const mag = fn.earthquake_magnitude || 'N/A';
+                const dist = parseFloat(fn.earthquake_distance_km || 0).toFixed(1);
+                const date = fn.earthquake_time ? formatDate(fn.earthquake_time) : 'Unknown';
+                html += `<div class="fn-item">M${mag} @ ${dist}km on ${date}</div>`;
+            });
+            if (falseNegatives.length > 3) {
+                html += `<div class="fn-item">... and ${falseNegatives.length - 3} more</div>`;
+            }
             html += `</div>`;
         }
         html += `</div>`;

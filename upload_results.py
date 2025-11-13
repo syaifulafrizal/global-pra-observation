@@ -138,6 +138,11 @@ def prepare_web_output():
         if eq_file.exists():
             shutil.copy(eq_file, data_dir / f'{station}_earthquake_correlations.csv')
         
+        # Copy false negatives if available
+        fn_file = station_folder / 'false_negatives.csv'
+        if fn_file.exists():
+            shutil.copy(fn_file, data_dir / f'{station}_false_negatives.csv')
+        
         # Copy figures
         figures_dir = station_folder / 'figures'
         if figures_dir.exists():

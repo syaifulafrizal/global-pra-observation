@@ -209,24 +209,135 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
                                        max_distance_km=200, min_magnitude=4.0)
         
         if not eq_df.empty:
-            # Get closest earthquake
-            closest = eq_df.loc[eq_df['distance_km'].idxmin()]
+            # Filter for magnitude > 6 for reliability assessment
+            eq_df_reliable = eq_df[eq_df['magnitude'] > 6.0].copy()
             
-            correlation = {
-                'anomaly_date': anomaly_date,
-                'anomaly_range': anomaly['Range'],
-                'anomaly_times': anomaly.get('Times', ''),
-                'earthquake_time': closest['time'],
-                'earthquake_magnitude': closest['magnitude'],
-                'earthquake_distance_km': closest['distance_km'],
-                'earthquake_place': closest['place'],
-                'days_before_anomaly': closest['days_from_anomaly'],
-                'total_earthquakes': len(eq_df)
-            }
-            correlations.append(correlation)
+            if not eq_df_reliable.empty:
+                # Get closest earthquake with magnitude > 6
+                closest = eq_df_reliable.loc[eq_df_reliable['distance_km'].idxmin()]
+                
+                correlation = {
+                    'anomaly_date': anomaly_date,
+                    'anomaly_range': anomaly['Range'],
+                    'anomaly_times': anomaly.get('Times', ''),
+                    'earthquake_time': closest['time'],
+                    'earthquake_magnitude': closest['magnitude'],
+                    'earthquake_distance_km': closest['distance_km'],
+                    'earthquake_place': closest['place'],
+                    'days_before_anomaly': closest['days_from_anomaly'],
+                    'total_earthquakes': len(eq_df),
+                    'reliable_earthquakes': len(eq_df_reliable)
+                }
+                correlations.append(correlation)
     
     if correlations:
         return pd.DataFrame(correlations)
+    return pd.DataFrame()
+
+def find_false_negatives(station_code, results_folder, days_lookback=14):
+    """
+    Find false negatives: Earthquakes with magnitude > 6 that occurred 
+    but no anomaly was detected
+    
+    Parameters:
+    -----------
+    station_code : str
+        Station code
+    results_folder : Path
+        Folder containing PRA results
+    days_lookback : int
+        Number of days to look back for earthquakes (default: 14)
+    
+    Returns:
+    --------
+    pd.DataFrame : False negative earthquakes
+    """
+    # Get station coordinates
+    lat, lon = get_station_coordinates(station_code)
+    if lat is None or lon is None:
+        return pd.DataFrame()
+    
+    # Get date range from latest processed data
+    json_files = list(results_folder.glob('PRA_Night_*.json'))
+    if not json_files:
+        return pd.DataFrame()
+    
+    # Get latest processing date
+    latest_json = max(json_files, key=lambda p: p.stat().st_mtime)
+    try:
+        with open(latest_json, 'r') as f:
+            data = json.load(f)
+            if 'date' in data:
+                latest_date = pd.to_datetime(data['date'])
+            else:
+                latest_date = datetime.now()
+    except:
+        latest_date = datetime.now()
+    
+    # Define time window
+    end_date = latest_date
+    start_date = end_date - timedelta(days=days_lookback)
+    
+    # Fetch all earthquakes with magnitude > 6
+    eq_df = fetch_usgs_earthquakes(start_date, end_date,
+                                   min_magnitude=6.0,
+                                   latitude=lat,
+                                   longitude=lon,
+                                   max_radius_km=200)
+    
+    if eq_df.empty:
+        return pd.DataFrame()
+    
+    # Calculate distances
+    distances = []
+    for _, eq in eq_df.iterrows():
+        dist = calculate_distance(lat, lon, eq['latitude'], eq['longitude'])
+        distances.append(dist)
+    
+    eq_df['distance_km'] = distances
+    eq_df = eq_df[eq_df['distance_km'] <= 200].copy()
+    
+    # Check which earthquakes had no corresponding anomaly
+    anomaly_file = results_folder / 'anomaly_master_table.csv'
+    anomaly_dates = []
+    
+    if anomaly_file.exists():
+        try:
+            anomalies = pd.read_csv(anomaly_file)
+            for _, anomaly in anomalies.iterrows():
+                try:
+                    date_str = anomaly['Range'].split()[0]
+                    anomaly_date = pd.to_datetime(date_str, format='%d/%m/%Y')
+                    anomaly_dates.append(anomaly_date.date())
+                except:
+                    continue
+        except:
+            pass
+    
+    # Find earthquakes without corresponding anomalies
+    false_negatives = []
+    for _, eq in eq_df.iterrows():
+        eq_date = eq['time'].date()
+        # Check if there's an anomaly within 14 days after the earthquake
+        has_anomaly = False
+        for anom_date in anomaly_dates:
+            days_diff = (anom_date - eq_date).days
+            if 0 <= days_diff <= 14:
+                has_anomaly = True
+                break
+        
+        if not has_anomaly:
+            false_negatives.append({
+                'earthquake_time': eq['time'],
+                'earthquake_magnitude': eq['magnitude'],
+                'earthquake_distance_km': eq['distance_km'],
+                'earthquake_place': eq['place'],
+                'earthquake_latitude': eq['latitude'],
+                'earthquake_longitude': eq['longitude']
+            })
+    
+    if false_negatives:
+        return pd.DataFrame(false_negatives)
     return pd.DataFrame()
 
 def save_earthquake_correlations(station_code, results_folder, correlations_df):
@@ -237,6 +348,76 @@ def save_earthquake_correlations(station_code, results_folder, correlations_df):
     output_file = results_folder / 'earthquake_correlations.csv'
     correlations_df.to_csv(output_file, index=False)
     print(f'Saved earthquake correlations: {output_file}')
+
+def save_false_negatives(station_code, results_folder, false_negatives_df):
+    """Save false negative earthquakes"""
+    if false_negatives_df.empty:
+        return
+    
+    output_file = results_folder / 'false_negatives.csv'
+    false_negatives_df.to_csv(output_file, index=False)
+    print(f'Saved false negatives: {output_file}')
+
+def get_recent_earthquakes_all_stations(days=14, min_magnitude=6.0):
+    """
+    Get all recent earthquakes (magnitude > min_magnitude) for all stations
+    Used for displaying on map
+    
+    Parameters:
+    -----------
+    days : int
+        Number of days to look back (default: 14)
+    min_magnitude : float
+        Minimum magnitude (default: 6.0)
+    
+    Returns:
+    --------
+    pd.DataFrame : All earthquakes with station associations
+    """
+    try:
+        from load_stations import load_stations
+        stations = load_stations()
+    except:
+        return pd.DataFrame()
+    
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=days)
+    
+    all_earthquakes = []
+    
+    for station in stations:
+        lat = station.get('latitude')
+        lon = station.get('longitude')
+        if lat is None or lon is None:
+            continue
+        
+        # Fetch earthquakes
+        eq_df = fetch_usgs_earthquakes(start_date, end_date,
+                                      min_magnitude=min_magnitude,
+                                      latitude=lat,
+                                      longitude=lon,
+                                      max_radius_km=200)
+        
+        if not eq_df.empty:
+            # Calculate distances
+            distances = []
+            for _, eq in eq_df.iterrows():
+                dist = calculate_distance(lat, lon, eq['latitude'], eq['longitude'])
+                distances.append(dist)
+            
+            eq_df['distance_km'] = distances
+            eq_df['station_code'] = station['code']
+            eq_df['station_name'] = station.get('name', station['code'])
+            
+            all_earthquakes.append(eq_df)
+    
+    if all_earthquakes:
+        combined = pd.concat(all_earthquakes, ignore_index=True)
+        # Remove duplicates (same earthquake near multiple stations)
+        combined = combined.drop_duplicates(subset=['time', 'latitude', 'longitude'])
+        return combined
+    
+    return pd.DataFrame()
 
 def main():
     """Test earthquake integration"""

@@ -168,7 +168,7 @@ header h1 {
 /* Summary Stats - Compact Grid */
 .summary-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
     margin: 20px 0;
 }
@@ -396,6 +396,25 @@ header h1 {
     object-fit: contain;
 }
 
+.eq-info, .fn-info {
+    margin-top: 15px;
+    padding: 12px;
+    background: #fff3cd;
+    border-radius: 6px;
+    border-left: 3px solid #ffc107;
+}
+
+.fn-info {
+    background: #f8d7da;
+    border-left-color: #8e44ad;
+}
+
+.eq-item, .fn-item {
+    margin: 6px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
 .plot-info {
     margin-top: 15px;
     padding-top: 15px;
@@ -613,6 +632,12 @@ footer .author a:hover {
     .plot-panel {
         height: auto;
         min-height: 400px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
