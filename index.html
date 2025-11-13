@@ -11,40 +11,20 @@
 <body>
     <div class="container">
         <header>
-            <h1>PRA Nighttime Detection Dashboard</h1>
-            <p class="subtitle">Polarization Ratio Analysis for Geomagnetic Anomaly Detection</p>
-            <p class="description">This dashboard monitors geomagnetic anomalies across INTERMAGNET stations worldwide. Anomalies are detected using multitaper spectral analysis and correlated with earthquake occurrences to assess prediction reliability. Stations are color-coded: gray (normal), orange (anomaly with earthquake correlation), and red (false alarm).</p>
+            <h1>🌍 PRA Nighttime Detection Dashboard</h1>
+            <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
             <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
         </header>
 
         <div id="stations-container">
-            <p style="text-align: center; color: white; font-size: 1.1em;">Loading data...</p>
+            <p>Loading data...</p>
         </div>
 
         <footer>
-            <div class="method-section">
-                <h3>Methodology</h3>
-                <p class="method-info">
-                    <strong>Detection Method:</strong> Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT) + nZ Normalization<br>
-                    <strong>Frequency Band:</strong> 0.095-0.110 Hz | <strong>Time Window:</strong> 20:00-04:00 Local Time<br>
-                    <strong>Earthquake Correlation:</strong> Within 200 km radius, 14 days before anomaly detection
-                </p>
-            </div>
-            
-            <div class="acknowledgements">
-                <h3>Acknowledgements</h3>
-                <p class="ack-text">This research utilizes data and services from the following organizations:</p>
-                <ul>
-                    <li><strong>INTERMAGNET</strong> - Geomagnetic observatory data provided by the <a href="https://www.intermagnet.org" target="_blank">International Real-time Magnetic Observatory Network</a></li>
-                    <li><strong>USGS</strong> - Earthquake catalog data from the <a href="https://earthquake.usgs.gov" target="_blank">United States Geological Survey</a></li>
-                    <li><strong>Universiti Putra Malaysia</strong> - Research institution where this work was conducted. <a href="https://www.upm.edu.my" target="_blank">Visit UPM</a></li>
-                    <li><strong>NASA OMNIWeb</strong> - SYM-H geomagnetic index data for quiet period determination</li>
-                </ul>
-            </div>
-            
-            <div class="author">
-                <p>Developed by <a href="https://github.com/syaifulafrizal" target="_blank">Nur Syaiful Afrizal</a></p>
-            </div>
+            <p>Method: Multitaper (NW=3.5) + EVT + nZ z-score | 
+               Frequency Band: 0.095-0.110 Hz | 
+               Time Window: 20:00-04:00 Local Time</p>
+            <p><a href="https://github.com/syaifulafrizal">Nur Syaiful Afrizal</a></p>
         </footer>
     </div>
 
