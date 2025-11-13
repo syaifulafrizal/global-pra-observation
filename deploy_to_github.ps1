@@ -222,8 +222,41 @@ try {
             Write-Log "Copying web_output files to root..." "Yellow"
             # Remove existing files (except .git and web_output)
             Get-ChildItem -Path . -Exclude ".git", "web_output" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+            
+            # web_output exists on main branch, not on gh-pages
+            # We need to get it from the stash or from main branch
+            # First try current directory (if we're still on main temporarily)
             if (Test-Path "web_output") {
                 Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
+            } else {
+                # Try to get from main branch
+                Write-Log "web_output not found on gh-pages, checking main branch..." "Yellow"
+                $mainWebOutput = git show main:web_output 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                    # Use git archive to extract web_output from main
+                    git archive main web_output | tar -x 2>&1 | Out-Null
+                    if (Test-Path "web_output") {
+                        Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
+                        Remove-Item -Path "web_output" -Recurse -Force -ErrorAction SilentlyContinue
+                    }
+                } else {
+                    Write-Log "WARNING: Could not find web_output. Running upload_results.py..." "Yellow"
+                    # Switch back to main temporarily to run upload_results
+                    git checkout main 2>&1 | Out-Null
+                    if (Test-Path "web_output") {
+                        Copy-Item -Path "web_output\*" -Destination "..\web_output_temp\" -Recurse -Force -ErrorAction SilentlyContinue
+                    } else {
+                        python upload_results.py 2>&1 | Out-Null
+                        if (Test-Path "web_output") {
+                            Copy-Item -Path "web_output\*" -Destination "..\web_output_temp\" -Recurse -Force -ErrorAction SilentlyContinue
+                        }
+                    }
+                    git checkout gh-pages 2>&1 | Out-Null
+                    if (Test-Path "..\web_output_temp") {
+                        Copy-Item -Path "..\web_output_temp\*" -Destination . -Recurse -Force
+                        Remove-Item -Path "..\web_output_temp" -Recurse -Force -ErrorAction SilentlyContinue
+                    }
+                }
             }
         }
         
