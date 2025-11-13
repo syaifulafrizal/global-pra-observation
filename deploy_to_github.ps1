@@ -79,65 +79,229 @@ if ($GITHUB_TOKEN) {
     }
 }
 
-# Stage web_output files
-Write-Log "Staging web_output files..." "Yellow"
-git add web_output/
-git add web_output/**/*
+# Save current branch
+$currentBranch = git rev-parse --abbrev-ref HEAD
 
-# Check if there are changes
-$status = git status --porcelain
-if (-not $status) {
-    Write-Log "No changes to deploy" "Yellow"
-    exit 0
-}
-
-# Commit changes
-$commitMessage = "Update web output - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-Write-Log "Committing changes..." "Yellow"
-git commit -m $commitMessage 2>&1 | Out-Null
-
-# Push to GitHub
-Write-Log "Pushing to GitHub..." "Yellow"
-try {
-    if ($GITHUB_BRANCH -eq "gh-pages") {
-        # Create orphan branch for gh-pages (first time only)
-        $branchExists = git branch -r | Select-String -Pattern "origin/gh-pages"
-        if (-not $branchExists) {
-            Write-Log "Creating gh-pages branch..." "Yellow"
-            git checkout --orphan gh-pages 2>&1 | Out-Null
-            git rm -rf --cached . 2>&1 | Out-Null
-            git add web_output/ 2>&1 | Out-Null
-            git commit -m "Initial gh-pages commit" 2>&1 | Out-Null
-        } else {
-            git checkout gh-pages 2>&1 | Out-Null
+# Step 1: Commit and push main branch changes first (if on main)
+if ($currentBranch -eq "main" -or $currentBranch -eq "master") {
+    Write-Log "Checking for uncommitted changes on $currentBranch branch..." "Yellow"
+    $status = git status --porcelain
+    if ($status) {
+        Write-Log "Found uncommitted changes on $currentBranch, committing..." "Yellow"
+        
+        # Stage all changes (except web_output which is in .gitignore)
+        git add -A 2>&1 | Out-Null
+        git reset HEAD web_output/ 2>&1 | Out-Null  # Don't commit web_output to main
+        
+        $mainCommitMsg = "Update source files - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        git commit -m $mainCommitMsg 2>&1 | Out-Null
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Log "Pushing $currentBranch branch to origin..." "Yellow"
+            git push origin $currentBranch 2>&1 | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Log "Successfully pushed $currentBranch branch" "Green"
+            } else {
+                Write-Log "Warning: Failed to push $currentBranch (continuing with deployment)" "Yellow"
+            }
         }
     } else {
+        Write-Log "No uncommitted changes on $currentBranch branch" "Green"
+    }
+}
+
+# Fetch latest from remote
+Write-Log "Fetching latest from remote..." "Yellow"
+git fetch origin 2>&1 | Out-Null
+
+# Push to GitHub
+Write-Log "Deploying to GitHub Pages..." "Yellow"
+try {
+    if ($GITHUB_BRANCH -eq "gh-pages") {
+        # Check if remote branch exists
+        $remoteBranchExists = git branch -r | Select-String -Pattern "origin/gh-pages"
+        $localBranchExists = git branch | Select-String -Pattern "^\s*gh-pages$"
+        
+        if (-not $remoteBranchExists) {
+            # Create orphan branch for gh-pages (first time only)
+            Write-Log "Creating gh-pages branch..." "Yellow"
+            
+            # Stash any uncommitted changes
+            $hasChanges = git status --porcelain
+            if ($hasChanges) {
+                Write-Log "Stashing uncommitted changes..." "Yellow"
+                git stash push -m "Auto-stash before gh-pages deployment" 2>&1 | Out-Null
+            }
+            
+            git checkout --orphan gh-pages 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                throw "Failed to create gh-pages branch"
+            }
+            git rm -rf --cached . 2>&1 | Out-Null
+            
+            # Copy web_output contents to root (GitHub Pages needs files at root)
+            Write-Log "Copying web_output files to root..." "Yellow"
+            if (Test-Path "web_output") {
+                Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
+            }
+            
+            git add -f . 2>&1 | Out-Null
+            git commit -m "Initial gh-pages commit" 2>&1 | Out-Null
+        } else {
+            Write-Log "Switching to gh-pages branch..." "Yellow"
+            
+            # Stash any uncommitted changes before switching
+            $hasChanges = git status --porcelain
+            if ($hasChanges) {
+                Write-Log "Stashing uncommitted changes..." "Yellow"
+                git stash push -m "Auto-stash before gh-pages deployment" 2>&1 | Out-Null
+            }
+            
+            # Try to checkout existing local branch
+            if ($localBranchExists) {
+                git checkout gh-pages 2>&1 | Out-Null
+            } else {
+                # Create local branch tracking remote
+                git checkout -b gh-pages origin/gh-pages 2>&1 | Out-Null
+            }
+            
+            if ($LASTEXITCODE -ne 0) {
+                # Force checkout by resetting the branch
+                Write-Log "Force resetting gh-pages branch..." "Yellow"
+                if ($localBranchExists) {
+                    git branch -D gh-pages 2>&1 | Out-Null
+                }
+                git checkout -b gh-pages origin/gh-pages 2>&1 | Out-Null
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Failed to checkout gh-pages branch"
+                }
+            }
+            
+            # Verify we're on gh-pages
+            $checkBranch = git rev-parse --abbrev-ref HEAD
+            if ($checkBranch -ne "gh-pages") {
+                throw "Not on gh-pages branch! Current: $checkBranch"
+            }
+            
+            # Copy web_output contents to root
+            Write-Log "Copying web_output files to root..." "Yellow"
+            # Remove existing files (except .git and web_output)
+            Get-ChildItem -Path . -Exclude ".git", "web_output" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+            if (Test-Path "web_output") {
+                Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
+            }
+        }
+        
+        # Verify we're still on gh-pages before committing
+        $verifyBranch = git rev-parse --abbrev-ref HEAD
+        if ($verifyBranch -ne "gh-pages") {
+            Write-Log "ERROR: Not on gh-pages branch! Current: $verifyBranch" "Red"
+            throw "Branch mismatch detected"
+        }
+        
+        # Stage all files at root
+        Write-Log "Staging files..." "Yellow"
+        git add -f . 2>&1 | Out-Null
+        # Remove web_output from staging (we don't want the folder, just its contents at root)
+        git reset HEAD web_output/ 2>&1 | Out-Null
+        
+    } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Failed to checkout $GITHUB_BRANCH branch"
+        }
+        # For non-gh-pages branches, just add web_output as-is
+        git add -f web_output/ 2>&1 | Out-Null
     }
     
-    git push -u origin $GITHUB_BRANCH --force 2>&1 | Out-Null
+    # Check if there are changes
+    $status = git status --porcelain
+    $hasChanges = $status -and ($status.Trim().Length -gt 0)
+    
+    # Commit changes (or create empty commit if no changes)
+    $commitMessage = "Update web output - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+    
+    # Final verification of branch before commit
+    $finalBranch = git rev-parse --abbrev-ref HEAD
+    Write-Log "Committing on branch: $finalBranch" "Cyan"
+    
+    if ($hasChanges) {
+        Write-Log "Committing changes..." "Yellow"
+        git commit -m $commitMessage 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Failed to commit changes"
+        }
+    } else {
+        Write-Log "No file changes detected, creating empty commit to update timestamp..." "Yellow"
+        git commit --allow-empty -m $commitMessage 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Failed to create empty commit"
+        }
+    }
+    
+    Write-Log "Pushing to origin/$GITHUB_BRANCH..." "Yellow"
+    $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "Push output: $pushOutput" "Red"
+        throw "Failed to push to GitHub"
+    }
     
     Write-Log "SUCCESS: Deployed to GitHub!" "Green"
     Write-Log "" "White"
     Write-Log "Your site will be available at:" "Cyan"
     if ($GITHUB_REPO -match "github.com/(.+)") {
         $repoPath = $matches[1] -replace "\.git$", ""
-        Write-Log "  https://$repoPath.github.io" "Green"
     } else {
         $repoPath = $GITHUB_REPO -replace "\.git$", "" -replace "https://github.com/", ""
+    }
+    # Format: username/repo -> https://username.github.io/repo
+    $parts = $repoPath -split "/"
+    if ($parts.Length -eq 2) {
+        $username = $parts[0]
+        $repoName = $parts[1]
+        Write-Log "  https://$username.github.io/$repoName" "Green"
+    } else {
         Write-Log "  https://$repoPath.github.io" "Green"
     }
     Write-Log "" "White"
     Write-Log "Note: It may take 1-2 minutes for GitHub Pages to update" "Yellow"
     
+    # Switch back to original branch
+    if ($currentBranch -and $currentBranch -ne $GITHUB_BRANCH) {
+        Write-Log "Switching back to $currentBranch branch..." "Yellow"
+        git checkout $currentBranch 2>&1 | Out-Null
+        
+        # Restore stashed changes if any
+        $stashList = git stash list 2>&1
+        if ($stashList -match "Auto-stash before gh-pages deployment") {
+            Write-Log "Restoring stashed changes..." "Yellow"
+            git stash pop 2>&1 | Out-Null
+        }
+    }
+    
 } catch {
-    Write-Log "ERROR: Failed to push to GitHub" "Red"
+    Write-Log "ERROR: Failed to deploy" "Red"
     Write-Log $_.Exception.Message "Red"
     Write-Log "" "White"
     Write-Log "Troubleshooting:" "Yellow"
     Write-Log "  1. Check GITHUB_REPO is correct" "White"
     Write-Log "  2. Ensure you have push access" "White"
     Write-Log "  3. For private repos, set GITHUB_TOKEN" "White"
+    Write-Log "  4. Check git status: git status" "White"
+    Write-Log "  5. Check current branch: git branch" "White"
+    
+    # Try to switch back to original branch
+    if ($currentBranch) {
+        Write-Log "Switching back to $currentBranch branch..." "Yellow"
+        git checkout $currentBranch 2>&1 | Out-Null
+        
+        # Restore stashed changes if any
+        $stashList = git stash list 2>&1
+        if ($stashList -match "Auto-stash before gh-pages deployment") {
+            Write-Log "Restoring stashed changes..." "Yellow"
+            git stash pop 2>&1 | Out-Null
+        }
+    }
     exit 1
 }
 

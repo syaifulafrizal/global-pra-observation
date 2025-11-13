@@ -14,10 +14,41 @@ import shutil
 OUTPUT_DIR = Path('web_output')  # Directory for prepared web files
 
 def get_stations():
-    """Get list of stations"""
+    """Get list of stations - auto-detect from processed data or use env var"""
     stations_env = os.getenv('INTERMAGNET_STATIONS', '')
     if stations_env:
         return [s.strip() for s in stations_env.split(',')]
+    
+    # Auto-detect: Find all stations that have been processed
+    downloads_dir = Path('INTERMAGNET_DOWNLOADS')
+    if downloads_dir.exists():
+        stations = []
+        for station_dir in downloads_dir.iterdir():
+            if station_dir.is_dir() and not station_dir.name.startswith('.'):
+                # Check if this station has processed JSON files
+                json_files = list(station_dir.glob('PRA_Night_*.json'))
+                if json_files:
+                    stations.append(station_dir.name)
+        
+        if stations:
+            stations.sort()
+            print(f'[INFO] Auto-detected {len(stations)} processed stations')
+            return stations
+    
+    # Fallback: Try to load from stations.json
+    if Path('stations.json').exists():
+        try:
+            with open('stations.json', 'r') as f:
+                data = json.load(f)
+                if isinstance(data, dict) and 'stations' in data:
+                    if isinstance(data['stations'], list):
+                        return data['stations']
+                    elif isinstance(data['stations'], dict):
+                        return list(data['stations'].keys())
+        except Exception:
+            pass
+    
+    # Last resort: default to KAK
     return ['KAK']
 
 def prepare_web_output():
