@@ -75,20 +75,28 @@ def main():
     global_count = len(global_eq) if not global_eq.empty else 0
     print(f'  [INFO] Total global earthquakes (M>=5.5) today: {global_count}')
     
-    # Get recent earthquakes for map display (today only, within 200km)
+    # Get recent earthquakes for map display (today only, ALL global earthquakes M>=5.5)
     print(f'\n{"="*60}')
-    print('Fetching today\'s earthquakes within 200km of stations...')
-    recent_eq = get_recent_earthquakes_all_stations(days=1, min_magnitude=5.5)
+    print('Fetching today\'s global earthquakes (M>=5.5) for map display...')
+    from earthquake_integration import get_global_earthquakes_today
+    recent_eq = get_global_earthquakes_today(min_magnitude=5.5)
     within_200km_count = len(recent_eq) if not recent_eq.empty else 0
-    print(f'  [INFO] Earthquakes (M>=5.5) within 200km of stations today: {within_200km_count}')
+    print(f'  [INFO] Earthquakes (M>=5.5) globally today: {within_200km_count}')
+    
+    # Always save to web_output for frontend (even if empty, so file exists)
+    web_data_dir = Path('web_output') / 'data'
+    web_data_dir.mkdir(parents=True, exist_ok=True)
+    recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
     
     if not recent_eq.empty:
-        # Save to web_output for frontend
-        web_data_dir = Path('web_output') / 'data'
-        web_data_dir.mkdir(parents=True, exist_ok=True)
-        recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
         recent_eq.to_csv(recent_eq_file, index=False)
         print(f'  [OK] Saved {len(recent_eq)} today\'s earthquakes (M>=5.5) to {recent_eq_file}')
+    else:
+        # Create empty CSV file with headers so frontend knows the file exists
+        import pandas as pd
+        empty_df = pd.DataFrame(columns=['time', 'latitude', 'longitude', 'magnitude', 'place', 'depth', 'type', 'id'])
+        empty_df.to_csv(recent_eq_file, index=False)
+        print(f'  [INFO] No earthquakes today, created empty CSV file: {recent_eq_file}')
     
     # Save global earthquake statistics (always create, even if 0)
     eq_stats = {

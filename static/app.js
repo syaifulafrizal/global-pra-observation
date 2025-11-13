@@ -215,18 +215,29 @@ function addStationToMap(stationCode, stationData, eqCorrelations) {
 }
 
 function addEarthquakeMarkers(earthquakes) {
-    if (!map || !earthquakes || earthquakes.length === 0) {
+    if (!map) {
+        console.warn('Map not initialized, cannot add earthquake markers');
         return;
     }
     
-    earthquakes.forEach(eq => {
+    if (!earthquakes || earthquakes.length === 0) {
+        console.log('No earthquakes to display on map');
+        return;
+    }
+    
+    console.log(`Adding ${earthquakes.length} earthquake markers to map`);
+    
+    earthquakes.forEach((eq, index) => {
         const lat = parseFloat(eq.latitude || eq.earthquake_latitude);
         const lon = parseFloat(eq.longitude || eq.earthquake_longitude);
         const mag = parseFloat(eq.magnitude || eq.earthquake_magnitude || 0);
         const place = eq.place || eq.earthquake_place || 'Unknown';
         const time = eq.time || eq.earthquake_time || '';
         
+        console.log(`EQ ${index + 1}: lat=${lat}, lon=${lon}, mag=${mag}, place=${place}`);
+        
         if (isNaN(lat) || isNaN(lon)) {
+            console.warn(`Skipping earthquake ${index + 1}: invalid coordinates (lat=${lat}, lon=${lon})`);
             return;
         }
         
@@ -267,12 +278,16 @@ function addEarthquakeMarkers(earthquakes) {
             .addTo(map)
             .bindPopup(popupContent);
         
+        console.log(`Added earthquake marker at [${lat}, ${lon}] with magnitude ${mag}`);
+        
         // Store in a separate object for earthquakes
         if (!markers.earthquakes) {
             markers.earthquakes = [];
         }
         markers.earthquakes.push(marker);
     });
+    
+    console.log(`Total earthquake markers added: ${markers.earthquakes ? markers.earthquakes.length : 0}`);
 }
 
 async function renderDashboard() {
@@ -443,6 +458,7 @@ async function renderDashboard() {
                 
                 // Add earthquake markers
                 const recentEarthquakes = await loadRecentEarthquakes();
+                console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
                 addEarthquakeMarkers(recentEarthquakes);
             } catch (error) {
                 console.error('Error initializing map:', error);
