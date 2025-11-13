@@ -338,7 +338,12 @@ async function renderDashboard() {
     try {
         const statsResponse = await fetch('data/today_earthquake_stats.json');
         if (statsResponse.ok) {
-            todayEQStats = await statsResponse.json();
+            const statsData = await statsResponse.json();
+            // Map JSON keys to JavaScript property names
+            todayEQStats = {
+                global: statsData.global_count || statsData.global || 0,
+                within200km: statsData.within_200km_count || statsData.within200km || 0
+            };
         }
     } catch (error) {
         console.warn('Could not load earthquake statistics:', error);
@@ -373,15 +378,15 @@ async function renderDashboard() {
     html += '<div id="stations-list" class="stations-list hidden"></div>';
     html += '</div>';
     
-    // Main content area: Map on left, Plot panel on right (desktop)
+    // Main content area: Map on top (full width), Plot panel below (full width)
     html += '<div class="main-content-layout">';
     
-    // Left side: Map
+    // Top: Map (full width)
     html += '<div class="map-section">';
     html += '<div id="map-container" class="map-container"></div>';
     html += '</div>';
     
-    // Right side: Plot panel
+    // Bottom: Plot panel (full width)
     html += '<div class="plot-panel-section">';
     html += '<div class="plot-panel">';
     html += '<h2 class="panel-title">📊 Station Analysis</h2>';
