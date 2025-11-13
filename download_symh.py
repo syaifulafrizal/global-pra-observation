@@ -61,26 +61,37 @@ def download_symh_omniweb(start_date, end_date, cache_file):
         
         # OMNIWeb data is only available up to 2025-10-30 (as of Nov 2025)
         # Limit dates to available range
+        # Make dates timezone-naive for comparison
+        if hasattr(start_date, 'tzinfo') and start_date.tzinfo is not None:
+            start_date_naive = start_date.replace(tzinfo=None)
+        else:
+            start_date_naive = start_date
+        
+        if hasattr(end_date, 'tzinfo') and end_date.tzinfo is not None:
+            end_date_naive = end_date.replace(tzinfo=None)
+        else:
+            end_date_naive = end_date
+        
         omni_max_date = datetime(2025, 10, 30)
         omni_min_date = datetime(1963, 11, 28)
         
         # Adjust dates if they're outside the available range
-        if end_date > omni_max_date:
-            end_date = omni_max_date
+        if end_date_naive > omni_max_date:
+            end_date_naive = omni_max_date
             print(f'[INFO] OMNIWeb data only available up to {omni_max_date.date()}, adjusting end date')
         
-        if start_date < omni_min_date:
-            start_date = omni_min_date
+        if start_date_naive < omni_min_date:
+            start_date_naive = omni_min_date
             print(f'[INFO] OMNIWeb data starts from {omni_min_date.date()}, adjusting start date')
         
         # If start_date > end_date after adjustment, return empty
-        if start_date > end_date:
+        if start_date_naive > end_date_naive:
             print(f'[WARNING] Date range adjusted to empty - OMNIWeb data not available for requested dates')
             return pd.DataFrame(columns=['SYMH', 'Disturbed'])
         
         # Format dates (OMNIWeb needs dates in YYYYMMDD format)
-        start_str = start_date.strftime('%Y%m%d')
-        end_str = end_date.strftime('%Y%m%d')
+        start_str = start_date_naive.strftime('%Y%m%d')
+        end_str = end_date_naive.strftime('%Y%m%d')
         
         # Parameters for OMNIWeb
         # SYM-H is variable 50 in OMNI2

@@ -234,11 +234,43 @@ try {
             throw "Branch mismatch detected"
         }
         
-        # Stage all files at root
+        # Stage all files at root (but exclude .git and web_output folder)
         Write-Log "Staging files..." "Yellow"
-        git add -f . 2>&1 | Out-Null
-        # Remove web_output from staging (we don't want the folder, just its contents at root)
-        git reset HEAD web_output/ 2>&1 | Out-Null
+        
+        # Add all files except .git and web_output folder
+        Get-ChildItem -Path . -Exclude ".git", "web_output" -Recurse -File | ForEach-Object {
+            git add -f $_.FullName 2>&1 | Out-Null
+        }
+        
+        # Also add directories (git needs to track empty dirs via .gitkeep or files)
+        Get-ChildItem -Path . -Exclude ".git", "web_output" -Directory | ForEach-Object {
+            # Add any files in subdirectories
+            Get-ChildItem -Path $_.FullName -Recurse -File | ForEach-Object {
+                git add -f $_.FullName 2>&1 | Out-Null
+            }
+        }
+        
+        # Verify files are staged
+        $stagedFiles = git diff --cached --name-only 2>&1
+        if ($stagedFiles) {
+            $fileList = $stagedFiles -split "`n" | Where-Object { $_ -and $_.Trim() }
+            $fileCount = $fileList.Count
+            Write-Log "Staged $fileCount files for commit" "Green"
+            if ($fileCount -lt 5) {
+                Write-Log "Staged files:" "Gray"
+                $fileList | ForEach-Object { Write-Log "  - $_" "Gray" }
+            }
+        } else {
+            Write-Log "Warning: No files staged. Checking status..." "Yellow"
+            git status 2>&1 | Write-Host
+            Write-Log "Attempting to add all files with git add -A..." "Yellow"
+            git add -A 2>&1 | Out-Null
+            $stagedFiles = git diff --cached --name-only 2>&1
+            if ($stagedFiles) {
+                $fileCount = ($stagedFiles -split "`n" | Where-Object { $_ }).Count
+                Write-Log "Now have $fileCount files staged" "Green"
+            }
+        }
         
     } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
@@ -247,6 +279,18 @@ try {
         }
         # For non-gh-pages branches, just add web_output as-is
         git add -f web_output/ 2>&1 | Out-Null
+    }
+    
+    # Ensure git user is configured
+    $gitUser = git config user.name 2>&1
+    $gitEmail = git config user.email 2>&1
+    if (-not $gitUser -or $gitUser -match "error") {
+        Write-Log "Configuring git user..." "Yellow"
+        git config user.name "PRA Automation" 2>&1 | Out-Null
+        git config user.email "pra@localhost" 2>&1 | Out-Null
+    }
+    if (-not $gitEmail -or $gitEmail -match "error") {
+        git config user.email "pra@localhost" 2>&1 | Out-Null
     }
     
     # Check if there are changes
@@ -262,16 +306,22 @@ try {
     
     if ($hasChanges) {
         Write-Log "Committing changes..." "Yellow"
-        git commit -m $commitMessage 2>&1 | Out-Null
+        $commitOutput = git commit -m $commitMessage 2>&1
         if ($LASTEXITCODE -ne 0) {
-            throw "Failed to commit changes"
+            Write-Log "Commit output: $commitOutput" "Red"
+            Write-Log "Checking git status..." "Yellow"
+            git status 2>&1 | Write-Host
+            throw "Failed to commit changes. Exit code: $LASTEXITCODE"
         }
+        Write-Log "Commit successful" "Green"
     } else {
         Write-Log "No file changes detected, creating empty commit to update timestamp..." "Yellow"
-        git commit --allow-empty -m $commitMessage 2>&1 | Out-Null
+        $commitOutput = git commit --allow-empty -m $commitMessage 2>&1
         if ($LASTEXITCODE -ne 0) {
-            throw "Failed to create empty commit"
+            Write-Log "Commit output: $commitOutput" "Red"
+            throw "Failed to create empty commit. Exit code: $LASTEXITCODE"
         }
+        Write-Log "Empty commit created successfully" "Green"
     }
     
     Write-Log "Pushing to origin/$GITHUB_BRANCH..." "Yellow"

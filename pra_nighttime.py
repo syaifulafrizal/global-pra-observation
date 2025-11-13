@@ -98,6 +98,11 @@ def download_data(station_code, date, out_folder):
     date_str = date.strftime('%Y-%m-%d')
     out_file = out_folder / f'{station_code}_{date.strftime("%Y%m%d")}.iaga2002'
     
+    # Check if file already exists and is not empty
+    if out_file.exists() and out_file.stat().st_size > 0:
+        print(f'[SKIP] Data already exists for {station_code} on {date_str}')
+        return out_file
+    
     params = [
         "Request=GetData",
         f"observatoryIagaCode={station_code}",
@@ -219,14 +224,23 @@ def compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, f_low, f_h
         
         seg = recXYZ[s:e, :]
         
+        # Ensure seg is a numpy array with numeric dtype
+        if hasattr(seg, 'values'):
+            seg = seg.values
+        seg = np.asarray(seg, dtype=np.float64)
+        
         # NaN handling
         nanFrac = np.sum(np.isnan(seg)) / seg.size
         if nanFrac > 0.05:
             continue
         elif nanFrac > 0:
+            # Interpolate NaN values
             for c in range(3):
-                seg[:, c] = pd.Series(seg[:, c]).interpolate(method='linear').bfill().ffill().values
+                seg_series = pd.Series(seg[:, c])
+                seg_series = seg_series.interpolate(method='linear').bfill().ffill()
+                seg[:, c] = seg_series.values
         
+        # Extract Z and G components
         segZ = seg[:, 2]
         segG = np.hypot(seg[:, 0], seg[:, 1])
         
