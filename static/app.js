@@ -84,12 +84,23 @@ function initMap() {
     }
     
     try {
-        map = L.map('map-container').setView([20, 0], 2);
+        map = L.map('map-container', {
+            minZoom: 2,  // Prevent zooming out too far
+            maxZoom: 10, // Limit maximum zoom
+            zoomControl: true
+        }).setView([20, 0], 2);
+        
+        // Set max bounds to prevent panning too far
+        const southWest = L.latLng(-85, -180);
+        const northEast = L.latLng(85, 180);
+        const bounds = L.latLngBounds(southWest, northEast);
+        map.setMaxBounds(bounds);
         
         // Add OpenStreetMap tiles with earthquake-themed styling
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
+            minZoom: 2,
+            maxZoom: 10
         }).addTo(map);
         
         // Clear existing markers
@@ -225,10 +236,7 @@ async function renderDashboard() {
     
     let html = '';
     
-    // Create map container first
-    html += '<div id="map-container" class="map-container"></div>';
-    
-    // Create summary stats
+    // Create summary stats first
     html += '<div class="summary-stats">';
     html += `<div class="stat-card"><div class="stat-value">${totalStations}</div><div class="stat-label">Total Stations</div></div>`;
     html += `<div class="stat-card stat-anomaly"><div class="stat-value">${anomalousCount}</div><div class="stat-label">Anomalies Detected</div></div>`;
@@ -236,15 +244,24 @@ async function renderDashboard() {
     html += `<div class="stat-card stat-false-alarm"><div class="stat-value">${falseAlarms}</div><div class="stat-label">⚠️ False Alarms</div></div>`;
     html += '</div>';
     
-    // Station list button (moved below summary)
+    // Station list button
     html += '<div class="controls">';
     html += '<button id="toggle-stations" class="btn btn-primary">📋 Show All Stations List</button>';
     html += '<div id="stations-list" class="stations-list hidden"></div>';
     html += '</div>';
     
-    // Station figure selector (only show anomalous by default)
-    html += '<div class="figure-selector-section">';
-    html += '<h2 class="section-title">📊 Station Analysis Plot</h2>';
+    // Main content area: Map on left, Plot panel on right (desktop)
+    html += '<div class="main-content-layout">';
+    
+    // Left side: Map
+    html += '<div class="map-section">';
+    html += '<div id="map-container" class="map-container"></div>';
+    html += '</div>';
+    
+    // Right side: Plot panel
+    html += '<div class="plot-panel-section">';
+    html += '<div class="plot-panel">';
+    html += '<h2 class="panel-title">📊 Station Analysis</h2>';
     html += '<div class="selector-container">';
     html += '<label for="station-selector" class="selector-label">Select Station:</label>';
     html += '<select id="station-selector" class="station-selector">';
@@ -257,7 +274,7 @@ async function renderDashboard() {
         const eqCorrelations = stationDataMap[station]?.eqCorrelations || [];
         const hasEQ = eqCorrelations.length > 0;
         const label = `${station} - ${metadata.name || station}${hasEQ ? ' 🌋' : ' ⚠️'}`;
-        html += `<option value="${station}" selected>${label}</option>`;
+        html += `<option value="${station}"${anomalousStations.indexOf(station) === 0 ? ' selected' : ''}>${label}</option>`;
     });
     
     // Add other stations
@@ -270,6 +287,8 @@ async function renderDashboard() {
     html += '</div>';
     html += '<div id="selected-station-plot" class="selected-station-plot"></div>';
     html += '</div>';
+    html += '</div>';
+    html += '</div>'; // Close main-content-layout
     
     container.innerHTML = html;
     
