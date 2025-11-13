@@ -26,8 +26,43 @@ Write-Log "==========================================" "Cyan"
 # Check if web_output exists
 if (-not (Test-Path "web_output")) {
     Write-Log "ERROR: web_output/ directory not found!" "Red"
-    Write-Log "Run 'python upload_results.py' first to prepare files" "Yellow"
-    exit 1
+    Write-Log "Running upload_results.py to prepare files..." "Yellow"
+    python upload_results.py
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "ERROR: Failed to prepare web output!" "Red"
+        exit 1
+    }
+    Write-Log "Web output prepared successfully" "Green"
+}
+
+# Verify stations.json exists and has multiple stations
+$stationsJson = "web_output\data\stations.json"
+if (Test-Path $stationsJson) {
+    try {
+        $jsonContent = Get-Content $stationsJson | ConvertFrom-Json
+        $stationCount = if ($jsonContent.stations) { $jsonContent.stations.Count } else { 0 }
+        if ($stationCount -le 1) {
+            Write-Log "WARNING: Only $stationCount station(s) in stations.json!" "Yellow"
+            Write-Log "Regenerating web output to ensure all stations are included..." "Yellow"
+            python upload_results.py
+            if ($LASTEXITCODE -eq 0) {
+                $jsonContent = Get-Content $stationsJson | ConvertFrom-Json
+                $stationCount = if ($jsonContent.stations) { $jsonContent.stations.Count } else { 0 }
+                Write-Log "After regeneration: $stationCount stations found" "Green"
+            }
+        } else {
+            Write-Log "Verified: $stationCount stations ready for deployment" "Green"
+        }
+    } catch {
+        Write-Log "WARNING: Could not verify stations.json, but continuing..." "Yellow"
+    }
+} else {
+    Write-Log "WARNING: stations.json not found, regenerating web output..." "Yellow"
+    python upload_results.py
+    if ($LASTEXITCODE -ne 0) {
+        Write-Log "ERROR: Failed to prepare web output!" "Red"
+        exit 1
+    }
 }
 
 # Check if git is initialized
