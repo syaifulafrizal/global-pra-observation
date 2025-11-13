@@ -66,10 +66,21 @@ def main():
             'false_negatives': len(false_negatives)
         }
     
-    # Get recent earthquakes for map display (today only)
+    # Get global earthquakes for today (for statistics)
     print(f'\n{"="*60}')
-    print('Fetching today\'s earthquakes for map display...')
+    print('Fetching today\'s global earthquakes (M>=5.5)...')
+    from earthquake_integration import get_global_earthquakes_today
+    global_eq = get_global_earthquakes_today(min_magnitude=5.5)
+    global_count = len(global_eq) if not global_eq.empty else 0
+    print(f'  [INFO] Total global earthquakes (M>=5.5) today: {global_count}')
+    
+    # Get recent earthquakes for map display (today only, within 200km)
+    print(f'\n{"="*60}')
+    print('Fetching today\'s earthquakes within 200km of stations...')
     recent_eq = get_recent_earthquakes_all_stations(days=1, min_magnitude=5.5)
+    within_200km_count = len(recent_eq) if not recent_eq.empty else 0
+    print(f'  [INFO] Earthquakes (M>=5.5) within 200km of stations today: {within_200km_count}')
+    
     if not recent_eq.empty:
         # Save to web_output for frontend
         web_data_dir = Path('web_output') / 'data'
@@ -77,8 +88,22 @@ def main():
         recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
         recent_eq.to_csv(recent_eq_file, index=False)
         print(f'  [OK] Saved {len(recent_eq)} today\'s earthquakes (M>=5.5) to {recent_eq_file}')
-    else:
-        print(f'  [INFO] No earthquakes (M>=5.5) found for today')
+    
+    # Save global earthquake statistics (always create, even if 0)
+    eq_stats = {
+        'analysis_date': datetime.now().strftime('%Y-%m-%d'),
+        'global_count': global_count,
+        'within_200km_count': within_200km_count,
+        'min_magnitude': 5.5
+    }
+    web_data_dir = Path('web_output') / 'data'
+    web_data_dir.mkdir(parents=True, exist_ok=True)
+    import json
+    stats_file = web_data_dir / 'today_earthquake_stats.json'
+    with open(stats_file, 'w') as f:
+        json.dump(eq_stats, f, indent=2)
+    print(f'  [OK] Saved earthquake statistics to {stats_file}')
+    print(f'      Global: {global_count}, Within 200km: {within_200km_count}')
     
     # Print summary
     print(f'\n{"="*60}')

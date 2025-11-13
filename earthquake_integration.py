@@ -59,7 +59,7 @@ def fetch_usgs_earthquakes(start_date, end_date, min_magnitude=4.0,
     }
     
     # If coordinates provided, use radius search
-    if latitude is not None and longitude is not None:
+    if latitude is not None and longitude is not None and max_radius_km is not None:
         params['latitude'] = latitude
         params['longitude'] = longitude
         params['maxradiuskm'] = max_radius_km
@@ -358,10 +358,36 @@ def save_false_negatives(station_code, results_folder, false_negatives_df):
     false_negatives_df.to_csv(output_file, index=False)
     print(f'Saved false negatives: {output_file}')
 
+def get_global_earthquakes_today(min_magnitude=5.5):
+    """
+    Get all global earthquakes (magnitude >= min_magnitude) for today
+    Used for reporting total earthquake count (not just within 200km)
+    
+    Parameters:
+    -----------
+    min_magnitude : float
+        Minimum magnitude (default: 5.5)
+    
+    Returns:
+    --------
+    pd.DataFrame : All global earthquakes today
+    """
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=1)
+    
+    # Fetch global earthquakes (no location filter)
+    eq_df = fetch_usgs_earthquakes(start_date, end_date,
+                                  min_magnitude=min_magnitude,
+                                  latitude=None,
+                                  longitude=None,
+                                  max_radius_km=None)
+    
+    return eq_df
+
 def get_recent_earthquakes_all_stations(days=1, min_magnitude=5.5):
     """
     Get all recent earthquakes (magnitude >= min_magnitude) for all stations
-    Used for displaying on map (shows only today's earthquakes)
+    Used for displaying on map (shows only today's earthquakes within 200km)
     
     Parameters:
     -----------
