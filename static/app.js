@@ -372,18 +372,25 @@ async function renderDashboard() {
     }
     html += '</div>';
     
-    // Station list button
-    html += '<div class="controls">';
-    html += '<button id="toggle-stations" class="btn btn-primary">📋 Show All Stations List</button>';
-    html += '<div id="stations-list" class="stations-list hidden"></div>';
-    html += '</div>';
-    
     // Main content area: Map on top (full width), Plot panel below (full width)
     html += '<div class="main-content-layout">';
     
     // Top: Map (full width)
     html += '<div class="map-section">';
     html += '<div id="map-container" class="map-container"></div>';
+    html += '<div class="map-legend">';
+    html += '<h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #2c3e50;">Map Legend</h4>';
+    html += '<div class="legend-item"><span class="legend-marker marker-gray"></span> Normal Station</div>';
+    html += '<div class="legend-item"><span class="legend-marker marker-eq-reliable"></span> Anomaly with EQ (M≥5.5)</div>';
+    html += '<div class="legend-item"><span class="legend-marker marker-eq-false"></span> False Alarm (No EQ)</div>';
+    html += '<div class="legend-item"><span class="legend-marker earthquake-marker-legend"></span> Earthquake (M≥5.5)</div>';
+    html += '</div>';
+    html += '</div>';
+    
+    // Station list button (moved below map)
+    html += '<div class="controls" style="margin-top: 15px; margin-bottom: 15px;">';
+    html += '<button id="toggle-stations" class="btn btn-primary">📋 Show All Stations List</button>';
+    html += '<div id="stations-list" class="stations-list hidden"></div>';
     html += '</div>';
     
     // Bottom: Plot panel (full width)
