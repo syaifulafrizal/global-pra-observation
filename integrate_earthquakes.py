@@ -42,23 +42,23 @@ def main():
             print(f'  [WARNING] No results folder for {station_code}')
             continue
         
-        # Correlate anomalies with earthquakes (magnitude > 6 for reliability)
+        # Correlate anomalies with earthquakes (magnitude >= 5.5 for reliability)
         correlations = correlate_anomalies_with_earthquakes(station_code, results_folder)
         
-        # Find false negatives (EQ > 6 occurred but no anomaly detected)
+        # Find false negatives (EQ >= 5.5 occurred but no anomaly detected)
         false_negatives = find_false_negatives(station_code, results_folder, days_lookback=14)
         
         if not correlations.empty:
             # Save correlations
             save_earthquake_correlations(station_code, results_folder, correlations)
-            print(f'  [OK] Found {len(correlations)} anomaly-earthquake correlations (M>6)')
+            print(f'  [OK] Found {len(correlations)} anomaly-earthquake correlations (M>=5.5)')
         else:
-            print(f'  [INFO] No earthquake correlations found (M>6)')
+            print(f'  [INFO] No earthquake correlations found (M>=5.5)')
         
         if not false_negatives.empty:
             # Save false negatives
             save_false_negatives(station_code, results_folder, false_negatives)
-            print(f'  [INFO] Found {len(false_negatives)} false negatives (EQ M>6 without anomaly)')
+            print(f'  [INFO] Found {len(false_negatives)} false negatives (EQ M>=5.5 without anomaly)')
         
         results_summary[station_code] = {
             'anomalies_with_eq': len(correlations),
@@ -66,17 +66,19 @@ def main():
             'false_negatives': len(false_negatives)
         }
     
-    # Get recent earthquakes for map display
+    # Get recent earthquakes for map display (today only)
     print(f'\n{"="*60}')
-    print('Fetching recent earthquakes for map display...')
-    recent_eq = get_recent_earthquakes_all_stations(days=14, min_magnitude=6.0)
+    print('Fetching today\'s earthquakes for map display...')
+    recent_eq = get_recent_earthquakes_all_stations(days=1, min_magnitude=5.5)
     if not recent_eq.empty:
         # Save to web_output for frontend
         web_data_dir = Path('web_output') / 'data'
         web_data_dir.mkdir(parents=True, exist_ok=True)
         recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
         recent_eq.to_csv(recent_eq_file, index=False)
-        print(f'  [OK] Saved {len(recent_eq)} recent earthquakes (M>6) to {recent_eq_file}')
+        print(f'  [OK] Saved {len(recent_eq)} today\'s earthquakes (M>=5.5) to {recent_eq_file}')
+    else:
+        print(f'  [INFO] No earthquakes (M>=5.5) found for today')
     
     # Print summary
     print(f'\n{"="*60}')
@@ -88,13 +90,13 @@ def main():
     stations_with_correlations = sum(1 for r in results_summary.values() if r['total_correlations'] > 0)
     
     print(f'Total stations processed: {len(results_summary)}')
-    print(f'Stations with correlations (M>6): {stations_with_correlations}')
-    print(f'Total reliable correlations (M>6): {total_correlations}')
-    print(f'Total false negatives (M>6): {total_false_negatives}')
+    print(f'Stations with correlations (M>=5.5): {stations_with_correlations}')
+    print(f'Total reliable correlations (M>=5.5): {total_correlations}')
+    print(f'Total false negatives (M>=5.5): {total_false_negatives}')
     
     # Show stations with correlations
     if stations_with_correlations > 0:
-        print(f'\nStations with earthquake correlations (M>6):')
+        print(f'\nStations with earthquake correlations (M>=5.5):')
         for station, data in results_summary.items():
             if data['total_correlations'] > 0:
                 print(f'  {station}: {data["total_correlations"]} correlations')

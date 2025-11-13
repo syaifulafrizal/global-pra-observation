@@ -19,22 +19,12 @@ def get_stations():
     if stations_env:
         return [s.strip() for s in stations_env.split(',')]
     
-    # Priority 1: Check web_output/data for existing _latest.json files
-    # This ensures we use all stations that were already processed
-    web_data_dir = Path('web_output') / 'data'
-    if web_data_dir.exists():
-        json_files = list(web_data_dir.glob('*_latest.json'))
-        if json_files:
-            stations = sorted([f.stem.replace('_latest', '') for f in json_files])
-            print(f'[INFO] Found {len(stations)} stations from web_output/data')
-            return stations
-    
-    # Priority 2: Auto-detect from INTERMAGNET_DOWNLOADS
+    # Priority 1: Auto-detect from INTERMAGNET_DOWNLOADS (source of truth)
     downloads_dir = Path('INTERMAGNET_DOWNLOADS')
     if downloads_dir.exists():
         stations = []
         for station_dir in downloads_dir.iterdir():
-            if station_dir.is_dir() and not station_dir.name.startswith('.'):
+            if station_dir.is_dir() and not station_dir.name.startswith('.') and not station_dir.name.startswith('_'):
                 # Check if this station has processed JSON files
                 json_files = list(station_dir.glob('PRA_Night_*.json'))
                 if json_files:
@@ -43,6 +33,16 @@ def get_stations():
         if stations:
             stations.sort()
             print(f'[INFO] Auto-detected {len(stations)} processed stations from INTERMAGNET_DOWNLOADS')
+            return stations
+    
+    # Priority 2: Check web_output/data for existing _latest.json files
+    # (fallback if INTERMAGNET_DOWNLOADS doesn't exist)
+    web_data_dir = Path('web_output') / 'data'
+    if web_data_dir.exists():
+        json_files = list(web_data_dir.glob('*_latest.json'))
+        if json_files:
+            stations = sorted([f.stem.replace('_latest', '') for f in json_files])
+            print(f'[INFO] Found {len(stations)} stations from web_output/data (fallback)')
             return stations
     
     # Priority 3: Try to load from existing web_output/data/stations.json

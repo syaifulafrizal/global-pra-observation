@@ -209,11 +209,11 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
                                        max_distance_km=200, min_magnitude=4.0)
         
         if not eq_df.empty:
-            # Filter for magnitude > 6 for reliability assessment
-            eq_df_reliable = eq_df[eq_df['magnitude'] > 6.0].copy()
+            # Filter for magnitude >= 5.5 for reliability assessment
+            eq_df_reliable = eq_df[eq_df['magnitude'] >= 5.5].copy()
             
             if not eq_df_reliable.empty:
-                # Get closest earthquake with magnitude > 6
+                # Get closest earthquake with magnitude >= 5.5
                 closest = eq_df_reliable.loc[eq_df_reliable['distance_km'].idxmin()]
                 
                 correlation = {
@@ -236,7 +236,7 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
 
 def find_false_negatives(station_code, results_folder, days_lookback=14):
     """
-    Find false negatives: Earthquakes with magnitude > 6 that occurred 
+    Find false negatives: Earthquakes with magnitude >= 5.5 that occurred 
     but no anomaly was detected
     
     Parameters:
@@ -278,9 +278,9 @@ def find_false_negatives(station_code, results_folder, days_lookback=14):
     end_date = latest_date
     start_date = end_date - timedelta(days=days_lookback)
     
-    # Fetch all earthquakes with magnitude > 6
+    # Fetch all earthquakes with magnitude >= 5.5
     eq_df = fetch_usgs_earthquakes(start_date, end_date,
-                                   min_magnitude=6.0,
+                                   min_magnitude=5.5,
                                    latitude=lat,
                                    longitude=lon,
                                    max_radius_km=200)
@@ -358,17 +358,17 @@ def save_false_negatives(station_code, results_folder, false_negatives_df):
     false_negatives_df.to_csv(output_file, index=False)
     print(f'Saved false negatives: {output_file}')
 
-def get_recent_earthquakes_all_stations(days=14, min_magnitude=6.0):
+def get_recent_earthquakes_all_stations(days=1, min_magnitude=5.5):
     """
-    Get all recent earthquakes (magnitude > min_magnitude) for all stations
-    Used for displaying on map
+    Get all recent earthquakes (magnitude >= min_magnitude) for all stations
+    Used for displaying on map (shows only today's earthquakes)
     
     Parameters:
     -----------
     days : int
-        Number of days to look back (default: 14)
+        Number of days to look back (default: 1 for today only)
     min_magnitude : float
-        Minimum magnitude (default: 6.0)
+        Minimum magnitude (default: 5.5)
     
     Returns:
     --------
