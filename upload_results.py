@@ -19,7 +19,17 @@ def get_stations():
     if stations_env:
         return [s.strip() for s in stations_env.split(',')]
     
-    # Auto-detect: Find all stations that have been processed
+    # Priority 1: Check web_output/data for existing _latest.json files
+    # This ensures we use all stations that were already processed
+    web_data_dir = Path('web_output') / 'data'
+    if web_data_dir.exists():
+        json_files = list(web_data_dir.glob('*_latest.json'))
+        if json_files:
+            stations = sorted([f.stem.replace('_latest', '') for f in json_files])
+            print(f'[INFO] Found {len(stations)} stations from web_output/data')
+            return stations
+    
+    # Priority 2: Auto-detect from INTERMAGNET_DOWNLOADS
     downloads_dir = Path('INTERMAGNET_DOWNLOADS')
     if downloads_dir.exists():
         stations = []
@@ -32,10 +42,23 @@ def get_stations():
         
         if stations:
             stations.sort()
-            print(f'[INFO] Auto-detected {len(stations)} processed stations')
+            print(f'[INFO] Auto-detected {len(stations)} processed stations from INTERMAGNET_DOWNLOADS')
             return stations
     
-    # Fallback: Try to load from stations.json
+    # Priority 3: Try to load from existing web_output/data/stations.json
+    web_stations_json = Path('web_output') / 'data' / 'stations.json'
+    if web_stations_json.exists():
+        try:
+            with open(web_stations_json, 'r') as f:
+                data = json.load(f)
+                if isinstance(data, dict) and 'stations' in data:
+                    if isinstance(data['stations'], list) and len(data['stations']) > 1:
+                        print(f'[INFO] Using {len(data["stations"])} stations from existing web_output/data/stations.json')
+                        return data['stations']
+        except Exception:
+            pass
+    
+    # Priority 4: Try to load from root stations.json
     if Path('stations.json').exists():
         try:
             with open('stations.json', 'r') as f:
@@ -49,6 +72,7 @@ def get_stations():
             pass
     
     # Last resort: default to KAK
+    print('[WARNING] Only found 1 station (KAK) - this may indicate missing data')
     return ['KAK']
 
 def prepare_web_output():
@@ -82,20 +106,27 @@ def prepare_web_output():
     all_stations_data = {}
     
     for station in stations:
-        station_folder = Path('INTERMAGNET_DOWNLOADS') / station
-        
-        if not station_folder.exists():
+        # Priority 1: Check if _latest.json already exists in web_output/data
+        existing_json = data_dir / f'{station}_latest.json'
+        if existing_json.exists():
+            # Use existing file
+            with open(existing_json, 'r') as f:
+                all_stations_data[station] = json.load(f)
             continue
         
-        # Copy latest JSON results
-        json_files = list(station_folder.glob('PRA_Night_*.json'))
-        if json_files:
-            latest_json = max(json_files, key=lambda p: p.stat().st_mtime)
-            shutil.copy(latest_json, data_dir / f'{station}_latest.json')
-            
-            # Load and add to all_stations_data
-            with open(latest_json, 'r') as f:
-                all_stations_data[station] = json.load(f)
+        # Priority 2: Look in INTERMAGNET_DOWNLOADS
+        station_folder = Path('INTERMAGNET_DOWNLOADS') / station
+        
+        if station_folder.exists():
+            # Copy latest JSON results
+            json_files = list(station_folder.glob('PRA_Night_*.json'))
+            if json_files:
+                latest_json = max(json_files, key=lambda p: p.stat().st_mtime)
+                shutil.copy(latest_json, data_dir / f'{station}_latest.json')
+                
+                # Load and add to all_stations_data
+                with open(latest_json, 'r') as f:
+                    all_stations_data[station] = json.load(f)
         
         # Copy anomaly table
         anomaly_file = station_folder / 'anomaly_master_table.csv'
