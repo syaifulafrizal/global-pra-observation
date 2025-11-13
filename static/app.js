@@ -131,11 +131,27 @@ function initMap() {
             maxZoom: 10
         }).addTo(map);
         
-        // Clear existing markers
-        Object.values(markers).forEach(marker => {
-            try {
-                marker.remove();
-            } catch (e) {}
+        // Clear existing markers and circles
+        if (markers.earthquakes) {
+            markers.earthquakes.forEach(m => {
+                try { m.remove(); } catch (e) {}
+            });
+        }
+        if (markers.earthquakeCircles) {
+            markers.earthquakeCircles.forEach(c => {
+                try { c.remove(); } catch (e) {}
+            });
+        }
+        Object.keys(markers).forEach(key => {
+            if (key !== 'earthquakes' && key !== 'earthquakeCircles') {
+                try {
+                    if (Array.isArray(markers[key])) {
+                        markers[key].forEach(m => m.remove());
+                    } else {
+                        markers[key].remove();
+                    }
+                } catch (e) {}
+            }
         });
         markers = {};
     } catch (error) {
@@ -280,11 +296,30 @@ function addEarthquakeMarkers(earthquakes) {
         
         console.log(`Added earthquake marker at [${lat}, ${lon}] with magnitude ${mag}`);
         
+        // Add 200km radius circle around earthquake
+        const circle = L.circle([lat, lon], {
+            radius: 200000, // 200km in meters
+            color: '#e74c3c',
+            fillColor: '#e74c3c',
+            fillOpacity: 0.1,
+            weight: 2,
+            dashArray: '5, 5'
+        }).addTo(map);
+        
+        // Add popup to circle as well
+        circle.bindPopup(`200km radius from ${place}<br>M${mag.toFixed(1)}`);
+        
         // Store in a separate object for earthquakes
         if (!markers.earthquakes) {
             markers.earthquakes = [];
         }
         markers.earthquakes.push(marker);
+        
+        // Store circles separately for cleanup
+        if (!markers.earthquakeCircles) {
+            markers.earthquakeCircles = [];
+        }
+        markers.earthquakeCircles.push(circle);
     });
     
     console.log(`Total earthquake markers added: ${markers.earthquakes ? markers.earthquakes.length : 0}`);
@@ -399,6 +434,7 @@ async function renderDashboard() {
     html += '<div class="legend-item"><span class="legend-marker marker-eq-reliable"></span> Anomaly with EQ (M≥5.5)</div>';
     html += '<div class="legend-item"><span class="legend-marker marker-eq-false"></span> False Alarm (No EQ)</div>';
     html += '<div class="legend-item"><span class="legend-marker earthquake-marker-legend"></span> Earthquake (M≥5.5)</div>';
+    html += '<div class="legend-item"><span style="display: inline-block; width: 20px; height: 2px; background: #e74c3c; border: 1px dashed #e74c3c; margin-right: 8px; vertical-align: middle;"></span> 200km Radius</div>';
     html += '</div>';
     html += '</div>';
     
