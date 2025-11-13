@@ -250,18 +250,24 @@ async function renderDashboard() {
     html += '<div id="stations-list" class="stations-list hidden"></div>';
     html += '</div>';
     
-    // Main content area: Map on left, Plot panel on right (desktop)
+    // Main content area: Map on top, Plot panel below (full width)
     html += '<div class="main-content-layout">';
     
-    // Left side: Map
+    // Map section
     html += '<div class="map-section">';
     html += '<div id="map-container" class="map-container"></div>';
+    html += '<div class="map-legend">';
+    html += '<div class="legend-item"><span class="legend-marker marker-gray"></span> Normal Station</div>';
+    html += '<div class="legend-item"><span class="legend-marker marker-eq-reliable"></span> Anomaly with EQ Correlation</div>';
+    html += '<div class="legend-item"><span class="legend-marker marker-eq-false"></span> False Alarm (No EQ)</div>';
+    html += '</div>';
     html += '</div>';
     
-    // Right side: Plot panel
+    // Plot panel section - Full width below map
     html += '<div class="plot-panel-section">';
     html += '<div class="plot-panel">';
-    html += '<h2 class="panel-title">📊 Station Analysis</h2>';
+    html += '<h2 class="panel-title">📊 Station Analysis Plot</h2>';
+    html += '<p class="panel-description">Select a station from the dropdown below to view detailed analysis plots, anomaly information, and earthquake correlations. Anomalous stations are listed first.</p>';
     html += '<div class="selector-container">';
     html += '<label for="station-selector" class="selector-label">Select Station:</label>';
     html += '<select id="station-selector" class="station-selector">';
