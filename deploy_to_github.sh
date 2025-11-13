@@ -75,6 +75,7 @@ CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 # Step 1: Commit and push main branch changes first (if on main)
 if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
@@ -107,6 +108,8 @@ fi
 # Fetch latest from remote
 log "Fetching latest from remote..."
 git fetch origin >/dev/null 2>&1
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -152,6 +155,7 @@ if [ "$GITHUB_BRANCH" = "gh-pages" ]; then
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
         # Stash any uncommitted changes before switching
         HAS_CHANGES=$(git status --porcelain)
@@ -180,6 +184,9 @@ if [ "$GITHUB_BRANCH" = "gh-pages" ]; then
                 exit 1
             fi
         fi
+=======
+        git checkout gh-pages >/dev/null 2>&1 || git checkout -b gh-pages >/dev/null 2>&1
+>>>>>>> Stashed changes
 =======
         git checkout gh-pages >/dev/null 2>&1 || git checkout -b gh-pages >/dev/null 2>&1
 >>>>>>> Stashed changes
@@ -224,10 +231,13 @@ else
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     if [ $? -ne 0 ]; then
         log "ERROR: Failed to checkout $GITHUB_BRANCH branch"
         exit 1
     fi
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -284,6 +294,7 @@ if [ -n "$CURRENT_BRANCH" ] && [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     # Restore stashed changes if any
     STASH_LIST=$(git stash list 2>&1)
@@ -293,6 +304,9 @@ if [ -n "$CURRENT_BRANCH" ] && [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
     fi
 fi
 
+=======
+fi
+>>>>>>> Stashed changes
 =======
 fi
 >>>>>>> Stashed changes
