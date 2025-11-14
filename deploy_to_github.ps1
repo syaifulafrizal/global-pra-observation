@@ -19,6 +19,61 @@ function Write-Log {
     Write-Host "[$Timestamp] $Message" -ForegroundColor $Color
 }
 
+function Remove-OldDataFiles {
+    param([string]$DataDir, [DateTime]$CutoffDate)
+    """Remove data files older than cutoff date"""
+    $deletedCount = 0
+    
+    # Remove old JSON files (format: {station}_{YYYY-MM-DD}.json)
+    $jsonFiles = Get-ChildItem -Path $DataDir -Filter "*_*.json" -ErrorAction SilentlyContinue
+    foreach ($file in $jsonFiles) {
+        if ($file.Name -eq "stations.json") { continue }
+        
+        # Extract date from filename: {station}_{YYYY-MM-DD}.json
+        if ($file.Name -match "_(\d{4}-\d{2}-\d{2})\.json$") {
+            $dateStr = $matches[1]
+            try {
+                $fileDate = [DateTime]::ParseExact($dateStr, "yyyy-MM-dd", $null)
+                if ($fileDate -lt $CutoffDate) {
+                    Remove-Item -Path $file.FullName -Force -ErrorAction SilentlyContinue
+                    $deletedCount++
+                }
+            } catch {
+                # Ignore parse errors
+            }
+        }
+    }
+    
+    # Remove old figure files
+    $figuresDir = Join-Path (Split-Path $DataDir -Parent) "figures"
+    if (Test-Path $figuresDir) {
+        $stationDirs = Get-ChildItem -Path $figuresDir -Directory -ErrorAction SilentlyContinue
+        foreach ($stationDir in $stationDirs) {
+            $figFiles = Get-ChildItem -Path $stationDir.FullName -Filter "PRA_*.png" -ErrorAction SilentlyContinue
+            foreach ($fig in $figFiles) {
+                # Extract date from filename: PRA_{station}_{YYYYMMDD}.png
+                if ($fig.Name -match "_(\d{8})\.png$") {
+                    $dateStr = $matches[1]
+                    try {
+                        $fileDate = [DateTime]::ParseExact($dateStr, "yyyyMMdd", $null)
+                        if ($fileDate -lt $CutoffDate) {
+                            Remove-Item -Path $fig.FullName -Force -ErrorAction SilentlyContinue
+                            $deletedCount++
+                        }
+                    } catch {
+                        # Ignore parse errors
+                    }
+                }
+            }
+        }
+    }
+    
+    if ($deletedCount -gt 0) {
+        Write-Log "Deleted $deletedCount old files (older than $($CutoffDate.ToString('yyyy-MM-dd')))" "Yellow"
+    }
+    return $deletedCount
+}
+
 Write-Log "==========================================" "Cyan"
 Write-Log "GitHub Pages Deployment" "Cyan"
 Write-Log "==========================================" "Cyan"
@@ -80,9 +135,9 @@ if (-not $GITHUB_REPO) {
     Write-Log "" "White"
     Write-Log "To enable GitHub Pages deployment:" "Cyan"
     Write-Log "  1. Create a GitHub repository" "White"
-    Write-Log "  2. Set: `$env:GITHUB_REPO='username/repo-name'" "White"
-    Write-Log "  3. Set: `$env:GITHUB_BRANCH='gh-pages' (or 'main')" "White"
-    Write-Log "  4. Optional: `$env:GITHUB_TOKEN='your-token' (for private repos)" "White"
+    Write-Log "  2. Set GITHUB_REPO environment variable" "White"
+    Write-Log "  3. Set GITHUB_BRANCH environment variable (gh-pages or main)" "White"
+    Write-Log "  4. Optional: Set GITHUB_TOKEN for private repos" "White"
     exit 0
 }
 
@@ -178,6 +233,14 @@ try {
                 Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
             }
             
+            # Clean up old files (older than 6 days)
+            $cutoffDate = (Get-Date).AddDays(-6).Date
+            $dataDir = Join-Path (Get-Location) "data"
+            if (Test-Path $dataDir) {
+                Write-Log "Cleaning up old data files (keeping last 7 days)..." "Yellow"
+                Remove-OldDataFiles -DataDir $dataDir -CutoffDate $cutoffDate
+            }
+            
             git add -f . 2>&1 | Out-Null
             git commit -m "Initial gh-pages commit" 2>&1 | Out-Null
         } else {
@@ -243,6 +306,14 @@ try {
                 Remove-Item -Path $tempWebOutput -Recurse -Force -ErrorAction SilentlyContinue
             } else {
                 throw "Temp web_output not found at $tempWebOutput"
+            }
+            
+            # Clean up old files (older than 6 days)
+            $cutoffDate = (Get-Date).AddDays(-6).Date
+            $dataDir = Join-Path (Get-Location) "data"
+            if (Test-Path $dataDir) {
+                Write-Log "Cleaning up old data files (keeping last 7 days)..." "Yellow"
+                Remove-OldDataFiles -DataDir $dataDir -CutoffDate $cutoffDate
             }
         }
         
@@ -405,6 +476,7 @@ try {
             Write-Log "Restoring stashed changes..." "Yellow"
             git stash pop 2>&1 | Out-Null
         }
+        git checkout $currentBranch 2>&1 | Out-Null
     }
     exit 1
 }

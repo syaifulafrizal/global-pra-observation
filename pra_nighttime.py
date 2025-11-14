@@ -620,10 +620,27 @@ def process_station(station_code):
     symh_end = today_dt + timedelta(days=1)
     GI = download_symh_data(symh_start, symh_end, cache_folder)
     
+    # Check if the nighttime window has already passed for this station
+    # The nighttime window is 20:00 yesterday to 04:00 today (local time)
+    start_time = yesterday_dt.replace(hour=20, minute=0, second=0)
+    end_time = today_dt.replace(hour=4, minute=0, second=0)
+    
+    # Get current time in station's timezone
+    now_station_tz = datetime.now(station_tz)
+    
+    # If we're before 04:00 today in station's timezone, the nighttime window hasn't completed yet
+    if now_station_tz < end_time:
+        print(f'[SKIP] Station {station_code} ({station_tz}): Nighttime window not yet complete')
+        print(f'       Current time: {now_station_tz.strftime("%Y-%m-%d %H:%M:%S %Z")}')
+        print(f'       Window ends:  {end_time.strftime("%Y-%m-%d %H:%M:%S %Z")}')
+        print(f'       This is expected - data will be available after 04:00 local time')
+        return None  # Return None to indicate "skipped" (not an error)
+    
     # Download station data
     dates_to_get = [yesterday_dt, today_dt]
     data_all = pd.DataFrame()
     downloaded_files = []
+    download_failed = False
     
     for date_dt in dates_to_get:
         file_path = download_data(station_code, date_dt, out_folder)
@@ -632,14 +649,23 @@ def process_station(station_code):
             df = read_iaga2002(file_path, station_tz)
             if not df.empty:
                 data_all = pd.concat([data_all, df], ignore_index=True)
+        elif file_path is None:
+            # Download failed - this might be an error or data not available yet
+            # Check if this date is in the future for this station
+            if date_dt.date() > now_station_tz.date():
+                print(f'[SKIP] Data for {date_dt.date()} is in the future for {station_code} ({station_tz})')
+            else:
+                download_failed = True
     
     if data_all.empty:
-        print(f'[ERROR] No data available for {station_code}')
-        return False
-    
-    # Filter nighttime window (20:00-04:00 in station's LOCAL time)
-    start_time = yesterday_dt.replace(hour=20, minute=0, second=0)
-    end_time = today_dt.replace(hour=4, minute=0, second=0)
+        if download_failed:
+            print(f'[ERROR] No data available for {station_code} - download failed')
+            return False
+        else:
+            # Data might not be available yet (not yet midnight or data not published)
+            print(f'[SKIP] No data available yet for {station_code} ({station_tz})')
+            print(f'       This may be normal if it\'s not yet midnight or data is not yet published')
+            return None  # Return None to indicate "skipped" (not an error)
     
     # Ensure timezone-aware for filtering (should already be, but double-check)
     if start_time.tzinfo is None:
@@ -650,8 +676,9 @@ def process_station(station_code):
     night_data = data_all[(data_all['dt'] >= start_time) & (data_all['dt'] <= end_time)].copy()
     
     if len(night_data) < WIN_LEN:
-        print(f'[ERROR] Not enough nighttime data for {station_code}')
-        return False
+        print(f'[WARNING] Not enough nighttime data for {station_code} (got {len(night_data)} samples, need {WIN_LEN})')
+        print(f'          This may be normal if the nighttime window is not yet complete')
+        return None  # Return None to indicate "skipped" (not an error)
     
     # Remove invalid data
     night_data = night_data[
@@ -875,7 +902,12 @@ def main():
     for station in stations:
         try:
             success = process_station(station)
-            results[station] = 'success' if success else 'failed'
+            if success is True:
+                results[station] = 'success'
+            elif success is None:
+                results[station] = 'skipped'  # No data yet (expected)
+            else:
+                results[station] = 'failed'  # Actual error
         except Exception as e:
             print(f'ERROR: Error processing {station}: {e}')
             import traceback
@@ -885,7 +917,21 @@ def main():
     print(f'\n{"="*60}')
     print('Summary:')
     for station, status in results.items():
-        print(f'  {station}: {status}')
+        if status == 'skipped':
+            print(f'  {station}: {status} (no data yet - expected)')
+        else:
+            print(f'  {station}: {status}')
+    print(f'{"="*60}')
+    
+    # Count statistics
+    success_count = sum(1 for s in results.values() if s == 'success')
+    skipped_count = sum(1 for s in results.values() if s == 'skipped')
+    failed_count = sum(1 for s in results.values() if s in ('failed', 'error'))
+    
+    print(f'\nStatistics:')
+    print(f'  Success: {success_count}')
+    print(f'  Skipped (no data yet): {skipped_count}')
+    print(f'  Failed/Error: {failed_count}')
     print(f'{"="*60}')
 
 if __name__ == '__main__':

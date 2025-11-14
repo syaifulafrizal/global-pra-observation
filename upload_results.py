@@ -7,8 +7,9 @@ Prepares files in web_output/ directory for Flask to serve
 import os
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 import shutil
+import re
 
 # Configuration
 OUTPUT_DIR = Path('web_output')  # Directory for prepared web files
@@ -81,9 +82,75 @@ def get_stations():
         "This error prevents using a default station to avoid incorrect results."
     )
 
+def parse_date_from_filename(filename):
+    """Extract date from PRA_Night_{station}_{YYYYMMDD}.json filename"""
+    # Pattern: PRA_Night_{station}_{YYYYMMDD}.json
+    match = re.search(r'PRA_Night_\w+_(\d{8})\.json', filename)
+    if match:
+        date_str = match.group(1)
+        try:
+            return datetime.strptime(date_str, '%Y%m%d').date()
+        except ValueError:
+            return None
+    return None
+
+def get_available_dates():
+    """Get list of available dates (last 7 days including today)"""
+    today = datetime.now().date()
+    dates = []
+    for i in range(7):
+        date = today - timedelta(days=i)
+        dates.append(date.strftime('%Y-%m-%d'))
+    return dates
+
+def cleanup_old_files(data_dir, cutoff_date):
+    """Delete files older than cutoff_date from web_output/data"""
+    deleted_count = 0
+    for file_path in data_dir.glob('*_*.json'):
+        if file_path.name == 'stations.json':
+            continue
+        
+        # Try to extract date from filename (format: {station}_{YYYY-MM-DD}.json)
+        match = re.search(r'_\d{4}-\d{2}-\d{2}\.json$', file_path.name)
+        if match:
+            date_str = match.group(0)[1:-5]  # Remove _ and .json
+            try:
+                file_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                if file_date < cutoff_date:
+                    file_path.unlink()
+                    deleted_count += 1
+            except ValueError:
+                pass
+    
+    # Also clean up old figure files
+    figures_dir = OUTPUT_DIR / 'figures'
+    if figures_dir.exists():
+        for station_dir in figures_dir.iterdir():
+            if station_dir.is_dir():
+                for fig_file in station_dir.glob('PRA_*.png'):
+                    # Extract date from filename: PRA_{station}_{YYYYMMDD}.png
+                    match = re.search(r'_(\d{8})\.png$', fig_file.name)
+                    if match:
+                        date_str = match.group(1)
+                        try:
+                            file_date = datetime.strptime(date_str, '%Y%m%d').date()
+                            if file_date < cutoff_date:
+                                fig_file.unlink()
+                                deleted_count += 1
+                        except ValueError:
+                            pass
+    
+    if deleted_count > 0:
+        print(f'[INFO] Deleted {deleted_count} old files (older than {cutoff_date})')
+    return deleted_count
+
 def prepare_web_output():
-    """Prepare static files for web deployment"""
+    """Prepare static files for web deployment with 7-day retention"""
     print('Preparing web output...')
+    
+    # Calculate cutoff date (6 days ago, so we keep 7 days total)
+    today = datetime.now().date()
+    cutoff_date = today - timedelta(days=6)
     
     # Create output directory
     OUTPUT_DIR.mkdir(exist_ok=True)
@@ -104,37 +171,51 @@ def prepare_web_output():
     data_dir = OUTPUT_DIR / 'data'
     data_dir.mkdir(exist_ok=True)
     
+    # Clean up old files first
+    cleanup_old_files(data_dir, cutoff_date)
+    
     # Copy stations.json for map metadata
     if Path('stations.json').exists():
         shutil.copy('stations.json', data_dir / 'stations.json')
     
     stations = get_stations()
-    all_stations_data = {}
+    all_available_dates = set()
+    date_station_data = {}  # {date: {station: data}}
     
+    # Process each station
     for station in stations:
-        # Priority 1: Check if _latest.json already exists in web_output/data
-        existing_json = data_dir / f'{station}_latest.json'
-        if existing_json.exists():
-            # Use existing file
-            with open(existing_json, 'r') as f:
-                all_stations_data[station] = json.load(f)
-            continue
-        
-        # Priority 2: Look in INTERMAGNET_DOWNLOADS
         station_folder = Path('INTERMAGNET_DOWNLOADS') / station
         
         if station_folder.exists():
-            # Copy latest JSON results
+            # Get all JSON files for this station
             json_files = list(station_folder.glob('PRA_Night_*.json'))
-            if json_files:
-                latest_json = max(json_files, key=lambda p: p.stat().st_mtime)
-                shutil.copy(latest_json, data_dir / f'{station}_latest.json')
+            
+            for json_file in json_files:
+                # Extract date from filename
+                file_date = parse_date_from_filename(json_file.name)
+                if file_date is None:
+                    continue
                 
-                # Load and add to all_stations_data
-                with open(latest_json, 'r') as f:
-                    all_stations_data[station] = json.load(f)
+                # Only keep files from last 7 days
+                if file_date < cutoff_date:
+                    continue
+                
+                # Format date as YYYY-MM-DD
+                date_str = file_date.strftime('%Y-%m-%d')
+                all_available_dates.add(date_str)
+                
+                # Copy JSON file with date-specific name
+                dest_file = data_dir / f'{station}_{date_str}.json'
+                shutil.copy(json_file, dest_file)
+                
+                # Load data for this date
+                if date_str not in date_station_data:
+                    date_station_data[date_str] = {}
+                
+                with open(json_file, 'r') as f:
+                    date_station_data[date_str][station] = json.load(f)
         
-        # Copy anomaly table
+        # Copy anomaly table (only latest, not date-specific)
         anomaly_file = station_folder / 'anomaly_master_table.csv'
         if anomaly_file.exists():
             shutil.copy(anomaly_file, data_dir / f'{station}_anomalies.csv')
@@ -149,16 +230,34 @@ def prepare_web_output():
         if fn_file.exists():
             shutil.copy(fn_file, data_dir / f'{station}_false_negatives.csv')
         
-        # Copy figures
+        # Copy figures (only last 7 days)
         figures_dir = station_folder / 'figures'
         if figures_dir.exists():
             web_figures_dir = OUTPUT_DIR / 'figures' / station
             web_figures_dir.mkdir(parents=True, exist_ok=True)
             
-            # Copy latest 10 figures
-            figures = sorted(figures_dir.glob('*.png'), key=lambda p: p.stat().st_mtime, reverse=True)[:10]
+            # Get all figure files
+            figures = list(figures_dir.glob('PRA_*.png'))
             for fig in figures:
-                shutil.copy(fig, web_figures_dir / fig.name)
+                # Extract date from filename: PRA_{station}_{YYYYMMDD}.png
+                match = re.search(r'_(\d{8})\.png$', fig.name)
+                if match:
+                    date_str = match.group(1)
+                    try:
+                        fig_date = datetime.strptime(date_str, '%Y%m%d').date()
+                        if fig_date >= cutoff_date:
+                            shutil.copy(fig, web_figures_dir / fig.name)
+                    except ValueError:
+                        pass
+    
+    # Get available dates sorted (most recent first)
+    available_dates = sorted(all_available_dates, reverse=True)
+    
+    # Get most recent date
+    most_recent_date = available_dates[0] if available_dates else None
+    
+    # Get data for most recent date (for backward compatibility)
+    most_recent_data = date_station_data.get(most_recent_date, {}) if most_recent_date else {}
     
     # Create stations index JSON (combine with metadata)
     stations_metadata = {}
@@ -171,14 +270,19 @@ def prepare_web_output():
         json.dump({
             'stations': stations,
             'last_updated': datetime.now().isoformat(),
-            'data': all_stations_data,
+            'available_dates': available_dates,  # List of available dates (most recent first)
+            'most_recent_date': most_recent_date,  # Default date to show
+            'data': most_recent_data,  # Data for most recent date (default)
             'metadata': stations_metadata.get('stations', []) if isinstance(stations_metadata, dict) else []
         }, f, indent=2)
+    
+    print(f'[INFO] Available dates: {", ".join(available_dates)}')
+    print(f'[INFO] Most recent date: {most_recent_date}')
     
     # Copy index.html
     if Path('templates/index.html').exists():
         # Create a static version (without Flask template syntax)
-        create_static_index(OUTPUT_DIR, stations, all_stations_data)
+        create_static_index(OUTPUT_DIR, stations, most_recent_data)
     else:
         # Create basic index.html
         create_basic_index(OUTPUT_DIR, stations)
@@ -204,7 +308,15 @@ def create_static_index(output_dir, stations, stations_data):
         <header>
             <h1>🌍 PRA Nighttime Detection Dashboard</h1>
             <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
-            <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
+            <div class="header-controls">
+                <div class="date-selector-container">
+                    <label for="date-selector" style="color: #ecf0f1; margin-right: 10px; font-weight: 500;">Select Date:</label>
+                    <select id="date-selector" style="padding: 8px 12px; font-size: 1em; border-radius: 4px; border: 1px solid #34495e; background: #2c3e50; color: #ecf0f1; cursor: pointer;">
+                        <option value="">Loading dates...</option>
+                    </select>
+                </div>
+                <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
+            </div>
         </header>
 
         <div id="stations-container">

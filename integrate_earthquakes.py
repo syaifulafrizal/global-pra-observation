@@ -68,6 +68,18 @@ def main():
             'false_negatives': len(false_negatives)
         }
     
+    # Clean old earthquake stats files to ensure fresh calculation
+    web_data_dir = Path('web_output') / 'data'
+    web_data_dir.mkdir(parents=True, exist_ok=True)
+    old_stats_file = web_data_dir / 'today_earthquake_stats.json'
+    old_recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
+    if old_stats_file.exists():
+        old_stats_file.unlink()
+        print(f'  [INFO] Deleted old earthquake stats file to ensure fresh calculation')
+    if old_recent_eq_file.exists():
+        old_recent_eq_file.unlink()
+        print(f'  [INFO] Deleted old recent earthquakes file to ensure fresh calculation')
+    
     # Get global earthquakes for today (for statistics)
     print(f'\n{"="*60}')
     print('Fetching today\'s global earthquakes (M>=5.5)...')

@@ -83,6 +83,52 @@ header h1 {
     font-family: 'Courier New', monospace;
 }
 
+.header-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.date-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-selector-container label {
+    color: #ecf0f1;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+#date-selector {
+    padding: 8px 12px;
+    font-size: 1em;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(44, 62, 80, 0.9);
+    color: #ecf0f1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+#date-selector:hover {
+    background: rgba(52, 73, 94, 0.95);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+#date-selector:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
 /* Main Content Layout - Full Width Map, Full Width Plot Below */
 .main-content-layout {
     display: flex;
@@ -916,6 +962,22 @@ footer .author a:hover {
 @media (max-width: 768px) {
     header h1 {
         font-size: 1.8em;
+    }
+    
+    .header-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .date-selector-container {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    #date-selector {
+        min-width: 180px;
+        width: 100%;
+        max-width: 300px;
     }
     
     .map-container {

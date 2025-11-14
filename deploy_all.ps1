@@ -125,12 +125,22 @@ if (Test-Path $uploadResultsPath) {
             $cleanLines | Set-Content -Path $uploadResultsPath
             Write-Log "Successfully cleaned merge conflicts in upload_results.py" "Green"
             
-            # Verify it's clean
+            # Verify it's clean (check for conflict markers)
             $verifyContent = Get-Content $uploadResultsPath -Raw
-            if ($verifyContent -match "<<<<<<<|=======|>>>>>>>") {
+            if ($verifyContent -match "(?m)^[\s]*<<<<<<<|(?m)^[\s]*=======[\s]*$|(?m)^[\s]*>>>>>>>") {
                 Write-Log "ERROR: Failed to clean all conflicts. Please resolve manually." "Red"
                 exit 1
             }
+            
+            # Verify Python syntax is valid
+            $syntaxCheck = & $pythonExe -m py_compile $uploadResultsPath 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Log "ERROR: Python syntax error after conflict cleanup!" "Red"
+                Write-Log "Syntax error details: $syntaxCheck" "Red"
+                Write-Log "Please fix upload_results.py manually" "Red"
+                exit 1
+            }
+            Write-Log "Verified: Python syntax is valid after cleanup" "Green"
         } catch {
             Write-Log "ERROR: Failed to clean merge conflicts: $_" "Red"
             Write-Log "Please resolve merge conflicts manually in upload_results.py" "Red"
@@ -226,6 +236,17 @@ if (Test-Path $deployScriptPath) {
             # Write cleaned content
             $cleanLines | Set-Content -Path $deployScriptPath
             Write-Log "Successfully cleaned merge conflicts in deploy_to_github.ps1" "Green"
+            
+            # Verify PowerShell syntax is valid
+            try {
+                $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $deployScriptPath -Raw), [ref]$null)
+                Write-Log "Verified: PowerShell syntax is valid after cleanup" "Green"
+            } catch {
+                Write-Log "ERROR: PowerShell syntax error after conflict cleanup!" "Red"
+                Write-Log "Syntax error details: $_" "Red"
+                Write-Log "Please fix deploy_to_github.ps1 manually" "Red"
+                exit 1
+            }
             
             # Verify it's clean - check multiple times with different patterns
             $verifyContent = Get-Content $deployScriptPath -Raw
