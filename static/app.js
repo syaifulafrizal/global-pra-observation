@@ -8,21 +8,88 @@ let map = null;
 let markers = {};
 let allStations = [];
 let anomalousStations = [];
+let availableDates = [];
+let selectedDate = null;
+let mostRecentDate = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Set up date selector
+    const dateSelector = document.getElementById('date-selector');
+    if (dateSelector) {
+        dateSelector.addEventListener('change', (e) => {
+            const selectedDate = e.target.value;
+            if (selectedDate) {
+                renderDashboard(selectedDate);
+            }
+        });
+    }
+    
     renderDashboard();
-    setInterval(renderDashboard, 300000); // Auto-refresh every 5 minutes
+    setInterval(() => {
+        // Auto-refresh with current selected date
+        const currentDate = document.getElementById('date-selector')?.value || selectedDate;
+        renderDashboard(currentDate);
+    }, 300000); // Auto-refresh every 5 minutes
 });
 
-async function loadData() {
+async function loadData(date = null) {
     try {
+        // First, load stations.json to get available dates
         const response = await fetch(DATA_URL);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        return data;
+        const metadata = await response.json();
+        
+        // Extract available dates and most recent date
+        availableDates = metadata.available_dates || [];
+        mostRecentDate = metadata.most_recent_date || null;
+        
+        // If no date specified, use most recent
+        if (!date && mostRecentDate) {
+            date = mostRecentDate;
+            selectedDate = date;
+        } else if (!date) {
+            // Fallback to today if no dates available
+            date = new Date().toISOString().split('T')[0];
+            selectedDate = date;
+        } else {
+            selectedDate = date;
+        }
+        
+        // Load data for the selected date
+        const dateData = {};
+        let hasData = false;
+        
+        // Try to load date-specific files for each station
+        for (const station of (metadata.stations || [])) {
+            try {
+                const stationResponse = await fetch(`data/${station}_${date}.json`);
+                if (stationResponse.ok) {
+                    dateData[station] = await stationResponse.json();
+                    hasData = true;
+                }
+            } catch (error) {
+                // Station data not available for this date
+                console.debug(`No data for ${station} on ${date}`);
+            }
+        }
+        
+        // If no data found for selected date, return null
+        if (!hasData) {
+            return null;
+        }
+        
+        // Return data in the same format as before
+        return {
+            stations: metadata.stations || [],
+            data: dateData,
+            metadata: metadata.metadata || [],
+            available_dates: availableDates,
+            most_recent_date: mostRecentDate,
+            selected_date: date
+        };
     } catch (error) {
         console.error('Error loading data:', error);
         return null;
@@ -96,6 +163,31 @@ function formatDate(dateStr) {
         month: 'short',
         day: 'numeric'
     });
+}
+
+function formatDateForSelector(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const dateOnly = new Date(date);
+    dateOnly.setHours(0, 0, 0, 0);
+    
+    let label = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+    
+    if (dateOnly.getTime() === today.getTime()) {
+        label += ' (Today)';
+    } else if (dateOnly.getTime() === yesterday.getTime()) {
+        label += ' (Yesterday)';
+    }
+    
+    return label;
 }
 
 function initMap() {
@@ -358,16 +450,50 @@ function addEarthquakeMarkers(earthquakes) {
     console.log(`Total earthquake markers added: ${markers.earthquakes ? markers.earthquakes.length : 0}`);
 }
 
-async function renderDashboard() {
+async function renderDashboard(date = null) {
     const container = document.getElementById('stations-container');
     if (!container) return;
     
     container.innerHTML = '<p style="text-align: center; color: white; font-size: 1.2em;">Loading data...</p>';
     
-    const data = await loadData();
+    const data = await loadData(date);
     if (!data) {
-        container.innerHTML = '<p class="no-data">❌ Failed to load data. Make sure to run upload_results.py first.</p>';
+        const dateStr = date || selectedDate || 'selected date';
+        container.innerHTML = `
+            <div class="no-data" style="text-align: center; padding: 40px;">
+                <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
+                <p style="color: #ecf0f1; font-size: 1.1em; margin-bottom: 10px;">
+                    No data is available for <strong>${dateStr}</strong>.
+                </p>
+                <p style="color: #95a5a6; font-size: 0.9em;">
+                    This may be because:
+                </p>
+                <ul style="color: #95a5a6; text-align: left; display: inline-block; margin-top: 10px;">
+                    <li>The analysis has not been run for this date yet</li>
+                    <li>The date is too far in the past (only last 7 days are kept)</li>
+                    <li>No stations had data available for this date</li>
+                </ul>
+                <p style="color: #ecf0f1; margin-top: 20px;">
+                    Please select a different date from the dropdown above.
+                </p>
+            </div>
+        `;
         return;
+    }
+    
+    // Update date selector
+    const dateSelector = document.getElementById('date-selector');
+    if (dateSelector && data.available_dates) {
+        dateSelector.innerHTML = '';
+        data.available_dates.forEach(date => {
+            const option = document.createElement('option');
+            option.value = date;
+            option.textContent = formatDateForSelector(date);
+            if (date === data.selected_date || date === data.most_recent_date) {
+                option.selected = true;
+            }
+            dateSelector.appendChild(option);
+        });
     }
     
     // Load metadata
