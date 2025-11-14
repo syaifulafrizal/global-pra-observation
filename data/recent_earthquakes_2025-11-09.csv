@@ -1,0 +1,8 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-11-09 09:28:23.919,39.6288,143.5049,10.0,5.7,"134 km E of Miyako, Japan",earthquake,
+2025-11-09 08:54:36.991,39.4662,143.3632,10.0,6.4,"121 km E of Yamada, Japan",earthquake,
+2025-11-09 08:34:01.761,39.4641,143.4138,10.0,5.6,"125 km E of Yamada, Japan",earthquake,
+2025-11-09 08:14:53.100,39.3606,143.4278,10.0,5.9,"127 km E of Yamada, Japan",earthquake,
+2025-11-09 08:11:25.615,39.5755,143.1905,10.0,5.5,"107 km E of Yamada, Japan",earthquake,
+2025-11-09 08:03:37.808,39.3957,143.4108,10.0,6.8,"126 km E of Yamada, Japan",earthquake,
+2025-11-09 06:38:31.510,12.5088,93.7981,133.186,5.5,"147 km NE of Port Blair, India",earthquake,

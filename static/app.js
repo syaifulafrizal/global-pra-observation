@@ -58,26 +58,66 @@ async function loadData(date = null) {
             selectedDate = date;
         }
         
-        // Load data for the selected date
+        // Load data for the selected date, with station-specific fallback to previous days
         const dateData = {};
-        let hasData = false;
+        const stationDates = {}; // Track which date each station is using
+        let hasAnyData = false;
         
-        // Try to load date-specific files for each station
+        // For each station, try to load data for selected date, then fallback to previous days
         for (const station of (metadata.stations || [])) {
+            let stationData = null;
+            let stationDateUsed = null;
+            
+            // Try selected date first
             try {
                 const stationResponse = await fetch(`data/${station}_${date}.json`);
                 if (stationResponse.ok) {
-                    dateData[station] = await stationResponse.json();
-                    hasData = true;
+                    stationData = await stationResponse.json();
+                    stationDateUsed = date;
+                    hasAnyData = true;
                 }
             } catch (error) {
-                // Station data not available for this date
-                console.debug(`No data for ${station} on ${date}`);
+                // Station data not available for this date, try fallback
+            }
+            
+            // If no data for selected date, try previous days (up to 6 days back)
+            if (!stationData) {
+                const selectedDateObj = new Date(date + 'T00:00:00');
+                for (let daysBack = 1; daysBack <= 6; daysBack++) {
+                    const fallbackDate = new Date(selectedDateObj);
+                    fallbackDate.setDate(fallbackDate.getDate() - daysBack);
+                    const fallbackDateStr = fallbackDate.toISOString().split('T')[0];
+                    
+                    // Check if this date is in available dates
+                    if (!availableDates.includes(fallbackDateStr)) {
+                        continue;
+                    }
+                    
+                    // Try to load data for this fallback date
+                    try {
+                        const stationResponse = await fetch(`data/${station}_${fallbackDateStr}.json`);
+                        if (stationResponse.ok) {
+                            stationData = await stationResponse.json();
+                            stationDateUsed = fallbackDateStr;
+                            hasAnyData = true;
+                            console.debug(`Station ${station}: Using fallback data from ${fallbackDateStr} (${daysBack} day(s) before selected date ${date})`);
+                            break;
+                        }
+                    } catch (error) {
+                        // Continue to next fallback date
+                    }
+                }
+            }
+            
+            // Store station data and date used
+            if (stationData) {
+                dateData[station] = stationData;
+                stationDates[station] = stationDateUsed;
             }
         }
         
-        // If no data found for selected date, return null
-        if (!hasData) {
+        // If no data found for any station, return null
+        if (!hasAnyData) {
             return null;
         }
         
@@ -88,7 +128,8 @@ async function loadData(date = null) {
             metadata: metadata.metadata || [],
             available_dates: availableDates,
             most_recent_date: mostRecentDate,
-            selected_date: date
+            selected_date: date,
+            station_dates: stationDates  // Which date each station is using
         };
     } catch (error) {
         console.error('Error loading data:', error);
@@ -124,17 +165,47 @@ async function loadFalseNegatives(station) {
     }
 }
 
-async function loadRecentEarthquakes() {
+async function loadRecentEarthquakes(date = null) {
+    // Try to load date-specific earthquake data, with fallback to previous days
+    if (!date) {
+        date = new Date().toISOString().split('T')[0];
+    }
+    
+    const dateObj = new Date(date + 'T00:00:00');
+    
+    // Try selected date first, then fallback up to 6 days back
+    for (let daysBack = 0; daysBack <= 6; daysBack++) {
+        const tryDate = new Date(dateObj);
+        tryDate.setDate(tryDate.getDate() - daysBack);
+        const tryDateStr = tryDate.toISOString().split('T')[0];
+        
+        try {
+            const response = await fetch(`data/recent_earthquakes_${tryDateStr}.csv`);
+            if (response.ok) {
+                const text = await response.text();
+                const earthquakes = parseCSV(text);
+                if (earthquakes.length > 0 || daysBack === 0) {
+                    // Return data if found, or if it's the selected date (even if empty)
+                    return earthquakes;
+                }
+            }
+        } catch (error) {
+            // Continue to next fallback date
+        }
+    }
+    
+    // Fallback to old format (today's earthquakes) for backward compatibility
     try {
         const response = await fetch('data/recent_earthquakes.csv');
-        if (!response.ok) {
-            return [];
+        if (response.ok) {
+            const text = await response.text();
+            return parseCSV(text);
         }
-        const text = await response.text();
-        return parseCSV(text);
     } catch (error) {
-        return [];
+        // Ignore
     }
+    
+    return [];
 }
 
 function parseCSV(csvText) {
@@ -370,13 +441,45 @@ function addEarthquakeMarkers(earthquakes) {
             iconAnchor: [Math.max(10, Math.min(20, mag * 2.5)), Math.max(10, Math.min(20, mag * 2.5))]
         });
         
-        // Create popup
-        const dateStr = time ? new Date(time).toLocaleString() : 'Unknown';
+        // Create popup with UTC and local time
+        let timeStr = 'Unknown';
+        let utcTimeStr = '';
+        let localTimeStr = '';
+        
+        if (time) {
+            try {
+                // Parse time (could be ISO string or timestamp)
+                const eqTime = new Date(time);
+                if (!isNaN(eqTime.getTime())) {
+                    // Format UTC time
+                    utcTimeStr = eqTime.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+                    
+                    // Format local time (at earthquake location - approximate using longitude)
+                    // Rough timezone estimate: 1 hour per 15 degrees longitude
+                    const localOffset = Math.round(lon / 15);
+                    const localTime = new Date(eqTime.getTime() + localOffset * 3600000);
+                    localTimeStr = localTime.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        timeZoneName: 'short'
+                    });
+                    
+                    timeStr = `${utcTimeStr}<br><small style="color: #666;">Local (approx): ${localTimeStr}</small>`;
+                }
+            } catch (e) {
+                timeStr = time;
+            }
+        }
+        
         const popupContent = `
             <div style="min-width: 200px; font-family: Arial, sans-serif;">
                 <strong style="color: #e74c3c; font-size: 1.2em;">🌋 Earthquake M${mag.toFixed(1)}</strong><br>
                 <span style="color: #555;">${place}</span><br>
-                <small>📅 ${dateStr}</small><br>
+                <small>📅 ${timeStr}</small><br>
                 <small>📍 ${lat.toFixed(3)}, ${lon.toFixed(3)}</small>
             </div>
         `;
@@ -463,15 +566,15 @@ async function renderDashboard(date = null) {
             <div class="no-data" style="text-align: center; padding: 40px;">
                 <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
                 <p style="color: #ecf0f1; font-size: 1.1em; margin-bottom: 10px;">
-                    No data is available for <strong>${dateStr}</strong>.
+                    No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
                 </p>
                 <p style="color: #95a5a6; font-size: 0.9em;">
                     This may be because:
                 </p>
                 <ul style="color: #95a5a6; text-align: left; display: inline-block; margin-top: 10px;">
-                    <li>The analysis has not been run for this date yet</li>
-                    <li>The date is too far in the past (only last 7 days are kept)</li>
-                    <li>No stations had data available for this date</li>
+                    <li>The analysis has not been run yet</li>
+                    <li>All dates are too far in the past (only last 7 days are kept)</li>
+                    <li>No stations had data available</li>
                 </ul>
                 <p style="color: #ecf0f1; margin-top: 20px;">
                     Please select a different date from the dropdown above.
@@ -479,6 +582,30 @@ async function renderDashboard(date = null) {
             </div>
         `;
         return;
+    }
+    
+    // Show notice if any stations are using fallback data
+    if (data.station_dates) {
+        const stationsUsingFallback = Object.entries(data.station_dates)
+            .filter(([station, dateUsed]) => dateUsed !== data.selected_date)
+            .map(([station]) => station);
+        
+        if (stationsUsingFallback.length > 0) {
+            const notice = document.createElement('div');
+            notice.className = 'fallback-notice';
+            notice.style.cssText = 'background: rgba(243, 156, 18, 0.2); border-left: 4px solid #f39c12; padding: 12px 20px; margin: 15px 0; border-radius: 4px; color: #ecf0f1;';
+            const stationList = stationsUsingFallback.length <= 5 
+                ? stationsUsingFallback.join(', ')
+                : `${stationsUsingFallback.slice(0, 5).join(', ')} and ${stationsUsingFallback.length - 5} more`;
+            notice.innerHTML = `
+                <strong>ℹ️ Notice:</strong> ${stationsUsingFallback.length} station(s) (${stationList}) don't have data for <strong>${formatDateForSelector(data.selected_date)}</strong>. 
+                Showing previous day's data for these stations.
+                ${data.selected_date === new Date().toISOString().split('T')[0] ? 
+                    '<br><small>This is normal if the nighttime window (20:00-04:00 local time) has not yet completed for these stations.</small>' : 
+                    ''}
+            `;
+            container.insertBefore(notice, container.firstChild);
+        }
     }
     
     // Update date selector
@@ -542,20 +669,46 @@ async function renderDashboard(date = null) {
     
     let html = '';
     
-    // Load today's earthquake statistics
-    let todayEQStats = { global: 0, within200km: 0 };
-    try {
-        const statsResponse = await fetch('data/today_earthquake_stats.json');
-        if (statsResponse.ok) {
-            const statsData = await statsResponse.json();
-            // Map JSON keys to JavaScript property names
-            todayEQStats = {
-                global: statsData.global_count || statsData.global || 0,
-                within200km: statsData.within_200km_count || statsData.within200km || 0
-            };
+    // Load earthquake statistics for selected date (with fallback)
+    let eqStats = { global: 0, within200km: 0 };
+    let eqDateUsed = data.selected_date;
+    
+    const dateObj = new Date(data.selected_date + 'T00:00:00');
+    for (let daysBack = 0; daysBack <= 6; daysBack++) {
+        const tryDate = new Date(dateObj);
+        tryDate.setDate(tryDate.getDate() - daysBack);
+        const tryDateStr = tryDate.toISOString().split('T')[0];
+        
+        try {
+            const statsResponse = await fetch(`data/earthquake_stats_${tryDateStr}.json`);
+            if (statsResponse.ok) {
+                const statsData = await statsResponse.json();
+                eqStats = {
+                    global: statsData.global_count || statsData.global || 0,
+                    within200km: statsData.within_200km_count || statsData.within200km || 0
+                };
+                eqDateUsed = tryDateStr;
+                break;
+            }
+        } catch (error) {
+            // Continue to next fallback date
         }
-    } catch (error) {
-        console.warn('Could not load earthquake statistics:', error);
+    }
+    
+    // Fallback to old format for backward compatibility
+    if (eqStats.global === 0 && eqStats.within200km === 0) {
+        try {
+            const statsResponse = await fetch('data/today_earthquake_stats.json');
+            if (statsResponse.ok) {
+                const statsData = await statsResponse.json();
+                eqStats = {
+                    global: statsData.global_count || statsData.global || 0,
+                    within200km: statsData.within_200km_count || statsData.within200km || 0
+                };
+            }
+        } catch (error) {
+            console.warn('Could not load earthquake statistics:', error);
+        }
     }
     
     // Create summary stats first
@@ -567,17 +720,21 @@ async function renderDashboard(date = null) {
     html += `<div class="stat-card stat-false-negative"><div class="stat-value">${falseNegatives}</div><div class="stat-label">❌ False Negatives (M≥5.5)</div></div>`;
     html += '</div>';
     
-    // Add today's earthquake statistics
+    // Add earthquake statistics
+    const eqDateLabel = eqDateUsed !== data.selected_date ?
+        `Earthquakes (M≥5.5) - ${formatDateForSelector(eqDateUsed)} (fallback from ${formatDateForSelector(data.selected_date)})` :
+        `Earthquakes (M≥5.5) - ${formatDateForSelector(data.selected_date)}`;
+    
     html += '<div class="today-eq-stats">';
-    html += `<h3>📊 Today's Earthquakes (M≥5.5) - ${new Date().toLocaleDateString()}</h3>`;
+    html += `<h3>📊 ${eqDateLabel}</h3>`;
     html += '<div class="eq-stats-grid">';
-    html += `<div class="eq-stat-card"><div class="eq-stat-value">${todayEQStats.global || 0}</div><div class="eq-stat-label">🌍 Global Count</div></div>`;
-    html += `<div class="eq-stat-card"><div class="eq-stat-value">${todayEQStats.within200km || 0}</div><div class="eq-stat-label">📍 Within 200km of Stations</div></div>`;
+    html += `<div class="eq-stat-card"><div class="eq-stat-value">${eqStats.global || 0}</div><div class="eq-stat-label">🌍 Global Count</div></div>`;
+    html += `<div class="eq-stat-card"><div class="eq-stat-value">${eqStats.within200km || 0}</div><div class="eq-stat-label">📍 Within 200km of Stations</div></div>`;
     html += '</div>';
-    if (todayEQStats.global > 0 && todayEQStats.within200km === 0) {
+    if (eqStats.global > 0 && eqStats.within200km === 0) {
         html += '<p class="eq-stats-note" style="color: #f39c12; margin-top: 10px; font-size: 0.9em;">ℹ️ There are earthquakes globally, but none within 200km of any station.</p>';
-    } else if (todayEQStats.global === 0) {
-        html += '<p class="eq-stats-note" style="color: #95a5a6; margin-top: 10px; font-size: 0.9em;">ℹ️ No earthquakes (M≥5.5) detected globally today.</p>';
+    } else if (eqStats.global === 0) {
+        html += '<p class="eq-stats-note" style="color: #95a5a6; margin-top: 10px; font-size: 0.9em;">ℹ️ No earthquakes (M≥5.5) detected globally for this date.</p>';
     }
     html += '</div>';
     
@@ -657,7 +814,7 @@ async function renderDashboard(date = null) {
                 }
                 
                 // Add earthquake markers
-                const recentEarthquakes = await loadRecentEarthquakes();
+                const recentEarthquakes = await loadRecentEarthquakes(data.selected_date);
                 console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
                 addEarthquakeMarkers(recentEarthquakes);
             } catch (error) {
@@ -750,18 +907,33 @@ async function renderDashboard(date = null) {
         });
     }
     
-    // Update timestamp
+    // Update timestamp (UTC-based)
     const timestampEl = document.getElementById('timestamp');
-    if (timestampEl && data.last_updated) {
-        timestampEl.textContent = new Date(data.last_updated).toLocaleString('en-US', {
-            timeZone: 'Asia/Singapore',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        }) + ' GMT+8';
+    if (timestampEl) {
+        if (data.last_updated) {
+            timestampEl.textContent = new Date(data.last_updated).toLocaleString('en-US', {
+                timeZone: 'UTC',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            });
+        } else {
+            // Fallback to current time in UTC
+            timestampEl.textContent = new Date().toLocaleString('en-US', {
+                timeZone: 'UTC',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            });
+        }
     }
 }
 
