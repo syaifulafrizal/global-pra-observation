@@ -5,8 +5,9 @@ Run this after pra_nighttime.py to add earthquake correlations
 """
 
 import os
+import shutil
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 from load_stations import load_stations
 from earthquake_integration import (
@@ -80,22 +81,112 @@ def main():
         old_recent_eq_file.unlink()
         print(f'  [INFO] Deleted old recent earthquakes file to ensure fresh calculation')
     
-    # Get global earthquakes for today (for statistics)
+    # Get global earthquakes for last 7 days (for date-specific display)
     print(f'\n{"="*60}')
-    print('Fetching today\'s global earthquakes (M>=5.5)...')
-    from earthquake_integration import get_global_earthquakes_today
-    global_eq = get_global_earthquakes_today(min_magnitude=5.5)
-    global_count = len(global_eq) if not global_eq.empty else 0
-    print(f'  [INFO] Total global earthquakes (M>=5.5) today: {global_count}')
+    print('Fetching global earthquakes (M>=5.5) for last 7 days...')
+    from earthquake_integration import get_global_earthquakes_today, calculate_distance, fetch_usgs_earthquakes
     
-    # Get recent earthquakes for map display (today only, ALL global earthquakes M>=5.5)
-    print(f'\n{"="*60}')
-    print('Fetching today\'s global earthquakes (M>=5.5) for map display...')
-    from earthquake_integration import get_global_earthquakes_today, calculate_distance
-    recent_eq = get_global_earthquakes_today(min_magnitude=5.5)
+    today = datetime.now().date()
+    web_data_dir = Path('web_output') / 'data'
+    web_data_dir.mkdir(parents=True, exist_ok=True)
     
-    # Calculate which earthquakes are actually within 200km of any station
-    within_200km_count = 0
+    # Process each of the last 7 days
+    for days_back in range(7):
+        target_date = today - timedelta(days=days_back)
+        date_str = target_date.strftime('%Y-%m-%d')
+        
+        # Fetch earthquakes for this date
+        start_date = datetime.combine(target_date, datetime.min.time())
+        end_date = start_date + timedelta(days=1)
+        
+        print(f'  Fetching earthquakes for {date_str}...')
+        day_eq = fetch_usgs_earthquakes(start_date, end_date, min_magnitude=5.5)
+        
+        if not day_eq.empty:
+            print(f'    Found {len(day_eq)} earthquakes for {date_str}')
+        else:
+            print(f'    No earthquakes for {date_str}')
+        
+        # Calculate which earthquakes are within 200km of any station
+        within_200km_count = 0
+        if not day_eq.empty:
+            stations_with_coords = []
+            for station in stations_data:
+                try:
+                    lat = station.get('latitude')
+                    lon = station.get('longitude')
+                    if lat is not None and lon is not None:
+                        lat = float(lat)
+                        lon = float(lon)
+                        if -90 <= lat <= 90 and -180 <= lon <= 180:
+                            stations_with_coords.append((lat, lon))
+                except (ValueError, TypeError):
+                    continue
+            
+            earthquakes_within_200km = set()
+            for idx, eq in day_eq.iterrows():
+                try:
+                    eq_lat = eq.get('latitude')
+                    eq_lon = eq.get('longitude')
+                    
+                    if pd.isna(eq_lat) or pd.isna(eq_lon):
+                        continue
+                    
+                    eq_lat = float(eq_lat)
+                    eq_lon = float(eq_lon)
+                    
+                    if not (-90 <= eq_lat <= 90 and -180 <= eq_lon <= 180):
+                        continue
+                    
+                    for st_lat, st_lon in stations_with_coords:
+                        try:
+                            from earthquake_integration import calculate_distance
+                            distance = calculate_distance(st_lat, st_lon, eq_lat, eq_lon)
+                            if distance <= 200:
+                                eq_id = eq.get('id', '')
+                                if not eq_id or pd.isna(eq_id):
+                                    eq_id = f"eq_{eq_lat:.3f}_{eq_lon:.3f}"
+                                earthquakes_within_200km.add(str(eq_id))
+                                break
+                        except Exception:
+                            continue
+                except Exception:
+                    continue
+            
+            within_200km_count = len(earthquakes_within_200km)
+        
+        # Save date-specific earthquake CSV
+        eq_file = web_data_dir / f'recent_earthquakes_{date_str}.csv'
+        if not day_eq.empty:
+            day_eq.to_csv(eq_file, index=False)
+        else:
+            # Create empty CSV with headers
+            empty_df = pd.DataFrame(columns=['time', 'latitude', 'longitude', 'magnitude', 'place', 'depth', 'type', 'id'])
+            empty_df.to_csv(eq_file, index=False)
+        
+        # Save date-specific earthquake statistics
+        eq_stats = {
+            'analysis_date': date_str,
+            'global_count': len(day_eq) if not day_eq.empty else 0,
+            'within_200km_count': within_200km_count,
+            'min_magnitude': 5.5
+        }
+        stats_file = web_data_dir / f'earthquake_stats_{date_str}.json'
+        import json
+        with open(stats_file, 'w') as f:
+            json.dump(eq_stats, f, indent=2)
+        
+        if days_back == 0:
+            # Also save as "today" for backward compatibility
+            shutil.copy(eq_file, web_data_dir / 'recent_earthquakes.csv')
+            shutil.copy(stats_file, web_data_dir / 'today_earthquake_stats.json')
+            global_count = len(day_eq) if not day_eq.empty else 0
+            recent_eq = day_eq.copy()
+            within_200km_count = within_200km_count  # Use the value calculated above
+    
+    print(f'  [OK] Saved earthquake data for last 7 days')
+    
+    # Summary uses today's data (already calculated above)
     if not recent_eq.empty:
         # Get all station coordinates (ensure they're floats)
         stations_with_coords = []
@@ -170,39 +261,9 @@ def main():
         
         within_200km_count = len(earthquakes_within_200km)
     
-    print(f'  [INFO] Earthquakes (M>=5.5) globally today: {len(recent_eq) if not recent_eq.empty else 0}')
+    # Summary (already saved above in the loop, but print summary)
+    print(f'  [INFO] Earthquakes (M>=5.5) globally today: {global_count}')
     print(f'  [INFO] Earthquakes (M>=5.5) within 200km of stations: {within_200km_count}')
-    
-    # Always save to web_output for frontend (even if empty, so file exists)
-    web_data_dir = Path('web_output') / 'data'
-    web_data_dir.mkdir(parents=True, exist_ok=True)
-    recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
-    
-    if not recent_eq.empty:
-        recent_eq.to_csv(recent_eq_file, index=False)
-        print(f'  [OK] Saved {len(recent_eq)} today\'s earthquakes (M>=5.5) to {recent_eq_file}')
-    else:
-        # Create empty CSV file with headers so frontend knows the file exists
-        import pandas as pd
-        empty_df = pd.DataFrame(columns=['time', 'latitude', 'longitude', 'magnitude', 'place', 'depth', 'type', 'id'])
-        empty_df.to_csv(recent_eq_file, index=False)
-        print(f'  [INFO] No earthquakes today, created empty CSV file: {recent_eq_file}')
-    
-    # Save global earthquake statistics (always create, even if 0)
-    eq_stats = {
-        'analysis_date': datetime.now().strftime('%Y-%m-%d'),
-        'global_count': global_count,
-        'within_200km_count': within_200km_count,
-        'min_magnitude': 5.5
-    }
-    web_data_dir = Path('web_output') / 'data'
-    web_data_dir.mkdir(parents=True, exist_ok=True)
-    import json
-    stats_file = web_data_dir / 'today_earthquake_stats.json'
-    with open(stats_file, 'w') as f:
-        json.dump(eq_stats, f, indent=2)
-    print(f'  [OK] Saved earthquake statistics to {stats_file}')
-    print(f'      Global: {global_count}, Within 200km: {within_200km_count}')
     
     # Print summary
     print(f'\n{"="*60}')

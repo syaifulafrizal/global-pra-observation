@@ -21,6 +21,7 @@ def get_stations():
         return [s.strip() for s in stations_env.split(',')]
     
     # Priority 1: Auto-detect from INTERMAGNET_DOWNLOADS (source of truth)
+    # Auto-detect: Find all stations that have been processed
     downloads_dir = Path('INTERMAGNET_DOWNLOADS')
     if downloads_dir.exists():
         stations = []
@@ -60,6 +61,10 @@ def get_stations():
             pass
     
     # Priority 4: Try to load from root stations.json
+            print(f'[INFO] Auto-detected {len(stations)} processed stations')
+            return stations
+    
+    # Fallback: Try to load from stations.json
     if Path('stations.json').exists():
         try:
             with open('stations.json', 'r') as f:
@@ -143,6 +148,8 @@ def cleanup_old_files(data_dir, cutoff_date):
     if deleted_count > 0:
         print(f'[INFO] Deleted {deleted_count} old files (older than {cutoff_date})')
     return deleted_count
+    # Last resort: default to KAK
+    return ['KAK']
 
 def prepare_web_output():
     """Prepare static files for web deployment with 7-day retention"""
