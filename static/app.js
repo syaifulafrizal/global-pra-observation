@@ -970,7 +970,9 @@ async function renderStationPlot(stationCode) {
     html += `</div>`;
     
     // Load and display figure
-    const figures = await loadStationFigures(stationCode);
+    // Use date from stationData if available, otherwise use selectedDate
+    const plotDate = stationData?.date || selectedDate || mostRecentDate;
+    const figures = await loadStationFigures(stationCode, plotDate);
     if (figures.length > 0) {
         html += `<div class="plot-image-container">`;
         html += `<img src="figures/${stationCode}/${figures[0]}" alt="PRA Plot for ${stationCode}" class="plot-image" onerror="this.parentElement.innerHTML='<p class=\\'error\\'>Plot not available</p>'">`;
@@ -1020,17 +1022,50 @@ async function renderStationPlot(stationCode) {
     plotDiv.innerHTML = html;
 }
 
-async function loadStationFigures(station) {
+async function loadStationFigures(station, date = null) {
+    // If date is provided, use it directly
+    if (date) {
+        const dateStr = date.replace(/-/g, '');
+        const filename = `PRA_${station}_${dateStr}.png`;
+        console.log(`[loadStationFigures] Using provided date for ${station}: ${date} -> ${filename}`);
+        return [filename];
+    }
+    
+    // Fallback: Try to get date from station data
     try {
-        const response = await fetch(`data/${station}_latest.json`);
-        if (response.ok) {
-            const data = await response.json();
-            if (data.date) {
-                const dateStr = data.date.replace(/-/g, '');
-                return [`PRA_${station}_${dateStr}.png`];
+        // Try to use selectedDate or mostRecentDate
+        const useDate = selectedDate || mostRecentDate;
+        if (useDate) {
+            const dateStr = useDate.replace(/-/g, '');
+            const filename = `PRA_${station}_${dateStr}.png`;
+            console.log(`[loadStationFigures] Using selectedDate/mostRecentDate for ${station}: ${useDate} -> ${filename}`);
+            return [filename];
+        }
+        
+        // Last resort: Try to fetch from date-specific JSON file
+        // Check available dates and try the most recent one
+        if (availableDates && availableDates.length > 0) {
+            console.log(`[loadStationFigures] Trying available dates for ${station}:`, availableDates);
+            for (const availableDate of availableDates) {
+                const dateStr = availableDate.replace(/-/g, '');
+                const filename = `PRA_${station}_${dateStr}.png`;
+                // Check if file exists by trying to load it
+                try {
+                    const testResponse = await fetch(`figures/${station}/${filename}`, { method: 'HEAD' });
+                    if (testResponse.ok) {
+                        console.log(`[loadStationFigures] Found plot file for ${station}: ${filename}`);
+                        return [filename];
+                    }
+                } catch (e) {
+                    // Continue to next date
+                }
             }
         }
-    } catch (e) {}
+    } catch (e) {
+        console.warn(`[loadStationFigures] Could not determine figure for station ${station}:`, e);
+    }
+    
+    console.warn(`[loadStationFigures] No plot file found for station ${station}`);
     return [];
 }
 
