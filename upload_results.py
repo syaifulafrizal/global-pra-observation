@@ -148,8 +148,6 @@ def cleanup_old_files(data_dir, cutoff_date):
     if deleted_count > 0:
         print(f'[INFO] Deleted {deleted_count} old files (older than {cutoff_date})')
     return deleted_count
-    # Last resort: default to KAK
-    return ['KAK']
 
 def prepare_web_output():
     """Prepare static files for web deployment with 7-day retention"""
