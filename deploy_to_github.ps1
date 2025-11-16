@@ -21,7 +21,7 @@ function Write-Log {
 
 function Remove-OldDataFiles {
     param([string]$DataDir, [DateTime]$CutoffDate)
-    """Remove data files older than cutoff date"""
+    # Remove data files older than cutoff date
     $deletedCount = 0
     
     # Remove old JSON files (format: {station}_{YYYY-MM-DD}.json)
@@ -361,7 +361,6 @@ try {
                 Write-Log "Now have $fileCount files staged" "Green"
             }
         }
-        
     } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {

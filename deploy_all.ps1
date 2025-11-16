@@ -125,6 +125,54 @@ if (Test-Path $uploadResultsPath) {
             $cleanLines | Set-Content -Path $uploadResultsPath
             Write-Log "Successfully cleaned merge conflicts in upload_results.py" "Green"
             
+            # Post-cleanup: Remove duplicate code patterns that often result from merge conflicts
+            # Read the file again to check for duplicates
+            $finalLines = Get-Content $uploadResultsPath
+            $deduplicatedLines = @()
+            $previousLine = ""
+            $skipNext = $false
+            
+            for ($i = 0; $i -lt $finalLines.Count; $i++) {
+                $currentLine = $finalLines[$i]
+                $trimmedCurrent = $currentLine.Trim()
+                $trimmedPrevious = $previousLine.Trim()
+                
+                # Skip if this line is a duplicate of the previous line (common merge conflict artifact)
+                # But only if both are similar if statements or similar code patterns
+                if ($trimmedCurrent -ne "" -and $trimmedPrevious -ne "") {
+                    # Check for duplicate if statements with similar conditions
+                    if ($trimmedCurrent -match "^if\s+.*is_dir\(\)" -and $trimmedPrevious -match "^if\s+.*is_dir\(\)") {
+                        # If current line is a subset of previous (shorter condition), skip it
+                        if ($trimmedCurrent.Length -lt $trimmedPrevious.Length -and $trimmedPrevious.Contains($trimmedCurrent.Substring(0, [Math]::Min(30, $trimmedCurrent.Length)))) {
+                            Write-Log "Removing duplicate if statement at line $($i+1)" "Yellow"
+                            continue
+                        }
+                    }
+                    
+                    # Check for orphaned return statements after another return
+                    if ($trimmedCurrent -match "^return\s+" -and $trimmedPrevious -match "^return\s+") {
+                        # Check if there's a comment like "Last resort" before the second return
+                        if ($i -gt 1 -and $finalLines[$i-2] -match "Last resort") {
+                            Write-Log "Removing orphaned return statement at line $($i+1)" "Yellow"
+                            continue
+                        }
+                    }
+                }
+                
+                # Check for lines that are exactly the same (duplicate consecutive lines)
+                if ($trimmedCurrent -eq $trimmedPrevious -and $trimmedCurrent -ne "" -and $trimmedCurrent -notmatch "^#") {
+                    # Skip exact duplicates (but keep comments and blank lines)
+                    continue
+                }
+                
+                $deduplicatedLines += $currentLine
+                $previousLine = $currentLine
+            }
+            
+            # Write deduplicated content
+            $deduplicatedLines | Set-Content -Path $uploadResultsPath
+            Write-Log "Removed duplicate code patterns" "Green"
+            
             # Verify it's clean (check for conflict markers)
             $verifyContent = Get-Content $uploadResultsPath -Raw
             if ($verifyContent -match "(?m)^[\s]*<<<<<<<|(?m)^[\s]*=======[\s]*$|(?m)^[\s]*>>>>>>>") {
