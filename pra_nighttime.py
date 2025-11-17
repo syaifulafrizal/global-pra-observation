@@ -503,9 +503,66 @@ def persistence_rule(T, isAnomQuiet, eq_date, K, Ddays):
     idx = (T >= t0) & (T <= eq_date)
     return np.sum(isAnomQuiet & idx) >= K
 
+def load_historical_quiet_p_values(station_code, current_date, out_folder, days_back=6):
+    """Load quiet P values from past days for EVT fitting
+    
+    Args:
+        station_code: Station code
+        current_date: Current date (datetime object in station timezone)
+        out_folder: Output folder path
+        days_back: Number of past days to load (default 6, for 7 days total including current)
+    
+    Returns:
+        tuple: (numpy array of quiet P values from past days, number of days loaded)
+    """
+    historical_Pq = []
+    days_loaded = 0
+    
+    for i in range(1, days_back + 1):  # Go back 1 to 6 days
+        past_date = current_date - timedelta(days=i)
+        json_file = out_folder / f'PRA_Night_{station_code}_{past_date.strftime("%Y%m%d")}.json'
+        
+        if json_file.exists():
+            try:
+                with open(json_file, 'r') as f:
+                    data = json.load(f)
+                
+                # Extract P values and isQuiet flags (preferred) or isAnomalous flags (fallback)
+                if 'P' in data:
+                    P_values = np.array(data['P'])
+                    
+                    # Prefer isQuiet if available, otherwise use ~isAnomalous as proxy
+                    if 'isQuiet' in data:
+                        is_quiet = np.array(data['isQuiet'])
+                        quiet_mask = is_quiet
+                    elif 'isAnomalous' in data:
+                        # Fallback: use non-anomalous as quiet proxy
+                        is_anomalous = np.array(data['isAnomalous'])
+                        quiet_mask = ~is_anomalous
+                    else:
+                        # If neither available, skip this day
+                        continue
+                    
+                    Pq_day = P_values[quiet_mask & np.isfinite(P_values)]
+                    
+                    if len(Pq_day) > 0:
+                        historical_Pq.extend(Pq_day.tolist())
+                        days_loaded += 1
+                        print(f'  Loaded {len(Pq_day)} quiet P values from {past_date.date()}')
+            except Exception as e:
+                print(f'  Warning: Could not load historical data from {past_date.date()}: {e}')
+                continue
+    
+    historical_array = np.array(historical_Pq) if historical_Pq else np.array([])
+    return historical_array, days_loaded
+
 def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI, 
-                f_low, f_high, stationZstats, opts, station_code):
-    """Analyze a single row with new method"""
+                f_low, f_high, stationZstats, opts, station_code, historical_Pq=None):
+    """Analyze a single row with new method
+    
+    Args:
+        historical_Pq: Optional numpy array of quiet P values from past days for EVT fitting
+    """
     # Compute P series
     result = compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, 
                             f_low, f_high, opts)
@@ -515,17 +572,31 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
     
     P, nZ, nG, T, isQuiet, fracDist = result
     
-    # Fit threshold from quiet samples
-    Pq = P[isQuiet & np.isfinite(P)]
+    # Get quiet P values from current day
+    Pq_current = P[isQuiet & np.isfinite(P)]
     
-    if len(Pq) == 0:
+    # Combine with historical quiet P values if available
+    if historical_Pq is not None and len(historical_Pq) > 0:
+        # Combine current day's quiet P values with historical data
+        Pq_combined = np.concatenate([historical_Pq, Pq_current])
+        print(f'  Using {len(historical_Pq)} historical + {len(Pq_current)} current = {len(Pq_combined)} total quiet P values for EVT fitting')
+        print(f'  (Data from historical datapoints + current day)')
+    else:
+        # Fallback to current day only if no historical data
+        Pq_combined = Pq_current
+        if len(Pq_current) > 0:
+            print(f'  Using {len(Pq_current)} current day quiet P values only (no historical data available yet)')
+            print(f'  Note: As more days of data accumulate, the threshold will become more accurate')
+    
+    if len(Pq_combined) == 0:
         return False, pd.DataFrame(), pd.DataFrame(), np.nan, 0
     
+    # Fit threshold using combined 7-day dataset
     if opts['useEVT']:
-        thrEff = fit_evt_threshold(Pq, opts['tailQ'], opts['fprTarget'], 
+        thrEff = fit_evt_threshold(Pq_combined, opts['tailQ'], opts['fprTarget'], 
                                    opts['pFloor'], opts['kSigma'])
     else:
-        thrEff = fit_ksigma_threshold(Pq, opts['kSigma'], opts['pFloor'])
+        thrEff = fit_ksigma_threshold(Pq_combined, opts['kSigma'], opts['pFloor'])
     
     # nZ guard
     nzOK = nz_guard(nZ, station_code, stationZstats, opts['useNZz'], 
@@ -547,7 +618,8 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
         'P': P,
         'nZ': nZ,
         'nG': nG,
-        'isAnomalous': isAnomQuiet
+        'isAnomalous': isAnomQuiet,
+        'isQuiet': isQuiet  # Store isQuiet for future historical data loading
     })
     ts['Time'] = pd.to_datetime(ts['Time'])
     
@@ -580,6 +652,71 @@ def cleanup_downloaded_files(out_folder):
             print(f'Deleted: {f.name}')
         except Exception as e:
             print(f'Warning: Could not delete {f.name}: {e}')
+
+def cleanup_old_data_files(station_code, current_date, out_folder, days_to_keep=7):
+    """Clean up old JSON, CSV, and figure files, keeping only the last N days
+    
+    Args:
+        station_code: Station code
+        current_date: Current date (datetime object in station timezone)
+        out_folder: Output folder path
+        days_to_keep: Number of days to keep (default 7, for 7-day rolling window)
+    """
+    cutoff_date = current_date - timedelta(days=days_to_keep)
+    deleted_count = 0
+    
+    # Clean up JSON files
+    json_files = list(out_folder.glob(f'PRA_Night_{station_code}_*.json'))
+    for json_file in json_files:
+        # Extract date from filename: PRA_Night_{station}_{YYYYMMDD}.json
+        try:
+            date_str = json_file.stem.split('_')[-1]  # Get YYYYMMDD part
+            file_date = datetime.strptime(date_str, '%Y%m%d').date()
+            file_date_dt = datetime.combine(file_date, datetime.min.time()).replace(tzinfo=current_date.tzinfo)
+            
+            if file_date_dt < cutoff_date:
+                json_file.unlink()
+                deleted_count += 1
+                print(f'  Deleted old JSON: {json_file.name}')
+        except (ValueError, IndexError) as e:
+            # Skip files that don't match the expected pattern
+            continue
+    
+    # Clean up CSV files
+    csv_files = list(out_folder.glob(f'PRA_Night_{station_code}_*.csv'))
+    for csv_file in csv_files:
+        try:
+            date_str = csv_file.stem.split('_')[-1]
+            file_date = datetime.strptime(date_str, '%Y%m%d').date()
+            file_date_dt = datetime.combine(file_date, datetime.min.time()).replace(tzinfo=current_date.tzinfo)
+            
+            if file_date_dt < cutoff_date:
+                csv_file.unlink()
+                deleted_count += 1
+                print(f'  Deleted old CSV: {csv_file.name}')
+        except (ValueError, IndexError):
+            continue
+    
+    # Clean up figure files
+    fig_folder = out_folder / 'figures'
+    if fig_folder.exists():
+        fig_files = list(fig_folder.glob(f'PRA_{station_code}_*.png'))
+        for fig_file in fig_files:
+            try:
+                # Extract date from filename: PRA_{station}_{YYYYMMDD}.png
+                date_str = fig_file.stem.split('_')[-1]
+                file_date = datetime.strptime(date_str, '%Y%m%d').date()
+                file_date_dt = datetime.combine(file_date, datetime.min.time()).replace(tzinfo=current_date.tzinfo)
+                
+                if file_date_dt < cutoff_date:
+                    fig_file.unlink()
+                    deleted_count += 1
+                    print(f'  Deleted old figure: {fig_file.name}')
+            except (ValueError, IndexError):
+                continue
+    
+    if deleted_count > 0:
+        print(f'[INFO] Cleaned up {deleted_count} old files for {station_code} (keeping last {days_to_keep} days)')
 
 def process_station(station_code):
     """Process a single station"""
@@ -714,17 +851,26 @@ def process_station(station_code):
     # Station stats (empty for now - can be computed from historical data)
     stationZstats = {}
     
+    # Load historical quiet P values from past 6 days for EVT fitting
+    print(f'[INFO] Loading historical quiet P values for {station_code}...')
+    historical_Pq, days_loaded = load_historical_quiet_p_values(station_code, today_dt, out_folder, days_back=6)
+    
+    if days_loaded > 0:
+        print(f'[INFO] Found historical data from {days_loaded} past day(s) for {station_code}')
+    else:
+        print(f'[INFO] No historical data available yet for {station_code} - will use current day only')
+    
     # Analyze
     is_anomalous, anom_table, ts, thrEff, nAnomHours = analyze_row(
         recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
-        F_LOW, F_HIGH, stationZstats, OPTS, station_code
+        F_LOW, F_HIGH, stationZstats, OPTS, station_code, historical_Pq=historical_Pq
     )
     
     if ts.empty:
         print(f'[ERROR] No valid time series for {station_code}')
         return False
     
-    # Save results
+    # Save results - include isQuiet for future historical data loading
     results = {
         'date': today_dt.date().isoformat(),
         'station': station_code,
@@ -733,6 +879,7 @@ def process_station(station_code):
         'nZ': ts['nZ'].tolist(),
         'nG': ts['nG'].tolist(),
         'isAnomalous': ts['isAnomalous'].tolist(),
+        'isQuiet': ts['isQuiet'].tolist(),  # Store isQuiet for historical data loading
         'threshold': float(thrEff),
         'nAnomHours': int(nAnomHours),
         'is_anomalous': bool(is_anomalous)
@@ -756,6 +903,10 @@ def process_station(station_code):
     
     # Cleanup downloaded files
     cleanup_downloaded_files(out_folder)
+    
+    # Cleanup old data files (keep only last 7 days)
+    print(f'[INFO] Cleaning up old data files for {station_code}...')
+    cleanup_old_data_files(station_code, today_dt, out_folder, days_to_keep=7)
     
     print(f'[OK] PRA Nighttime Analysis Completed for {station_code}')
     return True

@@ -361,6 +361,20 @@ try {
                 Write-Log "Now have $fileCount files staged" "Green"
             }
         }
+        
+        # Verify we're still on gh-pages before committing
+        $verifyBranch = git rev-parse --abbrev-ref HEAD
+        if ($verifyBranch -ne "gh-pages") {
+            Write-Log "ERROR: Not on gh-pages branch! Current: $verifyBranch" "Red"
+            throw "Branch mismatch detected"
+        }
+        
+        # Stage all files at root
+        Write-Log "Staging files..." "Yellow"
+        git add -f . 2>&1 | Out-Null
+        # Remove web_output from staging (we don't want the folder, just its contents at root)
+        git reset HEAD web_output/ 2>&1 | Out-Null
+        
     } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {

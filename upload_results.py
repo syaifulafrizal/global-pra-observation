@@ -97,7 +97,6 @@ def parse_date_from_filename(filename):
             return datetime.strptime(date_str, '%Y%m%d').date()
         except ValueError:
             return None
-    return None
 
 def get_available_dates():
     """Get list of available dates (last 7 days including today)"""
@@ -148,6 +147,8 @@ def cleanup_old_files(data_dir, cutoff_date):
     if deleted_count > 0:
         print(f'[INFO] Deleted {deleted_count} old files (older than {cutoff_date})')
     return deleted_count
+    # Last resort: default to KAK
+    return ['KAK']
 
 def prepare_web_output():
     """Prepare static files for web deployment with 7-day retention"""
@@ -376,7 +377,6 @@ def create_basic_index(output_dir, stations):
         <div id="stations-container" class="stations-grid">
             <p>Loading data...</p>
         </div>
-    </div>
     <script src="static/app.js"></script>
 </body>
 </html>'''
