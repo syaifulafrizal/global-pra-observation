@@ -227,8 +227,23 @@ try {
             
             # Copy web_output contents to root
             Write-Log "Copying web_output files to root..." "Yellow"
-            # Remove existing files (except .git and web_output)
+            # Remove existing files (except .git and web_output) - be more aggressive
+            Write-Log "Removing old files from root..." "Yellow"
             Get-ChildItem -Path . -Exclude ".git", "web_output" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+            
+            # Also remove any old index.html or static/ directory that might exist
+            if (Test-Path "index.html") {
+                Remove-Item "index.html" -Force -ErrorAction SilentlyContinue
+            }
+            if (Test-Path "static") {
+                Remove-Item "static" -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            if (Test-Path "data") {
+                Remove-Item "data" -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            if (Test-Path "figures") {
+                Remove-Item "figures" -Recurse -Force -ErrorAction SilentlyContinue
+            }
             
             # Copy from web_output directly to root
             if (Test-Path "web_output") {
@@ -244,6 +259,21 @@ try {
                     }
                 }
                 Write-Log "Files copied successfully" "Green"
+                
+                # Verify critical files exist
+                $criticalFiles = @('index.html', 'static/app.js', 'static/style.css', 'data/stations.json')
+                $missingFiles = @()
+                foreach ($file in $criticalFiles) {
+                    if (-not (Test-Path $file)) {
+                        $missingFiles += $file
+                    }
+                }
+                if ($missingFiles.Count -gt 0) {
+                    Write-Log "ERROR: Missing critical files after copy: $($missingFiles -join ', ')" "Red"
+                    throw "Critical files missing after copy"
+                } else {
+                    Write-Log "Verified: All critical files are present" "Green"
+                }
                 
                 # Create/update .gitignore to exclude web_output directory
                 if (-not (Test-Path ".gitignore")) {
