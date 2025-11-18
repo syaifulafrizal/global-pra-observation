@@ -231,18 +231,20 @@ input:checked + .slider:before {
     transition: width 0.3s ease;
 }
 
-/* Main Content Layout */
-.main-content-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-    margin-bottom: 24px;
+.metric-card.warning {
+    border-left: 4px solid var(--accent-warning, #f39c12);
 }
 
-@media (max-width: 1024px) {
-    .main-content-layout {
-        grid-template-columns: 1fr;
-    }
+.metric-card.warning .value {
+    color: var(--accent-warning, #f39c12);
+}
+
+/* Main Content Layout */
+.main-content-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 24px;
 }
 
 /* Map Section */
@@ -309,6 +311,7 @@ input:checked + .slider:before {
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 4px 6px var(--shadow);
+    width: 100%;
 }
 
 .plot-panel-header h2 {
@@ -341,11 +344,32 @@ input:checked + .slider:before {
 
 .selected-station-plot {
     margin-top: 20px;
-    min-height: 400px;
+    min-height: 600px;
+    width: 100%;
 }
 
 .selected-station-plot img {
+    width: 100%;
+    height: auto;
     max-width: 100%;
+    min-height: 600px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.plot-image-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.plot-image-container img,
+.plot-image-container .plot-image {
+    width: 100%;
+    height: auto;
+    min-height: 600px;
+    max-height: 800px;
+    object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--shadow);
 }

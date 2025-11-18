@@ -39,9 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateSelector = document.getElementById('date-selector');
     if (dateSelector) {
         dateSelector.addEventListener('change', (e) => {
-            const selectedDate = e.target.value;
-            if (selectedDate) {
-                renderDashboard(selectedDate);
+            const newDate = e.target.value;
+            if (newDate) {
+                selectedDate = newDate; // Update global variable
+                renderDashboard(newDate);
             }
         });
     }
@@ -53,9 +54,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Populate date selector immediately from stations.json
-    populateDateSelectorFromMetadata();
-    
-    renderDashboard();
+    populateDateSelectorFromMetadata().then(() => {
+        // Wait a bit for date selector to populate, then render
+        setTimeout(() => {
+            renderDashboard();
+        }, 100);
+    }).catch(error => {
+        console.error('Error populating date selector:', error);
+        // Still try to render even if date selector fails
+        renderDashboard();
+    });
     setInterval(() => {
         // Auto-refresh with current selected date
         const currentDate = document.getElementById('date-selector')?.value || selectedDate;
@@ -88,53 +96,62 @@ async function loadData(date = null) {
             selectedDate = date;
         }
         
+        // Validate that the selected date is in available dates
+        // If not, use the most recent date instead
+        if (availableDates.length > 0 && !availableDates.includes(date)) {
+            console.warn(`Selected date ${date} not in available dates. Using most recent: ${mostRecentDate}`);
+            date = mostRecentDate || availableDates[0];
+            selectedDate = date;
+        }
+        
         // Load data for the selected date, with station-specific fallback to previous days
+        // Only try dates that are in available_dates to avoid unnecessary 404s
         const dateData = {};
         const stationDates = {}; // Track which date each station is using
         let hasAnyData = false;
         
-        // For each station, try to load data for selected date, then fallback to previous days
+        // Sort available dates in descending order (most recent first) for efficient fallback
+        const sortedAvailableDates = [...availableDates].sort().reverse();
+        
+        // For each station, try to load data for selected date first
+        // If not available, fallback to most recent available date (for map display)
+        // This allows the map to show the most recent data even if selected date doesn't have data
         for (const station of (metadata.stations || [])) {
             let stationData = null;
             let stationDateUsed = null;
             
-            // Try selected date first
-            try {
-                const stationResponse = await fetch(`data/${station}_${date}.json`);
-                if (stationResponse.ok) {
-                    stationData = await stationResponse.json();
-                    stationDateUsed = date;
-                    hasAnyData = true;
+            // First, try the selected date (if it's in available_dates)
+            if (availableDates.includes(date)) {
+                try {
+                    const stationResponse = await fetch(`data/${station}_${date}.json`);
+                    if (stationResponse.ok) {
+                        stationData = await stationResponse.json();
+                        stationDateUsed = date;
+                        hasAnyData = true;
+                    }
+                } catch (error) {
+                    // Continue to fallback
                 }
-            } catch (error) {
-                // Station data not available for this date, try fallback
             }
             
-            // If no data for selected date, try previous days (up to 6 days back)
-            if (!stationData) {
-                const selectedDateObj = new Date(date + 'T00:00:00');
-                for (let daysBack = 1; daysBack <= 6; daysBack++) {
-                    const fallbackDate = new Date(selectedDateObj);
-                    fallbackDate.setDate(fallbackDate.getDate() - daysBack);
-                    const fallbackDateStr = fallbackDate.toISOString().split('T')[0];
+            // If selected date doesn't have data, fallback to most recent available date
+            // This ensures the map always shows the most recent data
+            if (!stationData && sortedAvailableDates.length > 0) {
+                for (const tryDate of sortedAvailableDates) {
+                    // Skip if we already tried this date
+                    if (tryDate === date) continue;
                     
-                    // Check if this date is in available dates
-                    if (!availableDates.includes(fallbackDateStr)) {
-                        continue;
-                    }
-                    
-                    // Try to load data for this fallback date
                     try {
-                        const stationResponse = await fetch(`data/${station}_${fallbackDateStr}.json`);
+                        const stationResponse = await fetch(`data/${station}_${tryDate}.json`);
                         if (stationResponse.ok) {
                             stationData = await stationResponse.json();
-                            stationDateUsed = fallbackDateStr;
+                            stationDateUsed = tryDate;
                             hasAnyData = true;
-                            console.debug(`Station ${station}: Using fallback data from ${fallbackDateStr} (${daysBack} day(s) before selected date ${date})`);
-                            break;
+                            console.debug(`Station ${station}: Using fallback data from ${tryDate} (selected date ${date} not available)`);
+                            break; // Found data, stop trying
                         }
                     } catch (error) {
-                        // Continue to next fallback date
+                        continue;
                     }
                 }
             }
@@ -200,43 +217,21 @@ async function loadFalseNegatives(station) {
 }
 
 async function loadRecentEarthquakes(date = null) {
-    // Try to load date-specific earthquake data, with fallback to previous days
+    // Load earthquake data for the specified date only (no fallback)
+    // Use selectedDate if no date provided
     if (!date) {
-        date = new Date().toISOString().split('T')[0];
+        date = selectedDate || new Date().toISOString().split('T')[0];
     }
     
-    const dateObj = new Date(date + 'T00:00:00');
-    
-    // Try selected date first, then fallback up to 6 days back
-    for (let daysBack = 0; daysBack <= 6; daysBack++) {
-        const tryDate = new Date(dateObj);
-        tryDate.setDate(tryDate.getDate() - daysBack);
-        const tryDateStr = tryDate.toISOString().split('T')[0];
-        
-        try {
-            const response = await fetch(`data/recent_earthquakes_${tryDateStr}.csv`);
-            if (response.ok) {
-                const text = await response.text();
-                const earthquakes = parseCSV(text);
-                if (earthquakes.length > 0 || daysBack === 0) {
-                    // Return data if found, or if it's the selected date (even if empty)
-                    return earthquakes;
-                }
-            }
-        } catch (error) {
-            // Continue to next fallback date
-        }
-    }
-    
-    // Fallback to old format (today's earthquakes) for backward compatibility
+    // Only try the specified date
     try {
-        const response = await fetch('data/recent_earthquakes.csv');
+        const response = await fetch(`data/recent_earthquakes_${date}.csv`);
         if (response.ok) {
             const text = await response.text();
             return parseCSV(text);
         }
     } catch (error) {
-        // Ignore
+        // Return empty array if file doesn't exist
     }
     
     return [];
@@ -388,7 +383,7 @@ function initMap() {
     }
 }
 
-function addStationToMap(stationCode, stationData, eqCorrelations) {
+function addStationToMap(stationCode, stationData, eqCorrelations, dataContext = null) {
     if (!map) {
         console.warn('Map not initialized, skipping marker for', stationCode);
         return;
@@ -417,10 +412,24 @@ function addStationToMap(stationCode, stationData, eqCorrelations) {
         iconAnchor: [12, 12]
     });
     
+    // Get the date being used for this station (from stationData or station_dates)
+    const stationDateUsed = stationData?.date || (dataContext?.station_dates && dataContext.station_dates[stationCode]) || 'Unknown';
+    const isUsingFallback = dataContext?.selected_date && stationDateUsed !== dataContext.selected_date;
+    
     // Create popup content with earthquake info
     let popupContent = `<div style="min-width: 220px; font-family: Arial, sans-serif;"><strong style="color: #c0392b; font-size: 1.1em;">${metadata.name || stationCode} (${stationCode})</strong><br>`;
     popupContent += `<span style="color: #7f8c8d;">${metadata.country || 'Unknown'}</span><br>`;
     popupContent += `<small>📍 ${metadata.latitude ? metadata.latitude.toFixed(3) : 'N/A'}, ${metadata.longitude ? metadata.longitude.toFixed(3) : 'N/A'}</small><br>`;
+    
+    // Show data date with fallback indicator
+    if (isUsingFallback && dataContext?.selected_date) {
+        popupContent += `<hr style="margin: 8px 0; border-color: #f39c12;">`;
+        popupContent += `<small style="color: #f39c12;">📅 Data from: ${formatDate(stationDateUsed)}</small><br>`;
+        popupContent += `<small style="color: #f39c12; font-style: italic;">(Selected: ${formatDateForSelector(dataContext.selected_date)})</small><br>`;
+    } else if (stationData) {
+        popupContent += `<hr style="margin: 8px 0; border-color: #95a5a6;">`;
+        popupContent += `<small style="color: #95a5a6;">📅 Data from: ${formatDate(stationDateUsed)}</small><br>`;
+    }
     
     if (hasAnomaly && stationData) {
         popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">⚠️ Anomaly Detected</strong><br>`;
@@ -620,6 +629,7 @@ function addEarthquakeMarkers(earthquakes) {
 }
 
 async function renderDashboard(date = null) {
+    console.log('renderDashboard called with date:', date);
     // The template already has the structure, we just need to update it
     // Show loading state
     const mapContainer = document.getElementById('map-container');
@@ -627,18 +637,41 @@ async function renderDashboard(date = null) {
         mapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ecf0f1;"><p>Loading map data...</p></div>';
     }
     
-    const data = await loadData(date);
-    if (!data) {
-        const dateStr = date || selectedDate || 'selected date';
+    let data;
+    try {
+        console.log('Loading data...');
+        data = await loadData(date);
+        console.log('Data loaded:', data ? 'Success' : 'Failed', data);
+        
+        if (!data) {
+            const dateStr = date || selectedDate || 'selected date';
+            console.warn('No data available for date:', dateStr);
+            if (mapContainer) {
+                mapContainer.innerHTML = `
+                    <div class="no-data" style="text-align: center; padding: 40px; color: #ecf0f1;">
+                        <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">
+                            No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
+                        </p>
+                        <p style="color: #95a5a6; font-size: 0.9em;">
+                            Please select a different date from the dropdown above.
+                        </p>
+                    </div>
+                `;
+            }
+            return;
+        }
+    } catch (error) {
+        console.error('Error in renderDashboard:', error);
         if (mapContainer) {
             mapContainer.innerHTML = `
-                <div class="no-data" style="text-align: center; padding: 40px; color: #ecf0f1;">
-                    <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
+                <div class="error" style="text-align: center; padding: 40px; color: #e74c3c;">
+                    <h2 style="margin-bottom: 20px;">❌ Error Loading Data</h2>
                     <p style="font-size: 1.1em; margin-bottom: 10px;">
-                        No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
+                        ${error.message || 'Unknown error occurred'}
                     </p>
                     <p style="color: #95a5a6; font-size: 0.9em;">
-                        Please select a different date from the dropdown above.
+                        Please check the browser console for details.
                     </p>
                 </div>
             `;
@@ -646,27 +679,71 @@ async function renderDashboard(date = null) {
         return;
     }
     
+    // Data was successfully loaded - continue with rendering
     // Show notice if any stations are using fallback data
     if (data.station_dates) {
         const stationsUsingFallback = Object.entries(data.station_dates)
             .filter(([station, dateUsed]) => dateUsed !== data.selected_date)
+            .map(([station, dateUsed]) => ({ station, dateUsed }));
+        
+        const stationsWithSelectedDate = Object.entries(data.station_dates)
+            .filter(([station, dateUsed]) => dateUsed === data.selected_date)
             .map(([station]) => station);
+        
+        // Group fallback stations by the date they're using
+        const fallbackByDate = {};
+        stationsUsingFallback.forEach(({ station, dateUsed }) => {
+            if (!fallbackByDate[dateUsed]) {
+                fallbackByDate[dateUsed] = [];
+            }
+            fallbackByDate[dateUsed].push(station);
+        });
         
         if (stationsUsingFallback.length > 0) {
             const notice = document.createElement('div');
             notice.className = 'fallback-notice';
-            notice.style.cssText = 'background: rgba(243, 156, 18, 0.2); border-left: 4px solid #f39c12; padding: 12px 20px; margin: 15px 0; border-radius: 4px; color: #ecf0f1;';
-            const stationList = stationsUsingFallback.length <= 5 
-                ? stationsUsingFallback.join(', ')
-                : `${stationsUsingFallback.slice(0, 5).join(', ')} and ${stationsUsingFallback.length - 5} more`;
-            notice.innerHTML = `
-                <strong>ℹ️ Notice:</strong> ${stationsUsingFallback.length} station(s) (${stationList}) don't have data for <strong>${formatDateForSelector(data.selected_date)}</strong>. 
-                Showing previous day's data for these stations.
-                ${data.selected_date === new Date().toISOString().split('T')[0] ? 
-                    '<br><small>This is normal if the nighttime window (20:00-04:00 local time) has not yet completed for these stations.</small>' : 
-                    ''}
-            `;
-            container.insertBefore(notice, container.firstChild);
+            notice.style.cssText = 'background: rgba(243, 156, 18, 0.15); border-left: 4px solid #f39c12; padding: 16px 20px; margin: 15px 0; border-radius: 8px; color: #ecf0f1; font-size: 0.95rem;';
+            
+            let noticeHTML = `<div style="display: flex; align-items: flex-start; gap: 12px;">`;
+            noticeHTML += `<div style="font-size: 1.5em;">ℹ️</div>`;
+            noticeHTML += `<div style="flex: 1;">`;
+            noticeHTML += `<strong style="color: #f39c12; display: block; margin-bottom: 8px;">Data Availability Notice</strong>`;
+            noticeHTML += `<p style="margin: 8px 0;">`;
+            noticeHTML += `<strong>${stationsWithSelectedDate.length}</strong> station(s) have data for <strong>${formatDateForSelector(data.selected_date)}</strong>. `;
+            noticeHTML += `<strong>${stationsUsingFallback.length}</strong> station(s) are using previous day's data:`;
+            noticeHTML += `</p>`;
+            
+            // List stations by fallback date
+            Object.entries(fallbackByDate).forEach(([fallbackDate, stations]) => {
+                const stationList = stations.length <= 8 
+                    ? stations.join(', ')
+                    : `${stations.slice(0, 8).join(', ')} and ${stations.length - 8} more`;
+                noticeHTML += `<div style="margin: 8px 0; padding-left: 16px; border-left: 2px solid rgba(243, 156, 18, 0.5);">`;
+                noticeHTML += `<strong>${stations.length} station(s)</strong> using data from <strong>${formatDateForSelector(fallbackDate)}</strong>: `;
+                noticeHTML += `<span style="color: #bdc3c7; font-size: 0.9em;">${stationList}</span>`;
+                noticeHTML += `</div>`;
+            });
+            
+            if (data.selected_date === new Date().toISOString().split('T')[0]) {
+                noticeHTML += `<p style="margin-top: 12px; font-size: 0.9em; color: #bdc3c7; font-style: italic;">`;
+                noticeHTML += `Note: This is normal if the nighttime window (20:00-04:00 local time) has not yet completed for these stations.`;
+                noticeHTML += `</p>`;
+            } else {
+                noticeHTML += `<p style="margin-top: 12px; font-size: 0.9em; color: #bdc3c7; font-style: italic;">`;
+                noticeHTML += `Note: EVT threshold calculation requires 7 days of data. Stations without data for the selected date are showing the most recent available data.`;
+                noticeHTML += `</p>`;
+            }
+            
+            noticeHTML += `</div></div>`;
+            notice.innerHTML = noticeHTML;
+            
+            const container = document.querySelector('.container') || document.body;
+            const mapSection = document.querySelector('.map-section');
+            if (mapSection && mapSection.parentNode) {
+                mapSection.parentNode.insertBefore(notice, mapSection);
+            } else {
+                container.insertBefore(notice, container.firstChild);
+            }
         }
     }
     
@@ -739,46 +816,23 @@ async function renderDashboard(date = null) {
         }
     }
     
-    // Load earthquake statistics for selected date (with fallback)
+    // Load earthquake statistics for selected date only (no fallback)
     let eqStats = { global: 0, within200km: 0 };
     let eqDateUsed = data.selected_date;
     
-    const dateObj = new Date(data.selected_date + 'T00:00:00');
-    for (let daysBack = 0; daysBack <= 6; daysBack++) {
-        const tryDate = new Date(dateObj);
-        tryDate.setDate(tryDate.getDate() - daysBack);
-        const tryDateStr = tryDate.toISOString().split('T')[0];
-        
-        try {
-            const statsResponse = await fetch(`data/earthquake_stats_${tryDateStr}.json`);
-            if (statsResponse.ok) {
-                const statsData = await statsResponse.json();
-                eqStats = {
-                    global: statsData.global_count || statsData.global || 0,
-                    within200km: statsData.within_200km_count || statsData.within200km || 0
-                };
-                eqDateUsed = tryDateStr;
-                break;
-            }
-        } catch (error) {
-            // Continue to next fallback date
+    // Only try the selected date
+    try {
+        const statsResponse = await fetch(`data/earthquake_stats_${data.selected_date}.json`);
+        if (statsResponse.ok) {
+            const statsData = await statsResponse.json();
+            eqStats = {
+                global: statsData.global_count || statsData.global || 0,
+                within200km: statsData.within_200km_count || statsData.within200km || 0
+            };
+            eqDateUsed = data.selected_date;
         }
-    }
-    
-    // Fallback to old format for backward compatibility
-    if (eqStats.global === 0 && eqStats.within200km === 0) {
-        try {
-            const statsResponse = await fetch('data/today_earthquake_stats.json');
-            if (statsResponse.ok) {
-                const statsData = await statsResponse.json();
-                eqStats = {
-                    global: statsData.global_count || statsData.global || 0,
-                    within200km: statsData.within_200km_count || statsData.within200km || 0
-                };
-            }
-        } catch (error) {
-            console.warn('Could not load earthquake statistics:', error);
-        }
+    } catch (error) {
+        console.debug('Could not load earthquake statistics for selected date:', error);
     }
     
     // Create summary stats boxes (like before, but better styled)
@@ -797,23 +851,26 @@ async function renderDashboard(date = null) {
             </div>
             <div class="metric-card">
                 <h3>Events (24h)</h3>
-                <div class="value">${withEQ}</div>
-                <div class="label">🌋 With EQ M≥5.0 (Reliable)</div>
+                <div class="value">${eqStats.global}</div>
+                <div class="label">🌍 Global M≥5.0</div>
+                <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                    ${eqStats.within200km} within 200km of stations
+                </div>
             </div>
-            <div class="metric-card progress">
-                <h3>Alert Level</h3>
-                <div class="value">${falseAlarms > 0 ? '⚠️' : '✓'}</div>
-                <div class="label">${falseAlarms > 0 ? 'False Alarms: ' + falseAlarms : 'All Clear'}</div>
-                ${falseAlarms > 0 ? `<div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(100, (falseAlarms / totalStations) * 100)}%"></div></div>` : ''}
+            <div class="metric-card ${falseAlarms > 0 ? 'warning' : ''}">
+                <h3>False Positives</h3>
+                <div class="value">${falseAlarms}</div>
+                <div class="label">Anomalies without EQ M≥5.0</div>
+            </div>
+            <div class="metric-card ${falseNegatives > 0 ? 'warning' : ''}">
+                <h3>False Negatives</h3>
+                <div class="value">${falseNegatives}</div>
+                <div class="label">EQ M≥5.0 without anomaly</div>
             </div>
         `;
     }
     
-    // Update timestamp
-    const timestampEl = document.getElementById('timestamp');
-    if (timestampEl) {
-        timestampEl.textContent = new Date().toLocaleString();
-    }
+    // Update timestamp will be handled in renderDashboard
     
     // Update station selector dropdown
     const stationSelector = document.getElementById('station-selector');
@@ -900,7 +957,7 @@ async function renderDashboard(date = null) {
             // Add all station markers
             for (const station of allStations) {
                 const { stationData, eqCorrelations } = stationDataMap[station] || { stationData: allStationsData[station], eqCorrelations: [] };
-                addStationToMap(station, stationData, eqCorrelations);
+                addStationToMap(station, stationData, eqCorrelations, data);
             }
             
             console.log('Loading earthquakes...');
@@ -1031,10 +1088,25 @@ async function renderStationPlot(stationCode) {
     const hasAnomaly = stationData && stationData.is_anomalous;
     const falseNegatives = await loadFalseNegatives(stationCode);
     
+    // Get the date being used for this station
+    const stationDateUsed = stationData?.date || selectedDate || mostRecentDate;
+    const isUsingFallback = selectedDate && stationDateUsed !== selectedDate;
+    
     let html = `<div class="station-plot-card">`;
     html += `<div class="plot-header">`;
     html += `<h3>${stationCode} - ${metadata.name || stationCode}</h3>`;
     html += `<p class="plot-location">${metadata.country || ''} | 📍 ${metadata.latitude ? metadata.latitude.toFixed(3) : 'N/A'}, ${metadata.longitude ? metadata.longitude.toFixed(3) : 'N/A'}</p>`;
+    
+    // Show date indicator
+    if (isUsingFallback && selectedDate) {
+        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(243, 156, 18, 0.15); border-left: 3px solid #f39c12; border-radius: 4px; font-size: 0.9em; color: #f39c12;">`;
+        html += `📅 Showing data from <strong>${formatDate(stationDateUsed)}</strong> (selected: ${formatDateForSelector(selectedDate)})`;
+        html += `</div>`;
+    } else if (stationData) {
+        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(149, 165, 166, 0.1); border-left: 3px solid #95a5a6; border-radius: 4px; font-size: 0.9em; color: #95a5a6;">`;
+        html += `📅 Data from: <strong>${formatDate(stationDateUsed)}</strong>`;
+        html += `</div>`;
+    }
     
     if (hasAnomaly) {
         html += `<div class="plot-status ${hasEQ ? 'status-eq' : 'status-false'}">`;
@@ -1049,8 +1121,10 @@ async function renderStationPlot(stationCode) {
     html += `</div>`;
     
     // Load and display figure
-    // Use date from stationData if available, otherwise use selectedDate
+    // Use the date from stationData (which should match selectedDate)
+    // This ensures the figure matches the data being displayed
     const plotDate = stationData?.date || selectedDate || mostRecentDate;
+    console.log(`[renderStationPlot] Loading figure for ${stationCode} with date: ${plotDate} (stationData.date: ${stationData?.date}, selectedDate: ${selectedDate})`);
     const figures = await loadStationFigures(stationCode, plotDate);
     if (figures.length > 0) {
         html += `<div class="plot-image-container">`;
@@ -1064,7 +1138,7 @@ async function renderStationPlot(stationCode) {
     if (stationData) {
         html += `<div class="plot-info">`;
         html += `<div class="info-row"><span class="info-label">Date:</span><span class="info-value">${formatDate(stationData.date)}</span></div>`;
-        html += `<div class="info-row"><span class="info-label">Threshold:</span><span class="info-value">${parseFloat(stationData.threshold || 0).toFixed(2)}</span></div>`;
+        html += `<div class="info-row"><span class="info-label">Threshold:</span><span class="info-value">${parseFloat(stationData.threshold || 0).toFixed(2)}</span> <span style="font-size: 0.8em; color: var(--text-secondary);">(EVT GPD, 7-day)</span></div>`;
         html += `<div class="info-row"><span class="info-label">Anomaly Hours:</span><span class="info-value">${stationData.nAnomHours || 0}</span></div>`;
         // Show reliable correlations (M>=5.0)
         if (hasEQ && reliableCorrelations.length > 0) {

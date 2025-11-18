@@ -225,6 +225,13 @@ try {
                 throw "Not on gh-pages branch! Current: $checkBranch"
             }
             
+            # Pull latest from remote to ensure we're up to date
+            Write-Log "Pulling latest from origin/gh-pages..." "Yellow"
+            git pull origin gh-pages 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                Write-Log "Warning: Failed to pull from remote (continuing anyway)" "Yellow"
+            }
+            
             # Copy web_output contents to root
             Write-Log "Copying web_output files to root..." "Yellow"
             # Remove existing files (except .git and web_output) - be more aggressive
@@ -391,7 +398,8 @@ try {
     }
     
     Write-Log "Pushing to origin/$GITHUB_BRANCH..." "Yellow"
-    # Force push to ensure old files are overwritten
+    # Force push to ensure old files are overwritten and cache is cleared
+    Write-Log "Using force push to overwrite any cached content..." "Yellow"
     $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Push output: $pushOutput" "Red"
@@ -426,12 +434,20 @@ try {
     if ($parts.Length -eq 2) {
         $username = $parts[0]
         $repoName = $parts[1]
-        Write-Log "  https://$username.github.io/$repoName" "Green"
+        $siteUrl = "https://$username.github.io/$repoName"
+        Write-Log "  $siteUrl" "Green"
     } else {
-        Write-Log "  https://$repoPath.github.io" "Green"
+        $siteUrl = "https://$repoPath.github.io"
+        Write-Log "  $siteUrl" "Green"
     }
     Write-Log "" "White"
-    Write-Log "Note: It may take 1-2 minutes for GitHub Pages to update" "Yellow"
+    Write-Log "Deployment Notes:" "Cyan"
+    Write-Log "  - GitHub Pages may take 1-2 minutes to update" "Yellow"
+    Write-Log "  - If you see the old version, clear your browser cache:" "Yellow"
+    Write-Log "    * Press Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac)" "White"
+    Write-Log "    * Or open in an incognito/private window" "White"
+    Write-Log "  - The deployment includes today's data: $(Get-Date -Format 'yyyy-MM-dd')" "Green"
+    Write-Log "" "White"
     
     # Switch back to original branch
     if ($currentBranch -and $currentBranch -ne $GITHUB_BRANCH) {
