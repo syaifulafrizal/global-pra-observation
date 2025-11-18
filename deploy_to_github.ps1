@@ -156,6 +156,52 @@ $currentBranch = git rev-parse --abbrev-ref HEAD
 Write-Log "Fetching latest from remote..." "Yellow"
 git fetch origin 2>&1 | Out-Null
 
+# IMPORTANT: Copy web_output to temp location BEFORE switching branches
+# web_output is in .gitignore, so it won't exist on gh-pages branch
+Write-Log "Preparing web_output for deployment..." "Yellow"
+if (-not (Test-Path "web_output")) {
+    Write-Log "ERROR: web_output/ directory not found on current branch!" "Red"
+    Write-Log "Please run 'python upload_results.py' first to prepare files" "Red"
+    exit 1
+}
+
+# Verify web_output/data/stations.json has correct format
+if (Test-Path "web_output/data/stations.json") {
+    try {
+        $webOutputJson = Get-Content "web_output/data/stations.json" | ConvertFrom-Json
+        $webOutputCount = if ($webOutputJson.stations) { $webOutputJson.stations.Count } else { 0 }
+        $webOutputHasDates = $webOutputJson.available_dates -ne $null
+        
+        Write-Log "web_output verification:" "Yellow"
+        Write-Log "  Stations: $webOutputCount" "Gray"
+        Write-Log "  Has available_dates: $webOutputHasDates" "Gray"
+        
+        if ($webOutputCount -le 1 -or -not $webOutputHasDates) {
+            Write-Log "ERROR: web_output/data/stations.json has wrong format!" "Red"
+            Write-Log "Please run 'python upload_results.py' again to regenerate it" "Red"
+            exit 1
+        } else {
+            Write-Log "Verified: web_output is correct ($webOutputCount stations)" "Green"
+        }
+    } catch {
+        Write-Log "ERROR: Could not verify web_output/data/stations.json: $_" "Red"
+        exit 1
+    }
+} else {
+    Write-Log "ERROR: web_output/data/stations.json not found!" "Red"
+    Write-Log "Please run 'python upload_results.py' first" "Red"
+    exit 1
+}
+
+# Copy web_output to temp location (outside .gitignore) so it persists across branch switches
+$tempWebOutput = "web_output_temp_deploy"
+Write-Log "Copying web_output to temp location for branch switching..." "Yellow"
+if (Test-Path $tempWebOutput) {
+    Remove-Item $tempWebOutput -Recurse -Force
+}
+Copy-Item -Path "web_output" -Destination $tempWebOutput -Recurse -Force
+Write-Log "web_output copied to $tempWebOutput (will be used after branch switch)" "Green"
+
 # Push to GitHub
 Write-Log "Deploying to GitHub Pages..." "Yellow"
 try {
@@ -252,10 +298,24 @@ try {
                 Remove-Item "figures" -Recurse -Force -ErrorAction SilentlyContinue
             }
             
-            # Copy from web_output directly to root
-            if (Test-Path "web_output") {
-                Write-Log "Copying files from web_output to root..." "Yellow"
-                # Copy all contents of web_output to current directory
+            # Copy from temp web_output location (web_output doesn't exist on gh-pages branch)
+            $tempWebOutput = "web_output_temp_deploy"
+            if (Test-Path $tempWebOutput) {
+                Write-Log "Copying files from temp web_output to root..." "Yellow"
+                # Copy all contents of temp web_output to current directory
+                $webOutputPath = Resolve-Path $tempWebOutput
+                Get-ChildItem -Path $webOutputPath -Force | ForEach-Object {
+                    $destPath = Join-Path (Get-Location) $_.Name
+                    if ($_.PSIsContainer) {
+                        Copy-Item -Path $_.FullName -Destination $destPath -Recurse -Force
+                    } else {
+                        Copy-Item -Path $_.FullName -Destination $destPath -Force
+                    }
+                }
+                Write-Log "Files copied successfully from temp location" "Green"
+            } elseif (Test-Path "web_output") {
+                # Fallback: try web_output if temp doesn't exist
+                Write-Log "Temp web_output not found, trying web_output directory..." "Yellow"
                 $webOutputPath = Resolve-Path "web_output"
                 Get-ChildItem -Path $webOutputPath -Force | ForEach-Object {
                     $destPath = Join-Path (Get-Location) $_.Name
@@ -266,67 +326,72 @@ try {
                     }
                 }
                 Write-Log "Files copied successfully" "Green"
-                
-                # Verify critical files exist and have correct content
-                $criticalFiles = @('index.html', 'static/app.js', 'static/style.css', 'data/stations.json')
-                $missingFiles = @()
-                foreach ($file in $criticalFiles) {
-                    if (-not (Test-Path $file)) {
-                        $missingFiles += $file
-                    }
+            } else {
+                throw "Neither temp web_output nor web_output directory found"
+            }
+            
+            # Verify critical files exist and have correct content
+            $criticalFiles = @('index.html', 'static/app.js', 'static/style.css', 'data/stations.json')
+            $missingFiles = @()
+            foreach ($file in $criticalFiles) {
+                if (-not (Test-Path $file)) {
+                    $missingFiles += $file
                 }
-                if ($missingFiles.Count -gt 0) {
-                    Write-Log "ERROR: Missing critical files after copy: $($missingFiles -join ', ')" "Red"
-                    throw "Critical files missing after copy"
-                } else {
-                    Write-Log "Verified: All critical files are present" "Green"
-                }
+            }
+            if ($missingFiles.Count -gt 0) {
+                Write-Log "ERROR: Missing critical files after copy: $($missingFiles -join ', ')" "Red"
+                throw "Critical files missing after copy"
+            } else {
+                Write-Log "Verified: All critical files are present" "Green"
+            }
+            
+            # Verify stations.json has correct format (not old format)
+            try {
+                $stationsJson = Get-Content "data/stations.json" | ConvertFrom-Json
+                $stationCount = if ($stationsJson.stations) { $stationsJson.stations.Count } else { 0 }
+                $hasAvailableDates = $stationsJson.available_dates -ne $null
+                $hasMetadata = $stationsJson.metadata -ne $null
                 
-                # Verify stations.json has correct format (not old format)
-                try {
-                    $stationsJson = Get-Content "data/stations.json" | ConvertFrom-Json
-                    $stationCount = if ($stationsJson.stations) { $stationsJson.stations.Count } else { 0 }
-                    $hasAvailableDates = $stationsJson.available_dates -ne $null
-                    $hasMetadata = $stationsJson.metadata -ne $null
+                Write-Log "Verifying stations.json content..." "Yellow"
+                Write-Log "  Stations: $stationCount" "Gray"
+                Write-Log "  Has available_dates: $hasAvailableDates" "Gray"
+                Write-Log "  Has metadata: $hasMetadata" "Gray"
+                
+                if ($stationCount -le 1 -or -not $hasAvailableDates) {
+                    Write-Log "ERROR: stations.json has old format! (Stations: $stationCount, Has dates: $hasAvailableDates)" "Red"
+                    Write-Log "This suggests web_output/data/stations.json wasn't copied correctly" "Red"
+                    Write-Log "Note: web_output may not exist on gh-pages branch (it's in .gitignore)" "Yellow"
+                    Write-Log "Re-copying from temp web_output location..." "Yellow"
                     
-                    Write-Log "Verifying stations.json content..." "Yellow"
-                    Write-Log "  Stations: $stationCount" "Gray"
-                    Write-Log "  Has available_dates: $hasAvailableDates" "Gray"
-                    Write-Log "  Has metadata: $hasMetadata" "Gray"
-                    
-                    if ($stationCount -le 1 -or -not $hasAvailableDates) {
-                        Write-Log "ERROR: stations.json has old format! (Stations: $stationCount, Has dates: $hasAvailableDates)" "Red"
-                        Write-Log "This suggests web_output/data/stations.json wasn't copied correctly" "Red"
-                        Write-Log "Checking web_output/data/stations.json..." "Yellow"
-                        if (Test-Path "web_output/data/stations.json") {
-                            $webOutputJson = Get-Content "web_output/data/stations.json" | ConvertFrom-Json
-                            $webOutputCount = if ($webOutputJson.stations) { $webOutputJson.stations.Count } else { 0 }
-                            Write-Log "  web_output has $webOutputCount stations" "Yellow"
-                            if ($webOutputCount -gt 1) {
-                                Write-Log "Copying stations.json again from web_output..." "Yellow"
-                                Copy-Item -Path "web_output/data/stations.json" -Destination "data/stations.json" -Force
-                                Write-Log "Re-copied stations.json" "Green"
-                            }
+                    # Use temp web_output location (should still exist)
+                    $tempWebOutput = "web_output_temp_deploy"
+                    if (Test-Path "$tempWebOutput/data/stations.json") {
+                        $webOutputJson = Get-Content "$tempWebOutput/data/stations.json" | ConvertFrom-Json
+                        $webOutputCount = if ($webOutputJson.stations) { $webOutputJson.stations.Count } else { 0 }
+                        Write-Log "  temp web_output has $webOutputCount stations" "Yellow"
+                        if ($webOutputCount -gt 1) {
+                            Copy-Item -Path "$tempWebOutput/data/stations.json" -Destination "data/stations.json" -Force
+                            Write-Log "Re-copied stations.json from temp web_output" "Green"
                         } else {
-                            throw "web_output/data/stations.json not found - cannot verify or fix"
+                            throw "temp web_output also has wrong format ($webOutputCount stations)"
                         }
                     } else {
-                        Write-Log "Verified: stations.json has correct format ($stationCount stations)" "Green"
+                        throw "temp web_output/data/stations.json not found - cannot fix"
                     }
-                } catch {
-                    Write-Log "WARNING: Could not verify stations.json content: $_" "Yellow"
+                } else {
+                    Write-Log "Verified: stations.json has correct format ($stationCount stations)" "Green"
                 }
-                
-                # Create/update .gitignore to exclude web_output directory
-                if (-not (Test-Path ".gitignore")) {
-                    New-Item -Path ".gitignore" -ItemType File -Force | Out-Null
-                }
-                $gitignoreContent = Get-Content ".gitignore" -ErrorAction SilentlyContinue
-                if ($gitignoreContent -notcontains "web_output/") {
-                    Add-Content -Path ".gitignore" -Value "web_output/"
-                }
-            } else {
-                throw "web_output directory not found"
+            } catch {
+                Write-Log "WARNING: Could not verify stations.json content: $_" "Yellow"
+            }
+            
+            # Create/update .gitignore to exclude web_output directory
+            if (-not (Test-Path ".gitignore")) {
+                New-Item -Path ".gitignore" -ItemType File -Force | Out-Null
+            }
+            $gitignoreContent = Get-Content ".gitignore" -ErrorAction SilentlyContinue
+            if ($gitignoreContent -notcontains "web_output/") {
+                Add-Content -Path ".gitignore" -Value "web_output/"
             }
             
             # Clean up old files (older than 6 days)
@@ -479,6 +544,14 @@ try {
         } else {
             throw "Failed to push to GitHub"
         }
+    }
+    
+    # Clean up temp web_output directory before success message
+    $tempWebOutput = "web_output_temp_deploy"
+    if (Test-Path $tempWebOutput) {
+        Write-Log "Cleaning up temp web_output directory..." "Yellow"
+        Remove-Item $tempWebOutput -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Log "Temp directory cleaned up" "Green"
     }
     
     Write-Log "SUCCESS: Deployed to GitHub!" "Green"
