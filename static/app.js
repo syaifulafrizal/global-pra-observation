@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadBtn.addEventListener('click', downloadAnomaliesCSV);
     }
     
+    // Populate date selector immediately from stations.json
+    populateDateSelectorFromMetadata();
+    
     renderDashboard();
     setInterval(() => {
         // Auto-refresh with current selected date
@@ -286,6 +289,38 @@ function formatDateForSelector(dateStr) {
     }
     
     return label;
+}
+
+async function populateDateSelectorFromMetadata() {
+    try {
+        const response = await fetch(DATA_URL);
+        if (!response.ok) {
+            console.error('Failed to load stations.json:', response.status);
+            return;
+        }
+        const metadata = await response.json();
+        
+        const dateSelector = document.getElementById('date-selector');
+        if (dateSelector && metadata.available_dates && metadata.available_dates.length > 0) {
+            dateSelector.innerHTML = '';
+            metadata.available_dates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = formatDateForSelector(date);
+                if (date === metadata.most_recent_date) {
+                    option.selected = true;
+                    selectedDate = date;
+                }
+                dateSelector.appendChild(option);
+            });
+            
+            // Store for later use
+            availableDates = metadata.available_dates || [];
+            mostRecentDate = metadata.most_recent_date || null;
+        }
+    } catch (error) {
+        console.error('Error populating date selector:', error);
+    }
 }
 
 function initMap() {
