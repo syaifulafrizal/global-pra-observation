@@ -285,12 +285,12 @@ def prepare_web_output():
     print(f'[INFO] Available dates: {", ".join(available_dates)}')
     print(f'[INFO] Most recent date: {most_recent_date}')
     
-    # Copy index.html
+    # Copy index.html from template (it's already static HTML, no Flask syntax)
     if Path('templates/index.html').exists():
-        # Create a static version (without Flask template syntax)
-        create_static_index(OUTPUT_DIR, stations, most_recent_data)
+        shutil.copy('templates/index.html', OUTPUT_DIR / 'index.html')
+        print(f'[OK] Copied index.html from template')
     else:
-        # Create basic index.html
+        # Create basic index.html as fallback
         create_basic_index(OUTPUT_DIR, stations)
     
     print(f'[OK] Web output prepared in {OUTPUT_DIR}')

@@ -9,164 +9,87 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $ScriptDir
 
 # Configuration
-$GITHUB_REPO = $env:GITHUB_REPO  # e.g., "username/pra-observation" or full URL
-$GITHUB_BRANCH = $env:GITHUB_BRANCH  # e.g., "gh-pages" or "main"
-$GITHUB_TOKEN = $env:GITHUB_TOKEN  # Personal access token (optional, for private repos)
+$GITHUB_REPO = if ($env:GITHUB_REPO) { $env:GITHUB_REPO } else { "https://github.com/syaifulafrizal/global-pra-observation.git" }
+$GITHUB_BRANCH = if ($env:GITHUB_BRANCH) { $env:GITHUB_BRANCH } else { "gh-pages" }
+$GITHUB_TOKEN = $env:GITHUB_TOKEN
 
+# Logging function
 function Write-Log {
-    param([string]$Message, [string]$Color = "White")
-    $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Write-Host "[$Timestamp] $Message" -ForegroundColor $Color
-}
-
-function Remove-OldDataFiles {
-    param([string]$DataDir, [DateTime]$CutoffDate)
-    # Remove data files older than cutoff date
-    $deletedCount = 0
-    
-    # Remove old JSON files (format: {station}_{YYYY-MM-DD}.json)
-    $jsonFiles = Get-ChildItem -Path $DataDir -Filter "*_*.json" -ErrorAction SilentlyContinue
-    foreach ($file in $jsonFiles) {
-        if ($file.Name -eq "stations.json") { continue }
-        
-        # Extract date from filename: {station}_{YYYY-MM-DD}.json
-        if ($file.Name -match "_(\d{4}-\d{2}-\d{2})\.json$") {
-            $dateStr = $matches[1]
-            try {
-                $fileDate = [DateTime]::ParseExact($dateStr, "yyyy-MM-dd", $null)
-                if ($fileDate -lt $CutoffDate) {
-                    Remove-Item -Path $file.FullName -Force -ErrorAction SilentlyContinue
-                    $deletedCount++
-                }
-            } catch {
-                # Ignore parse errors
-            }
-        }
-    }
-    
-    # Remove old figure files
-    $figuresDir = Join-Path (Split-Path $DataDir -Parent) "figures"
-    if (Test-Path $figuresDir) {
-        $stationDirs = Get-ChildItem -Path $figuresDir -Directory -ErrorAction SilentlyContinue
-        foreach ($stationDir in $stationDirs) {
-            $figFiles = Get-ChildItem -Path $stationDir.FullName -Filter "PRA_*.png" -ErrorAction SilentlyContinue
-            foreach ($fig in $figFiles) {
-                # Extract date from filename: PRA_{station}_{YYYYMMDD}.png
-                if ($fig.Name -match "_(\d{8})\.png$") {
-                    $dateStr = $matches[1]
-                    try {
-                        $fileDate = [DateTime]::ParseExact($dateStr, "yyyyMMdd", $null)
-                        if ($fileDate -lt $CutoffDate) {
-                            Remove-Item -Path $fig.FullName -Force -ErrorAction SilentlyContinue
-                            $deletedCount++
-                        }
-                    } catch {
-                        # Ignore parse errors
-                    }
-                }
-            }
-        }
-    }
-    
-    if ($deletedCount -gt 0) {
-        Write-Log "Deleted $deletedCount old files (older than $($CutoffDate.ToString('yyyy-MM-dd')))" "Yellow"
-    }
-    return $deletedCount
+    param(
+        [string]$Message,
+        [string]$Color = "White"
+    )
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Write-Host "[$timestamp] $Message" -ForegroundColor $Color
 }
 
 Write-Log "==========================================" "Cyan"
-Write-Log "GitHub Pages Deployment" "Cyan"
+Write-Log "GitHub Pages Deployment Script" "Cyan"
 Write-Log "==========================================" "Cyan"
+Write-Log "Repository: $GITHUB_REPO" "White"
+Write-Log "Branch: $GITHUB_BRANCH" "White"
+Write-Log "" "White"
 
 # Check if web_output exists
 if (-not (Test-Path "web_output")) {
-    Write-Log "ERROR: web_output/ directory not found!" "Red"
-    Write-Log "Running upload_results.py to prepare files..." "Yellow"
-    python upload_results.py
-    if ($LASTEXITCODE -ne 0) {
-        Write-Log "ERROR: Failed to prepare web output!" "Red"
-        exit 1
-    }
-    Write-Log "Web output prepared successfully" "Green"
-}
-
-# Verify stations.json exists and has multiple stations
-$stationsJson = "web_output\data\stations.json"
-if (Test-Path $stationsJson) {
-    try {
-        $jsonContent = Get-Content $stationsJson | ConvertFrom-Json
-        $stationCount = if ($jsonContent.stations) { $jsonContent.stations.Count } else { 0 }
-        if ($stationCount -le 1) {
-            Write-Log "WARNING: Only $stationCount station(s) in stations.json!" "Yellow"
-            Write-Log "Regenerating web output to ensure all stations are included..." "Yellow"
-            python upload_results.py
-            if ($LASTEXITCODE -eq 0) {
-                $jsonContent = Get-Content $stationsJson | ConvertFrom-Json
-                $stationCount = if ($jsonContent.stations) { $jsonContent.stations.Count } else { 0 }
-                Write-Log "After regeneration: $stationCount stations found" "Green"
-            }
-        } else {
-            Write-Log "Verified: $stationCount stations ready for deployment" "Green"
-        }
-    } catch {
-        Write-Log "WARNING: Could not verify stations.json, but continuing..." "Yellow"
-    }
-} else {
-    Write-Log "WARNING: stations.json not found, regenerating web output..." "Yellow"
-    python upload_results.py
-    if ($LASTEXITCODE -ne 0) {
-        Write-Log "ERROR: Failed to prepare web output!" "Red"
-        exit 1
-    }
+    Write-Log "ERROR: web_output directory not found!" "Red"
+    Write-Log "Please run upload_results.py first to prepare web output." "Yellow"
+    exit 1
 }
 
 # Check if git is initialized
 if (-not (Test-Path ".git")) {
     Write-Log "Initializing git repository..." "Yellow"
-    git init
-    git config user.name "PRA Automation" 2>$null
-    git config user.email "pra@localhost" 2>$null
+    git init 2>&1 | Out-Null
+    git config user.name "PRA Automation" 2>&1 | Out-Null
+    git config user.email "pra@localhost" 2>&1 | Out-Null
 }
 
-# Check if GitHub repo is configured
-if (-not $GITHUB_REPO) {
-    Write-Log "WARNING: GITHUB_REPO environment variable not set" "Yellow"
-    Write-Log "Skipping GitHub deployment" "Yellow"
-    Write-Log "" "White"
-    Write-Log "To enable GitHub Pages deployment:" "Cyan"
-    Write-Log "  1. Create a GitHub repository" "White"
-    Write-Log "  2. Set GITHUB_REPO environment variable" "White"
-    Write-Log "  3. Set GITHUB_BRANCH environment variable (gh-pages or main)" "White"
-    Write-Log "  4. Optional: Set GITHUB_TOKEN for private repos" "White"
-    exit 0
-}
-
-# Determine branch (default: gh-pages for GitHub Pages)
-if (-not $GITHUB_BRANCH) {
-    $GITHUB_BRANCH = "gh-pages"
-}
-
-Write-Log "Repository: $GITHUB_REPO" "Green"
-Write-Log "Branch: $GITHUB_BRANCH" "Green"
-
-# Check if remote exists
-$remoteExists = git remote | Select-String -Pattern "origin"
-if (-not $remoteExists) {
-    Write-Log "Adding GitHub remote..." "Yellow"
-    if ($GITHUB_REPO -notmatch "^https://") {
-        $GITHUB_REPO = "https://github.com/$GITHUB_REPO.git"
-    }
+# Configure remote
+$remotes = git remote 2>&1
+if ($remotes -notmatch "origin") {
+    Write-Log "Adding remote origin..." "Yellow"
     git remote add origin $GITHUB_REPO
+} else {
+    Write-Log "Updating remote origin URL..." "Yellow"
+    git remote set-url origin $GITHUB_REPO
 }
 
-# Update remote URL if token provided
+# If using token, update remote URL
 if ($GITHUB_TOKEN) {
     Write-Log "Using GitHub token for authentication..." "Yellow"
-    $repoUrl = git remote get-url origin
-    if ($repoUrl -match "https://github.com/(.+)") {
+    if ($GITHUB_REPO -match "github.com/(.+)") {
         $repoPath = $matches[1]
         git remote set-url origin "https://$GITHUB_TOKEN@github.com/$repoPath"
     }
+}
+
+# Function to remove old data files
+function Remove-OldDataFiles {
+    param(
+        [string]$DataDir,
+        [datetime]$CutoffDate
+    )
+    
+    $deletedCount = 0
+    if (Test-Path $DataDir) {
+        Get-ChildItem -Path $DataDir -Filter "*.json" | Where-Object {
+            $_.LastWriteTime -lt $CutoffDate
+        } | ForEach-Object {
+            Write-Log "  Deleting old file: $($_.Name)" "Gray"
+            Remove-Item $_.FullName -Force
+            $deletedCount++
+        }
+        
+        Get-ChildItem -Path $DataDir -Filter "*.png" | Where-Object {
+            $_.LastWriteTime -lt $CutoffDate
+        } | ForEach-Object {
+            Write-Log "  Deleting old file: $($_.Name)" "Gray"
+            Remove-Item $_.FullName -Force
+            $deletedCount++
+        }
+    }
+    return $deletedCount
 }
 
 # Save current branch
