@@ -284,6 +284,30 @@ try {
         # Remove web_output from staging (we don't want the folder, just its contents at root)
         git reset HEAD web_output/ 2>&1 | Out-Null
         
+        # Verify critical files are staged
+        $stagedFiles = git diff --cached --name-only
+        $criticalFiles = @('index.html', 'data/stations.json', 'static/app.js', 'static/style.css')
+        $missingFiles = @()
+        foreach ($file in $criticalFiles) {
+            if (-not ($stagedFiles -contains $file)) {
+                $missingFiles += $file
+            }
+        }
+        if ($missingFiles.Count -gt 0) {
+            Write-Log "WARNING: Missing critical files in staging: $($missingFiles -join ', ')" "Yellow"
+            Write-Log "Attempting to stage missing files..." "Yellow"
+            foreach ($file in $missingFiles) {
+                if (Test-Path $file) {
+                    git add -f $file 2>&1 | Out-Null
+                    Write-Log "  Staged: $file" "Green"
+                } else {
+                    Write-Log "  ERROR: $file does not exist!" "Red"
+                }
+            }
+        } else {
+            Write-Log "All critical files are staged" "Green"
+        }
+        
     } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {
@@ -337,6 +361,7 @@ try {
     }
     
     Write-Log "Pushing to origin/$GITHUB_BRANCH..." "Yellow"
+    # Force push to ensure old files are overwritten
     $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Push output: $pushOutput" "Red"

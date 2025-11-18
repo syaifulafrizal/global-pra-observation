@@ -171,6 +171,7 @@ async function loadEarthquakeCorrelations(station) {
     try {
         const response = await fetch(`data/${station}_earthquake_correlations.csv`);
         if (!response.ok) {
+            // Silently return empty array if CSV doesn't exist
             return [];
         }
         const text = await response.text();
@@ -178,6 +179,7 @@ async function loadEarthquakeCorrelations(station) {
         // Filter by magnitude >= 5.0 for reliability
         return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
     } catch (error) {
+        // Silently return empty array - CSV files are optional
         return [];
     }
 }
@@ -186,11 +188,13 @@ async function loadFalseNegatives(station) {
     try {
         const response = await fetch(`data/${station}_false_negatives.csv`);
         if (!response.ok) {
+            // Silently return empty array if CSV doesn't exist
             return [];
         }
         const text = await response.text();
         return parseCSV(text);
     } catch (error) {
+        // Silently return empty array - CSV files are optional
         return [];
     }
 }
@@ -1183,24 +1187,48 @@ async function renderStationsList(stations, stationsData) {
 // Download anomalies CSV
 async function downloadAnomaliesCSV() {
     try {
-        // Collect all anomaly data from all stations
+        // Collect all anomaly data from all stations using JSON data we already have
         const allAnomalies = [];
         
+        // Use the data we already loaded in allStationsData
         for (const station of allStations) {
             try {
-                const response = await fetch(`data/${station}_anomalies.csv`);
-                if (response.ok) {
-                    const csvText = await response.text();
-                    const anomalies = parseCSV(csvText);
-                    
-                    // Add station code to each anomaly
-                    anomalies.forEach(anomaly => {
-                        anomaly.Station = station;
-                        allAnomalies.push(anomaly);
-                    });
+                const stationData = allStationsData[station];
+                if (stationData && stationData.timestamps && stationData.isAnomalous) {
+                    // Extract anomalies from the station data
+                    for (let i = 0; i < stationData.timestamps.length; i++) {
+                        if (stationData.isAnomalous[i]) {
+                            const anomaly = {
+                                Station: station,
+                                TimeOfAnomaly: stationData.timestamps[i],
+                                AnomalyValue: stationData.P ? stationData.P[i] : '',
+                                nZ: stationData.nZ ? stationData.nZ[i] : '',
+                                nG: stationData.nG ? stationData.nG[i] : '',
+                                Threshold: stationData.threshold || ''
+                            };
+                            allAnomalies.push(anomaly);
+                        }
+                    }
+                } else {
+                    // Fallback: try to load from CSV if JSON doesn't have anomaly info
+                    try {
+                        const response = await fetch(`data/${station}_anomalies.csv`);
+                        if (response.ok) {
+                            const csvText = await response.text();
+                            const anomalies = parseCSV(csvText);
+                            
+                            // Add station code to each anomaly
+                            anomalies.forEach(anomaly => {
+                                anomaly.Station = station;
+                                allAnomalies.push(anomaly);
+                            });
+                        }
+                    } catch (error) {
+                        // Silently ignore - CSV files are optional
+                    }
                 }
             } catch (error) {
-                console.warn(`Could not load anomalies for ${station}:`, error);
+                // Silently ignore errors for individual stations
             }
         }
         
