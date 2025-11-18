@@ -149,6 +149,9 @@ if ($currentBranch -eq "main" -or $currentBranch -eq "master") {
     }
 }
 
+# Save current branch
+$currentBranch = git rev-parse --abbrev-ref HEAD
+
 # Fetch latest from remote
 Write-Log "Fetching latest from remote..." "Yellow"
 git fetch origin 2>&1 | Out-Null
@@ -312,14 +315,6 @@ try {
                 Write-Log "Now have $fileCount files staged" "Green"
             }
         }
-        
-        # Verify we're still on gh-pages before committing
-        $verifyBranch = git rev-parse --abbrev-ref HEAD
-        if ($verifyBranch -ne "gh-pages") {
-            Write-Log "ERROR: Not on gh-pages branch! Current: $verifyBranch" "Red"
-            throw "Branch mismatch detected"
-        }
-        
     } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {
