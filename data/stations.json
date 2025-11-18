@@ -1,97 +1,579 @@
 {
   "stations": [
-    "ABG",
-    "AMS",
-    "API",
-    "ASP",
-    "BEL",
-    "CLF",
-    "CNB",
-    "CZT",
-    "DOU",
-    "ESK",
-    "EYR",
-    "FUR",
-    "GNA",
-    "GUA",
-    "HAD",
-    "HER",
-    "HLP",
-    "IRT",
-    "KAK",
-    "KNY",
-    "LER",
-    "LRM",
-    "LYC",
-    "MBO",
-    "MMB",
-    "NGK",
-    "NUR",
-    "PAG",
-    "PHU",
-    "PIL",
-    "SOD",
-    "SPT",
-    "SUA",
-    "TAM",
-    "TAN",
-    "TIK",
-    "VAL",
-    "VSS",
-    "WNG",
-    "YAK"
+    "KAK"
   ],
-  "available_dates": [
-    "2025-11-18",
-    "2025-11-17",
-    "2025-11-16",
-    "2025-11-15",
-    "2025-11-14",
-    "2025-11-13",
-    "2025-11-12"
-  ],
-  "most_recent_date": "2025-11-18",
-  "last_updated": "2025-11-18T15:49:12.637266",
-  "metadata": {
-    "ABG": {},
-    "AMS": {},
-    "API": {},
-    "ASP": {},
-    "BEL": {},
-    "CLF": {},
-    "CNB": {},
-    "CZT": {},
-    "DOU": {},
-    "ESK": {},
-    "EYR": {},
-    "FUR": {},
-    "GNA": {},
-    "GUA": {},
-    "HAD": {},
-    "HER": {},
-    "HLP": {},
-    "IRT": {},
-    "KAK": {},
-    "KNY": {},
-    "LER": {},
-    "LRM": {},
-    "LYC": {},
-    "MBO": {},
-    "MMB": {},
-    "NGK": {},
-    "NUR": {},
-    "PAG": {},
-    "PHU": {},
-    "PIL": {},
-    "SOD": {},
-    "SPT": {},
-    "SUA": {},
-    "TAM": {},
-    "TAN": {},
-    "TIK": {},
-    "VAL": {},
-    "VSS": {},
-    "WNG": {},
-    "YAK": {}
-  }
+  "last_updated": "2025-11-13T00:12:12.689924",
+  "data": {
+    "KAK": {
+      "date": "2025-11-12",
+      "station": "KAK",
+      "timestamps": [
+        "2025-11-11T11:29:59",
+        "2025-11-11T12:29:59",
+        "2025-11-11T13:29:59",
+        "2025-11-11T14:29:59",
+        "2025-11-11T15:29:59",
+        "2025-11-11T16:29:59",
+        "2025-11-11T17:29:59",
+        "2025-11-11T18:29:59"
+      ],
+      "P": [
+        1.8393627965035524,
+        2.1381371199770434,
+        2.2106540084112813,
+        1.2977453300084896,
+        1.6208657790945942,
+        1.4242164653036782,
+        0.5198684253804545,
+        0.6382614164598657
+      ],
+      "nZ": [
+        1.8393627965035524,
+        2.4825005898438093,
+        3.0,
+        1.9525155696409708,
+        2.9986759127653837,
+        2.8484329306073564,
+        1.0,
+        1.2625204579627918
+      ],
+      "nG": [
+        1.0,
+        1.161057710775099,
+        1.3570644653506831,
+        1.5045444776350672,
+        1.8500457912316626,
+        2.0,
+        1.923563638757579,
+        1.9780616929116535
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "threshold": 3.819037839813043,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    }
+  },
+  "metadata": [
+    {
+      "code": "KAK",
+      "name": "Kakioka",
+      "country": "Japan",
+      "latitude": 36.232,
+      "longitude": 140.186,
+      "timezone": "Asia/Tokyo"
+    },
+    {
+      "code": "HER",
+      "name": "Hermanus",
+      "country": "South Africa",
+      "latitude": -34.425,
+      "longitude": 19.225,
+      "timezone": "Africa/Johannesburg"
+    },
+    {
+      "code": "NGK",
+      "name": "Niemegk",
+      "country": "Germany",
+      "latitude": 52.073,
+      "longitude": 12.675,
+      "timezone": "Europe/Berlin"
+    },
+    {
+      "code": "API",
+      "name": "Apia",
+      "country": "Samoa",
+      "latitude": -13.806,
+      "longitude": -171.778,
+      "timezone": "Pacific/Apia"
+    },
+    {
+      "code": "BOU",
+      "name": "Boulder",
+      "country": "USA",
+      "latitude": 40.137,
+      "longitude": -105.238,
+      "timezone": "America/Denver"
+    },
+    {
+      "code": "FRD",
+      "name": "Fredericksburg",
+      "country": "USA",
+      "latitude": 38.205,
+      "longitude": -77.373,
+      "timezone": "America/New_York"
+    },
+    {
+      "code": "GUA",
+      "name": "Guam",
+      "country": "USA",
+      "latitude": 13.588,
+      "longitude": 144.867,
+      "timezone": "Pacific/Guam"
+    },
+    {
+      "code": "HON",
+      "name": "Honolulu",
+      "country": "USA",
+      "latitude": 21.316,
+      "longitude": -158.003,
+      "timezone": "Pacific/Honolulu"
+    },
+    {
+      "code": "SJG",
+      "name": "San Juan",
+      "country": "Puerto Rico",
+      "latitude": 18.113,
+      "longitude": -66.151,
+      "timezone": "America/Puerto_Rico"
+    },
+    {
+      "code": "SIT",
+      "name": "Sitka",
+      "country": "USA",
+      "latitude": 57.058,
+      "longitude": -135.331,
+      "timezone": "America/Anchorage"
+    },
+    {
+      "code": "TUC",
+      "name": "Tucson",
+      "country": "USA",
+      "latitude": 32.174,
+      "longitude": -110.734,
+      "timezone": "America/Phoenix"
+    },
+    {
+      "code": "ABG",
+      "name": "Alibag",
+      "country": "India",
+      "latitude": 18.637,
+      "longitude": 72.872,
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "code": "ASP",
+      "name": "Alice Springs",
+      "country": "Australia",
+      "latitude": -23.796,
+      "longitude": 133.888,
+      "timezone": "Australia/Darwin"
+    },
+    {
+      "code": "CAN",
+      "name": "Canberra",
+      "country": "Australia",
+      "latitude": -35.32,
+      "longitude": 149.004,
+      "timezone": "Australia/Sydney"
+    },
+    {
+      "code": "CNB",
+      "name": "Chambon-la-For\u00c3\u00aat",
+      "country": "France",
+      "latitude": 48.025,
+      "longitude": 2.267,
+      "timezone": "Europe/Paris"
+    },
+    {
+      "code": "CZT",
+      "name": "Port-aux-Fran\u00c3\u00a7ais",
+      "country": "France (Kerguelen)",
+      "latitude": -49.352,
+      "longitude": 70.26,
+      "timezone": "Indian/Kerguelen"
+    },
+    {
+      "code": "EYR",
+      "name": "Eyrewell",
+      "country": "New Zealand",
+      "latitude": -43.408,
+      "longitude": 172.349,
+      "timezone": "Pacific/Auckland"
+    },
+    {
+      "code": "FUR",
+      "name": "F\u00c3\u00bcrstenfeldbruck",
+      "country": "Germany",
+      "latitude": 48.167,
+      "longitude": 11.275,
+      "timezone": "Europe/Berlin"
+    },
+    {
+      "code": "GNA",
+      "name": "Gnangara",
+      "country": "Australia",
+      "latitude": -31.8,
+      "longitude": 115.95,
+      "timezone": "Australia/Perth"
+    },
+    {
+      "code": "HAD",
+      "name": "Hartland",
+      "country": "United Kingdom",
+      "latitude": 51.001,
+      "longitude": -4.481,
+      "timezone": "Europe/London"
+    },
+    {
+      "code": "KNY",
+      "name": "Kanozan",
+      "country": "Japan",
+      "latitude": 35.26,
+      "longitude": 139.951,
+      "timezone": "Asia/Tokyo"
+    },
+    {
+      "code": "LRM",
+      "name": "L'Aquila",
+      "country": "Italy",
+      "latitude": 42.383,
+      "longitude": 13.317,
+      "timezone": "Europe/Rome"
+    },
+    {
+      "code": "MBO",
+      "name": "M'Bour",
+      "country": "Senegal",
+      "latitude": 14.39,
+      "longitude": -16.96,
+      "timezone": "Africa/Dakar"
+    },
+    {
+      "code": "MMB",
+      "name": "Memambetsu",
+      "country": "Japan",
+      "latitude": 43.91,
+      "longitude": 144.189,
+      "timezone": "Asia/Tokyo"
+    },
+    {
+      "code": "PPT",
+      "name": "Pamatai",
+      "country": "French Polynesia",
+      "latitude": -17.567,
+      "longitude": -149.583,
+      "timezone": "Pacific/Tahiti"
+    },
+    {
+      "code": "TAM",
+      "name": "Tamanrasset",
+      "country": "Algeria",
+      "latitude": 22.79,
+      "longitude": 5.53,
+      "timezone": "Africa/Algiers"
+    },
+    {
+      "code": "TEO",
+      "name": "Teoloyucan",
+      "country": "Mexico",
+      "latitude": 19.744,
+      "longitude": -99.183,
+      "timezone": "America/Mexico_City"
+    },
+    {
+      "code": "VSS",
+      "name": "Vassouras",
+      "country": "Brazil",
+      "latitude": -22.404,
+      "longitude": -43.662,
+      "timezone": "America/Sao_Paulo"
+    },
+    {
+      "code": "WNG",
+      "name": "Wingst",
+      "country": "Germany",
+      "latitude": 53.743,
+      "longitude": 9.073,
+      "timezone": "Europe/Berlin"
+    },
+    {
+      "code": "YAK",
+      "name": "Yakutsk",
+      "country": "Russia",
+      "latitude": 62.034,
+      "longitude": 129.675,
+      "timezone": "Asia/Yakutsk"
+    },
+    {
+      "code": "AMS",
+      "name": "Amberley",
+      "country": "New Zealand",
+      "latitude": -43.155,
+      "longitude": 172.728,
+      "timezone": "Pacific/Auckland"
+    },
+    {
+      "code": "BEL",
+      "name": "Belsk",
+      "country": "Poland",
+      "latitude": 51.836,
+      "longitude": 20.789,
+      "timezone": "Europe/Warsaw"
+    },
+    {
+      "code": "CLF",
+      "name": "Chambon-la-For\u00c3\u00aat",
+      "country": "France",
+      "latitude": 48.025,
+      "longitude": 2.267,
+      "timezone": "Europe/Paris"
+    },
+    {
+      "code": "DOU",
+      "name": "Dourbes",
+      "country": "Belgium",
+      "latitude": 50.095,
+      "longitude": 4.595,
+      "timezone": "Europe/Brussels"
+    },
+    {
+      "code": "ESK",
+      "name": "Eskdalemuir",
+      "country": "United Kingdom",
+      "latitude": 55.317,
+      "longitude": -3.206,
+      "timezone": "Europe/London"
+    },
+    {
+      "code": "FCC",
+      "name": "Fort Churchill",
+      "country": "Canada",
+      "latitude": 58.759,
+      "longitude": -94.088,
+      "timezone": "America/Winnipeg"
+    },
+    {
+      "code": "FUR",
+      "name": "F\u00c3\u00bcrstenfeldbruck",
+      "country": "Germany",
+      "latitude": 48.167,
+      "longitude": 11.275,
+      "timezone": "Europe/Berlin"
+    },
+    {
+      "code": "GUA",
+      "name": "Guam",
+      "country": "USA",
+      "latitude": 13.588,
+      "longitude": 144.867,
+      "timezone": "Pacific/Guam"
+    },
+    {
+      "code": "HLP",
+      "name": "Hel",
+      "country": "Poland",
+      "latitude": 54.608,
+      "longitude": 18.808,
+      "timezone": "Europe/Warsaw"
+    },
+    {
+      "code": "IRT",
+      "name": "Irkutsk",
+      "country": "Russia",
+      "latitude": 52.167,
+      "longitude": 104.45,
+      "timezone": "Asia/Irkutsk"
+    },
+    {
+      "code": "KGD",
+      "name": "Karaganda",
+      "country": "Kazakhstan",
+      "latitude": 49.817,
+      "longitude": 73.083,
+      "timezone": "Asia/Almaty"
+    },
+    {
+      "code": "LER",
+      "name": "Lerwick",
+      "country": "United Kingdom",
+      "latitude": 60.131,
+      "longitude": -1.183,
+      "timezone": "Europe/London"
+    },
+    {
+      "code": "LYC",
+      "name": "Lyon",
+      "country": "France",
+      "latitude": 45.759,
+      "longitude": 4.829,
+      "timezone": "Europe/Paris"
+    },
+    {
+      "code": "NUR",
+      "name": "Nurmij\u00c3\u00a4rvi",
+      "country": "Finland",
+      "latitude": 60.508,
+      "longitude": 24.655,
+      "timezone": "Europe/Helsinki"
+    },
+    {
+      "code": "OUL",
+      "name": "Oulu",
+      "country": "Finland",
+      "latitude": 64.52,
+      "longitude": 25.505,
+      "timezone": "Europe/Helsinki"
+    },
+    {
+      "code": "PAG",
+      "name": "Pag",
+      "country": "Croatia",
+      "latitude": 44.35,
+      "longitude": 15.05,
+      "timezone": "Europe/Zagreb"
+    },
+    {
+      "code": "PHU",
+      "name": "Phuthuy",
+      "country": "Vietnam",
+      "latitude": 21.033,
+      "longitude": 105.958,
+      "timezone": "Asia/Ho_Chi_Minh"
+    },
+    {
+      "code": "PIL",
+      "name": "Pilar",
+      "country": "Argentina",
+      "latitude": -31.68,
+      "longitude": -63.88,
+      "timezone": "America/Argentina/Cordoba"
+    },
+    {
+      "code": "QIX",
+      "name": "Qixian",
+      "country": "China",
+      "latitude": 37.47,
+      "longitude": 112.33,
+      "timezone": "Asia/Shanghai"
+    },
+    {
+      "code": "RAN",
+      "name": "Ranchi",
+      "country": "India",
+      "latitude": 23.35,
+      "longitude": 85.33,
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "code": "SHU",
+      "name": "Shumagin",
+      "country": "USA",
+      "latitude": 55.348,
+      "longitude": -160.464,
+      "timezone": "America/Anchorage"
+    },
+    {
+      "code": "SOD",
+      "name": "Sodankyl\u00c3\u00a4",
+      "country": "Finland",
+      "latitude": 67.365,
+      "longitude": 26.629,
+      "timezone": "Europe/Helsinki"
+    },
+    {
+      "code": "SPT",
+      "name": "San Pablo-Toledo",
+      "country": "Spain",
+      "latitude": 39.544,
+      "longitude": -4.348,
+      "timezone": "Europe/Madrid"
+    },
+    {
+      "code": "SUA",
+      "name": "Sua",
+      "country": "Romania",
+      "latitude": 44.683,
+      "longitude": 26.25,
+      "timezone": "Europe/Bucharest"
+    },
+    {
+      "code": "TAN",
+      "name": "Tananarive",
+      "country": "Madagascar",
+      "latitude": -18.917,
+      "longitude": 47.55,
+      "timezone": "Indian/Antananarivo"
+    },
+    {
+      "code": "TEO",
+      "name": "Teoloyucan",
+      "country": "Mexico",
+      "latitude": 19.744,
+      "longitude": -99.183,
+      "timezone": "America/Mexico_City"
+    },
+    {
+      "code": "THL",
+      "name": "Thule",
+      "country": "Greenland",
+      "latitude": 77.48,
+      "longitude": -69.22,
+      "timezone": "America/Thule"
+    },
+    {
+      "code": "TIK",
+      "name": "Tixie Bay",
+      "country": "Russia",
+      "latitude": 71.587,
+      "longitude": 128.92,
+      "timezone": "Asia/Yakutsk"
+    },
+    {
+      "code": "TRW",
+      "name": "Trewartha",
+      "country": "United Kingdom",
+      "latitude": 50.344,
+      "longitude": -5.131,
+      "timezone": "Europe/London"
+    },
+    {
+      "code": "VAL",
+      "name": "Valentia",
+      "country": "Ireland",
+      "latitude": 51.938,
+      "longitude": -10.248,
+      "timezone": "Europe/Dublin"
+    },
+    {
+      "code": "VIC",
+      "name": "Victoria",
+      "country": "Canada",
+      "latitude": 48.65,
+      "longitude": -123.45,
+      "timezone": "America/Vancouver"
+    },
+    {
+      "code": "VLA",
+      "name": "Vladivostok",
+      "country": "Russia",
+      "latitude": 43.2,
+      "longitude": 131.9,
+      "timezone": "Asia/Vladivostok"
+    },
+    {
+      "code": "WNG",
+      "name": "Wingst",
+      "country": "Germany",
+      "latitude": 53.743,
+      "longitude": 9.073,
+      "timezone": "Europe/Berlin"
+    },
+    {
+      "code": "YSS",
+      "name": "Yuzhno-Sakhalinsk",
+      "country": "Russia",
+      "latitude": 46.967,
+      "longitude": 142.717,
+      "timezone": "Asia/Sakhalin"
+    }
+  ]
 }

@@ -1,6 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2025-11-17 19:06:35.519,39.7568,143.1957,33.331,5.2,"108 km E of Miyako, Japan",earthquake,
-2025-11-17 17:23:03.682,12.1277,-86.4514,128.024,5.3,"12 km WSW of Ciudad Sandino, Nicaragua",earthquake,
-2025-11-17 12:12:37.800,0.106,124.0046,119.483,5.3,"61 km SW of Modisi, Indonesia",earthquake,
-2025-11-17 09:48:31.919,-61.1895,159.6597,10.0,5.0,Balleny Islands region,earthquake,
-2025-11-17 00:46:17.538,-11.0885,-106.3645,10.0,5.0,central East Pacific Rise,earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id

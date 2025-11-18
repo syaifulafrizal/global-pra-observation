@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-11-12 06:03:28.885,73.2435,6.9306,10,5.7,Greenland Sea,earthquake,
