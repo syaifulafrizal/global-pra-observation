@@ -198,85 +198,95 @@ input:checked + .slider:before {
     font-family: 'Courier New', monospace;
 }
 
-/* Metric Cards */
-.metrics-grid {
+/* Summary Stats Boxes - Professional Grid Layout */
+.summary-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     margin-bottom: 30px;
 }
 
-.metric-card {
+.stat-card {
     background: var(--bg-card);
     border-radius: 12px;
-    padding: 24px;
+    padding: 24px 20px;
+    text-align: center;
     box-shadow: 0 2px 10px var(--shadow);
     border: 1px solid var(--border-color);
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
 }
 
-.metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px var(--shadow-hover);
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
-.metric-icon {
-    font-size: 2em;
-    flex-shrink: 0;
-    opacity: 0.8;
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px var(--shadow-hover);
 }
 
-.metric-content {
-    flex: 1;
-    min-width: 0;
+.stat-card:hover::before {
+    opacity: 1;
 }
 
-.metric-value {
-    font-size: 2.2em;
+.stat-value {
+    font-size: 2.5em;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     line-height: 1;
 }
 
-.metric-label {
+.stat-label {
     font-size: 0.85em;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     font-weight: 600;
-    margin-bottom: 8px;
+    line-height: 1.4;
 }
 
-.metric-detail {
-    font-size: 0.9em;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-    min-height: 20px;
+/* Color variants for different stat types */
+.stat-anomaly .stat-value {
+    color: var(--accent-red);
 }
 
-.metric-progress {
-    width: 100%;
-    height: 6px;
-    background: var(--bg-secondary);
-    border-radius: 3px;
-    overflow: hidden;
+.stat-anomaly::before {
+    background: linear-gradient(90deg, var(--accent-red), #c0392b);
 }
 
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
-    border-radius: 3px;
-    transition: width 0.3s ease;
+.stat-eq-reliable .stat-value {
+    color: var(--accent-orange);
 }
 
-.progress-bar.full {
-    width: 100%;
+.stat-eq-reliable::before {
+    background: linear-gradient(90deg, var(--accent-orange), #d35400);
+}
+
+.stat-false-alarm .stat-value {
+    color: #c0392b;
+}
+
+.stat-false-alarm::before {
+    background: linear-gradient(90deg, #c0392b, #a93226);
+}
+
+.stat-false-negative .stat-value {
+    color: #8e44ad;
+}
+
+.stat-false-negative::before {
+    background: linear-gradient(90deg, #8e44ad, #7d3c98);
 }
 
 /* Section Headers */
@@ -557,7 +567,13 @@ footer .author {
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .metrics-grid {
+    .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 968px) {
+    .summary-stats {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -577,8 +593,17 @@ footer .author {
         align-items: flex-start;
     }
     
-    .metrics-grid {
+    .summary-stats {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 20px 16px;
+    }
+    
+    .stat-value {
+        font-size: 2em;
     }
     
     .map-container {
