@@ -616,33 +616,29 @@ function addEarthquakeMarkers(earthquakes) {
 }
 
 async function renderDashboard(date = null) {
-    const container = document.getElementById('stations-container');
-    if (!container) return;
-    
-    container.innerHTML = '<p style="text-align: center; color: white; font-size: 1.2em;">Loading data...</p>';
+    // The template already has the structure, we just need to update it
+    // Show loading state
+    const mapContainer = document.getElementById('map-container');
+    if (mapContainer) {
+        mapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ecf0f1;"><p>Loading map data...</p></div>';
+    }
     
     const data = await loadData(date);
     if (!data) {
         const dateStr = date || selectedDate || 'selected date';
-        container.innerHTML = `
-            <div class="no-data" style="text-align: center; padding: 40px;">
-                <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
-                <p style="color: #ecf0f1; font-size: 1.1em; margin-bottom: 10px;">
-                    No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
-                </p>
-                <p style="color: #95a5a6; font-size: 0.9em;">
-                    This may be because:
-                </p>
-                <ul style="color: #95a5a6; text-align: left; display: inline-block; margin-top: 10px;">
-                    <li>The analysis has not been run yet</li>
-                    <li>All dates are too far in the past (only last 7 days are kept)</li>
-                    <li>No stations had data available</li>
-                </ul>
-                <p style="color: #ecf0f1; margin-top: 20px;">
-                    Please select a different date from the dropdown above.
-                </p>
-            </div>
-        `;
+        if (mapContainer) {
+            mapContainer.innerHTML = `
+                <div class="no-data" style="text-align: center; padding: 40px; color: #ecf0f1;">
+                    <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
+                    <p style="font-size: 1.1em; margin-bottom: 10px;">
+                        No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
+                    </p>
+                    <p style="color: #95a5a6; font-size: 0.9em;">
+                        Please select a different date from the dropdown above.
+                    </p>
+                </div>
+            `;
+        }
         return;
     }
     
@@ -729,8 +725,6 @@ async function renderDashboard(date = null) {
         }
     }
     
-    let html = '';
-    
     // Load earthquake statistics for selected date (with fallback)
     let eqStats = { global: 0, within200km: 0 };
     let eqDateUsed = data.selected_date;
@@ -800,128 +794,118 @@ async function renderDashboard(date = null) {
         `;
     }
     
-    // Add earthquake statistics
-    const eqDateLabel = eqDateUsed !== data.selected_date ?
-        `Earthquakes (M≥5.0) - ${formatDateForSelector(eqDateUsed)} (fallback from ${formatDateForSelector(data.selected_date)})` :
-        `Earthquakes (M≥5.0) - ${formatDateForSelector(data.selected_date)}`;
-    
-    html += '<div class="today-eq-stats">';
-    html += `<h3>📊 ${eqDateLabel}</h3>`;
-    html += '<div class="eq-stats-grid">';
-    html += `<div class="eq-stat-card"><div class="eq-stat-value">${eqStats.global || 0}</div><div class="eq-stat-label">🌍 Global Count</div></div>`;
-    html += `<div class="eq-stat-card"><div class="eq-stat-value">${eqStats.within200km || 0}</div><div class="eq-stat-label">📍 Within 200km of Stations</div></div>`;
-    html += '</div>';
-    if (eqStats.global > 0 && eqStats.within200km === 0) {
-        html += '<p class="eq-stats-note" style="color: #f39c12; margin-top: 10px; font-size: 0.9em;">ℹ️ There are earthquakes globally, but none within 200km of any station.</p>';
-    } else if (eqStats.global === 0) {
-        html += '<p class="eq-stats-note" style="color: #95a5a6; margin-top: 10px; font-size: 0.9em;">ℹ️ No earthquakes (M≥5.0) detected globally for this date.</p>';
+    // Update timestamp
+    const timestampEl = document.getElementById('timestamp');
+    if (timestampEl) {
+        timestampEl.textContent = new Date().toLocaleString();
     }
-    html += '</div>';
     
-    // Main content area: Map on top (full width), Plot panel below (full width)
-    html += '<div class="main-content-layout">';
-    
-    // Top: Map (full width)
-    html += '<div class="map-section">';
-    html += '<div id="map-container" class="map-container"></div>';
-    html += '<div class="map-legend">';
-    html += '<h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #2c3e50;">Map Legend</h4>';
-    html += '<div class="legend-item"><span class="legend-marker marker-gray"></span> Normal Station</div>';
-    html += '<div class="legend-item"><span class="legend-marker marker-eq-reliable"></span> Anomaly with EQ (M≥5.0)</div>';
-    html += '<div class="legend-item"><span class="legend-marker marker-eq-false"></span> False Alarm (No EQ)</div>';
-    html += '<div class="legend-item"><span class="legend-marker earthquake-marker-legend"></span> Earthquake (M≥5.0)</div>';
-    html += '<div class="legend-item"><span style="display: inline-block; width: 20px; height: 2px; background: #e74c3c; border: 1px dashed #e74c3c; margin-right: 8px; vertical-align: middle;"></span> 200km Radius</div>';
-    html += '</div>';
-    html += '</div>';
-    
-    // Station list button (moved below map)
-    html += '<div class="controls" style="margin-top: 15px; margin-bottom: 15px;">';
-    html += '<button id="toggle-stations" class="btn btn-primary">📋 Show All Stations List</button>';
-    html += '<div id="stations-list" class="stations-list hidden"></div>';
-    html += '</div>';
-    
-    // Station Analysis Panel (mobile-optimized)
-    html += '<div class="plot-panel-section">';
-    html += '<div class="plot-panel">';
-    html += '<div class="plot-panel-header">';
-    html += '<h2 class="panel-title">📊 Station Analysis</h2>';
-    html += '<button id="toggle-plot-panel" class="toggle-plot-btn mobile-only" aria-label="Toggle plot panel">▼</button>';
-    html += '</div>';
-    html += '<div id="plot-panel-content" class="plot-panel-content">';
-    html += '<div class="selector-container">';
-    html += '<label for="station-selector" class="selector-label">Select Station:</label>';
-    html += '<select id="station-selector" class="station-selector">';
-    html += '<option value="">-- Select a station --</option>';
-    
-    // Add anomalous stations first
-    anomalousStations.forEach(station => {
-        const metadata = stationMetadata[station] || {};
-        const stationData = allStationsData[station];
-        const eqCorrelations = stationDataMap[station]?.eqCorrelations || [];
-        const hasEQ = eqCorrelations.length > 0;
-        const label = `${station} - ${metadata.name || station}${hasEQ ? ' 🌋' : ' ⚠️'}`;
-        html += `<option value="${station}"${anomalousStations.indexOf(station) === 0 ? ' selected' : ''}>${label}</option>`;
-    });
-    
-    // Add other stations
-    allStations.filter(s => !anomalousStations.includes(s)).forEach(station => {
-        const metadata = stationMetadata[station] || {};
-        html += `<option value="${station}">${station} - ${metadata.name || station} (Normal)</option>`;
-    });
-    
-    html += '</select>';
-    html += '</div>';
-    html += '<div id="selected-station-plot" class="selected-station-plot"></div>';
-    html += '</div>'; // Close plot-panel-content
-    html += '</div>'; // Close plot-panel
-    html += '</div>'; // Close plot-panel-section
-    html += '</div>'; // Close main-content-layout
-    
-    container.innerHTML = html;
-    
-    // Initialize map
-    setTimeout(async () => {
-        const mapEl = document.getElementById('map-container');
-        if (mapEl && mapEl.offsetParent !== null) {
-            try {
-                initMap();
-                await new Promise(resolve => setTimeout(resolve, 200));
-                
-                // Add all station markers
-                for (const station of allStations) {
-                    const { stationData, eqCorrelations } = stationDataMap[station];
-                    addStationToMap(station, stationData, eqCorrelations);
-                }
-                
-                // Add earthquake markers
-                const recentEarthquakes = await loadRecentEarthquakes(data.selected_date);
-                console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
-                addEarthquakeMarkers(recentEarthquakes);
-            } catch (error) {
-                console.error('Error initializing map:', error);
+    // Update station selector dropdown
+    const stationSelector = document.getElementById('station-selector');
+    if (stationSelector) {
+        stationSelector.innerHTML = '<option value="">Select a station...</option>';
+        
+        // Add anomalous stations first
+        anomalousStations.forEach(station => {
+            const metadata = stationMetadata[station] || {};
+            const stationData = allStationsData[station];
+            const eqCorrelations = stationDataMap[station]?.eqCorrelations || [];
+            const hasEQ = eqCorrelations.length > 0;
+            const label = `${station} - ${metadata.name || station}${hasEQ ? ' 🌋' : ' ⚠️'}`;
+            const option = document.createElement('option');
+            option.value = station;
+            option.textContent = label;
+            if (anomalousStations.indexOf(station) === 0) {
+                option.selected = true;
             }
-        }
-    }, 300);
-    
-    // Setup station selector
-    const selector = document.getElementById('station-selector');
-    if (selector) {
-        selector.addEventListener('change', async (e) => {
-            const selectedStation = e.target.value;
-            if (selectedStation) {
-                await renderStationPlot(selectedStation);
-            } else {
-                const plotDiv = document.getElementById('selected-station-plot');
-                if (plotDiv) plotDiv.innerHTML = '';
-            }
+            stationSelector.appendChild(option);
         });
         
+        // Add other stations
+        allStations.filter(s => !anomalousStations.includes(s)).forEach(station => {
+            const metadata = stationMetadata[station] || {};
+            const option = document.createElement('option');
+            option.value = station;
+            option.textContent = `${station} - ${metadata.name || station} (Normal)`;
+            stationSelector.appendChild(option);
+        });
+        
+        // Setup change handler if not already set
+        if (!stationSelector.hasAttribute('data-handler-attached')) {
+            stationSelector.setAttribute('data-handler-attached', 'true');
+            stationSelector.addEventListener('change', async (e) => {
+                const selectedStation = e.target.value;
+                if (selectedStation) {
+                    await renderStationPlot(selectedStation);
+                } else {
+                    const plotDiv = document.getElementById('selected-station-plot');
+                    if (plotDiv) plotDiv.innerHTML = '';
+                }
+            });
+        }
+        
         // Load first anomalous station by default
-        if (anomalousStations.length > 0) {
-            selector.value = anomalousStations[0];
+        if (anomalousStations.length > 0 && !stationSelector.value) {
+            stationSelector.value = anomalousStations[0];
             await renderStationPlot(anomalousStations[0]);
         }
     }
+    
+    // Initialize map - wait a bit for DOM to be ready
+    setTimeout(async () => {
+        const mapEl = document.getElementById('map-container');
+        if (!mapEl) {
+            console.error('Map container not found');
+            return;
+        }
+        
+        // Clear any loading message
+        mapEl.innerHTML = '';
+        
+        // Ensure container has dimensions
+        if (mapEl.offsetHeight === 0) {
+            console.warn('Map container has no height, setting minimum height');
+            mapEl.style.minHeight = '600px';
+        }
+        
+        try {
+            console.log('Initializing map...');
+            initMap();
+            
+            if (!map) {
+                console.error('Map initialization failed');
+                mapEl.innerHTML = '<div style="padding: 20px; color: #e74c3c;">Failed to initialize map</div>';
+                return;
+            }
+            
+            // Wait for map to be ready
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            console.log('Adding station markers...', allStations.length);
+            // Add all station markers
+            for (const station of allStations) {
+                const { stationData, eqCorrelations } = stationDataMap[station] || { stationData: allStationsData[station], eqCorrelations: [] };
+                addStationToMap(station, stationData, eqCorrelations);
+            }
+            
+            console.log('Loading earthquakes...');
+            // Add earthquake markers
+            const recentEarthquakes = await loadRecentEarthquakes(data.selected_date);
+            console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
+            addEarthquakeMarkers(recentEarthquakes);
+            
+            // Invalidate map size to ensure it renders correctly
+            setTimeout(() => {
+                if (map) {
+                    map.invalidateSize();
+                    console.log('Map size invalidated');
+                }
+            }, 100);
+        } catch (error) {
+            console.error('Error initializing map:', error);
+            mapEl.innerHTML = `<div style="padding: 20px; color: #e74c3c;">Error loading map: ${error.message}<br><small>${error.stack}</small></div>`;
+        }
+    }, 500);
     
     // Setup mobile plot panel toggle
     const togglePlotBtn = document.getElementById('toggle-plot-panel');

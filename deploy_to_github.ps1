@@ -187,35 +187,13 @@ try {
                 Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
             }
             
-            # Clean up old files (older than 6 days)
-            $cutoffDate = (Get-Date).AddDays(-6).Date
-            $dataDir = Join-Path (Get-Location) "data"
-            if (Test-Path $dataDir) {
-                Write-Log "Cleaning up old data files (keeping last 7 days)..." "Yellow"
-                Remove-OldDataFiles -DataDir $dataDir -CutoffDate $cutoffDate
-            }
-            
+
             git add -f . 2>&1 | Out-Null
             git commit -m "Initial gh-pages commit" 2>&1 | Out-Null
         } else {
             Write-Log "Switching to gh-pages branch..." "Yellow"
             
-            # IMPORTANT: Copy web_output to temp location BEFORE switching branches
-            # web_output only exists on main, not on gh-pages
-            $tempWebOutput = Join-Path $env:TEMP "web_output_deploy_$(Get-Date -Format 'yyyyMMddHHmmss')"
-            if (Test-Path "web_output") {
-                Write-Log "Copying web_output to temp location before branch switch..." "Yellow"
-                Copy-Item -Path "web_output" -Destination $tempWebOutput -Recurse -Force
-            } else {
-                Write-Log "web_output not found! Running upload_results.py..." "Yellow"
-                python upload_results.py 2>&1 | Out-Null
-                if (Test-Path "web_output") {
-                    Copy-Item -Path "web_output" -Destination $tempWebOutput -Recurse -Force
-                } else {
-                    throw "Failed to create web_output. Please run upload_results.py first."
-                }
-            }
-            
+
             # Stash any uncommitted changes before switching
             $hasChanges = git status --porcelain
             if ($hasChanges) {
@@ -278,43 +256,12 @@ try {
             throw "Branch mismatch detected"
         }
         
-        # Stage all files at root (but exclude .git and web_output folder)
+        # Stage all files at root
         Write-Log "Staging files..." "Yellow"
+        git add -f . 2>&1 | Out-Null
+        # Remove web_output from staging (we don't want the folder, just its contents at root)
+        git reset HEAD web_output/ 2>&1 | Out-Null
         
-        # Add all files except .git and web_output folder
-        Get-ChildItem -Path . -Exclude ".git", "web_output" -Recurse -File | ForEach-Object {
-            git add -f $_.FullName 2>&1 | Out-Null
-        }
-        
-        # Also add directories (git needs to track empty dirs via .gitkeep or files)
-        Get-ChildItem -Path . -Exclude ".git", "web_output" -Directory | ForEach-Object {
-            # Add any files in subdirectories
-            Get-ChildItem -Path $_.FullName -Recurse -File | ForEach-Object {
-                git add -f $_.FullName 2>&1 | Out-Null
-            }
-        }
-        
-        # Verify files are staged
-        $stagedFiles = git diff --cached --name-only 2>&1
-        if ($stagedFiles) {
-            $fileList = $stagedFiles -split "`n" | Where-Object { $_ -and $_.Trim() }
-            $fileCount = $fileList.Count
-            Write-Log "Staged $fileCount files for commit" "Green"
-            if ($fileCount -lt 5) {
-                Write-Log "Staged files:" "Gray"
-                $fileList | ForEach-Object { Write-Log "  - $_" "Gray" }
-            }
-        } else {
-            Write-Log "Warning: No files staged. Checking status..." "Yellow"
-            git status 2>&1 | Write-Host
-            Write-Log "Attempting to add all files with git add -A..." "Yellow"
-            git add -A 2>&1 | Out-Null
-            $stagedFiles = git diff --cached --name-only 2>&1
-            if ($stagedFiles) {
-                $fileCount = ($stagedFiles -split "`n" | Where-Object { $_ }).Count
-                Write-Log "Now have $fileCount files staged" "Green"
-            }
-        }
     } else {
         git checkout $GITHUB_BRANCH 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {
