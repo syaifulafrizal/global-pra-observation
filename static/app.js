@@ -14,6 +14,27 @@ let mostRecentDate = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Set up dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    if (darkModeToggle) {
+        // Load saved preference
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode === 'true') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+        
+        darkModeToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+    }
+    
     // Set up date selector
     const dateSelector = document.getElementById('date-selector');
     if (dateSelector) {
@@ -23,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderDashboard(selectedDate);
             }
         });
+    }
+    
+    // Set up CSV download button
+    const downloadBtn = document.getElementById('download-anomalies-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadAnomaliesCSV);
     }
     
     renderDashboard();
@@ -711,14 +738,17 @@ async function renderDashboard(date = null) {
         }
     }
     
-    // Create summary stats first
-    html += '<div class="summary-stats">';
-    html += `<div class="stat-card"><div class="stat-value">${totalStations}</div><div class="stat-label">Total Stations</div></div>`;
-    html += `<div class="stat-card stat-anomaly"><div class="stat-value">${anomalousCount}</div><div class="stat-label">Anomalies Detected</div></div>`;
-    html += `<div class="stat-card stat-eq-reliable"><div class="stat-value">${withEQ}</div><div class="stat-label">🌋 With EQ M≥5.5 (Reliable)</div></div>`;
-    html += `<div class="stat-card stat-false-alarm"><div class="stat-value">${falseAlarms}</div><div class="stat-label">⚠️ False Alarms</div></div>`;
-    html += `<div class="stat-card stat-false-negative"><div class="stat-value">${falseNegatives}</div><div class="stat-label">❌ False Negatives (M≥5.5)</div></div>`;
-    html += '</div>';
+    // Update metrics cards
+    updateMetrics({
+        totalStations,
+        activeStations: totalStations,
+        anomalousCount,
+        anomalousStations: anomalousStations,
+        withEQ,
+        falseAlarms,
+        falseNegatives,
+        eqStats
+    });
     
     // Add earthquake statistics
     const eqDateLabel = eqDateUsed !== data.selected_date ?
@@ -1102,4 +1132,152 @@ async function renderStationsList(stations, stationsData) {
     
     html += '</tbody></table>';
     listEl.innerHTML = html;
+}
+
+// Update metrics cards
+function updateMetrics(stats) {
+    const { totalStations, activeStations, anomalousCount, anomalousStations: anomalyStations, withEQ, falseAlarms, falseNegatives, eqStats } = stats;
+    
+    // Active Stations
+    const activeStationsEl = document.getElementById('active-stations-value');
+    const activeStationsDetail = document.getElementById('active-stations-detail');
+    const activeStationsProgress = document.getElementById('active-stations-progress');
+    if (activeStationsEl) {
+        activeStationsEl.textContent = `${activeStations}/${totalStations}`;
+        const percentage = totalStations > 0 ? Math.round((activeStations / totalStations) * 100) : 0;
+        if (activeStationsDetail) {
+            activeStationsDetail.textContent = `${percentage}% operational`;
+        }
+        if (activeStationsProgress) {
+            activeStationsProgress.style.width = `${percentage}%`;
+        }
+    }
+    
+    // Anomalies Detected
+    const anomaliesValue = document.getElementById('anomalies-value');
+    const anomaliesDetail = document.getElementById('anomalies-detail');
+    const anomaliesProgress = document.getElementById('anomalies-progress');
+    if (anomaliesValue) {
+        anomaliesValue.textContent = anomalousCount;
+        if (anomaliesDetail && anomalousCount > 0 && anomalyStations) {
+            const stationList = anomalyStations.slice(0, 3).join(', ');
+            anomaliesDetail.textContent = anomalousCount > 3 
+                ? `${stationList} +${anomalousCount - 3} more`
+                : stationList;
+        } else if (anomaliesDetail) {
+            anomaliesDetail.textContent = 'No anomalies';
+        }
+        if (anomaliesProgress) {
+            const maxAnomalies = Math.max(anomalousCount, 10); // Scale to max 10 for progress
+            const percentage = Math.min((anomalousCount / maxAnomalies) * 100, 100);
+            anomaliesProgress.style.width = `${percentage}%`;
+        }
+    }
+    
+    // Events (24h)
+    const eventsValue = document.getElementById('events-value');
+    const eventsDetail = document.getElementById('events-detail');
+    const eventsProgress = document.getElementById('events-progress');
+    if (eventsValue && eqStats) {
+        const totalEvents = eqStats.global || 0;
+        const verifiedEvents = eqStats.within200km || 0;
+        eventsValue.textContent = totalEvents;
+        if (eventsDetail) {
+            eventsDetail.textContent = `${verifiedEvents} verified events`;
+        }
+        if (eventsProgress) {
+            const maxEvents = Math.max(totalEvents, 10);
+            const percentage = Math.min((totalEvents / maxEvents) * 100, 100);
+            eventsProgress.style.width = `${percentage}%`;
+        }
+    }
+    
+    // Alert Level
+    const alertLevelValue = document.getElementById('alert-level-value');
+    const alertLevelDetail = document.getElementById('alert-level-detail');
+    if (alertLevelValue) {
+        if (anomalousCount > 0 && withEQ > 0) {
+            alertLevelValue.textContent = 'Warning';
+            alertLevelValue.style.color = 'var(--accent-orange)';
+            if (alertLevelDetail) {
+                alertLevelDetail.textContent = `${withEQ} verified anomaly(ies)`;
+            }
+        } else if (anomalousCount > 0) {
+            alertLevelValue.textContent = 'Caution';
+            alertLevelValue.style.color = 'var(--accent-yellow)';
+            if (alertLevelDetail) {
+                alertLevelDetail.textContent = 'Anomalies detected';
+            }
+        } else {
+            alertLevelValue.textContent = 'Normal';
+            alertLevelValue.style.color = 'var(--accent-green)';
+            if (alertLevelDetail) {
+                alertLevelDetail.textContent = 'System healthy';
+            }
+        }
+    }
+}
+
+// Download anomalies CSV
+async function downloadAnomaliesCSV() {
+    try {
+        // Collect all anomaly data from all stations
+        const allAnomalies = [];
+        
+        for (const station of allStations) {
+            try {
+                const response = await fetch(`data/${station}_anomalies.csv`);
+                if (response.ok) {
+                    const csvText = await response.text();
+                    const anomalies = parseCSV(csvText);
+                    
+                    // Add station code to each anomaly
+                    anomalies.forEach(anomaly => {
+                        anomaly.Station = station;
+                        allAnomalies.push(anomaly);
+                    });
+                }
+            } catch (error) {
+                console.warn(`Could not load anomalies for ${station}:`, error);
+            }
+        }
+        
+        if (allAnomalies.length === 0) {
+            alert('No anomalies found to download.');
+            return;
+        }
+        
+        // Convert to CSV format
+        const headers = Object.keys(allAnomalies[0]);
+        const csvRows = [
+            headers.join(','),
+            ...allAnomalies.map(row => 
+                headers.map(header => {
+                    const value = row[header] || '';
+                    // Escape commas and quotes in CSV
+                    if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+                        return `"${value.replace(/"/g, '""')}"`;
+                    }
+                    return value;
+                }).join(',')
+            )
+        ];
+        
+        const csvContent = csvRows.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `anomalies_${selectedDate || new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log(`Downloaded ${allAnomalies.length} anomalies`);
+    } catch (error) {
+        console.error('Error downloading anomalies CSV:', error);
+        alert('Error downloading anomalies CSV. Please try again.');
+    }
 }
