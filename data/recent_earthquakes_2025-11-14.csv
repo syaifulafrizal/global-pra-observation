@@ -1,2 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2025-11-14 19:09:04.173,-15.3477,-175.6934,10,5.7,"214 km WNW of Hihifo, Tonga",earthquake,
+2025-11-14 19:09:04.941,-15.3184,-175.7314,11.068,5.7,"219 km WNW of Hihifo, Tonga",earthquake,
+2025-11-14 18:41:43.227,50.5729,158.1681,22.693,5.2,"144 km E of Severo-Kuril’sk, Russia",earthquake,
+2025-11-14 11:33:45.194,50.4433,158.3043,21.716,5.2,"156 km E of Severo-Kuril’sk, Russia",earthquake,
+2025-11-14 00:45:57.302,6.9697,-33.9398,10.0,5.0,central Mid-Atlantic Ridge,earthquake,

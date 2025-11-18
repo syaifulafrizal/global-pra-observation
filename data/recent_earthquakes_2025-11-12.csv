@@ -1,2 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2025-11-12 06:03:28.885,73.2435,6.9306,10,5.7,Greenland Sea,earthquake,
+2025-11-12 14:23:31.498,34.9696,32.5382,10.0,5.3,"3 km SE of Meládeia, Cyprus",earthquake,
+2025-11-12 12:02:22.507,20.9167,121.0642,24.141,5.1,"107 km WNW of Basco, Philippines",earthquake,
+2025-11-12 09:31:25.011,34.7782,32.4841,10.0,5.2,"2 km ESE of Konia, Cyprus",earthquake,
+2025-11-12 06:03:28.885,73.2435,6.9306,10.0,5.7,Greenland Sea,earthquake,
+2025-11-12 04:23:01.642,-55.3317,-26.9473,10.0,5.0,South Sandwich Islands region,earthquake,
+2025-11-12 03:23:34.793,-5.8826,145.5585,109.896,5.1,"29 km NE of Goroka, Papua New Guinea",earthquake,
+2025-11-12 00:29:22.826,39.8005,143.2201,35.0,5.4,"111 km E of Miyako, Japan",earthquake,
