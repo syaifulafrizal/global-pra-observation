@@ -267,7 +267,7 @@ try {
                 }
                 Write-Log "Files copied successfully" "Green"
                 
-                # Verify critical files exist
+                # Verify critical files exist and have correct content
                 $criticalFiles = @('index.html', 'static/app.js', 'static/style.css', 'data/stations.json')
                 $missingFiles = @()
                 foreach ($file in $criticalFiles) {
@@ -280,6 +280,41 @@ try {
                     throw "Critical files missing after copy"
                 } else {
                     Write-Log "Verified: All critical files are present" "Green"
+                }
+                
+                # Verify stations.json has correct format (not old format)
+                try {
+                    $stationsJson = Get-Content "data/stations.json" | ConvertFrom-Json
+                    $stationCount = if ($stationsJson.stations) { $stationsJson.stations.Count } else { 0 }
+                    $hasAvailableDates = $stationsJson.available_dates -ne $null
+                    $hasMetadata = $stationsJson.metadata -ne $null
+                    
+                    Write-Log "Verifying stations.json content..." "Yellow"
+                    Write-Log "  Stations: $stationCount" "Gray"
+                    Write-Log "  Has available_dates: $hasAvailableDates" "Gray"
+                    Write-Log "  Has metadata: $hasMetadata" "Gray"
+                    
+                    if ($stationCount -le 1 -or -not $hasAvailableDates) {
+                        Write-Log "ERROR: stations.json has old format! (Stations: $stationCount, Has dates: $hasAvailableDates)" "Red"
+                        Write-Log "This suggests web_output/data/stations.json wasn't copied correctly" "Red"
+                        Write-Log "Checking web_output/data/stations.json..." "Yellow"
+                        if (Test-Path "web_output/data/stations.json") {
+                            $webOutputJson = Get-Content "web_output/data/stations.json" | ConvertFrom-Json
+                            $webOutputCount = if ($webOutputJson.stations) { $webOutputJson.stations.Count } else { 0 }
+                            Write-Log "  web_output has $webOutputCount stations" "Yellow"
+                            if ($webOutputCount -gt 1) {
+                                Write-Log "Copying stations.json again from web_output..." "Yellow"
+                                Copy-Item -Path "web_output/data/stations.json" -Destination "data/stations.json" -Force
+                                Write-Log "Re-copied stations.json" "Green"
+                            }
+                        } else {
+                            throw "web_output/data/stations.json not found - cannot verify or fix"
+                        }
+                    } else {
+                        Write-Log "Verified: stations.json has correct format ($stationCount stations)" "Green"
+                    }
+                } catch {
+                    Write-Log "WARNING: Could not verify stations.json content: $_" "Yellow"
                 }
                 
                 # Create/update .gitignore to exclude web_output directory
@@ -321,7 +356,7 @@ try {
         # Remove web_output from staging (we don't want the folder, just its contents at root)
         git reset HEAD web_output/ 2>&1 | Out-Null
         
-        # Verify critical files are staged
+        # Verify critical files are staged and have correct content
         $stagedFiles = git diff --cached --name-only
         $criticalFiles = @('index.html', 'data/stations.json', 'static/app.js', 'static/style.css')
         $missingFiles = @()
@@ -343,6 +378,31 @@ try {
             }
         } else {
             Write-Log "All critical files are staged" "Green"
+        }
+        
+        # Final verification: Check that staged stations.json has correct format
+        if (Test-Path "data/stations.json") {
+            try {
+                $stagedJson = Get-Content "data/stations.json" | ConvertFrom-Json
+                $stagedCount = if ($stagedJson.stations) { $stagedJson.stations.Count } else { 0 }
+                $stagedHasDates = $stagedJson.available_dates -ne $null
+                
+                if ($stagedCount -le 1 -or -not $stagedHasDates) {
+                    Write-Log "ERROR: Staged stations.json still has old format! ($stagedCount stations, dates: $stagedHasDates)" "Red"
+                    Write-Log "Re-copying from web_output..." "Yellow"
+                    if (Test-Path "web_output/data/stations.json") {
+                        Copy-Item -Path "web_output/data/stations.json" -Destination "data/stations.json" -Force
+                        git add -f "data/stations.json" 2>&1 | Out-Null
+                        Write-Log "Re-copied and re-staged stations.json" "Green"
+                    } else {
+                        throw "Cannot fix: web_output/data/stations.json not found"
+                    }
+                } else {
+                    Write-Log "Final verification: Staged stations.json is correct ($stagedCount stations)" "Green"
+                }
+            } catch {
+                Write-Log "WARNING: Could not verify staged stations.json: $_" "Yellow"
+            }
         }
         
     } else {
