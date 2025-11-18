@@ -3,34 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRA Nighttime Detection - Dashboard</title>
+    <title>Earthquake Monitoring System - PRA Dashboard</title>
     <link rel="stylesheet" href="static/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
-<body>
+<body class="light-mode">
     <div class="container">
         <header>
-            <h1>🌍 PRA Nighttime Detection Dashboard</h1>
-            <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
-            <div class="header-controls">
-                <div class="date-selector-container">
-                    <label for="date-selector" style="color: #ecf0f1; margin-right: 10px; font-weight: 500;">Select Date:</label>
-                    <select id="date-selector" style="padding: 8px 12px; font-size: 1em; border-radius: 4px; border: 1px solid #34495e; background: #2c3e50; color: #ecf0f1; cursor: pointer;">
-                        <option value="">Loading dates...</option>
-                    </select>
+            <div class="header-left">
+                <h1>
+                    <span class="icon">🌊</span>
+                    Earthquake Monitoring System
+                </h1>
+                <p class="subtitle">Geomagnetic Field Analysis</p>
+            </div>
+            <div class="header-right">
+                <div class="header-controls">
+                    <div class="date-selector-container">
+                        <label for="date-selector">Select Date:</label>
+                        <select id="date-selector">
+                            <option value="">Loading dates...</option>
+                        </select>
+                    </div>
+                    <div class="mode-toggle-container">
+                        <span class="mode-label">Dark</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
                 <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
             </div>
         </header>
 
-        <div id="stations-container">
-            <p>Loading data...</p>
+        <!-- Summary Stats Boxes -->
+        <div class="summary-stats" id="summary-stats">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content-layout">
+            <!-- Map Section -->
+            <div class="map-section">
+                <div class="section-header">
+                    <h2>Station Map</h2>
+                    <div class="section-actions">
+                        <button class="btn-download" id="download-anomalies-btn" title="Download Anomalies CSV">
+                            📥 Download Anomalies
+                        </button>
+                    </div>
+                </div>
+                <div id="map-container" class="map-container"></div>
+                <div class="map-legend" id="map-legend"></div>
+            </div>
+
+            <!-- Plot Panel Section -->
+            <div class="plot-panel-section">
+                <div class="plot-panel">
+                    <div class="plot-panel-header">
+                        <h2 class="panel-title">Station Analysis</h2>
+                    </div>
+                    <div class="plot-panel-content">
+                        <div class="selector-container">
+                            <label class="selector-label">Select Station:</label>
+                            <select class="station-selector" id="station-selector">
+                                <option value="">Select a station...</option>
+                            </select>
+                        </div>
+                        <div class="selected-station-plot" id="selected-station-plot"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <footer>
             <p class="method-info">
-                Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT) + nZ Normalization<br>
+                Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT)<br>
                 Frequency Band: 0.095-0.110 Hz | Time Window: 20:00-04:00 Local Time
             </p>
             
@@ -39,7 +89,6 @@
                 <ul>
                     <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a> (International Real-time Magnetic Observatory Network)</li>
                     <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United States Geological Survey)</li>
-                    <li>SYM-H index data from <a href="https://omniweb.gsfc.nasa.gov" target="_blank">NASA OMNIWeb</a></li>
                     <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra Malaysia</a></li>
                 </ul>
             </div>
