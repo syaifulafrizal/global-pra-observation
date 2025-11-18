@@ -192,14 +192,52 @@ def prepare_web_output():
     if deleted > 0:
         print(f'[INFO] Cleaned up {deleted} old files')
     
-    # Load station metadata
-    stations_metadata = {}
+    # Load station metadata from root stations.json
+    metadata_dict = {}
     if Path('stations.json').exists():
         try:
-            with open('stations.json', 'r') as f:
+            with open('stations.json', 'r', encoding='utf-8') as f:
                 stations_metadata = json.load(f)
-        except Exception:
-            pass
+                
+            # Handle different formats of stations.json
+            if isinstance(stations_metadata, dict):
+                if 'stations' in stations_metadata:
+                    # Format 1: {"stations": [{"code": "KAK", "name": "...", ...}, ...]}
+                    if isinstance(stations_metadata['stations'], list):
+                        for station_obj in stations_metadata['stations']:
+                            if isinstance(station_obj, dict) and 'code' in station_obj:
+                                code = station_obj['code']
+                                metadata_dict[code] = {
+                                    'name': station_obj.get('name', ''),
+                                    'country': station_obj.get('country', ''),
+                                    'latitude': station_obj.get('latitude', 0),
+                                    'longitude': station_obj.get('longitude', 0),
+                                    'timezone': station_obj.get('timezone', '')
+                                }
+                        if metadata_dict:
+                            print(f'[INFO] Loaded metadata for {len(metadata_dict)} stations from root stations.json')
+                    # Format 2: {"stations": {"KAK": {...}, ...}}
+                    elif isinstance(stations_metadata['stations'], dict):
+                        metadata_dict = stations_metadata['stations']
+                        print(f'[INFO] Loaded metadata for {len(metadata_dict)} stations from root stations.json (dict format)')
+                # Format 3: {"metadata": [...]} - array of metadata objects
+                elif 'metadata' in stations_metadata and isinstance(stations_metadata['metadata'], list):
+                    for station_obj in stations_metadata['metadata']:
+                        if isinstance(station_obj, dict) and 'code' in station_obj:
+                            code = station_obj['code']
+                            metadata_dict[code] = {
+                                'name': station_obj.get('name', ''),
+                                'country': station_obj.get('country', ''),
+                                'latitude': station_obj.get('latitude', 0),
+                                'longitude': station_obj.get('longitude', 0),
+                                'timezone': station_obj.get('timezone', '')
+                            }
+                    if metadata_dict:
+                        print(f'[INFO] Loaded metadata for {len(metadata_dict)} stations from metadata array')
+        except Exception as e:
+            print(f'[WARNING] Could not load station metadata: {e}')
+            import traceback
+            traceback.print_exc()
     
     # Create stations.json with available dates and metadata
     stations_json = {
@@ -209,12 +247,21 @@ def prepare_web_output():
         'last_updated': datetime.now().isoformat(),
     }
     
-    # Add station metadata if available
-    if isinstance(stations_metadata, dict) and 'stations' in stations_metadata:
-        if isinstance(stations_metadata['stations'], dict):
-            stations_json['metadata'] = stations_metadata['stations']
-        elif isinstance(stations_metadata['stations'], list):
-            stations_json['metadata'] = {s: {} for s in stations}
+    # Add station metadata - ensure all stations have at least empty metadata
+    if metadata_dict:
+        print(f'[INFO] Using metadata for {len(metadata_dict)} stations')
+        # Only include metadata for stations that are actually processed
+        filtered_metadata = {code: metadata_dict[code] for code in stations if code in metadata_dict}
+        stations_json['metadata'] = filtered_metadata
+        # Add empty metadata for stations without metadata
+        for station in stations:
+            if station not in stations_json['metadata']:
+                stations_json['metadata'][station] = {}
+        print(f'[INFO] Final metadata contains {len(stations_json["metadata"])} stations')
+    else:
+        print(f'[WARNING] No metadata found, creating empty metadata for {len(stations)} stations')
+        # If no metadata found, create empty dict for all stations
+        stations_json['metadata'] = {s: {} for s in stations}
     
     with open(data_dir / 'stations.json', 'w') as f:
         json.dump(stations_json, f, indent=2)

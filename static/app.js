@@ -681,11 +681,21 @@ async function renderDashboard(date = null) {
         });
     }
     
-    // Load metadata
-    if (data.metadata && Array.isArray(data.metadata)) {
-        data.metadata.forEach(station => {
-            stationMetadata[station.code] = station;
-        });
+    // Load metadata - handle both array and object formats
+    if (data.metadata) {
+        if (Array.isArray(data.metadata)) {
+            // Format: metadata is an array of objects with 'code' field
+            data.metadata.forEach(station => {
+                if (station.code) {
+                    stationMetadata[station.code] = station;
+                }
+            });
+        } else if (typeof data.metadata === 'object') {
+            // Format: metadata is an object with station codes as keys
+            Object.keys(data.metadata).forEach(code => {
+                stationMetadata[code] = data.metadata[code];
+            });
+        }
     }
     
     allStations = data.stations || [];
