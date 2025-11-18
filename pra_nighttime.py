@@ -342,17 +342,26 @@ def compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, f_low, f_h
     S_G = np.array(S_G_list)
     T = pd.Series(T_list)
     
-    # Normalize to nZ (1-3) and nG (1-2)
-    rangeZ = np.max(S_Z) - np.min(S_Z)
-    if rangeZ == 0:
-        rangeZ = np.finfo(float).eps
-    rangeG = np.max(S_G) - np.min(S_G)
-    if rangeG == 0:
-        rangeG = np.finfo(float).eps
+    # For nighttime monitoring (8 hourly windows per day), min-max normalization
+    # is statistically unstable and disturbs the analysis. Apply EVT directly to
+    # the polarization ratio without normalization, preserving physical scale.
+    # This makes thresholds comparable across nights.
+    nZ = S_Z  # Keep raw band power for nZ guard (backward compatibility)
+    nG = S_G  # Keep raw band power for output (backward compatibility)
     
-    nZ = 1 + 2 * (S_Z - np.min(S_Z)) / rangeZ  # 1..3
-    nG = 1 + (S_G - np.min(S_G)) / rangeG      # 1..2
-    P = nZ / nG
+    # Compute polarization ratio directly from raw band powers
+    # Avoid division by zero or near-zero values
+    # Use a threshold based on a small fraction of mean S_G to handle cases where S_G is very close to 0
+    # This prevents numerical instability while preserving the physical meaning
+    mean_S_G = np.mean(S_G[S_G > 0]) if np.any(S_G > 0) else 1.0
+    min_S_G = max(1e-10, mean_S_G * 1e-6)  # Use 1e-6 of mean or 1e-10, whichever is larger
+    S_G_safe = np.where(S_G > min_S_G, S_G, min_S_G)
+    P = S_Z / S_G_safe
+    
+    # Log warning if many values were clamped (indicates potential data quality issue)
+    clamped_count = np.sum(S_G <= min_S_G)
+    if clamped_count > 0:
+        print(f'  Warning: {clamped_count}/{len(S_G)} S_G values were very small (<= {min_S_G:.2e}) and clamped to prevent division issues')
     
     # Compute quiet flags
     isQuiet, fracDist = compute_quiet_flags(T, GI, opts['quietTol'], opts['tightQuiet'], 
@@ -947,11 +956,11 @@ def save_plot(station_code, out_folder, ts, thr, date, station_timezone):
     ax1.grid(True)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=station_timezone))
     
-    # Plot 2: nZ and nG
-    ax2.plot(t_utc, nZ, 'b-', linewidth=1.2, label='nZ')
-    ax2.plot(t_utc, nG, 'g--', linewidth=1.2, label='nG')
+    # Plot 2: nZ and nG (raw band powers, no normalization)
+    ax2.plot(t_utc, nZ, 'b-', linewidth=1.2, label='S_Z (raw)')
+    ax2.plot(t_utc, nG, 'g--', linewidth=1.2, label='S_G (raw)')
     ax2.set_xlabel('Time (Local)')
-    ax2.set_ylabel('Normalized Power')
+    ax2.set_ylabel('Band Power (raw)')
     ax2.legend()
     ax2.grid(True)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=station_timezone))
