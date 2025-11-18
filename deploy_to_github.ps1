@@ -230,9 +230,20 @@ try {
             # Remove existing files (except .git and web_output)
             Get-ChildItem -Path . -Exclude ".git", "web_output" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
             
-            # Copy from web_output directly
+            # Copy from web_output directly to root
             if (Test-Path "web_output") {
-                Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
+                Write-Log "Copying files from web_output to root..." "Yellow"
+                # Copy all contents of web_output to current directory
+                $webOutputPath = Resolve-Path "web_output"
+                Get-ChildItem -Path $webOutputPath -Force | ForEach-Object {
+                    $destPath = Join-Path (Get-Location) $_.Name
+                    if ($_.PSIsContainer) {
+                        Copy-Item -Path $_.FullName -Destination $destPath -Recurse -Force
+                    } else {
+                        Copy-Item -Path $_.FullName -Destination $destPath -Force
+                    }
+                }
+                Write-Log "Files copied successfully" "Green"
             } else {
                 throw "web_output directory not found"
             }
@@ -253,8 +264,9 @@ try {
             throw "Branch mismatch detected"
         }
         
-        # Stage all files at root
+        # Stage all files at root (excluding web_output directory itself)
         Write-Log "Staging files..." "Yellow"
+        # Use git add with . to add all files, then unstage web_output if it exists
         git add -f . 2>&1 | Out-Null
         # Remove web_output from staging (we don't want the folder, just its contents at root)
         git reset HEAD web_output/ 2>&1 | Out-Null
