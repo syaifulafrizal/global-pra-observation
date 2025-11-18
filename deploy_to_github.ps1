@@ -13,36 +13,29 @@ $GITHUB_REPO = if ($env:GITHUB_REPO) { $env:GITHUB_REPO } else { "https://github
 $GITHUB_BRANCH = if ($env:GITHUB_BRANCH) { $env:GITHUB_BRANCH } else { "gh-pages" }
 $GITHUB_TOKEN = $env:GITHUB_TOKEN
 
-# Logging function
 function Write-Log {
-    param(
-        [string]$Message,
-        [string]$Color = "White"
-    )
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Write-Host "[$timestamp] $Message" -ForegroundColor $Color
+    param([string]$Message, [string]$Color = "White")
+    $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Write-Host "[$Timestamp] $Message" -ForegroundColor $Color
 }
 
 Write-Log "==========================================" "Cyan"
-Write-Log "GitHub Pages Deployment Script" "Cyan"
+Write-Log "GitHub Pages Deployment" "Cyan"
 Write-Log "==========================================" "Cyan"
-Write-Log "Repository: $GITHUB_REPO" "White"
-Write-Log "Branch: $GITHUB_BRANCH" "White"
-Write-Log "" "White"
 
 # Check if web_output exists
 if (-not (Test-Path "web_output")) {
-    Write-Log "ERROR: web_output directory not found!" "Red"
-    Write-Log "Please run upload_results.py first to prepare web output." "Yellow"
+    Write-Log "ERROR: web_output/ directory not found!" "Red"
+    Write-Log "Run 'python upload_results.py' first to prepare files" "Yellow"
     exit 1
 }
 
 # Check if git is initialized
 if (-not (Test-Path ".git")) {
     Write-Log "Initializing git repository..." "Yellow"
-    git init 2>&1 | Out-Null
-    git config user.name "PRA Automation" 2>&1 | Out-Null
-    git config user.email "pra@localhost" 2>&1 | Out-Null
+    git init
+    git config user.name "PRA Automation" 2>$null
+    git config user.email "pra@localhost" 2>$null
 }
 
 # Function to remove old data files
@@ -73,19 +66,43 @@ function Remove-OldDataFiles {
     return $deletedCount
 }
 
-# Configure remote - always ensure it's set correctly
+# Configure remote - always ensure it's set correctly with full URL
 $remotes = git remote 2>&1
-$expectedUrl = if ($GITHUB_TOKEN) {
-    # Extract repo path from GITHUB_REPO
-    if ($GITHUB_REPO -match "github.com/(.+)") {
-        $repoPath = $matches[1] -replace "\.git$", ""
-        "https://$GITHUB_TOKEN@github.com/$repoPath.git"
+
+# Normalize GITHUB_REPO to full URL format
+$normalizedRepo = if ($GITHUB_REPO -match "^https://github\.com/") {
+    # Already a full URL, ensure it ends with .git
+    if ($GITHUB_REPO -notmatch "\.git$") {
+        "$GITHUB_REPO.git"
     } else {
         $GITHUB_REPO
     }
+} elseif ($GITHUB_REPO -match "^github\.com/") {
+    # Missing https:// prefix
+    "https://$GITHUB_REPO"
+} elseif ($GITHUB_REPO -match "^[^/]+/[^/]+$") {
+    # Just username/repo format
+    "https://github.com/$GITHUB_REPO.git"
 } else {
+    # Assume it's already correct or use default
     $GITHUB_REPO
 }
+
+# Build expected URL (with token if provided)
+$expectedUrl = if ($GITHUB_TOKEN) {
+    if ($normalizedRepo -match "https://github\.com/(.+)") {
+        $repoPath = $matches[1] -replace "\.git$", ""
+        "https://$GITHUB_TOKEN@github.com/$repoPath.git"
+    } else {
+        $normalizedRepo
+    }
+} else {
+    $normalizedRepo
+}
+
+Write-Log "Repository: $normalizedRepo" "White"
+Write-Log "Branch: $GITHUB_BRANCH" "White"
+Write-Log "" "White"
 
 if ($remotes -notmatch "origin") {
     Write-Log "Adding remote origin..." "Yellow"
@@ -100,7 +117,7 @@ if ($remotes -notmatch "origin") {
         git remote set-url origin $expectedUrl --push
         git remote set-url origin $expectedUrl
     }
-    Write-Log "Remote URL verified" "Gray"
+    Write-Log "Remote URL verified: $expectedUrl" "Gray"
 }
 
 # Save current branch
@@ -131,9 +148,6 @@ if ($currentBranch -eq "main" -or $currentBranch -eq "master") {
         }
     }
 }
-
-# Save current branch
-$currentBranch = git rev-parse --abbrev-ref HEAD
 
 # Fetch latest from remote
 Write-Log "Fetching latest from remote..." "Yellow"
@@ -367,19 +381,9 @@ try {
             Write-Log "ERROR: Remote URL is incorrect. Current remote:" "Red"
             git remote -v 2>&1 | Write-Host
             Write-Log "Attempting to fix remote URL..." "Yellow"
-            # Recalculate expected URL (in case $expectedUrl is not in scope)
-            $fixUrl = if ($GITHUB_TOKEN) {
-                if ($GITHUB_REPO -match "github.com/(.+)") {
-                    $repoPath = $matches[1] -replace "\.git$", ""
-                    "https://$GITHUB_TOKEN@github.com/$repoPath.git"
-                } else {
-                    $GITHUB_REPO
-                }
-            } else {
-                $GITHUB_REPO
-            }
-            git remote set-url origin $fixUrl
-            Write-Log "Remote URL fixed to: $fixUrl" "Yellow"
+            # Always use the normalized full URL
+            git remote set-url origin $expectedUrl
+            Write-Log "Remote URL fixed to: $expectedUrl" "Yellow"
             Write-Log "Retrying push..." "Yellow"
             $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
             if ($LASTEXITCODE -ne 0) {
