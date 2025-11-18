@@ -771,25 +771,26 @@ async function renderDashboard(date = null) {
     const summaryStatsEl = document.getElementById('summary-stats');
     if (summaryStatsEl) {
         summaryStatsEl.innerHTML = `
-            <div class="stat-card">
-                <div class="stat-value">${totalStations}</div>
-                <div class="stat-label">Total Stations</div>
+            <div class="metric-card">
+                <h3>Active Stations</h3>
+                <div class="value">${totalStations}</div>
+                <div class="label">Total stations monitored</div>
             </div>
-            <div class="stat-card stat-anomaly">
-                <div class="stat-value">${anomalousCount}</div>
-                <div class="stat-label">Anomalies Detected</div>
+            <div class="metric-card">
+                <h3>Anomalies Detected</h3>
+                <div class="value">${anomalousCount}</div>
+                <div class="label">Polarization ratio anomalies</div>
             </div>
-            <div class="stat-card stat-eq-reliable">
-                <div class="stat-value">${withEQ}</div>
-                <div class="stat-label">🌋 With EQ M≥5.0 (Reliable)</div>
+            <div class="metric-card">
+                <h3>Events (24h)</h3>
+                <div class="value">${withEQ}</div>
+                <div class="label">🌋 With EQ M≥5.0 (Reliable)</div>
             </div>
-            <div class="stat-card stat-false-alarm">
-                <div class="stat-value">${falseAlarms}</div>
-                <div class="stat-label">⚠️ False Alarms</div>
-            </div>
-            <div class="stat-card stat-false-negative">
-                <div class="stat-value">${falseNegatives}</div>
-                <div class="stat-label">❌ False Negatives (M≥5.0)</div>
+            <div class="metric-card progress">
+                <h3>Alert Level</h3>
+                <div class="value">${falseAlarms > 0 ? '⚠️' : '✓'}</div>
+                <div class="label">${falseAlarms > 0 ? 'False Alarms: ' + falseAlarms : 'All Clear'}</div>
+                ${falseAlarms > 0 ? `<div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(100, (falseAlarms / totalStations) * 100)}%"></div></div>` : ''}
             </div>
         `;
     }
