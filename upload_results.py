@@ -105,8 +105,6 @@ def get_stations():
     
     # Last resort: raise error
     raise ValueError("No stations found. Please ensure data has been processed.")
-    # Last resort: default to KAK
-    return ['KAK']
 
 def prepare_web_output():
     """Prepare static files for web deployment with date-specific handling"""
