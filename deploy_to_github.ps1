@@ -187,13 +187,11 @@ try {
                 Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
             }
             
-
             git add -f . 2>&1 | Out-Null
             git commit -m "Initial gh-pages commit" 2>&1 | Out-Null
         } else {
             Write-Log "Switching to gh-pages branch..." "Yellow"
             
-
             # Stash any uncommitted changes before switching
             $hasChanges = git status --porcelain
             if ($hasChanges) {
@@ -232,12 +230,11 @@ try {
             # Remove existing files (except .git and web_output)
             Get-ChildItem -Path . -Exclude ".git", "web_output" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
             
-            # Copy from temp location
-            if (Test-Path $tempWebOutput) {
-                Copy-Item -Path "$tempWebOutput\*" -Destination . -Recurse -Force
-                Remove-Item -Path $tempWebOutput -Recurse -Force -ErrorAction SilentlyContinue
+            # Copy from web_output directly
+            if (Test-Path "web_output") {
+                Copy-Item -Path "web_output\*" -Destination . -Recurse -Force
             } else {
-                throw "Temp web_output not found at $tempWebOutput"
+                throw "web_output directory not found"
             }
             
             # Clean up old files (older than 6 days)
