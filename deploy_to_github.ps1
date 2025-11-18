@@ -132,6 +132,9 @@ if ($currentBranch -eq "main" -or $currentBranch -eq "master") {
     }
 }
 
+# Save current branch
+$currentBranch = git rev-parse --abbrev-ref HEAD
+
 # Fetch latest from remote
 Write-Log "Fetching latest from remote..." "Yellow"
 git fetch origin 2>&1 | Out-Null
@@ -364,7 +367,19 @@ try {
             Write-Log "ERROR: Remote URL is incorrect. Current remote:" "Red"
             git remote -v 2>&1 | Write-Host
             Write-Log "Attempting to fix remote URL..." "Yellow"
-            git remote set-url origin $expectedUrl
+            # Recalculate expected URL (in case $expectedUrl is not in scope)
+            $fixUrl = if ($GITHUB_TOKEN) {
+                if ($GITHUB_REPO -match "github.com/(.+)") {
+                    $repoPath = $matches[1] -replace "\.git$", ""
+                    "https://$GITHUB_TOKEN@github.com/$repoPath.git"
+                } else {
+                    $GITHUB_REPO
+                }
+            } else {
+                $GITHUB_REPO
+            }
+            git remote set-url origin $fixUrl
+            Write-Log "Remote URL fixed to: $fixUrl" "Yellow"
             Write-Log "Retrying push..." "Yellow"
             $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
             if ($LASTEXITCODE -ne 0) {
