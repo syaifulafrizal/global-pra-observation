@@ -383,11 +383,12 @@ try {
         Write-Log "Switching back to $currentBranch branch..." "Yellow"
         git checkout $currentBranch 2>&1 | Out-Null
         
-        # Restore stashed changes if any
+        # Don't restore stashed changes - they may contain merge conflicts
+        # Clear any stashes to prevent conflicts from being restored
         $stashList = git stash list 2>&1
         if ($stashList -match "Auto-stash before gh-pages deployment") {
-            Write-Log "Restoring stashed changes..." "Yellow"
-            git stash pop 2>&1 | Out-Null
+            Write-Log "Clearing stashed changes to prevent merge conflicts..." "Yellow"
+            git stash drop 2>&1 | Out-Null
         }
     }
     
@@ -408,11 +409,11 @@ try {
         Write-Log "Switching back to $currentBranch branch..." "Yellow"
         git checkout $currentBranch 2>&1 | Out-Null
         
-        # Restore stashed changes if any
+        # Clear any stashes to prevent merge conflicts from being restored
         $stashList = git stash list 2>&1
         if ($stashList -match "Auto-stash before gh-pages deployment") {
-            Write-Log "Restoring stashed changes..." "Yellow"
-            git stash pop 2>&1 | Out-Null
+            Write-Log "Clearing stashed changes to prevent merge conflicts..." "Yellow"
+            git stash drop 2>&1 | Out-Null
         }
     }
     exit 1
