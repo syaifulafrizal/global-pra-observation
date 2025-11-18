@@ -209,11 +209,11 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
                                        max_distance_km=200, min_magnitude=4.0)
         
         if not eq_df.empty:
-            # Filter for magnitude >= 5.5 for reliability assessment
-            eq_df_reliable = eq_df[eq_df['magnitude'] >= 5.5].copy()
+            # Filter for magnitude >= 5.0 for reliability assessment
+            eq_df_reliable = eq_df[eq_df['magnitude'] >= 5.0].copy()
             
             if not eq_df_reliable.empty:
-                # Get closest earthquake with magnitude >= 5.5
+                # Get closest earthquake with magnitude >= 5.0
                 closest = eq_df_reliable.loc[eq_df_reliable['distance_km'].idxmin()]
                 
                 correlation = {
@@ -236,7 +236,7 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
 
 def find_false_negatives(station_code, results_folder, days_lookback=14):
     """
-    Find false negatives: Earthquakes with magnitude >= 5.5 that occurred 
+    Find false negatives: Earthquakes with magnitude >= 5.0 that occurred 
     but no anomaly was detected
     
     Parameters:
@@ -278,9 +278,9 @@ def find_false_negatives(station_code, results_folder, days_lookback=14):
     end_date = latest_date
     start_date = end_date - timedelta(days=days_lookback)
     
-    # Fetch all earthquakes with magnitude >= 5.5
+    # Fetch all earthquakes with magnitude >= 5.0
     eq_df = fetch_usgs_earthquakes(start_date, end_date,
-                                   min_magnitude=5.5,
+                                   min_magnitude=5.0,
                                    latitude=lat,
                                    longitude=lon,
                                    max_radius_km=200)
@@ -358,7 +358,7 @@ def save_false_negatives(station_code, results_folder, false_negatives_df):
     false_negatives_df.to_csv(output_file, index=False)
     print(f'Saved false negatives: {output_file}')
 
-def get_global_earthquakes_today(min_magnitude=5.5):
+def get_global_earthquakes_today(min_magnitude=5.0):
     """
     Get all global earthquakes (magnitude >= min_magnitude) for today
     Used for reporting total earthquake count (not just within 200km)
@@ -384,7 +384,7 @@ def get_global_earthquakes_today(min_magnitude=5.5):
     
     return eq_df
 
-def get_recent_earthquakes_all_stations(days=1, min_magnitude=5.5):
+def get_recent_earthquakes_all_stations(days=1, min_magnitude=5.0):
     """
     Get all recent earthquakes (magnitude >= min_magnitude) for all stations
     Used for displaying on map (shows only today's earthquakes within 200km)

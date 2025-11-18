@@ -49,7 +49,7 @@ OPTS = {
     'tailQ': 0.75,
     'fprTarget': 0.05,
     'kSigma': 4.0,
-    'pFloor': 1.5,
+    'pFloor': 0.0,  # No minimum threshold floor - let EVT determine threshold naturally
     'useNZz': True,
     'NZzMin': 1.25,
     'NZfixed': 2.5,
@@ -472,7 +472,9 @@ def fit_evt_threshold(Pq, tailQ, fpr, pFloor, kSigma):
             return fit_ksigma_threshold(Pq, kSigma, pFloor)
         
         thr = u + qTail
-        thr = max(thr, pFloor)
+        # Only apply floor if it's positive (0.0 means no floor)
+        if pFloor > 0:
+            thr = max(thr, pFloor)
         return thr
     except:
         return fit_ksigma_threshold(Pq, kSigma, pFloor)
@@ -481,11 +483,15 @@ def fit_ksigma_threshold(Pq, K, pFloor):
     """Fit k-sigma threshold"""
     Pq = Pq[np.isfinite(Pq)]
     if len(Pq) == 0:
-        return pFloor
+        # Only return floor if it's positive, otherwise return 0
+        return pFloor if pFloor > 0 else 0.0
     
     mu = np.mean(Pq)
     sd = np.std(Pq)
-    return max(mu + K * sd, pFloor)
+    # Only apply floor if it's positive (0.0 means no floor)
+    if pFloor > 0:
+        return max(mu + K * sd, pFloor)
+    return mu + K * sd
 
 def nz_guard(nZ, station, stMap, useZ, zMin, fixedMin):
     """Apply nZ z-score guard"""

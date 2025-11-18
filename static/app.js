@@ -172,8 +172,8 @@ async function loadEarthquakeCorrelations(station) {
         }
         const text = await response.text();
         const correlations = parseCSV(text);
-        // Filter by magnitude >= 5.5 for reliability
-        return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.5);
+        // Filter by magnitude >= 5.0 for reliability
+        return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
     } catch (error) {
         return [];
     }
@@ -389,10 +389,10 @@ function addStationToMap(stationCode, stationData, eqCorrelations) {
         popupContent += `📊 Threshold: ${parseFloat(stationData.threshold || 0).toFixed(2)}<br>`;
         popupContent += `⏱️ Anomaly Hours: ${stationData.nAnomHours || 0}<br>`;
         
-        // Filter by magnitude >= 5.5 for display
-        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.5);
+        // Filter by magnitude >= 5.0 for display
+        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
         if (hasEQ && reliableCorrelations.length > 0) {
-            popupContent += `<hr style="margin: 8px 0; border-color: #e67e22;"><strong style="color: #e67e22;">🌋 EQ Correlation Found (M≥5.5): ${reliableCorrelations.length}</strong><br>`;
+            popupContent += `<hr style="margin: 8px 0; border-color: #e67e22;"><strong style="color: #e67e22;">🌋 EQ Correlation Found (M≥5.0): ${reliableCorrelations.length}</strong><br>`;
             reliableCorrelations.slice(0, 3).forEach((eq) => {
                 const mag = eq.earthquake_magnitude || 'N/A';
                 const dist = parseFloat(eq.earthquake_distance_km || 0).toFixed(1);
@@ -404,7 +404,7 @@ function addStationToMap(stationCode, stationData, eqCorrelations) {
             }
         } else {
             popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">⚠️ False Alarm</strong><br>`;
-            popupContent += `No EQ M≥5.5 within 200km within 14 days`;
+            popupContent += `No EQ M≥5.0 within 200km within 14 days`;
         }
     } else {
         popupContent += `<hr style="margin: 8px 0; border-color: #95a5a6;"><span style="color: #95a5a6;">✅ Status: Normal</span><br>`;
@@ -678,8 +678,8 @@ async function renderDashboard(date = null) {
             anomalousCount++;
             anomalousStations.push(station);
             const eqCorrelations = await loadEarthquakeCorrelations(station);
-            // Filter by magnitude >= 5.5 for reliability
-            const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.5);
+            // Filter by magnitude >= 5.0 for reliability
+            const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
             if (reliableCorrelations.length > 0) {
                 withEQ++;
             } else {
@@ -738,22 +738,37 @@ async function renderDashboard(date = null) {
         }
     }
     
-    // Update metrics cards
-    updateMetrics({
-        totalStations,
-        activeStations: totalStations,
-        anomalousCount,
-        anomalousStations: anomalousStations,
-        withEQ,
-        falseAlarms,
-        falseNegatives,
-        eqStats
-    });
+    // Create summary stats boxes (like before, but better styled)
+    const summaryStatsEl = document.getElementById('summary-stats');
+    if (summaryStatsEl) {
+        summaryStatsEl.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-value">${totalStations}</div>
+                <div class="stat-label">Total Stations</div>
+            </div>
+            <div class="stat-card stat-anomaly">
+                <div class="stat-value">${anomalousCount}</div>
+                <div class="stat-label">Anomalies Detected</div>
+            </div>
+            <div class="stat-card stat-eq-reliable">
+                <div class="stat-value">${withEQ}</div>
+                <div class="stat-label">🌋 With EQ M≥5.0 (Reliable)</div>
+            </div>
+            <div class="stat-card stat-false-alarm">
+                <div class="stat-value">${falseAlarms}</div>
+                <div class="stat-label">⚠️ False Alarms</div>
+            </div>
+            <div class="stat-card stat-false-negative">
+                <div class="stat-value">${falseNegatives}</div>
+                <div class="stat-label">❌ False Negatives (M≥5.0)</div>
+            </div>
+        `;
+    }
     
     // Add earthquake statistics
     const eqDateLabel = eqDateUsed !== data.selected_date ?
-        `Earthquakes (M≥5.5) - ${formatDateForSelector(eqDateUsed)} (fallback from ${formatDateForSelector(data.selected_date)})` :
-        `Earthquakes (M≥5.5) - ${formatDateForSelector(data.selected_date)}`;
+        `Earthquakes (M≥5.0) - ${formatDateForSelector(eqDateUsed)} (fallback from ${formatDateForSelector(data.selected_date)})` :
+        `Earthquakes (M≥5.0) - ${formatDateForSelector(data.selected_date)}`;
     
     html += '<div class="today-eq-stats">';
     html += `<h3>📊 ${eqDateLabel}</h3>`;
@@ -764,7 +779,7 @@ async function renderDashboard(date = null) {
     if (eqStats.global > 0 && eqStats.within200km === 0) {
         html += '<p class="eq-stats-note" style="color: #f39c12; margin-top: 10px; font-size: 0.9em;">ℹ️ There are earthquakes globally, but none within 200km of any station.</p>';
     } else if (eqStats.global === 0) {
-        html += '<p class="eq-stats-note" style="color: #95a5a6; margin-top: 10px; font-size: 0.9em;">ℹ️ No earthquakes (M≥5.5) detected globally for this date.</p>';
+        html += '<p class="eq-stats-note" style="color: #95a5a6; margin-top: 10px; font-size: 0.9em;">ℹ️ No earthquakes (M≥5.0) detected globally for this date.</p>';
     }
     html += '</div>';
     
@@ -777,9 +792,9 @@ async function renderDashboard(date = null) {
     html += '<div class="map-legend">';
     html += '<h4 style="margin: 0 0 10px 0; font-size: 1.1em; color: #2c3e50;">Map Legend</h4>';
     html += '<div class="legend-item"><span class="legend-marker marker-gray"></span> Normal Station</div>';
-    html += '<div class="legend-item"><span class="legend-marker marker-eq-reliable"></span> Anomaly with EQ (M≥5.5)</div>';
+    html += '<div class="legend-item"><span class="legend-marker marker-eq-reliable"></span> Anomaly with EQ (M≥5.0)</div>';
     html += '<div class="legend-item"><span class="legend-marker marker-eq-false"></span> False Alarm (No EQ)</div>';
-    html += '<div class="legend-item"><span class="legend-marker earthquake-marker-legend"></span> Earthquake (M≥5.5)</div>';
+    html += '<div class="legend-item"><span class="legend-marker earthquake-marker-legend"></span> Earthquake (M≥5.0)</div>';
     html += '<div class="legend-item"><span style="display: inline-block; width: 20px; height: 2px; background: #e74c3c; border: 1px dashed #e74c3c; margin-right: 8px; vertical-align: middle;"></span> 200km Radius</div>';
     html += '</div>';
     html += '</div>';
@@ -976,8 +991,8 @@ async function renderStationPlot(stationCode) {
     const stationData = allStationsData[stationCode];
     const metadata = stationMetadata[stationCode] || {};
     const eqCorrelations = await loadEarthquakeCorrelations(stationCode);
-    // Filter by magnitude >= 5.5 for reliability
-    const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.5);
+        // Filter by magnitude >= 5.0 for reliability
+        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
     const hasEQ = reliableCorrelations.length > 0;
     const hasAnomaly = stationData && stationData.is_anomalous;
     const falseNegatives = await loadFalseNegatives(stationCode);
@@ -989,12 +1004,12 @@ async function renderStationPlot(stationCode) {
     
     if (hasAnomaly) {
         html += `<div class="plot-status ${hasEQ ? 'status-eq' : 'status-false'}">`;
-        html += hasEQ ? `🌋 EQ Correlation Found (M≥5.5): ${reliableCorrelations.length}` : `⚠️ False Alarm (No EQ M≥5.5)`;
+        html += hasEQ ? `🌋 EQ Correlation Found (M≥5.0): ${reliableCorrelations.length}` : `⚠️ False Alarm (No EQ M≥5.0)`;
         html += `</div>`;
     } else {
         html += `<div class="plot-status status-normal">✅ Normal</div>`;
         if (falseNegatives.length > 0) {
-            html += `<div class="plot-status status-false-negative" style="margin-top: 8px;">❌ False Negative: ${falseNegatives.length} EQ M≥5.5 without anomaly</div>`;
+            html += `<div class="plot-status status-false-negative" style="margin-top: 8px;">❌ False Negative: ${falseNegatives.length} EQ M≥5.0 without anomaly</div>`;
         }
     }
     html += `</div>`;
@@ -1017,10 +1032,10 @@ async function renderStationPlot(stationCode) {
         html += `<div class="info-row"><span class="info-label">Date:</span><span class="info-value">${formatDate(stationData.date)}</span></div>`;
         html += `<div class="info-row"><span class="info-label">Threshold:</span><span class="info-value">${parseFloat(stationData.threshold || 0).toFixed(2)}</span></div>`;
         html += `<div class="info-row"><span class="info-label">Anomaly Hours:</span><span class="info-value">${stationData.nAnomHours || 0}</span></div>`;
-        // Show reliable correlations (M>=5.5)
+        // Show reliable correlations (M>=5.0)
         if (hasEQ && reliableCorrelations.length > 0) {
             html += `<div class="eq-info">`;
-            html += `<h4>🌋 Earthquake Correlations (M≥5.5):</h4>`;
+            html += `<h4>🌋 Earthquake Correlations (M≥5.0):</h4>`;
             reliableCorrelations.slice(0, 5).forEach((eq) => {
                 const mag = eq.earthquake_magnitude || 'N/A';
                 const dist = parseFloat(eq.earthquake_distance_km || 0).toFixed(1);
@@ -1033,7 +1048,7 @@ async function renderStationPlot(stationCode) {
         // Show false negatives if any
         if (falseNegatives.length > 0) {
             html += `<div class="fn-info">`;
-            html += `<h4>❌ False Negatives (M≥5.5, no anomaly detected):</h4>`;
+            html += `<h4>❌ False Negatives (M≥5.0, no anomaly detected):</h4>`;
             falseNegatives.slice(0, 3).forEach((fn) => {
                 const mag = fn.earthquake_magnitude || 'N/A';
                 const dist = parseFloat(fn.earthquake_distance_km || 0).toFixed(1);
@@ -1134,89 +1149,6 @@ async function renderStationsList(stations, stationsData) {
     listEl.innerHTML = html;
 }
 
-// Update metrics cards
-function updateMetrics(stats) {
-    const { totalStations, activeStations, anomalousCount, anomalousStations: anomalyStations, withEQ, falseAlarms, falseNegatives, eqStats } = stats;
-    
-    // Active Stations
-    const activeStationsEl = document.getElementById('active-stations-value');
-    const activeStationsDetail = document.getElementById('active-stations-detail');
-    const activeStationsProgress = document.getElementById('active-stations-progress');
-    if (activeStationsEl) {
-        activeStationsEl.textContent = `${activeStations}/${totalStations}`;
-        const percentage = totalStations > 0 ? Math.round((activeStations / totalStations) * 100) : 0;
-        if (activeStationsDetail) {
-            activeStationsDetail.textContent = `${percentage}% operational`;
-        }
-        if (activeStationsProgress) {
-            activeStationsProgress.style.width = `${percentage}%`;
-        }
-    }
-    
-    // Anomalies Detected
-    const anomaliesValue = document.getElementById('anomalies-value');
-    const anomaliesDetail = document.getElementById('anomalies-detail');
-    const anomaliesProgress = document.getElementById('anomalies-progress');
-    if (anomaliesValue) {
-        anomaliesValue.textContent = anomalousCount;
-        if (anomaliesDetail && anomalousCount > 0 && anomalyStations) {
-            const stationList = anomalyStations.slice(0, 3).join(', ');
-            anomaliesDetail.textContent = anomalousCount > 3 
-                ? `${stationList} +${anomalousCount - 3} more`
-                : stationList;
-        } else if (anomaliesDetail) {
-            anomaliesDetail.textContent = 'No anomalies';
-        }
-        if (anomaliesProgress) {
-            const maxAnomalies = Math.max(anomalousCount, 10); // Scale to max 10 for progress
-            const percentage = Math.min((anomalousCount / maxAnomalies) * 100, 100);
-            anomaliesProgress.style.width = `${percentage}%`;
-        }
-    }
-    
-    // Events (24h)
-    const eventsValue = document.getElementById('events-value');
-    const eventsDetail = document.getElementById('events-detail');
-    const eventsProgress = document.getElementById('events-progress');
-    if (eventsValue && eqStats) {
-        const totalEvents = eqStats.global || 0;
-        const verifiedEvents = eqStats.within200km || 0;
-        eventsValue.textContent = totalEvents;
-        if (eventsDetail) {
-            eventsDetail.textContent = `${verifiedEvents} verified events`;
-        }
-        if (eventsProgress) {
-            const maxEvents = Math.max(totalEvents, 10);
-            const percentage = Math.min((totalEvents / maxEvents) * 100, 100);
-            eventsProgress.style.width = `${percentage}%`;
-        }
-    }
-    
-    // Alert Level
-    const alertLevelValue = document.getElementById('alert-level-value');
-    const alertLevelDetail = document.getElementById('alert-level-detail');
-    if (alertLevelValue) {
-        if (anomalousCount > 0 && withEQ > 0) {
-            alertLevelValue.textContent = 'Warning';
-            alertLevelValue.style.color = 'var(--accent-orange)';
-            if (alertLevelDetail) {
-                alertLevelDetail.textContent = `${withEQ} verified anomaly(ies)`;
-            }
-        } else if (anomalousCount > 0) {
-            alertLevelValue.textContent = 'Caution';
-            alertLevelValue.style.color = 'var(--accent-yellow)';
-            if (alertLevelDetail) {
-                alertLevelDetail.textContent = 'Anomalies detected';
-            }
-        } else {
-            alertLevelValue.textContent = 'Normal';
-            alertLevelValue.style.color = 'var(--accent-green)';
-            if (alertLevelDetail) {
-                alertLevelDetail.textContent = 'System healthy';
-            }
-        }
-    }
-}
 
 // Download anomalies CSV
 async function downloadAnomaliesCSV() {

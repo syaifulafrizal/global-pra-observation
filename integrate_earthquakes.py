@@ -45,23 +45,23 @@ def main():
             print(f'  [WARNING] No results folder for {station_code}')
             continue
         
-        # Correlate anomalies with earthquakes (magnitude >= 5.5 for reliability)
+        # Correlate anomalies with earthquakes (magnitude >= 5.0 for reliability)
         correlations = correlate_anomalies_with_earthquakes(station_code, results_folder)
         
-        # Find false negatives (EQ >= 5.5 occurred but no anomaly detected)
+        # Find false negatives (EQ >= 5.0 occurred but no anomaly detected)
         false_negatives = find_false_negatives(station_code, results_folder, days_lookback=14)
         
         if not correlations.empty:
             # Save correlations
             save_earthquake_correlations(station_code, results_folder, correlations)
-            print(f'  [OK] Found {len(correlations)} anomaly-earthquake correlations (M>=5.5)')
+            print(f'  [OK] Found {len(correlations)} anomaly-earthquake correlations (M>=5.0)')
         else:
-            print(f'  [INFO] No earthquake correlations found (M>=5.5)')
+            print(f'  [INFO] No earthquake correlations found (M>=5.0)')
         
         if not false_negatives.empty:
             # Save false negatives
             save_false_negatives(station_code, results_folder, false_negatives)
-            print(f'  [INFO] Found {len(false_negatives)} false negatives (EQ M>=5.5 without anomaly)')
+            print(f'  [INFO] Found {len(false_negatives)} false negatives (EQ M>=5.0 without anomaly)')
         
         results_summary[station_code] = {
             'anomalies_with_eq': len(correlations),
@@ -83,7 +83,7 @@ def main():
     
     # Get global earthquakes for last 7 days (for date-specific display)
     print(f'\n{"="*60}')
-    print('Fetching global earthquakes (M>=5.5) for last 7 days...')
+    print('Fetching global earthquakes (M>=5.0) for last 7 days...')
     from earthquake_integration import get_global_earthquakes_today, calculate_distance, fetch_usgs_earthquakes
     
     today = datetime.now().date()
@@ -100,7 +100,7 @@ def main():
         end_date = start_date + timedelta(days=1)
         
         print(f'  Fetching earthquakes for {date_str}...')
-        day_eq = fetch_usgs_earthquakes(start_date, end_date, min_magnitude=5.5)
+        day_eq = fetch_usgs_earthquakes(start_date, end_date, min_magnitude=5.0)
         
         if not day_eq.empty:
             print(f'    Found {len(day_eq)} earthquakes for {date_str}')
@@ -169,7 +169,7 @@ def main():
             'analysis_date': date_str,
             'global_count': len(day_eq) if not day_eq.empty else 0,
             'within_200km_count': within_200km_count,
-            'min_magnitude': 5.5
+            'min_magnitude': 5.0
         }
         stats_file = web_data_dir / f'earthquake_stats_{date_str}.json'
         import json
@@ -262,8 +262,8 @@ def main():
         within_200km_count = len(earthquakes_within_200km)
     
     # Summary (already saved above in the loop, but print summary)
-    print(f'  [INFO] Earthquakes (M>=5.5) globally today: {global_count}')
-    print(f'  [INFO] Earthquakes (M>=5.5) within 200km of stations: {within_200km_count}')
+    print(f'  [INFO] Earthquakes (M>=5.0) globally today: {global_count}')
+    print(f'  [INFO] Earthquakes (M>=5.0) within 200km of stations: {within_200km_count}')
     
     # Print summary
     print(f'\n{"="*60}')
@@ -275,13 +275,13 @@ def main():
     stations_with_correlations = sum(1 for r in results_summary.values() if r['total_correlations'] > 0)
     
     print(f'Total stations processed: {len(results_summary)}')
-    print(f'Stations with correlations (M>=5.5): {stations_with_correlations}')
-    print(f'Total reliable correlations (M>=5.5): {total_correlations}')
-    print(f'Total false negatives (M>=5.5): {total_false_negatives}')
+    print(f'Stations with correlations (M>=5.0): {stations_with_correlations}')
+    print(f'Total reliable correlations (M>=5.0): {total_correlations}')
+    print(f'Total false negatives (M>=5.0): {total_false_negatives}')
     
     # Show stations with correlations
     if stations_with_correlations > 0:
-        print(f'\nStations with earthquake correlations (M>=5.5):')
+        print(f'\nStations with earthquake correlations (M>=5.0):')
         for station, data in results_summary.items():
             if data['total_correlations'] > 0:
                 print(f'  {station}: {data["total_correlations"]} correlations')
