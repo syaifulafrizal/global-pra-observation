@@ -194,10 +194,16 @@ if (Test-Path "web_output/data/stations.json") {
 }
 
 # Copy web_output to temp location (outside .gitignore) so it persists across branch switches
-# Also copy stations.json to a tracked file that will persist
-$tempWebOutput = "web_output_temp_deploy"
-$tempStationsJson = "stations.json.temp"
+# Use absolute path in parent directory to ensure it persists across branch switches
+$repoRoot = (Get-Location).Path
+$parentDir = Split-Path -Parent $repoRoot
+$tempWebOutput = Join-Path $parentDir "web_output_temp_deploy_$(Split-Path -Leaf $repoRoot)"
+$tempStationsJson = Join-Path $parentDir "stations_json_temp_$(Split-Path -Leaf $repoRoot).json"
+
 Write-Log "Copying web_output to temp location for branch switching..." "Yellow"
+Write-Log "  Temp location: $tempWebOutput" "Gray"
+Write-Log "  Temp stations.json: $tempStationsJson" "Gray"
+
 if (Test-Path $tempWebOutput) {
     Remove-Item $tempWebOutput -Recurse -Force
 }
@@ -206,10 +212,10 @@ Copy-Item -Path "web_output" -Destination $tempWebOutput -Recurse -Force
 # Also copy stations.json to a single file that will persist (not in a directory)
 if (Test-Path "web_output/data/stations.json") {
     Copy-Item -Path "web_output/data/stations.json" -Destination $tempStationsJson -Force
-    Write-Log "Copied stations.json to $tempStationsJson (will persist across branch switch)" "Green"
+    Write-Log "Copied stations.json to temp file (will persist across branch switch)" "Green"
 }
 
-Write-Log "web_output copied to $tempWebOutput (will be used after branch switch)" "Green"
+Write-Log "web_output copied to temp location (will be used after branch switch)" "Green"
 
 # Push to GitHub
 Write-Log "Deploying to GitHub Pages..." "Yellow"
@@ -308,12 +314,21 @@ try {
             }
             
             # Copy from temp web_output location (web_output doesn't exist on gh-pages branch)
-            $tempWebOutput = "web_output_temp_deploy"
-            $tempStationsJson = "stations.json.temp"
+            # Use absolute path in parent directory (persists across branch switches)
+            $repoRoot = (Get-Location).Path
+            $parentDir = Split-Path -Parent $repoRoot
+            $tempWebOutput = Join-Path $parentDir "web_output_temp_deploy_$(Split-Path -Leaf $repoRoot)"
+            $tempStationsJson = Join-Path $parentDir "stations_json_temp_$(Split-Path -Leaf $repoRoot).json"
+            
+            Write-Log "Looking for temp files..." "Yellow"
+            Write-Log "  Temp location: $tempWebOutput" "Gray"
+            Write-Log "  Temp stations.json: $tempStationsJson" "Gray"
             
             # First, try to restore stations.json from the temp file (most reliable)
             if (Test-Path $tempStationsJson) {
-                Write-Log "Found temp stations.json file, will use it after copying..." "Yellow"
+                Write-Log "Found temp stations.json file, will use it after copying..." "Green"
+            } else {
+                Write-Log "Temp stations.json not found at: $tempStationsJson" "Yellow"
             }
             
             if (Test-Path $tempWebOutput) {
@@ -403,7 +418,10 @@ try {
                     Write-Log "Re-copying from temp stations.json file..." "Yellow"
                     
                     # Try temp stations.json file first (most reliable)
-                    $tempStationsJson = "stations.json.temp"
+                    # Use absolute path in parent directory
+                    $repoRoot = (Get-Location).Path
+                    $parentDir = Split-Path -Parent $repoRoot
+                    $tempStationsJson = Join-Path $parentDir "stations_json_temp_$(Split-Path -Leaf $repoRoot).json"
                     if (Test-Path $tempStationsJson) {
                         $webOutputJson = Get-Content $tempStationsJson | ConvertFrom-Json
                         $webOutputCount = if ($webOutputJson.stations) { $webOutputJson.stations.Count } else { 0 }
@@ -416,7 +434,9 @@ try {
                         }
                     } else {
                         # Fallback: try temp web_output directory
-                        $tempWebOutput = "web_output_temp_deploy"
+                        $repoRoot = (Get-Location).Path
+                        $parentDir = Split-Path -Parent $repoRoot
+                        $tempWebOutput = Join-Path $parentDir "web_output_temp_deploy_$(Split-Path -Leaf $repoRoot)"
                         if (Test-Path "$tempWebOutput/data/stations.json") {
                             $webOutputJson = Get-Content "$tempWebOutput/data/stations.json" | ConvertFrom-Json
                             $webOutputCount = if ($webOutputJson.stations) { $webOutputJson.stations.Count } else { 0 }
@@ -508,7 +528,10 @@ try {
                 if ($stagedCount -le 1 -or -not $stagedHasDates) {
                     Write-Log "ERROR: Staged stations.json still has old format! ($stagedCount stations, dates: $stagedHasDates)" "Red"
                     Write-Log "Re-copying from temp stations.json file..." "Yellow"
-                    $tempStationsJson = "stations.json.temp"
+                    # Use absolute path in parent directory
+                    $repoRoot = (Get-Location).Path
+                    $parentDir = Split-Path -Parent $repoRoot
+                    $tempStationsJson = Join-Path $parentDir "stations_json_temp_$(Split-Path -Leaf $repoRoot).json"
                     if (Test-Path $tempStationsJson) {
                         Copy-Item -Path $tempStationsJson -Destination "data/stations.json" -Force
                         git add -f "data/stations.json" 2>&1 | Out-Null
@@ -605,8 +628,11 @@ try {
     }
     
     # Clean up temp files before success message
-    $tempWebOutput = "web_output_temp_deploy"
-    $tempStationsJson = "stations.json.temp"
+    # Use absolute path in parent directory
+    $repoRoot = (Get-Location).Path
+    $parentDir = Split-Path -Parent $repoRoot
+    $tempWebOutput = Join-Path $parentDir "web_output_temp_deploy_$(Split-Path -Leaf $repoRoot)"
+    $tempStationsJson = Join-Path $parentDir "stations_json_temp_$(Split-Path -Leaf $repoRoot).json"
     if (Test-Path $tempWebOutput) {
         Write-Log "Cleaning up temp web_output directory..." "Yellow"
         Remove-Item $tempWebOutput -Recurse -Force -ErrorAction SilentlyContinue
