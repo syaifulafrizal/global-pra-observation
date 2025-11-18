@@ -45,25 +45,6 @@ if (-not (Test-Path ".git")) {
     git config user.email "pra@localhost" 2>&1 | Out-Null
 }
 
-# Configure remote
-$remotes = git remote 2>&1
-if ($remotes -notmatch "origin") {
-    Write-Log "Adding remote origin..." "Yellow"
-    git remote add origin $GITHUB_REPO
-} else {
-    Write-Log "Updating remote origin URL..." "Yellow"
-    git remote set-url origin $GITHUB_REPO
-}
-
-# If using token, update remote URL
-if ($GITHUB_TOKEN) {
-    Write-Log "Using GitHub token for authentication..." "Yellow"
-    if ($GITHUB_REPO -match "github.com/(.+)") {
-        $repoPath = $matches[1]
-        git remote set-url origin "https://$GITHUB_TOKEN@github.com/$repoPath"
-    }
-}
-
 # Function to remove old data files
 function Remove-OldDataFiles {
     param(
@@ -90,6 +71,36 @@ function Remove-OldDataFiles {
         }
     }
     return $deletedCount
+}
+
+# Configure remote - always ensure it's set correctly
+$remotes = git remote 2>&1
+$expectedUrl = if ($GITHUB_TOKEN) {
+    # Extract repo path from GITHUB_REPO
+    if ($GITHUB_REPO -match "github.com/(.+)") {
+        $repoPath = $matches[1] -replace "\.git$", ""
+        "https://$GITHUB_TOKEN@github.com/$repoPath.git"
+    } else {
+        $GITHUB_REPO
+    }
+} else {
+    $GITHUB_REPO
+}
+
+if ($remotes -notmatch "origin") {
+    Write-Log "Adding remote origin..." "Yellow"
+    git remote add origin $expectedUrl
+} else {
+    Write-Log "Updating remote origin URL..." "Yellow"
+    git remote set-url origin $expectedUrl
+    # Verify it was set correctly
+    $verifyUrl = git remote get-url origin 2>&1
+    if ($verifyUrl -ne $expectedUrl -and -not ($verifyUrl -match "error")) {
+        Write-Log "Warning: Remote URL mismatch. Setting again..." "Yellow"
+        git remote set-url origin $expectedUrl --push
+        git remote set-url origin $expectedUrl
+    }
+    Write-Log "Remote URL verified" "Gray"
 }
 
 # Save current branch
@@ -348,7 +359,20 @@ try {
     $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Push output: $pushOutput" "Red"
-        throw "Failed to push to GitHub"
+        # Check if it's a remote URL issue
+        if ($pushOutput -match "does not appear to be a git repository") {
+            Write-Log "ERROR: Remote URL is incorrect. Current remote:" "Red"
+            git remote -v 2>&1 | Write-Host
+            Write-Log "Attempting to fix remote URL..." "Yellow"
+            git remote set-url origin $expectedUrl
+            Write-Log "Retrying push..." "Yellow"
+            $pushOutput = git push -u origin $GITHUB_BRANCH --force 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                throw "Failed to push to GitHub after fixing remote URL"
+            }
+        } else {
+            throw "Failed to push to GitHub"
+        }
     }
     
     Write-Log "SUCCESS: Deployed to GitHub!" "Green"
@@ -394,6 +418,7 @@ try {
     Write-Log "  3. For private repos, set GITHUB_TOKEN" "White"
     Write-Log "  4. Check git status: git status" "White"
     Write-Log "  5. Check current branch: git branch" "White"
+    Write-Log "  6. Check remote URL: git remote -v" "White"
     
     # Try to switch back to original branch
     if ($currentBranch) {
