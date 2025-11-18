@@ -2,16 +2,71 @@
 """
 Prepare processed results for local web serving
 Prepares files in web_output/ directory for Flask to serve
+Handles date-specific files and 7-day data retention
 """
 
 import os
 import json
+import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 import shutil
 
 # Configuration
 OUTPUT_DIR = Path('web_output')  # Directory for prepared web files
+
+def parse_date_from_filename(filename):
+    """Extract date from filename in format YYYY-MM-DD"""
+    # Try to match date patterns like 2025-11-18 or 20251118
+    date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', filename)
+    if date_match:
+        return date_match.group(0)
+    date_match = re.search(r'(\d{4})(\d{2})(\d{2})', filename)
+    if date_match:
+        return f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}"
+    return None
+
+def get_available_dates():
+    """Get list of available dates (last 7 days)"""
+    dates = []
+    today = datetime.now().date()
+    for i in range(7):
+        date = today - timedelta(days=i)
+        dates.append(date.strftime('%Y-%m-%d'))
+    return dates
+
+def cleanup_old_files(data_dir, figures_dir, cutoff_date):
+    """Remove files older than cutoff_date"""
+    deleted_count = 0
+    
+    # Clean JSON files in data/
+    if data_dir.exists():
+        for json_file in data_dir.glob('*.json'):
+            if json_file.name != 'stations.json':
+                file_date = parse_date_from_filename(json_file.name)
+                if file_date:
+                    try:
+                        file_date_obj = datetime.strptime(file_date, '%Y-%m-%d').date()
+                        if file_date_obj < cutoff_date:
+                            json_file.unlink()
+                            deleted_count += 1
+                    except ValueError:
+                        pass
+    
+    # Clean PNG files in figures/
+    if figures_dir.exists():
+        for png_file in figures_dir.rglob('*.png'):
+            file_date = parse_date_from_filename(png_file.name)
+            if file_date:
+                try:
+                    file_date_obj = datetime.strptime(file_date, '%Y-%m-%d').date()
+                    if file_date_obj < cutoff_date:
+                        png_file.unlink()
+                        deleted_count += 1
+                except ValueError:
+                    pass
+    
+    return deleted_count
 
 def get_stations():
     """Get list of stations - auto-detect from processed data or use env var"""
@@ -48,11 +103,11 @@ def get_stations():
         except Exception:
             pass
     
-    # Last resort: default to KAK
-    return ['KAK']
+    # Last resort: raise error
+    raise ValueError("No stations found. Please ensure data has been processed.")
 
 def prepare_web_output():
-    """Prepare static files for web deployment"""
+    """Prepare static files for web deployment with date-specific handling"""
     print('Preparing web output...')
     
     # Create output directory
@@ -70,16 +125,25 @@ def prepare_web_output():
     if Path('static/app.js').exists():
         shutil.copy('static/app.js', static_dir / 'app.js')
     
-    # Create data directory
+    # Create data and figures directories
     data_dir = OUTPUT_DIR / 'data'
     data_dir.mkdir(exist_ok=True)
     
-    # Copy stations.json for map metadata
-    if Path('stations.json').exists():
-        shutil.copy('stations.json', data_dir / 'stations.json')
+    figures_dir = OUTPUT_DIR / 'figures'
+    figures_dir.mkdir(exist_ok=True)
     
+    # Get available dates (last 7 days)
+    available_dates = get_available_dates()
+    most_recent_date = available_dates[0] if available_dates else None
+    
+    print(f'[INFO] Available dates: {", ".join(available_dates)}')
+    print(f'[INFO] Most recent date: {most_recent_date}')
+    
+    # Get stations
     stations = get_stations()
-    all_stations_data = {}
+    
+    # Copy date-specific files for the last 7 days
+    cutoff_date = (datetime.now() - timedelta(days=6)).date()
     
     for station in stations:
         station_folder = Path('INTERMAGNET_DOWNLOADS') / station
@@ -87,130 +151,84 @@ def prepare_web_output():
         if not station_folder.exists():
             continue
         
-        # Copy latest JSON results
+        # Copy date-specific JSON files
         json_files = list(station_folder.glob('PRA_Night_*.json'))
-        if json_files:
-            latest_json = max(json_files, key=lambda p: p.stat().st_mtime)
-            shutil.copy(latest_json, data_dir / f'{station}_latest.json')
+        for json_file in json_files:
+            file_date = parse_date_from_filename(json_file.name)
+            if file_date and file_date in available_dates:
+                try:
+                    file_date_obj = datetime.strptime(file_date, '%Y-%m-%d').date()
+                    if file_date_obj >= cutoff_date:
+                        # Copy as {station}_{date}.json
+                        dest_file = data_dir / f'{station}_{file_date}.json'
+                        shutil.copy(json_file, dest_file)
+                except ValueError:
+                    pass
+        
+        # Copy date-specific figures
+        station_figures_dir = station_folder / 'figures'
+        if station_figures_dir.exists():
+            web_station_figures_dir = figures_dir / station
+            web_station_figures_dir.mkdir(exist_ok=True)
             
-            # Load and add to all_stations_data
-            with open(latest_json, 'r') as f:
-                all_stations_data[station] = json.load(f)
-        
-        # Copy anomaly table
-        anomaly_file = station_folder / 'anomaly_master_table.csv'
-        if anomaly_file.exists():
-            shutil.copy(anomaly_file, data_dir / f'{station}_anomalies.csv')
-        
-        # Copy earthquake correlations if available
-        eq_file = station_folder / 'earthquake_correlations.csv'
-        if eq_file.exists():
-            shutil.copy(eq_file, data_dir / f'{station}_earthquake_correlations.csv')
-        
-        # Copy figures
-        figures_dir = station_folder / 'figures'
-        if figures_dir.exists():
-            web_figures_dir = OUTPUT_DIR / 'figures' / station
-            web_figures_dir.mkdir(parents=True, exist_ok=True)
-            
-            # Copy latest 10 figures
-            figures = sorted(figures_dir.glob('*.png'), key=lambda p: p.stat().st_mtime, reverse=True)[:10]
-            for fig in figures:
-                shutil.copy(fig, web_figures_dir / fig.name)
+            for fig_file in station_figures_dir.glob('*.png'):
+                file_date = parse_date_from_filename(fig_file.name)
+                if file_date and file_date in available_dates:
+                    try:
+                        file_date_obj = datetime.strptime(file_date, '%Y-%m-%d').date()
+                        if file_date_obj >= cutoff_date:
+                            shutil.copy(fig_file, web_station_figures_dir / fig_file.name)
+                    except ValueError:
+                        pass
     
-    # Create stations index JSON (combine with metadata)
+    # Copy date-specific earthquake files
+    for date in available_dates:
+        eq_csv = Path(f'recent_earthquakes_{date}.csv')
+        if eq_csv.exists():
+            shutil.copy(eq_csv, data_dir / eq_csv.name)
+    
+    # Clean up old files (older than 6 days)
+    deleted = cleanup_old_files(data_dir, figures_dir, cutoff_date)
+    if deleted > 0:
+        print(f'[INFO] Cleaned up {deleted} old files')
+    
+    # Load station metadata
     stations_metadata = {}
     if Path('stations.json').exists():
-        with open('stations.json', 'r') as f:
-            stations_metadata = json.load(f)
+        try:
+            with open('stations.json', 'r') as f:
+                stations_metadata = json.load(f)
+        except Exception:
+            pass
     
-    # Create combined stations.json for frontend
+    # Create stations.json with available dates and metadata
+    stations_json = {
+        'stations': stations,
+        'available_dates': available_dates,
+        'most_recent_date': most_recent_date,
+        'last_updated': datetime.now().isoformat(),
+    }
+    
+    # Add station metadata if available
+    if isinstance(stations_metadata, dict) and 'stations' in stations_metadata:
+        if isinstance(stations_metadata['stations'], dict):
+            stations_json['metadata'] = stations_metadata['stations']
+        elif isinstance(stations_metadata['stations'], list):
+            stations_json['metadata'] = {s: {} for s in stations}
+    
     with open(data_dir / 'stations.json', 'w') as f:
-        json.dump({
-            'stations': stations,
-            'last_updated': datetime.now().isoformat(),
-            'data': all_stations_data,
-            'metadata': stations_metadata.get('stations', []) if isinstance(stations_metadata, dict) else []
-        }, f, indent=2)
+        json.dump(stations_json, f, indent=2)
     
-    # Copy index.html
-    if Path('templates/index.html').exists():
-        # Create a static version (without Flask template syntax)
-        create_static_index(OUTPUT_DIR, stations, all_stations_data)
+    # Copy index.html directly from template
+    template_path = Path('templates/index.html')
+    if template_path.exists():
+        shutil.copy(template_path, OUTPUT_DIR / 'index.html')
+        print('[OK] Copied index.html from template')
     else:
-        # Create basic index.html
-        create_basic_index(OUTPUT_DIR, stations)
+        raise FileNotFoundError(f"Template not found: {template_path}")
     
     print(f'[OK] Web output prepared in {OUTPUT_DIR}')
     return OUTPUT_DIR
-
-def create_static_index(output_dir, stations, stations_data):
-    """Create static HTML index file"""
-    # Create static HTML (JavaScript will populate data)
-    html_content = '''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRA Nighttime Detection - Dashboard</title>
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🌍 PRA Nighttime Detection Dashboard</h1>
-            <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
-            <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
-        </header>
-
-        <div id="stations-container">
-            <p>Loading data...</p>
-        </div>
-
-        <footer>
-            <p>Method: Multitaper (NW=3.5) + EVT + nZ z-score | 
-               Frequency Band: 0.095-0.110 Hz | 
-               Time Window: 20:00-04:00 Local Time</p>
-            <p><a href="https://github.com/syaifulafrizal">Nur Syaiful Afrizal</a></p>
-        </footer>
-    </div>
-
-    <script src="static/app.js"></script>
-</body>
-</html>'''
-    
-    with open(output_dir / 'index.html', 'w', encoding='utf-8') as f:
-        f.write(html_content)
-
-def create_basic_index(output_dir, stations):
-    """Create basic index.html if template doesn't exist"""
-    html_content = f'''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRA Nighttime Detection</title>
-    <link rel="stylesheet" href="static/style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🌍 PRA Nighttime Detection Dashboard</h1>
-            <p class="subtitle">Polarization Ratio Analysis for INTERMAGNET Stations</p>
-        </header>
-        <div id="stations-container" class="stations-grid">
-            <p>Loading data...</p>
-        </div>
-    </div>
-    <script src="static/app.js"></script>
-</body>
-</html>'''
-    
-    with open(output_dir / 'index.html', 'w', encoding='utf-8') as f:
-        f.write(html_content)
-
 
 def main():
     """Main function - prepare files for local serving"""
@@ -234,4 +252,3 @@ def main():
 
 if __name__ == '__main__':
     exit(main())
-
