@@ -244,6 +244,15 @@ try {
                     }
                 }
                 Write-Log "Files copied successfully" "Green"
+                
+                # Create/update .gitignore to exclude web_output directory
+                if (-not (Test-Path ".gitignore")) {
+                    New-Item -Path ".gitignore" -ItemType File -Force | Out-Null
+                }
+                $gitignoreContent = Get-Content ".gitignore" -ErrorAction SilentlyContinue
+                if ($gitignoreContent -notcontains "web_output/") {
+                    Add-Content -Path ".gitignore" -Value "web_output/"
+                }
             } else {
                 throw "web_output directory not found"
             }
@@ -266,6 +275,10 @@ try {
         
         # Stage all files at root (excluding web_output directory itself)
         Write-Log "Staging files..." "Yellow"
+        # Stage .gitignore first to ensure web_output is ignored
+        if (Test-Path ".gitignore") {
+            git add -f .gitignore 2>&1 | Out-Null
+        }
         # Use git add with . to add all files, then unstage web_output if it exists
         git add -f . 2>&1 | Out-Null
         # Remove web_output from staging (we don't want the folder, just its contents at root)
