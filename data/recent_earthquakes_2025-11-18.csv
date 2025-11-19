@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-11-18 22:36:32.878,8.7898,-84.0158,10,5.4,"57 km WSW of Puerto Cortés, Costa Rica",earthquake,
+2025-11-18 15:35:29.942,-11.9825,65.7403,10,5.3,Mid-Indian Ridge,earthquake,
