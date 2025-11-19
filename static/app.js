@@ -184,8 +184,25 @@ async function loadData(date = null) {
     }
 }
 
-async function loadEarthquakeCorrelations(station) {
+async function loadEarthquakeCorrelations(station, date = null) {
     try {
+        // Try date-specific file first if date is provided
+        if (date) {
+            try {
+                const dateResponse = await fetch(`data/${station}_${date}_earthquake_correlations.json`);
+                if (dateResponse.ok) {
+                    const data = await dateResponse.json();
+                    // Handle both array and object formats
+                    const correlations = Array.isArray(data) ? data : (data.correlations || []);
+                    // Filter by magnitude >= 5.0 for reliability
+                    return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
+                }
+            } catch (error) {
+                // Fallback to CSV
+            }
+        }
+        
+        // Fallback to static CSV file
         const response = await fetch(`data/${station}_earthquake_correlations.csv`);
         if (!response.ok) {
             // Silently return empty array if CSV doesn't exist
@@ -201,8 +218,23 @@ async function loadEarthquakeCorrelations(station) {
     }
 }
 
-async function loadFalseNegatives(station) {
+async function loadFalseNegatives(station, date = null) {
     try {
+        // Try date-specific file first if date is provided
+        if (date) {
+            try {
+                const dateResponse = await fetch(`data/${station}_${date}_false_negatives.json`);
+                if (dateResponse.ok) {
+                    const data = await dateResponse.json();
+                    // Handle both array and object formats
+                    return Array.isArray(data) ? data : (data.false_negatives || []);
+                }
+            } catch (error) {
+                // Fallback to CSV
+            }
+        }
+        
+        // Fallback to static CSV file
         const response = await fetch(`data/${station}_false_negatives.csv`);
         if (!response.ok) {
             // Silently return empty array if CSV doesn't exist
@@ -680,6 +712,10 @@ async function renderDashboard(date = null) {
     }
     
     // Data was successfully loaded - continue with rendering
+    // Remove any existing fallback notices first to prevent duplicates
+    const existingNotices = document.querySelectorAll('.fallback-notice');
+    existingNotices.forEach(notice => notice.remove());
+    
     // Show notice if any stations are using fallback data
     if (data.station_dates) {
         const stationsUsingFallback = Object.entries(data.station_dates)
@@ -787,8 +823,11 @@ async function renderDashboard(date = null) {
     let totalStations = 0;
     let anomalousCount = 0;
     let withEQ = 0;
-    let falseAlarms = 0;
-    let falseNegatives = 0;
+    
+    // For cumulative false positives/negatives since Nov 18, 2025
+    const ANALYSIS_START_DATE = '2025-11-18';
+    let allFalsePositives = []; // Array of {station, date, ...}
+    let allFalseNegatives = []; // Array of {station, date, earthquake_time, ...}
     
     const stationDataMap = {};
     for (const station of allStations) {
@@ -799,21 +838,120 @@ async function renderDashboard(date = null) {
         if (hasAnomaly) {
             anomalousCount++;
             anomalousStations.push(station);
-            const eqCorrelations = await loadEarthquakeCorrelations(station);
+            // Load correlations for the selected date
+            const eqCorrelations = await loadEarthquakeCorrelations(station, data.selected_date);
             // Filter by magnitude >= 5.0 for reliability
-            const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
+            const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
             if (reliableCorrelations.length > 0) {
                 withEQ++;
             } else {
-                falseAlarms++;
+                // This is a false positive for the selected date
+                allFalsePositives.push({
+                    station: station,
+                    date: data.selected_date,
+                    stationData: stationData
+                });
             }
             stationDataMap[station] = { stationData, eqCorrelations: reliableCorrelations };
         } else {
-            // Check for false negatives (EQ >= 5.5 occurred but no anomaly)
-            const fn = await loadFalseNegatives(station);
-            falseNegatives += fn.length;
+            // Check for false negatives (EQ >= 5.0 occurred but no anomaly) for the selected date
+            const fn = await loadFalseNegatives(station, data.selected_date);
+            if (fn.length > 0) {
+                fn.forEach(fnItem => {
+                    allFalseNegatives.push({
+                        station: station,
+                        date: data.selected_date,
+                        earthquake_time: fnItem.earthquake_time || fnItem.time,
+                        ...fnItem
+                    });
+                });
+            }
             stationDataMap[station] = { stationData: null, eqCorrelations: [], falseNegatives: fn };
         }
+    }
+    
+    // Load cumulative false positives and false negatives from all dates since analysis start
+    const datesSinceStart = (data.available_dates || []).filter(d => d >= ANALYSIS_START_DATE).sort();
+    
+    // Load false positives and false negatives from all dates
+    for (const date of datesSinceStart) {
+        for (const station of allStations) {
+            // Load station data for this date to check for false positives
+            try {
+                const stationResponse = await fetch(`data/${station}_${date}.json`);
+                if (stationResponse.ok) {
+                    const stationDataForDate = await stationResponse.json();
+                    if (stationDataForDate.is_anomalous) {
+                        // Check if it's a false positive (anomaly without earthquake)
+                        const eqCorrelations = await loadEarthquakeCorrelations(station, date);
+                        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
+                        if (reliableCorrelations.length === 0) {
+                            // False positive - check if we already have it
+                            const exists = allFalsePositives.some(fp => fp.station === station && fp.date === date);
+                            if (!exists) {
+                                allFalsePositives.push({
+                                    station: station,
+                                    date: date,
+                                    stationData: stationDataForDate
+                                });
+                            }
+                        }
+                    } else {
+                        // Check for false negatives
+                        const fn = await loadFalseNegatives(station, date);
+                        if (fn.length > 0) {
+                            fn.forEach(fnItem => {
+                                // Check if we already have this false negative
+                                const eqTime = fnItem.earthquake_time || fnItem.time;
+                                const exists = allFalseNegatives.some(fn => 
+                                    fn.station === station && 
+                                    fn.earthquake_time === eqTime
+                                );
+                                if (!exists) {
+                                    allFalseNegatives.push({
+                                        station: station,
+                                        date: date,
+                                        earthquake_time: eqTime,
+                                        ...fnItem
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            } catch (error) {
+                // Skip if file doesn't exist
+                continue;
+            }
+        }
+    }
+    
+    // Calculate totals and find latest occurrences
+    const falseAlarms = allFalsePositives.length;
+    const falseNegatives = allFalseNegatives.length;
+    
+    // Find latest false positive date
+    let latestFalsePositiveDate = null;
+    if (allFalsePositives.length > 0) {
+        const dates = allFalsePositives.map(fp => fp.date).sort().reverse();
+        latestFalsePositiveDate = dates[0];
+    }
+    
+    // Find latest false negative earthquake time
+    let latestFalseNegativeDate = null;
+    if (allFalseNegatives.length > 0) {
+        const dates = allFalseNegatives
+            .map(fn => {
+                const eqTime = fn.earthquake_time || fn.time;
+                if (typeof eqTime === 'string') {
+                    return eqTime.split('T')[0]; // Extract date part
+                }
+                return fn.date;
+            })
+            .filter(d => d)
+            .sort()
+            .reverse();
+        latestFalseNegativeDate = dates[0];
     }
     
     // Load earthquake statistics for selected date only (no fallback)
@@ -861,11 +999,17 @@ async function renderDashboard(date = null) {
                 <h3>False Positives</h3>
                 <div class="value">${falseAlarms}</div>
                 <div class="label">Anomalies without EQ M≥5.0</div>
+                <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                    Since: ${formatDateForSelector(ANALYSIS_START_DATE)}${latestFalsePositiveDate ? `<br>Latest: ${formatDateForSelector(latestFalsePositiveDate)}` : ''}
+                </div>
             </div>
             <div class="metric-card ${falseNegatives > 0 ? 'warning' : ''}">
                 <h3>False Negatives</h3>
                 <div class="value">${falseNegatives}</div>
                 <div class="label">EQ M≥5.0 without anomaly</div>
+                <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                    Since: ${formatDateForSelector(ANALYSIS_START_DATE)}${latestFalseNegativeDate ? `<br>Latest: ${formatDateForSelector(latestFalseNegativeDate)}` : ''}
+                </div>
             </div>
         `;
     }
@@ -1081,12 +1225,12 @@ async function renderStationPlot(stationCode) {
     
     const stationData = allStationsData[stationCode];
     const metadata = stationMetadata[stationCode] || {};
-    const eqCorrelations = await loadEarthquakeCorrelations(stationCode);
+    const eqCorrelations = await loadEarthquakeCorrelations(stationCode, selectedDate);
         // Filter by magnitude >= 5.0 for reliability
-        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
+        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
     const hasEQ = reliableCorrelations.length > 0;
     const hasAnomaly = stationData && stationData.is_anomalous;
-    const falseNegatives = await loadFalseNegatives(stationCode);
+    const falseNegatives = await loadFalseNegatives(stationCode, selectedDate);
     
     // Get the date being used for this station
     const stationDateUsed = stationData?.date || selectedDate || mostRecentDate;
@@ -1234,7 +1378,7 @@ async function renderStationsList(stations, stationsData) {
         const metadata = stationMetadata[station] || {};
         const data = stationsData && stationsData[station];
         const hasAnomaly = data && data.is_anomalous;
-        const eqCorrelations = await loadEarthquakeCorrelations(station);
+        const eqCorrelations = await loadEarthquakeCorrelations(station, selectedDate);
         const hasEQ = eqCorrelations.length > 0;
         
         html += '<tr>';
