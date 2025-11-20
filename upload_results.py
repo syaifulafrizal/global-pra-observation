@@ -152,16 +152,29 @@ def prepare_web_output():
             continue
         
         # Copy date-specific JSON files
+        # Note: JSON files are named with "today's" date but contain data from yesterday 20:00 to today 04:00
+        # So we need to create copies for both today and yesterday
         json_files = list(station_folder.glob('PRA_Night_*.json'))
         for json_file in json_files:
             file_date = parse_date_from_filename(json_file.name)
-            if file_date and file_date in available_dates:
+            if file_date:
                 try:
                     file_date_obj = datetime.strptime(file_date, '%Y-%m-%d').date()
                     if file_date_obj >= cutoff_date:
-                        # Copy as {station}_{date}.json
-                        dest_file = data_dir / f'{station}_{file_date}.json'
-                        shutil.copy(json_file, dest_file)
+                        # Copy as {station}_{date}.json (for today)
+                        if file_date in available_dates:
+                            dest_file = data_dir / f'{station}_{file_date}.json'
+                            shutil.copy(json_file, dest_file)
+                        
+                        # Also create a copy for yesterday (since the JSON contains yesterday 20:00 to today 04:00)
+                        yesterday_date_obj = file_date_obj - timedelta(days=1)
+                        yesterday_date = yesterday_date_obj.strftime('%Y-%m-%d')
+                        if yesterday_date in available_dates:
+                            dest_file_yesterday = data_dir / f'{station}_{yesterday_date}.json'
+                            # Only copy if it doesn't exist (to avoid overwriting if yesterday's file was already processed)
+                            if not dest_file_yesterday.exists():
+                                shutil.copy(json_file, dest_file_yesterday)
+                                print(f'[INFO] Created {station}_{yesterday_date}.json (from {file_date} data)')
                 except ValueError:
                     pass
         

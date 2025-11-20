@@ -436,6 +436,44 @@ footer {
     border: none;
 }
 
+/* Triangle marker for stations */
+.marker-triangle {
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 20px solid;
+    border-top: 0;
+    position: relative;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.marker-triangle::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 2px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 16px solid white;
+    border-top: 0;
+}
+
+.marker-triangle.marker-gray {
+    border-bottom-color: #95a5a6;
+}
+
+.marker-triangle.marker-eq-reliable {
+    border-bottom-color: #f39c12;
+}
+
+.marker-triangle.marker-eq-false {
+    border-bottom-color: #e74c3c;
+}
+
+/* Legacy circle marker (kept for backward compatibility, but not used) */
 .marker-dot {
     width: 24px;
     height: 24px;

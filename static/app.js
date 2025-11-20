@@ -113,9 +113,15 @@ async function loadData(date = null) {
         // Sort available dates in descending order (most recent first) for efficient fallback
         const sortedAvailableDates = [...availableDates].sort().reverse();
         
+        // Calculate yesterday's date for smarter fallback
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+        
         // For each station, try to load data for selected date first
-        // If not available, fallback to most recent available date (for map display)
-        // This allows the map to show the most recent data even if selected date doesn't have data
+        // If not available, prefer yesterday's date, then fallback to most recent available date
+        // This ensures we don't jump too far back in time
         for (const station of (metadata.stations || [])) {
             let stationData = null;
             let stationDateUsed = null;
@@ -134,12 +140,37 @@ async function loadData(date = null) {
                 }
             }
             
-            // If selected date doesn't have data, fallback to most recent available date
-            // This ensures the map always shows the most recent data
+            // If selected date doesn't have data, try yesterday first (if available and not already tried)
+            if (!stationData && availableDates.includes(yesterdayStr) && yesterdayStr !== date) {
+                try {
+                    const stationResponse = await fetch(`data/${station}_${yesterdayStr}.json`);
+                    if (stationResponse.ok) {
+                        stationData = await stationResponse.json();
+                        stationDateUsed = yesterdayStr;
+                        hasAnyData = true;
+                        console.debug(`Station ${station}: Using yesterday's data from ${yesterdayStr} (selected date ${date} not available)`);
+                    }
+                } catch (error) {
+                    // Continue to other fallbacks
+                }
+            }
+            
+            // If still no data, fallback to most recent available date (but skip if it's too old)
+            // Only use dates that are within 2 days of the selected date or yesterday
             if (!stationData && sortedAvailableDates.length > 0) {
+                const targetDate = date || yesterdayStr;
                 for (const tryDate of sortedAvailableDates) {
                     // Skip if we already tried this date
-                    if (tryDate === date) continue;
+                    if (tryDate === date || tryDate === yesterdayStr) continue;
+                    
+                    // Only use dates that are recent (within 3 days of target)
+                    const tryDateObj = new Date(tryDate);
+                    const targetDateObj = new Date(targetDate);
+                    const daysDiff = Math.abs((targetDateObj - tryDateObj) / (1000 * 60 * 60 * 24));
+                    if (daysDiff > 3) {
+                        console.debug(`Station ${station}: Skipping ${tryDate} (too old, ${daysDiff.toFixed(1)} days from target)`);
+                        continue;
+                    }
                     
                     try {
                         const stationResponse = await fetch(`data/${station}_${tryDate}.json`);
@@ -387,6 +418,41 @@ function initMap() {
             maxZoom: 10
         }).addTo(map);
         
+        // Add map legend
+        const legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function() {
+            const div = L.DomUtil.create('div', 'map-legend-control');
+            div.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            div.style.padding = '12px';
+            div.style.borderRadius = '8px';
+            div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            div.style.fontSize = '12px';
+            div.style.lineHeight = '1.6';
+            div.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 8px; color: #2c3e50;">Map Legend</div>
+                <div style="margin-bottom: 6px;">
+                    <span class="marker-triangle marker-gray" style="display: inline-block; margin-right: 6px;"></span>
+                    <span>Normal Station</span>
+                </div>
+                <div style="margin-bottom: 6px;">
+                    <span class="marker-triangle marker-eq-reliable" style="display: inline-block; margin-right: 6px;"></span>
+                    <span>Anomaly with EQ (M≥5.0)</span>
+                </div>
+                <div style="margin-bottom: 6px;">
+                    <span class="marker-triangle marker-eq-false" style="display: inline-block; margin-right: 6px;"></span>
+                    <span>False Alarm (No EQ)</span>
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #ddd;">
+                    <div style="margin-bottom: 4px;">
+                        <span style="display: inline-block; width: 16px; height: 16px; background: #e74c3c; border-radius: 50%; margin-right: 6px; vertical-align: middle;"></span>
+                        <span>Earthquake (M≥5.0)</span>
+                    </div>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+        
         // Clear existing markers and circles
         if (markers.earthquakes) {
             markers.earthquakes.forEach(m => {
@@ -436,12 +502,12 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         color = hasEQ ? 'eq-reliable' : 'eq-false'; // Orange if EQ found, red if false alarm
     }
     
-    // Create custom icon with earthquake theme
+    // Create custom icon with earthquake theme (triangle shape for stations)
     const icon = L.divIcon({
         className: 'station-marker',
-        html: `<div class="marker-dot marker-${color}"></div>`,
+        html: `<div class="marker-triangle marker-${color}"></div>`,
         iconSize: [24, 24],
-        iconAnchor: [12, 12]
+        iconAnchor: [12, 20] // Anchor at bottom center of triangle
     });
     
     // Get the date being used for this station (from stationData or station_dates)
