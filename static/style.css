@@ -305,6 +305,54 @@ input:checked + .slider:before {
     color: var(--text-secondary);
 }
 
+/* Map legend control (Leaflet control) */
+.map-legend-control {
+    background: rgba(255, 255, 255, 0.95) !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+    color: #2c3e50 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.dark-mode .map-legend-control {
+    background: rgba(37, 40, 54, 0.95) !important;
+    color: #ecf0f1 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+.map-legend-control .legend-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.dark-mode .map-legend-control .legend-title {
+    color: #ecf0f1;
+}
+
+.map-legend-control .legend-item {
+    margin-bottom: 6px;
+    color: #2c3e50;
+}
+
+.dark-mode .map-legend-control .legend-item {
+    color: #ecf0f1;
+}
+
+.map-legend-control .legend-divider {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #ddd;
+}
+
+.dark-mode .map-legend-control .legend-divider {
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
 /* Plot Panel */
 .plot-panel-section {
     background: var(--bg-secondary);

@@ -418,37 +418,81 @@ function initMap() {
             maxZoom: 10
         }).addTo(map);
         
-        // Add map legend
+        // Add map legend with dark mode support
         const legend = L.control({ position: 'bottomright' });
+        const updateLegendStyles = (legendDiv) => {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            if (isDarkMode) {
+                legendDiv.style.backgroundColor = 'rgba(37, 40, 54, 0.95)';
+                legendDiv.style.color = '#ecf0f1';
+                legendDiv.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                legendDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.5)';
+            } else {
+                legendDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                legendDiv.style.color = '#2c3e50';
+                legendDiv.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+                legendDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+            }
+        };
+        
         legend.onAdd = function() {
             const div = L.DomUtil.create('div', 'map-legend-control');
-            div.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
             div.style.padding = '12px';
             div.style.borderRadius = '8px';
-            div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
             div.style.fontSize = '12px';
             div.style.lineHeight = '1.6';
+            div.style.fontWeight = 'normal';
+            
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const titleColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
+            const textColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
+            const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : '#ddd';
+            
             div.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 8px; color: #2c3e50;">Map Legend</div>
-                <div style="margin-bottom: 6px;">
+                <div class="legend-title" style="font-weight: bold; margin-bottom: 8px; color: ${titleColor};">Map Legend</div>
+                <div class="legend-item" style="margin-bottom: 6px; color: ${textColor};">
                     <span class="marker-triangle marker-gray" style="display: inline-block; margin-right: 6px;"></span>
                     <span>Normal Station</span>
                 </div>
-                <div style="margin-bottom: 6px;">
+                <div class="legend-item" style="margin-bottom: 6px; color: ${textColor};">
                     <span class="marker-triangle marker-eq-reliable" style="display: inline-block; margin-right: 6px;"></span>
                     <span>Anomaly with EQ (M≥5.0)</span>
                 </div>
-                <div style="margin-bottom: 6px;">
+                <div class="legend-item" style="margin-bottom: 6px; color: ${textColor};">
                     <span class="marker-triangle marker-eq-false" style="display: inline-block; margin-right: 6px;"></span>
                     <span>False Alarm (No EQ)</span>
                 </div>
-                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #ddd;">
-                    <div style="margin-bottom: 4px;">
+                <div class="legend-divider" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid ${dividerColor};">
+                    <div style="margin-bottom: 4px; color: ${textColor};">
                         <span style="display: inline-block; width: 16px; height: 16px; background: #e74c3c; border-radius: 50%; margin-right: 6px; vertical-align: middle;"></span>
                         <span>Earthquake (M≥5.0)</span>
                     </div>
                 </div>
             `;
+            
+            updateLegendStyles(div);
+            
+            // Update legend when dark mode changes
+            const observer = new MutationObserver(() => {
+                updateLegendStyles(div);
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                const titleColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
+                const textColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
+                const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : '#ddd';
+                
+                const title = div.querySelector('.legend-title');
+                const items = div.querySelectorAll('.legend-item');
+                const divider = div.querySelector('.legend-divider');
+                
+                if (title) title.style.color = titleColor;
+                items.forEach(item => item.style.color = textColor);
+                if (divider) divider.style.borderTopColor = dividerColor;
+                const eqItem = divider?.querySelector('div');
+                if (eqItem) eqItem.style.color = textColor;
+            });
+            
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            
             return div;
         };
         legend.addTo(map);
