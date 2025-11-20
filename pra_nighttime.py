@@ -781,11 +781,25 @@ def process_station(station_code):
     now_station_tz = datetime.now(station_tz)
     
     # If we're before 04:00 today in station's timezone, the nighttime window hasn't completed yet
+    # However, we should still check if yesterday's data exists and download it if missing
     if now_station_tz < end_time:
-        print(f'[SKIP] Station {station_code} ({station_tz}): Nighttime window not yet complete')
+        print(f'[INFO] Station {station_code} ({station_tz}): Nighttime window not yet complete')
         print(f'       Current time: {now_station_tz.strftime("%Y-%m-%d %H:%M:%S %Z")}')
         print(f'       Window ends:  {end_time.strftime("%Y-%m-%d %H:%M:%S %Z")}')
-        print(f'       This is expected - data will be available after 04:00 local time')
+        
+        # Check if yesterday's data exists - if not, download it
+        yesterday_file = out_folder / f'{station_code}_{yesterday_dt.strftime("%Y%m%d")}.iaga2002'
+        if not yesterday_file.exists() or yesterday_file.stat().st_size == 0:
+            print(f'[INFO] Yesterday\'s data missing for {station_code} - downloading...')
+            file_path = download_data(station_code, yesterday_dt, out_folder)
+            if file_path and file_path.exists():
+                print(f'[OK] Downloaded yesterday\'s data for {station_code}')
+            else:
+                print(f'[WARNING] Could not download yesterday\'s data for {station_code}')
+        else:
+            print(f'[OK] Yesterday\'s data already exists for {station_code}')
+        
+        print(f'       Processing will be available after 04:00 local time')
         return None  # Return None to indicate "skipped" (not an error)
     
     # Download station data
