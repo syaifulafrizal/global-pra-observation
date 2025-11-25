@@ -1,2 +1,4 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2025-11-25 04:47:30.499,52.1557,159.6723,45.919,5,"121 km SE of Vilyuchinsk, Russia",earthquake,
+2025-11-25 10:45:18.837,6.2836,126.1644,73.622,5.4,"8 km S of Pondaguitan, Philippines",earthquake,
+2025-11-25 09:01:18.227,33.0542,131.1067,10.0,5.4,"13 km N of Aso, Japan",earthquake,
+2025-11-25 04:47:30.499,52.1557,159.6723,45.919,5.0,"121 km SE of Vilyuchinsk, Russia",earthquake,
