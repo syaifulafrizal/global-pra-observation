@@ -161,20 +161,20 @@ def prepare_web_output():
                 try:
                     file_date_obj = datetime.strptime(file_date, '%Y-%m-%d').date()
                     if file_date_obj >= cutoff_date:
-                        # Copy as {station}_{date}.json (for today)
-                        if file_date in available_dates:
-                            dest_file = data_dir / f'{station}_{file_date}.json'
-                            shutil.copy(json_file, dest_file)
+                        # Copy as {station}_{date}.json (always copy if within date range, not just if in available_dates)
+                        # This ensures files are available even if they're not in the standard 7-day window
+                        dest_file = data_dir / f'{station}_{file_date}.json'
+                        shutil.copy(json_file, dest_file)
+                        print(f'[INFO] Copied {station}_{file_date}.json')
                         
                         # Also create a copy for yesterday (since the JSON contains yesterday 20:00 to today 04:00)
                         yesterday_date_obj = file_date_obj - timedelta(days=1)
                         yesterday_date = yesterday_date_obj.strftime('%Y-%m-%d')
-                        if yesterday_date in available_dates:
+                        if yesterday_date_obj >= cutoff_date:  # Only if yesterday is also within range
                             dest_file_yesterday = data_dir / f'{station}_{yesterday_date}.json'
-                            # Only copy if it doesn't exist (to avoid overwriting if yesterday's file was already processed)
-                            if not dest_file_yesterday.exists():
-                                shutil.copy(json_file, dest_file_yesterday)
-                                print(f'[INFO] Created {station}_{yesterday_date}.json (from {file_date} data)')
+                            # Always copy/overwrite to ensure we have the latest data
+                            shutil.copy(json_file, dest_file_yesterday)
+                            print(f'[INFO] Created {station}_{yesterday_date}.json (from {file_date} data)')
                 except ValueError:
                     pass
         
