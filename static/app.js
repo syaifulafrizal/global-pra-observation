@@ -488,12 +488,12 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
 
     // Show data date with fallback indicator
     if (isUsingFallback && dataContext?.selected_date) {
-        popupContent += `<hr style="margin: 8px 0; border-color: #f39c12;">`;
-        popupContent += `<small style="color: #f39c12;">📅 Data from: ${formatDate(stationDateUsed)}</small><br>`;
-        popupContent += `<small style="color: #f39c12; font-style: italic;">(Selected: ${formatDateForSelector(dataContext.selected_date)})</small><br>`;
+        popupContent += `<hr style="margin: 8px 0; border-color: var(--accent-warning);">`;
+        popupContent += `<small style="color: var(--accent-warning);">📅 Data from: ${formatDate(stationDateUsed)}</small><br>`;
+        popupContent += `<small style="color: var(--accent-warning); font-style: italic;">(Selected: ${formatDateForSelector(dataContext.selected_date)})</small><br>`;
     } else if (stationData) {
-        popupContent += `<hr style="margin: 8px 0; border-color: #95a5a6;">`;
-        popupContent += `<small style="color: #95a5a6;">📅 Data from: ${formatDate(stationDateUsed)}</small><br>`;
+        popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);">`;
+        popupContent += `<small style="color: var(--text-secondary);">📅 Data from: ${formatDate(stationDateUsed)}</small><br>`;
     }
 
     if (hasAnomaly && stationData) {
@@ -520,7 +520,7 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
             popupContent += `No EQ M≥5.0 within 200km within 14 days`;
         }
     } else {
-        popupContent += `<hr style="margin: 8px 0; border-color: #95a5a6;"><span style="color: #95a5a6;">✅ Status: Normal</span><br>`;
+        popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);"><span style="color: var(--text-secondary);">✅ Status: Normal</span><br>`;
         popupContent += `No anomalies detected`;
     }
     popupContent += `</div>`;
@@ -568,11 +568,11 @@ function getChartColors() {
 async function create7DayTrendChart(data) {
     const ctx = document.getElementById('trend-chart');
     if (!ctx) return;
-    
+
     const colors = getChartColors();
     const dates = data.available_dates.slice(-7);
     const anomalyCounts = [];
-    
+
     for (const date of dates) {
         let count = 0;
         for (const station of data.stations) {
@@ -582,11 +582,11 @@ async function create7DayTrendChart(data) {
                     const stationData = await response.json();
                     if (stationData.is_anomalous) count++;
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
         anomalyCounts.push(count);
     }
-    
+
     charts.trend = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -622,9 +622,9 @@ async function create7DayTrendChart(data) {
 function createStationDistributionChart(normalCount, withEqCount, falseAlarmCount) {
     const ctx = document.getElementById('distribution-chart');
     if (!ctx) return;
-    
+
     const colors = getChartColors();
-    
+
     charts.distribution = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -651,9 +651,9 @@ function createStationDistributionChart(normalCount, withEqCount, falseAlarmCoun
 function createDetectionRateChart(successRate) {
     const ctx = document.getElementById('success-rate-chart');
     if (!ctx) return;
-    
+
     const colors = getChartColors();
-    
+
     charts.successRate = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -697,10 +697,10 @@ function createDetectionRateChart(successRate) {
 async function createMagnitudeDistributionChart(selectedDate) {
     const ctx = document.getElementById('magnitude-chart');
     if (!ctx) return;
-    
+
     const colors = getChartColors();
     const earthquakes = await loadRecentEarthquakes(selectedDate);
-    
+
     const magRanges = { 'M5-5.9': 0, 'M6-6.9': 0, 'M7-7.9': 0, 'M8+': 0 };
     earthquakes.forEach(eq => {
         const mag = parseFloat(eq.magnitude || eq.earthquake_magnitude || 0);
@@ -709,7 +709,7 @@ async function createMagnitudeDistributionChart(selectedDate) {
         else if (mag >= 6.0) magRanges['M6-6.9']++;
         else if (mag >= 5.0) magRanges['M5-5.9']++;
     });
-    
+
     charts.magnitude = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -978,7 +978,7 @@ async function renderDashboard(date = null) {
     // Show loading state
     const mapContainer = document.getElementById('map-container');
     if (mapContainer) {
-        mapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ecf0f1;"><p>Loading map data...</p></div>';
+        mapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-primary);"><p>Loading map data...</p></div>';
     }
 
     let data;
@@ -992,12 +992,12 @@ async function renderDashboard(date = null) {
             console.warn('No data available for date:', dateStr);
             if (mapContainer) {
                 mapContainer.innerHTML = `
-                    <div class="no-data" style="text-align: center; padding: 40px; color: #ecf0f1;">
+                    <div class="no-data" style="text-align: center; padding: 40px; color: var(--text-primary);">
                         <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
                         <p style="font-size: 1.1em; margin-bottom: 10px;">
                             No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
                         </p>
-                        <p style="color: #95a5a6; font-size: 0.9em;">
+                        <p style="color: var(--text-secondary); font-size: 0.9em;">
                             Please select a different date from the dropdown above.
                         </p>
                     </div>
@@ -1014,7 +1014,7 @@ async function renderDashboard(date = null) {
                     <p style="font-size: 1.1em; margin-bottom: 10px;">
                         ${error.message || 'Unknown error occurred'}
                     </p>
-                    <p style="color: #95a5a6; font-size: 0.9em;">
+                    <p style="color: var(--text-secondary); font-size: 0.9em;">
                         Please check the browser console for details.
                     </p>
                 </div>
@@ -1050,12 +1050,12 @@ async function renderDashboard(date = null) {
         if (stationsUsingFallback.length > 0) {
             const notice = document.createElement('div');
             notice.className = 'fallback-notice';
-            notice.style.cssText = 'background: rgba(243, 156, 18, 0.15); border-left: 4px solid #f39c12; padding: 16px 20px; margin: 15px 0; border-radius: 8px; color: #ecf0f1; font-size: 0.95rem;';
+            notice.style.cssText = 'background: rgba(243, 156, 18, 0.15); border-left: 4px solid #f39c12; padding: 16px 20px; margin: 15px 0; border-radius: 8px; color: var(--text-primary); font-size: 0.95rem;';
 
             let noticeHTML = `<div style="display: flex; align-items: flex-start; gap: 12px;">`;
             noticeHTML += `<div style="font-size: 1.5em;">ℹ️</div>`;
             noticeHTML += `<div style="flex: 1;">`;
-            noticeHTML += `<strong style="color: #f39c12; display: block; margin-bottom: 8px;">Data Availability Notice</strong>`;
+            noticeHTML += `<strong style="color: var(--accent-warning); display: block; margin-bottom: 8px;">Data Availability Notice</strong>`;
             noticeHTML += `<p style="margin: 8px 0;">`;
             noticeHTML += `<strong>${stationsWithSelectedDate.length}</strong> station(s) have data for <strong>${formatDateForSelector(data.selected_date)}</strong>. `;
             noticeHTML += `<strong>${stationsUsingFallback.length}</strong> station(s) are using previous day's data:`;
@@ -1363,6 +1363,11 @@ async function renderDashboard(date = null) {
             stationSelector.value = anomalousStations[0];
             await renderStationPlot(anomalousStations[0]);
         }
+
+        // Create analytics charts
+        const normalStations = totalStations - anomalousCount;
+        const detectionRate = anomalousCount > 0 ? Math.round((withEQ / anomalousCount) * 100) : 0;
+        await createAnalyticsCharts(data, normalStations, withEQ, falseAlarms, detectionRate);
     }
 
     // Initialize map - wait a bit for DOM to be ready
@@ -1544,11 +1549,11 @@ async function renderStationPlot(stationCode) {
 
     // Show date indicator
     if (isUsingFallback && selectedDate) {
-        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(243, 156, 18, 0.15); border-left: 3px solid #f39c12; border-radius: 4px; font-size: 0.9em; color: #f39c12;">`;
+        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(243, 156, 18, 0.15); border-left: 3px solid #f39c12; border-radius: 4px; font-size: 0.9em; color: var(--accent-warning);">`;
         html += `📅 Showing data from <strong>${formatDate(stationDateUsed)}</strong> (selected: ${formatDateForSelector(selectedDate)})`;
         html += `</div>`;
     } else if (stationData) {
-        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(149, 165, 166, 0.1); border-left: 3px solid #95a5a6; border-radius: 4px; font-size: 0.9em; color: #95a5a6;">`;
+        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(149, 165, 166, 0.1); border-left: 3px solid #95a5a6; border-radius: 4px; font-size: 0.9em; color: var(--text-secondary);">`;
         html += `📅 Data from: <strong>${formatDate(stationDateUsed)}</strong>`;
         html += `</div>`;
     }
