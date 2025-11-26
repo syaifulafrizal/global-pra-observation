@@ -541,6 +541,216 @@ function getEarthquakeColor(magnitude) {
     return '#f1c40f';  // Yellow for M5.0-5.9
 }
 
+
+// ===== CHART FUNCTIONS =====
+let charts = {};
+
+function destroyCharts() {
+    Object.values(charts).forEach(chart => {
+        if (chart) chart.destroy();
+    });
+    charts = {};
+}
+
+function getChartColors() {
+    const isDark = document.body.classList.contains('dark-mode');
+    return {
+        text: isDark ? '#f9fafb' : '#1f2937',
+        grid: isDark ? '#374151' : '#e5e7eb',
+        primary: isDark ? '#06b6d4' : '#0891b2',
+        success: isDark ? '#34d399' : '#10b981',
+        warning: isDark ? '#fbbf24' : '#f59e0b',
+        danger: isDark ? '#f87171' : '#ef4444',
+        gray: isDark ? '#9ca3af' : '#6b7280'
+    };
+}
+
+async function create7DayTrendChart(data) {
+    const ctx = document.getElementById('trend-chart');
+    if (!ctx) return;
+    
+    const colors = getChartColors();
+    const dates = data.available_dates.slice(-7);
+    const anomalyCounts = [];
+    
+    for (const date of dates) {
+        let count = 0;
+        for (const station of data.stations) {
+            try {
+                const response = await fetch(`data/${station}_${date}.json`);
+                if (response.ok) {
+                    const stationData = await response.json();
+                    if (stationData.is_anomalous) count++;
+                }
+            } catch (e) {}
+        }
+        anomalyCounts.push(count);
+    }
+    
+    charts.trend = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates.map(d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+            datasets: [{
+                label: 'Anomalies',
+                data: anomalyCounts,
+                backgroundColor: colors.primary,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, color: colors.text },
+                    grid: { color: colors.grid }
+                },
+                x: {
+                    ticks: { color: colors.text },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+function createStationDistributionChart(normalCount, withEqCount, falseAlarmCount) {
+    const ctx = document.getElementById('distribution-chart');
+    if (!ctx) return;
+    
+    const colors = getChartColors();
+    
+    charts.distribution = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Normal', 'With EQ', 'False Alarm'],
+            datasets: [{
+                data: [normalCount, withEqCount, falseAlarmCount],
+                backgroundColor: [colors.gray, colors.warning, colors.danger],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: colors.text, padding: 10, font: { size: 11 } }
+                }
+            }
+        }
+    });
+}
+
+function createDetectionRateChart(successRate) {
+    const ctx = document.getElementById('success-rate-chart');
+    if (!ctx) return;
+    
+    const colors = getChartColors();
+    
+    charts.successRate = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Success', 'Failed'],
+            datasets: [{
+                data: [successRate, 100 - successRate],
+                backgroundColor: [colors.success, colors.grid],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => context.label + ': ' + context.parsed + '%'
+                    }
+                }
+            }
+        },
+        plugins: [{
+            afterDraw: (chart) => {
+                const ctx = chart.ctx;
+                const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+                ctx.save();
+                ctx.font = 'bold 24px Inter';
+                ctx.fillStyle = colors.text;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(Math.round(successRate) + '%', centerX, centerY);
+                ctx.restore();
+            }
+        }]
+    });
+}
+
+async function createMagnitudeDistributionChart(selectedDate) {
+    const ctx = document.getElementById('magnitude-chart');
+    if (!ctx) return;
+    
+    const colors = getChartColors();
+    const earthquakes = await loadRecentEarthquakes(selectedDate);
+    
+    const magRanges = { 'M5-5.9': 0, 'M6-6.9': 0, 'M7-7.9': 0, 'M8+': 0 };
+    earthquakes.forEach(eq => {
+        const mag = parseFloat(eq.magnitude || eq.earthquake_magnitude || 0);
+        if (mag >= 8.0) magRanges['M8+']++;
+        else if (mag >= 7.0) magRanges['M7-7.9']++;
+        else if (mag >= 6.0) magRanges['M6-6.9']++;
+        else if (mag >= 5.0) magRanges['M5-5.9']++;
+    });
+    
+    charts.magnitude = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(magRanges),
+            datasets: [{
+                label: 'Count',
+                data: Object.values(magRanges),
+                backgroundColor: ['#f1c40f', '#e67e22', '#e74c3c', '#c0392b'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, color: colors.text },
+                    grid: { color: colors.grid }
+                },
+                y: {
+                    ticks: { color: colors.text },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+async function createAnalyticsCharts(data, normalCount, withEqCount, falseAlarmCount, successRate) {
+    destroyCharts();
+    await create7DayTrendChart(data);
+    createStationDistributionChart(normalCount, withEqCount, falseAlarmCount);
+    createDetectionRateChart(successRate);
+    await createMagnitudeDistributionChart(data.selected_date);
+}
+
 function addEarthquakeMarkers(earthquakes) {
     if (!map) {
         console.warn('Map not initialized, cannot add earthquake markers');
@@ -1580,3 +1790,4 @@ async function downloadAnomaliesCSV() {
         alert('Error downloading anomalies CSV. Please try again.');
     }
 }
+

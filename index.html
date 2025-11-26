@@ -8,19 +8,19 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="light-mode">
     <div class="container">
         <header>
-            <div class="header-left">
+            <div class="header-content">
                 <h1>
                     <span class="icon">🌋</span>
                     GEMPA
                 </h1>
                 <p class="subtitle">Geomagnetic Earthquake Monitoring & Precursor Analysis</p>
                 <p class="subtitle-malay">Sistem Pemantauan Gempa Bumi Geomagnetik</p>
-            </div>
-            <div class="header-right">
+                
                 <div class="header-controls">
                     <div class="date-selector-container">
                         <label for="date-selector">Select Date:</label>
@@ -43,6 +43,28 @@
         <!-- Summary Stats Boxes -->
         <div class="summary-stats" id="summary-stats">
             <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Analytics Section with Charts -->
+        <div class="analytics-section">
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">7-Day Anomaly Trend</h3>
+                    <canvas id="trend-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Station Status</h3>
+                    <canvas id="distribution-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Detection Success Rate</h3>
+                    <canvas id="success-rate-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Magnitude Distribution</h3>
+                    <canvas id="magnitude-chart"></canvas>
+                </div>
+            </div>
         </div>
 
         <!-- Main Content -->
