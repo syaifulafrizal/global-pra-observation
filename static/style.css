@@ -84,6 +84,14 @@ header {
 .header-left .subtitle {
     color: var(--text-secondary);
     font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.header-left .subtitle-malay {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.8;
 }
 
 .header-right {
@@ -484,7 +492,7 @@ footer {
     border: none;
 }
 
-/* Triangle marker for stations */
+/* Triangle marker for stations - SOLID FILL */
 .marker-triangle {
     width: 0;
     height: 0;
@@ -496,19 +504,7 @@ footer {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
-.marker-triangle::before {
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 2px;
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 16px solid white;
-    border-top: 0;
-}
-
+/* Solid filled triangles with white border */
 .marker-triangle.marker-gray {
     border-bottom-color: #95a5a6;
 }

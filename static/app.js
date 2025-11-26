@@ -418,84 +418,7 @@ function initMap() {
             maxZoom: 10
         }).addTo(map);
 
-        // Add map legend with dark mode support
-        const legend = L.control({ position: 'bottomright' });
-        const updateLegendStyles = (legendDiv) => {
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            if (isDarkMode) {
-                legendDiv.style.backgroundColor = 'rgba(37, 40, 54, 0.95)';
-                legendDiv.style.color = '#ecf0f1';
-                legendDiv.style.border = '1px solid rgba(255, 255, 255, 0.1)';
-                legendDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.5)';
-            } else {
-                legendDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                legendDiv.style.color = '#2c3e50';
-                legendDiv.style.border = '1px solid rgba(0, 0, 0, 0.1)';
-                legendDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-            }
-        };
-
-        legend.onAdd = function () {
-            const div = L.DomUtil.create('div', 'map-legend-control');
-            div.style.padding = '12px';
-            div.style.borderRadius = '8px';
-            div.style.fontSize = '12px';
-            div.style.lineHeight = '1.6';
-            div.style.fontWeight = 'normal';
-
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            const titleColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
-            const textColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
-            const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : '#ddd';
-
-            div.innerHTML = `
-                <div class="legend-title" style="font-weight: bold; margin-bottom: 8px; color: ${titleColor};">Map Legend</div>
-                <div class="legend-item" style="margin-bottom: 6px; color: ${textColor};">
-                    <span class="marker-triangle marker-gray" style="display: inline-block; margin-right: 6px;"></span>
-                    <span>Normal Station</span>
-                </div>
-                <div class="legend-item" style="margin-bottom: 6px; color: ${textColor};">
-                    <span class="marker-triangle marker-eq-reliable" style="display: inline-block; margin-right: 6px;"></span>
-                    <span>Anomaly with EQ (M≥5.0)</span>
-                </div>
-                <div class="legend-item" style="margin-bottom: 6px; color: ${textColor};">
-                    <span class="marker-triangle marker-eq-false" style="display: inline-block; margin-right: 6px;"></span>
-                    <span>False Alarm (No EQ)</span>
-                </div>
-                <div class="legend-divider" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid ${dividerColor};">
-                    <div style="margin-bottom: 4px; color: ${textColor};">
-                        <span style="display: inline-block; width: 16px; height: 16px; background: #e74c3c; border-radius: 50%; margin-right: 6px; vertical-align: middle;"></span>
-                        <span>Earthquake (M≥5.0)</span>
-                    </div>
-                </div>
-            `;
-
-            updateLegendStyles(div);
-
-            // Update legend when dark mode changes
-            const observer = new MutationObserver(() => {
-                updateLegendStyles(div);
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                const titleColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
-                const textColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
-                const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : '#ddd';
-
-                const title = div.querySelector('.legend-title');
-                const items = div.querySelectorAll('.legend-item');
-                const divider = div.querySelector('.legend-divider');
-
-                if (title) title.style.color = titleColor;
-                items.forEach(item => item.style.color = textColor);
-                if (divider) divider.style.borderTopColor = dividerColor;
-                const eqItem = divider?.querySelector('div');
-                if (eqItem) eqItem.style.color = textColor;
-            });
-
-            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
-            return div;
-        };
-        legend.addTo(map);
+        // Legend is now outside the map - see createStandaloneLegend() function
 
         // Clear existing markers and circles
         if (markers.earthquakes) {
@@ -610,6 +533,14 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
     markers[stationCode] = marker;
 }
 
+function getEarthquakeColor(magnitude) {
+    // Color gradient based on magnitude
+    if (magnitude >= 8.0) return '#c0392b';  // Dark red for M8.0+
+    if (magnitude >= 7.0) return '#e74c3c';  // Red for M7.0-7.9
+    if (magnitude >= 6.0) return '#e67e22';  // Orange for M6.0-6.9
+    return '#f1c40f';  // Yellow for M5.0-5.9
+}
+
 function addEarthquakeMarkers(earthquakes) {
     if (!map) {
         console.warn('Map not initialized, cannot add earthquake markers');
@@ -637,13 +568,16 @@ function addEarthquakeMarkers(earthquakes) {
             return;
         }
 
-        // Create earthquake icon (red triangle)
+        // Get color based on magnitude
+        const eqColor = getEarthquakeColor(mag);
+
+        // Create earthquake icon with magnitude-based color
         const icon = L.divIcon({
             className: 'earthquake-marker',
             html: `<div class="eq-marker" style="
                 width: ${Math.max(20, Math.min(40, mag * 5))}px;
                 height: ${Math.max(20, Math.min(40, mag * 5))}px;
-                background: #e74c3c;
+                background: ${eqColor};
                 border: 2px solid white;
                 border-radius: 50%;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.4);
@@ -768,6 +702,64 @@ function addEarthquakeMarkers(earthquakes) {
     });
 
     console.log(`Total earthquake markers added: ${markers.earthquakes ? markers.earthquakes.length : 0}`);
+}
+
+function createStandaloneLegend() {
+    const legendDiv = document.getElementById('map-legend');
+    if (!legendDiv) return;
+
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const textColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
+    const bgColor = isDarkMode ? 'var(--bg-tertiary)' : 'var(--bg-tertiary)';
+
+    legendDiv.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 16px; background: ${bgColor}; border-radius: 8px;">
+            <div>
+                <h4 style="margin: 0 0 12px 0; color: ${textColor}; font-size: 0.9rem; font-weight: bold;">Station Markers</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span class="marker-triangle marker-gray" style="display: inline-block;"></span>
+                        <span>Normal Station</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span class="marker-triangle marker-eq-reliable" style="display: inline-block;"></span>
+                        <span>Anomaly with EQ (M≥5.0)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span class="marker-triangle marker-eq-false" style="display: inline-block;"></span>
+                        <span>False Alarm (No EQ)</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin: 0 0 12px 0; color: ${textColor}; font-size: 0.9rem; font-weight: bold;">Earthquake Magnitude Scale</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span style="display: inline-block; width: 16px; height: 16px; background: #f1c40f; border-radius: 50%; border: 2px solid white;"></span>
+                        <span>M 5.0-5.9 (Moderate)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span style="display: inline-block; width: 16px; height: 16px; background: #e67e22; border-radius: 50%; border: 2px solid white;"></span>
+                        <span>M 6.0-6.9 (Strong)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span style="display: inline-block; width: 16px; height: 16px; background: #e74c3c; border-radius: 50%; border: 2px solid white;"></span>
+                        <span>M 7.0-7.9 (Major)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
+                        <span style="display: inline-block; width: 16px; height: 16px; background: #c0392b; border-radius: 50%; border: 2px solid white;"></span>
+                        <span>M 8.0+ (Great)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Update legend when dark mode changes
+    const observer = new MutationObserver(() => {
+        createStandaloneLegend(); // Recreate legend with new colors
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 }
 
 async function renderDashboard(date = null) {
@@ -1205,6 +1197,9 @@ async function renderDashboard(date = null) {
             const recentEarthquakes = await loadRecentEarthquakes(data.selected_date);
             console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
             addEarthquakeMarkers(recentEarthquakes);
+
+            // Create standalone legend outside the map
+            createStandaloneLegend();
 
             // Invalidate map size to ensure it renders correctly
             setTimeout(() => {
