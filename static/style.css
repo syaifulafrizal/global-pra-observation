@@ -641,3 +641,29 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Enhanced Chart Card Styles */
+.chart-card {
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.chart-card:hover {
+    box-shadow: 0 6px 16px var(--shadow);
+}
+
+/* Better metric card styling */
+.metric-card {
+    box-shadow: 0 2px 6px var(--shadow);
+}
+
+.metric-card:hover {
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* Improve fallback notice readability */
+.fallback-notice {
+    background: rgba(243, 156, 18, 0.15) !important;
+    border-left: 4px solid var(--accent-warning) !important;
+    color: var(--text-primary) !important;
+}
