@@ -126,22 +126,23 @@ async function loadData(date = null) {
             let stationData = null;
             let stationDateUsed = null;
 
-            // First, try the selected date (if it's in available_dates)
-            if (availableDates.includes(date)) {
-                try {
-                    const stationResponse = await fetch(`data/${station}_${date}.json`);
-                    if (stationResponse.ok) {
-                        stationData = await stationResponse.json();
-                        stationDateUsed = date;
-                        hasAnyData = true;
-                    }
-                } catch (error) {
-                    // Continue to fallback
+            // First, always try the selected date (even if not in available_dates)
+            // This ensures that if a user selects a date, we try to load it
+            try {
+                const stationResponse = await fetch(`data/${station}_${date}.json`);
+                if (stationResponse.ok) {
+                    stationData = await stationResponse.json();
+                    stationDateUsed = date;
+                    hasAnyData = true;
+                    console.debug(`Station ${station}: Using selected date ${date}`);
                 }
+            } catch (error) {
+                // Continue to fallback
             }
 
-            // If selected date doesn't have data, try yesterday first (if available and not already tried)
-            if (!stationData && availableDates.includes(yesterdayStr) && yesterdayStr !== date) {
+            // If selected date doesn't have data, try yesterday first (even if not in availableDates)
+            // This ensures we prefer yesterday over older dates
+            if (!stationData && yesterdayStr !== date) {
                 try {
                     const stationResponse = await fetch(`data/${station}_${yesterdayStr}.json`);
                     if (stationResponse.ok) {
