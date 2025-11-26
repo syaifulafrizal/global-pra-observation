@@ -135,8 +135,11 @@ async function loadData(date = null) {
                     stationDateUsed = date;
                     hasAnyData = true;
                     console.debug(`Station ${station}: Using selected date ${date}`);
+                } else {
+                    console.debug(`Station ${station}: Selected date ${date} returned status ${stationResponse.status} (${stationResponse.statusText})`);
                 }
             } catch (error) {
+                console.debug(`Station ${station}: Error fetching selected date ${date}:`, error);
                 // Continue to fallback
             }
 
