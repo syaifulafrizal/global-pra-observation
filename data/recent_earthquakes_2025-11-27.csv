@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-11-27 04:56:26.540,2.6921,96.0266,25.388,6.6,"45 km WNW of Sinabang, Indonesia",earthquake,
