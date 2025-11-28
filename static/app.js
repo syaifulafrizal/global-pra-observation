@@ -159,33 +159,57 @@ async function loadData(date = null) {
                 }
             }
 
-            // If still no data, fallback to most recent available date (but skip if it's too old)
-            // Only use dates that are within 2 days of the selected date or yesterday
+            // If still no data, fallback to most recent available date
+            // Try dates in order: closest to selected date first, then work backwards
             if (!stationData && sortedAvailableDates.length > 0) {
                 const targetDate = date || yesterdayStr;
-                for (const tryDate of sortedAvailableDates) {
-                    // Skip if we already tried this date
-                    if (tryDate === date || tryDate === yesterdayStr) continue;
-
-                    // Only use dates that are recent (within 3 days of target)
-                    const tryDateObj = new Date(tryDate);
-                    const targetDateObj = new Date(targetDate);
-                    const daysDiff = Math.abs((targetDateObj - tryDateObj) / (1000 * 60 * 60 * 24));
-                    if (daysDiff > 3) {
-                        console.debug(`Station ${station}: Skipping ${tryDate} (too old, ${daysDiff.toFixed(1)} days from target)`);
+                const targetDateObj = new Date(targetDate);
+                
+                // Create a list of dates to try, sorted by proximity to target date
+                const datesToTry = [...sortedAvailableDates]
+                    .filter(tryDate => tryDate !== date && tryDate !== yesterdayStr) // Skip already tried
+                    .map(tryDate => {
+                        const tryDateObj = new Date(tryDate);
+                        const daysDiff = Math.abs((targetDateObj - tryDateObj) / (1000 * 60 * 60 * 24));
+                        return { date: tryDate, daysDiff };
+                    })
+                    .filter(item => item.daysDiff <= 3) // Only within 3 days
+                    .sort((a, b) => a.daysDiff - b.daysDiff); // Closest first
+                
+                // Also try dates that might exist but aren't in availableDates
+                // Try dates from selected date backwards (1 day, 2 days, 3 days ago)
+                for (let daysBack = 1; daysBack <= 3; daysBack++) {
+                    const tryDateObj = new Date(targetDateObj);
+                    tryDateObj.setDate(tryDateObj.getDate() - daysBack);
+                    const tryDate = tryDateObj.toISOString().split('T')[0];
+                    
+                    // Skip if already tried or already in datesToTry
+                    if (tryDate === date || tryDate === yesterdayStr || 
+                        datesToTry.some(item => item.date === tryDate)) {
                         continue;
                     }
-
+                    
+                    datesToTry.push({ date: tryDate, daysDiff: daysBack });
+                }
+                
+                // Sort again by daysDiff to ensure closest dates are tried first
+                datesToTry.sort((a, b) => a.daysDiff - b.daysDiff);
+                
+                // Now try each date in order
+                for (const { date: tryDate } of datesToTry) {
                     try {
                         const stationResponse = await fetch(`data/${station}_${tryDate}.json`);
                         if (stationResponse.ok) {
                             stationData = await stationResponse.json();
                             stationDateUsed = tryDate;
                             hasAnyData = true;
-                            console.debug(`Station ${station}: Using fallback data from ${tryDate} (selected date ${date} not available)`);
+                            console.debug(`Station ${station}: Using fallback data from ${tryDate} (${Math.round((targetDateObj - new Date(tryDate)) / (1000 * 60 * 60 * 24))} days before selected date ${date})`);
                             break; // Found data, stop trying
+                        } else {
+                            console.debug(`Station ${station}: Fallback date ${tryDate} returned status ${stationResponse.status}`);
                         }
                     } catch (error) {
+                        console.debug(`Station ${station}: Error fetching fallback date ${tryDate}:`, error);
                         continue;
                     }
                 }
