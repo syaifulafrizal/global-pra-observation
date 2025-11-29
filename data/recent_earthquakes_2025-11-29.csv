@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-11-29 11:50:03.996,-13.6752,166.5035,10.0,5.0,"115 km W of Sola, Vanuatu",earthquake,
+2025-11-29 08:03:53.146,-52.387,151.8477,10.0,5.9,west of Macquarie Island,earthquake,
+2025-11-29 06:05:00.072,-6.8657,156.2583,162.783,5.1,"99 km SE of Kieta, Papua New Guinea",earthquake,
+2025-11-29 03:34:09.763,49.0406,156.1069,29.933,5.1,"181 km S of Severo-Kuril’sk, Russia",earthquake,
