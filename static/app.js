@@ -129,7 +129,7 @@ async function loadData(date = null) {
             // First, always try the selected date (even if not in available_dates)
             // This ensures that if a user selects a date, we try to load it
             try {
-                const stationResponse = await fetch(`data/${station}_${date}.json`);
+                const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
                 if (stationResponse.ok) {
                     stationData = await stationResponse.json();
                     stationDateUsed = date;
@@ -145,17 +145,24 @@ async function loadData(date = null) {
 
             // If selected date doesn't have data, try yesterday first (even if not in availableDates)
             // This ensures we prefer yesterday over older dates
+            let yesterdayTried = false;
+            let yesterdaySuccess = false;
             if (!stationData && yesterdayStr !== date) {
+                yesterdayTried = true;
                 try {
-                    const stationResponse = await fetch(`data/${station}_${yesterdayStr}.json`);
+                    const stationResponse = await fetch(`data/${station}_${yesterdayStr}.json`, { cache: 'no-cache' });
                     if (stationResponse.ok) {
                         stationData = await stationResponse.json();
                         stationDateUsed = yesterdayStr;
                         hasAnyData = true;
+                        yesterdaySuccess = true;
                         console.debug(`Station ${station}: Using yesterday's data from ${yesterdayStr} (selected date ${date} not available)`);
+                    } else {
+                        console.debug(`Station ${station}: Yesterday (${yesterdayStr}) returned status ${stationResponse.status}`);
                     }
                 } catch (error) {
-                    // Continue to other fallbacks
+                    console.debug(`Station ${station}: Error fetching yesterday (${yesterdayStr}):`, error);
+                    // Continue to other fallbacks - will retry in fallback loop
                 }
             }
 
@@ -178,13 +185,15 @@ async function loadData(date = null) {
                 
                 // Also try dates that might exist but aren't in availableDates
                 // Try dates from selected date backwards (1 day, 2 days, 3 days ago)
+                // If yesterday was tried but failed, retry it here (might be a cache/network issue)
                 for (let daysBack = 1; daysBack <= 3; daysBack++) {
                     const tryDateObj = new Date(targetDateObj);
                     tryDateObj.setDate(tryDateObj.getDate() - daysBack);
                     const tryDate = tryDateObj.toISOString().split('T')[0];
                     
-                    // Skip if already tried or already in datesToTry
-                    if (tryDate === date || tryDate === yesterdayStr || 
+                    // Skip if already successfully loaded, or if it's the selected date
+                    // But retry yesterday if it was tried but failed (yesterdayTried && !yesterdaySuccess)
+                    if (tryDate === date || (tryDate === yesterdayStr && yesterdaySuccess) ||
                         datesToTry.some(item => item.date === tryDate)) {
                         continue;
                     }
@@ -198,7 +207,7 @@ async function loadData(date = null) {
                 // Now try each date in order
                 for (const { date: tryDate } of datesToTry) {
                     try {
-                        const stationResponse = await fetch(`data/${station}_${tryDate}.json`);
+                        const stationResponse = await fetch(`data/${station}_${tryDate}.json`, { cache: 'no-cache' });
                         if (stationResponse.ok) {
                             stationData = await stationResponse.json();
                             stationDateUsed = tryDate;
