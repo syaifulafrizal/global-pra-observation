@@ -37,6 +37,17 @@ if (Test-Path Env:FORCE_RERUN) {
     Write-Log "Note: Using cached results if available (set FORCE_RERUN=1 to force rerun)" "Gray"
 }
 
+# Preflight: make sure the latest raw data exists for every station
+Write-Log ""
+Write-Log "Preflight: Checking station data availability (today vs yesterday)..." "Yellow"
+& $pythonExe ensure_station_data.py
+if ($LASTEXITCODE -ne 0) {
+    Write-Log "WARNING: Data availability pre-check encountered issues. Review logs above." "Yellow"
+} else {
+    Write-Log "Preflight check complete - raw data is up to date." "Green"
+}
+Write-Log ""
+
 # Step 1: Run PRA Analysis
 Write-Log "Step 1/4: Running PRA Analysis (pra_nighttime.py)..." "Yellow"
 Write-Log "This may take several minutes for all stations..." "Gray"

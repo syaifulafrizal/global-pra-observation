@@ -390,6 +390,26 @@ function formatDateForSelector(dateStr) {
     return label;
 }
 
+async function fetchHistoryFile(filename) {
+    try {
+        const response = await fetch(`data/${filename}`, { cache: 'no-cache' });
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.debug(`Failed to load ${filename}:`, error);
+    }
+    return { entries: [] };
+}
+
+async function getAnomalyHistory() {
+    return await fetchHistoryFile('anomaly_history.json');
+}
+
+async function getFalseNegativeHistory() {
+    return await fetchHistoryFile('false_negative_history.json');
+}
+
 async function populateDateSelectorFromMetadata() {
     try {
         const response = await fetch(DATA_URL);
@@ -1173,11 +1193,6 @@ async function renderDashboard(date = null) {
     let anomalousCount = 0;
     let withEQ = 0;
 
-    // For cumulative false positives/negatives since Nov 18, 2025
-    const ANALYSIS_START_DATE = '2025-11-18';
-    let allFalsePositives = []; // Array of {station, date, ...}
-    let allFalseNegatives = []; // Array of {station, date, earthquake_time, ...}
-
     const stationDataMap = {};
     for (const station of allStations) {
         totalStations++;
@@ -1205,88 +1220,43 @@ async function renderDashboard(date = null) {
         }
     }
 
-    // Load cumulative false positives and false negatives from all dates since analysis start
-    const datesSinceStart = (data.available_dates || []).filter(d => d >= ANALYSIS_START_DATE).sort();
+    // For cumulative false positives/negatives since Nov 18, 2025
+    const ANALYSIS_START_DATE = '2025-11-18';
+    let falseAlarms = 0;
+    let falseNegatives = 0;
+    let latestFalsePositiveDate = null;
+    let latestFalseNegativeDate = null;
+    try {
+        const [anomalyHistory, falseNegativeHistory] = await Promise.all([
+            getAnomalyHistory(),
+            getFalseNegativeHistory()
+        ]);
 
-    // Load false positives and false negatives from all dates
-    for (const date of datesSinceStart) {
-        for (const station of allStations) {
-            // Load station data for this date to check for false positives
-            try {
-                const stationResponse = await fetch(`data/${station}_${date}.json`);
-                if (stationResponse.ok) {
-                    const stationDataForDate = await stationResponse.json();
-                    if (stationDataForDate.is_anomalous) {
-                        // Check if it's a false positive (anomaly without earthquake)
-                        const eqCorrelations = await loadEarthquakeCorrelations(station, date);
-                        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
-                        if (reliableCorrelations.length === 0) {
-                            // False positive - check if we already have it
-                            const exists = allFalsePositives.some(fp => fp.station === station && fp.date === date);
-                            if (!exists) {
-                                allFalsePositives.push({
-                                    station: station,
-                                    date: date,
-                                    stationData: stationDataForDate
-                                });
-                            }
-                        }
-                    } else {
-                        // Check for false negatives
-                        const fn = await loadFalseNegatives(station, date);
-                        if (fn.length > 0) {
-                            fn.forEach(fnItem => {
-                                // Check if we already have this false negative
-                                const eqTime = fnItem.earthquake_time || fnItem.time;
-                                const exists = allFalseNegatives.some(fn =>
-                                    fn.station === station &&
-                                    fn.earthquake_time === eqTime
-                                );
-                                if (!exists) {
-                                    allFalseNegatives.push({
-                                        station: station,
-                                        date: date,
-                                        earthquake_time: eqTime,
-                                        ...fnItem
-                                    });
-                                }
-                            });
-                        }
-                    }
-                }
-            } catch (error) {
-                // Skip if file doesn't exist
-                continue;
+        const anomalyEntries = Array.isArray(anomalyHistory?.entries) ? anomalyHistory.entries : [];
+        const falseNegativeEntries = Array.isArray(falseNegativeHistory?.entries) ? falseNegativeHistory.entries : [];
+
+        const falsePositiveEntries = anomalyEntries.filter(entry => entry && entry.has_correlated_eq !== true);
+        falseAlarms = falsePositiveEntries.length;
+        if (falsePositiveEntries.length > 0) {
+            const sortedFP = [...falsePositiveEntries].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            latestFalsePositiveDate = sortedFP[0]?.date || null;
+        }
+
+        falseNegatives = falseNegativeEntries.length;
+        if (falseNegativeEntries.length > 0) {
+            const sortedFN = [...falseNegativeEntries].sort((a, b) => {
+                const aTime = (a.earthquake_time || a.date || '').toString();
+                const bTime = (b.earthquake_time || b.date || '').toString();
+                return bTime.localeCompare(aTime);
+            });
+            const latestFN = sortedFN[0];
+            if (latestFN) {
+                const fnTime = latestFN.earthquake_time || latestFN.date;
+                latestFalseNegativeDate = typeof fnTime === 'string' ? fnTime.split('T')[0] : fnTime;
             }
         }
-    }
-
-    // Calculate totals and find latest occurrences
-    const falseAlarms = allFalsePositives.length;
-    const falseNegatives = allFalseNegatives.length;
-
-    // Find latest false positive date
-    let latestFalsePositiveDate = null;
-    if (allFalsePositives.length > 0) {
-        const dates = allFalsePositives.map(fp => fp.date).sort().reverse();
-        latestFalsePositiveDate = dates[0];
-    }
-
-    // Find latest false negative earthquake time
-    let latestFalseNegativeDate = null;
-    if (allFalseNegatives.length > 0) {
-        const dates = allFalseNegatives
-            .map(fn => {
-                const eqTime = fn.earthquake_time || fn.time;
-                if (typeof eqTime === 'string') {
-                    return eqTime.split('T')[0]; // Extract date part
-                }
-                return fn.date;
-            })
-            .filter(d => d)
-            .sort()
-            .reverse();
-        latestFalseNegativeDate = dates[0];
+    } catch (historyError) {
+        console.debug('Unable to load history files for cumulative metrics:', historyError);
     }
 
     // Load earthquake statistics for selected date only (no fallback)
