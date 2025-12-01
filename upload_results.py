@@ -158,8 +158,19 @@ def station_has_correlation(station_folder, target_date):
         return False
     return False
 
-def update_anomaly_history(stations, data_dir):
-    """Append new anomalies to the persistent history log"""
+def update_anomaly_history(stations, data_dir, available_dates=None):
+    """Append new anomalies to the persistent history log and retroactively link earthquakes
+    
+    This function:
+    1. Keeps ALL anomalies ever detected (persistent history)
+    2. Processes new anomalies from recent dates
+    3. Retroactively links earthquakes that occurred 14-30 days AFTER anomalies
+    
+    Args:
+        stations: List of station codes
+        data_dir: Directory containing history files
+        available_dates: List of recent dates to check for NEW anomalies
+    """
     history_path = data_dir / ANOMALY_HISTORY_FILENAME
     entries = load_history_entries(history_path)
     entry_map = {}
@@ -170,6 +181,10 @@ def update_anomaly_history(stations, data_dir):
             entry_map[f'{station}|{date}'] = entry
     updated = False
     now_iso = datetime.utcnow().isoformat()
+    
+    # Convert available_dates to set for faster lookup (only for NEW anomalies)
+    date_filter = set(available_dates) if available_dates else None
+    
     for station in stations:
         station_folder = Path('INTERMAGNET_DOWNLOADS') / station
         if not station_folder.exists():
@@ -181,14 +196,33 @@ def update_anomaly_history(stations, data_dir):
                     station_data = json.load(f)
             except Exception:
                 continue
-            is_anomalous = bool(station_data.get('is_anomalous') or station_data.get('isAnomalous'))
-            n_hours = station_data.get('nAnomHours') or station_data.get('n_anom_hours') or 0
-            if not is_anomalous and (not n_hours or n_hours == 0):
-                continue
+            
+            # Get the date first
             event_date = station_data.get('date') or parse_date_from_filename(json_file.name)
             if not event_date:
                 continue
+            
+            # Only process NEW anomalies from recent dates
+            # But keep all existing anomalies in history
+            is_new_anomaly = date_filter and event_date in date_filter
             key = f'{station}|{event_date}'
+            already_exists = key in entry_map
+            
+            # Skip if not a new anomaly and already exists
+            if not is_new_anomaly and already_exists:
+                continue
+            
+            is_anomalous = bool(station_data.get('is_anomalous') or station_data.get('isAnomalous'))
+            n_hours = station_data.get('nAnomHours') or station_data.get('n_anom_hours') or 0
+            
+            # Only add if actually anomalous
+            if not is_anomalous and (not n_hours or n_hours == 0):
+                continue
+            
+            # Only process if it's a new anomaly from recent dates
+            if not is_new_anomaly:
+                continue
+            
             entry = entry_map.get(key, {
                 'station': station,
                 'date': event_date,
@@ -198,16 +232,54 @@ def update_anomaly_history(stations, data_dir):
             entry['n_anomaly_hours'] = n_hours
             entry['source_file'] = json_file.name
             entry['last_confirmed'] = now_iso
+            
+            # Check for earthquake correlation (14-30 days after anomaly)
             entry['has_correlated_eq'] = station_has_correlation(station_folder, event_date)
+            
             entry_map[key] = entry
             updated = True
+    
+    # RETROACTIVE LINKING: Check all existing anomalies for new earthquakes
+    # This handles cases where EQ occurs 14-30 days AFTER anomaly was detected
+    print('[INFO] Checking for retroactive earthquake correlations...')
+    retroactive_updates = 0
+    for key, entry in entry_map.items():
+        station = entry.get('station')
+        event_date = entry.get('date')
+        if not station or not event_date:
+            continue
+        
+        station_folder = Path('INTERMAGNET_DOWNLOADS') / station
+        if not station_folder.exists():
+            continue
+        
+        # Re-check earthquake correlation (may have changed if new EQ occurred)
+        old_status = entry.get('has_correlated_eq', False)
+        new_status = station_has_correlation(station_folder, event_date)
+        
+        if old_status != new_status:
+            entry['has_correlated_eq'] = new_status
+            entry['last_confirmed'] = now_iso
+            updated = True
+            retroactive_updates += 1
+    
+    if retroactive_updates > 0:
+        print(f'[INFO] Updated {retroactive_updates} anomalies with retroactive EQ correlations')
+    
     if updated:
         sorted_entries = sorted(
             entry_map.values(),
             key=lambda e: (e.get('date', ''), e.get('station', ''))
         )
         save_history_entries(history_path, sorted_entries)
-        print(f'[INFO] Updated anomaly history with {len(sorted_entries)} total entries')
+        
+        # Count true positives and false positives
+        true_positives = sum(1 for e in sorted_entries if e.get('has_correlated_eq'))
+        false_positives = sum(1 for e in sorted_entries if not e.get('has_correlated_eq'))
+        
+        print(f'[INFO] Updated anomaly history: {len(sorted_entries)} total anomalies')
+        print(f'[INFO]   True Positives: {true_positives} (with correlated EQ)')
+        print(f'[INFO]   False Positives: {false_positives} (no correlated EQ)')
     else:
         # Ensure file exists even if no update occurred
         if not history_path.exists():
@@ -414,7 +486,7 @@ def prepare_web_output():
         print(f'[INFO] Cleaned up {deleted} old files')
 
     # Keep cumulative anomaly and false negative histories
-    update_anomaly_history(stations, data_dir)
+    update_anomaly_history(stations, data_dir, available_dates)
     update_false_negative_history(stations, data_dir)
     
     # Load station metadata from root stations.json
