@@ -171,7 +171,7 @@ async function loadData(date = null) {
             if (!stationData && sortedAvailableDates.length > 0) {
                 const targetDate = date || yesterdayStr;
                 const targetDateObj = new Date(targetDate);
-                
+
                 // Create a list of dates to try, sorted by proximity to target date
                 const datesToTry = [...sortedAvailableDates]
                     .filter(tryDate => tryDate !== date && tryDate !== yesterdayStr) // Skip already tried
@@ -182,7 +182,7 @@ async function loadData(date = null) {
                     })
                     .filter(item => item.daysDiff <= 3) // Only within 3 days
                     .sort((a, b) => a.daysDiff - b.daysDiff); // Closest first
-                
+
                 // Also try dates that might exist but aren't in availableDates
                 // Try dates from selected date backwards (1 day, 2 days, 3 days ago)
                 // If yesterday was tried but failed, retry it here (might be a cache/network issue)
@@ -190,20 +190,20 @@ async function loadData(date = null) {
                     const tryDateObj = new Date(targetDateObj);
                     tryDateObj.setDate(tryDateObj.getDate() - daysBack);
                     const tryDate = tryDateObj.toISOString().split('T')[0];
-                    
+
                     // Skip if already successfully loaded, or if it's the selected date
                     // But retry yesterday if it was tried but failed (yesterdayTried && !yesterdaySuccess)
                     if (tryDate === date || (tryDate === yesterdayStr && yesterdaySuccess) ||
                         datesToTry.some(item => item.date === tryDate)) {
                         continue;
                     }
-                    
+
                     datesToTry.push({ date: tryDate, daysDiff: daysBack });
                 }
-                
+
                 // Sort again by daysDiff to ensure closest dates are tried first
                 datesToTry.sort((a, b) => a.daysDiff - b.daysDiff);
-                
+
                 // Now try each date in order
                 for (const { date: tryDate } of datesToTry) {
                     try {
@@ -1235,10 +1235,20 @@ async function renderDashboard(date = null) {
         const anomalyEntries = Array.isArray(anomalyHistory?.entries) ? anomalyHistory.entries : [];
         const falseNegativeEntries = Array.isArray(falseNegativeHistory?.entries) ? falseNegativeHistory.entries : [];
 
+        // Deduplicate false positives by station+date
         const falsePositiveEntries = anomalyEntries.filter(entry => entry && entry.has_correlated_eq !== true);
-        falseAlarms = falsePositiveEntries.length;
-        if (falsePositiveEntries.length > 0) {
-            const sortedFP = [...falsePositiveEntries].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+        const uniqueFalsePositives = new Map();
+        falsePositiveEntries.forEach(entry => {
+            const key = `${entry.station}_${entry.date}`;
+            if (!uniqueFalsePositives.has(key)) {
+                uniqueFalsePositives.set(key, entry);
+            }
+        });
+        falseAlarms = uniqueFalsePositives.size;  // Only count unique station+date combos
+
+        if (uniqueFalsePositives.size > 0) {
+            const sortedFP = Array.from(uniqueFalsePositives.values())
+                .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
             latestFalsePositiveDate = sortedFP[0]?.date || null;
         }
 
