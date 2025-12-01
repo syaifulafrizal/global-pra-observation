@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-01T14:44:51.714791",
+  "last_updated": "2025-12-01T15:04:16.588746",
   "entries": [
     {
       "station": "BOU",
@@ -548,7 +548,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ABG_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -558,7 +558,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_AMS_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -568,7 +568,7 @@
       "threshold": 0.3588897133460622,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_API_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -578,7 +578,7 @@
       "threshold": 2.1013123123329316,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ASP_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -588,7 +588,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BEL_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -598,7 +598,7 @@
       "threshold": 5.135346631968437,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BOU_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -608,7 +608,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CLF_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -618,7 +618,7 @@
       "threshold": 5.05829719491908,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CNB_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -628,7 +628,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CZT_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -638,7 +638,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_DOU_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -648,7 +648,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ESK_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -658,7 +658,7 @@
       "threshold": 6.489089034589789,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_EYR_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -668,7 +668,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FCC_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -678,7 +678,7 @@
       "threshold": 4.3347368982878836,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FRD_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -688,7 +688,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FUR_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -698,7 +698,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GNA_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -708,7 +708,7 @@
       "threshold": 0.04522734761742344,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GUA_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -718,7 +718,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HAD_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -728,7 +728,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HER_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -738,7 +738,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HLP_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -748,7 +748,7 @@
       "threshold": 0.616695149259413,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HON_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -758,7 +758,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_IRT_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -768,7 +768,7 @@
       "threshold": 1.4349146991415427,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KAK_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -778,7 +778,7 @@
       "threshold": 1.3694463907653485,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KNY_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -788,7 +788,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LER_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -798,7 +798,7 @@
       "threshold": 1.993103807036733,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LRM_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -808,7 +808,7 @@
       "threshold": 15.732501978983848,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_LYC_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -818,7 +818,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MBO_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -828,7 +828,7 @@
       "threshold": 2.6733205555924404,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_MMB_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -838,7 +838,7 @@
       "threshold": 5.976449045590228,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NGK_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -848,7 +848,7 @@
       "threshold": 11.669681885043806,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NUR_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -858,7 +858,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PAG_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -868,7 +868,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PHU_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -878,7 +878,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PIL_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -888,7 +888,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PPT_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -898,7 +898,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SHU_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -908,7 +908,7 @@
       "threshold": 11.170244747243615,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SIT_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -918,7 +918,7 @@
       "threshold": 0.7774022315413863,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SJG_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -928,7 +928,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SOD_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -938,7 +938,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SPT_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -948,7 +948,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SUA_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -958,7 +958,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAM_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -968,7 +968,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAN_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -978,7 +978,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_THL_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -988,7 +988,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TIK_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -998,7 +998,7 @@
       "threshold": 2.7710103778498745,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TUC_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1008,7 +1008,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VAL_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1018,7 +1018,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VIC_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1028,7 +1028,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VSS_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1038,7 +1038,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_WNG_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1048,7 +1048,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_YAK_20251125.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1058,7 +1058,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ABG_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1068,7 +1068,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_AMS_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1078,7 +1078,7 @@
       "threshold": 0.35889108983897194,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_API_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1088,7 +1088,7 @@
       "threshold": 2.1029694877653977,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ASP_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1098,7 +1098,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BEL_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1108,7 +1108,7 @@
       "threshold": 5.135481775759979,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BOU_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1118,7 +1118,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CLF_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1128,7 +1128,7 @@
       "threshold": 5.063054062349574,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CNB_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1138,7 +1138,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CZT_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1148,7 +1148,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_DOU_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1158,7 +1158,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ESK_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1168,7 +1168,7 @@
       "threshold": 6.49626818354914,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_EYR_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1178,7 +1178,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FCC_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1188,7 +1188,7 @@
       "threshold": 6.506410343052703,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FRD_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1198,7 +1198,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FUR_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1208,7 +1208,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GNA_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1218,7 +1218,7 @@
       "threshold": 0.045268800465132104,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GUA_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1228,7 +1228,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HAD_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1238,7 +1238,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HER_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1248,7 +1248,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HLP_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1258,7 +1258,7 @@
       "threshold": 0.6168242281057011,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HON_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1268,7 +1268,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_IRT_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1278,7 +1278,7 @@
       "threshold": 1.4362334274381416,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KAK_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1288,7 +1288,7 @@
       "threshold": 1.0516853900253704,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KNY_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1298,7 +1298,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LER_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1308,7 +1308,7 @@
       "threshold": 1.9950709159158297,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LRM_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1318,7 +1318,7 @@
       "threshold": 15.818042250127512,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LYC_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1328,7 +1328,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MBO_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1338,7 +1338,7 @@
       "threshold": 2.6749943644305847,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MMB_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1348,7 +1348,7 @@
       "threshold": 5.978583612407039,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NGK_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1358,7 +1358,7 @@
       "threshold": 25.576294987031368,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NUR_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1368,7 +1368,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PAG_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1378,7 +1378,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PHU_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1388,7 +1388,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PIL_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1398,7 +1398,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PPT_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1408,7 +1408,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SHU_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1418,7 +1418,7 @@
       "threshold": 11.173618858296127,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SIT_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1428,7 +1428,7 @@
       "threshold": 0.777912181236512,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SJG_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1438,7 +1438,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SOD_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1448,7 +1448,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SPT_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1458,7 +1458,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SUA_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1468,7 +1468,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAM_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1478,7 +1478,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAN_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1488,7 +1488,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_THL_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1498,7 +1498,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TIK_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1508,7 +1508,7 @@
       "threshold": 2.7711501866359822,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TUC_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1518,7 +1518,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VAL_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1528,7 +1528,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VIC_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1538,7 +1538,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VSS_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1548,7 +1548,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_WNG_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1558,7 +1558,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_YAK_20251126.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1568,7 +1568,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ABG_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1578,7 +1578,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_AMS_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1588,7 +1588,7 @@
       "threshold": 0.3588914912617035,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_API_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1598,7 +1598,7 @@
       "threshold": 2.1029847541400217,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ASP_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1608,7 +1608,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BEL_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1618,7 +1618,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CLF_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1628,7 +1628,7 @@
       "threshold": 5.068274423290046,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CNB_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1638,7 +1638,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CZT_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1648,7 +1648,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_DOU_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1658,7 +1658,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ESK_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1668,7 +1668,7 @@
       "threshold": 6.498434393323048,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_EYR_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1678,7 +1678,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FUR_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1688,7 +1688,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GNA_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1698,7 +1698,7 @@
       "threshold": 0.04527724125627189,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GUA_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1708,7 +1708,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HAD_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1718,7 +1718,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HER_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1728,7 +1728,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HLP_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1738,7 +1738,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_IRT_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1748,7 +1748,7 @@
       "threshold": 1.4365048627972525,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KAK_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1758,7 +1758,7 @@
       "threshold": 1.0518967070168634,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KNY_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1768,7 +1768,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LER_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1778,7 +1778,7 @@
       "threshold": 1.9958658602435584,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LRM_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1788,7 +1788,7 @@
       "threshold": 15.862340517310725,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LYC_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1798,7 +1798,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MBO_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1808,7 +1808,7 @@
       "threshold": 2.67553960258349,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MMB_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1818,7 +1818,7 @@
       "threshold": 5.977863246501087,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NGK_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1828,7 +1828,7 @@
       "threshold": 28.292588427624693,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NUR_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1838,7 +1838,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PAG_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1848,7 +1848,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PHU_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1858,7 +1858,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SOD_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1868,7 +1868,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SPT_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1878,7 +1878,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SUA_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1888,7 +1888,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAM_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1898,7 +1898,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAN_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1908,7 +1908,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TIK_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1918,7 +1918,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VAL_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1928,7 +1928,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_WNG_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1938,7 +1938,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_YAK_20251127.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1948,7 +1948,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ABG_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1958,7 +1958,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_AMS_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1968,7 +1968,7 @@
       "threshold": 0.4361584746080849,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_API_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1978,7 +1978,7 @@
       "threshold": 2.488888093718182,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ASP_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1988,7 +1988,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BEL_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -1998,7 +1998,7 @@
       "threshold": 5.138705912388408,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BOU_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2008,7 +2008,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CLF_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2018,7 +2018,7 @@
       "threshold": 10.216202710856887,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CNB_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2028,7 +2028,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CZT_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2038,7 +2038,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_DOU_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2048,7 +2048,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ESK_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2058,7 +2058,7 @@
       "threshold": 6.4988544946368965,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_EYR_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2068,7 +2068,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FCC_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2078,7 +2078,7 @@
       "threshold": 6.703961251611888,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FRD_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2088,7 +2088,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FUR_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2098,7 +2098,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GNA_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2108,7 +2108,7 @@
       "threshold": 0.04525891042210821,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GUA_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2118,7 +2118,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HAD_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2128,7 +2128,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HER_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2138,7 +2138,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HLP_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2148,7 +2148,7 @@
       "threshold": 0.6171877510045282,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HON_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2158,7 +2158,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_IRT_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2168,7 +2168,7 @@
       "threshold": 1.4362935673256179,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KAK_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2178,7 +2178,7 @@
       "threshold": 1.051706378309988,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KNY_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2188,7 +2188,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LER_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2198,7 +2198,7 @@
       "threshold": 3.6431480388355997,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LRM_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2208,7 +2208,7 @@
       "threshold": 16.047378539433076,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LYC_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2218,7 +2218,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MBO_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2228,7 +2228,7 @@
       "threshold": 2.676313679625929,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MMB_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2238,7 +2238,7 @@
       "threshold": 5.976057445757347,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NGK_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2248,7 +2248,7 @@
       "threshold": 28.30140220285456,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NUR_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2258,7 +2258,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PAG_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2268,7 +2268,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PHU_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2278,7 +2278,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PIL_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2288,7 +2288,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PPT_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2298,7 +2298,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SHU_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2308,7 +2308,7 @@
       "threshold": 11.198246384848625,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SIT_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2318,7 +2318,7 @@
       "threshold": 0.778422910364389,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SJG_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2328,7 +2328,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SOD_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2338,7 +2338,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SPT_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2348,7 +2348,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SUA_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2358,7 +2358,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAM_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2368,7 +2368,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAN_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2378,7 +2378,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_THL_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2388,7 +2388,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TIK_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2398,7 +2398,7 @@
       "threshold": 2.7727250503551986,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TUC_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2408,7 +2408,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VAL_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2418,7 +2418,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VIC_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2428,7 +2428,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VSS_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2438,7 +2438,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_WNG_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2448,7 +2448,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_YAK_20251128.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2458,7 +2458,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ABG_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2468,7 +2468,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_AMS_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2478,7 +2478,7 @@
       "threshold": 0.4361584029897062,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_API_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2488,7 +2488,7 @@
       "threshold": 2.489320868373324,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ASP_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2498,7 +2498,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BEL_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2508,7 +2508,7 @@
       "threshold": 5.13869965165921,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BOU_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2518,7 +2518,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CLF_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2528,7 +2528,7 @@
       "threshold": 10.218173077702726,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CNB_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2538,7 +2538,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CZT_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2548,7 +2548,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_DOU_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2558,7 +2558,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ESK_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2568,7 +2568,7 @@
       "threshold": 6.502143491826926,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_EYR_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2578,7 +2578,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FCC_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2588,7 +2588,7 @@
       "threshold": 7.629479091185844,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FRD_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2598,7 +2598,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FUR_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2608,7 +2608,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GNA_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2618,7 +2618,7 @@
       "threshold": 0.04526075624844917,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GUA_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2628,7 +2628,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HAD_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2638,7 +2638,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HER_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2648,7 +2648,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HLP_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2658,7 +2658,7 @@
       "threshold": 0.6171993319083533,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HON_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2668,7 +2668,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_IRT_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2678,7 +2678,7 @@
       "threshold": 1.4365634414849278,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KAK_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2688,7 +2688,7 @@
       "threshold": 1.0518055246708469,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KNY_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2698,7 +2698,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LER_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2708,7 +2708,7 @@
       "threshold": 3.6441113940673246,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LRM_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2718,7 +2718,7 @@
       "threshold": 16.039132683028853,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LYC_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2728,7 +2728,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MBO_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2738,7 +2738,7 @@
       "threshold": 2.676873091119696,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MMB_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2748,7 +2748,7 @@
       "threshold": 5.9762611455881816,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NGK_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2758,7 +2758,7 @@
       "threshold": 28.302635839585594,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NUR_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2768,7 +2768,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PAG_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2778,7 +2778,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PHU_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2788,7 +2788,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PIL_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2798,7 +2798,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PPT_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2808,7 +2808,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SHU_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2818,7 +2818,7 @@
       "threshold": 11.192318914405275,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SIT_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2828,7 +2828,7 @@
       "threshold": 0.7781111116096023,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SJG_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2838,7 +2838,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SOD_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2848,7 +2848,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SPT_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2858,7 +2858,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SUA_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2868,7 +2868,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAM_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2878,7 +2878,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAN_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2888,7 +2888,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_THL_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2898,7 +2898,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TIK_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2908,7 +2908,7 @@
       "threshold": 2.772403323232472,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TUC_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2918,7 +2918,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VAL_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2928,7 +2928,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VIC_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2938,7 +2938,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VSS_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2948,7 +2948,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_WNG_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2958,7 +2958,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_YAK_20251129.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2968,7 +2968,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ABG_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2978,7 +2978,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_AMS_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2988,7 +2988,7 @@
       "threshold": 0.44244532854378776,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_API_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -2998,7 +2998,7 @@
       "threshold": 2.5199578120590784,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ASP_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3008,7 +3008,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BEL_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3018,7 +3018,7 @@
       "threshold": 5.138683175741507,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_BOU_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3028,7 +3028,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CLF_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3038,7 +3038,7 @@
       "threshold": 10.524297830772825,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CNB_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3048,7 +3048,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_CZT_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3058,7 +3058,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_DOU_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3068,7 +3068,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_ESK_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3078,7 +3078,7 @@
       "threshold": 6.50384771553642,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_EYR_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3088,7 +3088,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FCC_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3098,7 +3098,7 @@
       "threshold": 7.629628038039594,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FRD_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3108,7 +3108,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_FUR_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3118,7 +3118,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GNA_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3128,7 +3128,7 @@
       "threshold": 0.04521449734324036,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_GUA_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3138,7 +3138,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HAD_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3148,7 +3148,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HER_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3158,7 +3158,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HLP_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3168,7 +3168,7 @@
       "threshold": 0.6166860797586738,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_HON_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3178,7 +3178,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_IRT_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3188,7 +3188,7 @@
       "threshold": 1.4354644355665735,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KAK_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3198,7 +3198,7 @@
       "threshold": 1.0510064076542396,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_KNY_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3208,7 +3208,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LER_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3218,7 +3218,7 @@
       "threshold": 3.7432843817900316,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LRM_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3228,7 +3228,7 @@
       "threshold": 16.07132371614236,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_LYC_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3238,7 +3238,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MBO_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3248,7 +3248,7 @@
       "threshold": 2.6758027343822652,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_MMB_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3258,7 +3258,7 @@
       "threshold": 5.97818752119817,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NGK_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3268,7 +3268,7 @@
       "threshold": 28.74460656864143,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_NUR_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3278,7 +3278,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PAG_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3288,7 +3288,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PHU_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3298,7 +3298,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PIL_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3308,7 +3308,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_PPT_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3318,7 +3318,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SHU_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3328,7 +3328,7 @@
       "threshold": 17.456575578447346,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SIT_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3338,7 +3338,7 @@
       "threshold": 0.7782618904960951,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SJG_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3348,7 +3348,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SOD_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3358,7 +3358,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SPT_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3368,7 +3368,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_SUA_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3378,7 +3378,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAM_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3388,7 +3388,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TAN_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3398,7 +3398,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_THL_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3408,7 +3408,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TIK_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3418,7 +3418,7 @@
       "threshold": 2.7721762437614457,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_TUC_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3428,7 +3428,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VAL_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3438,7 +3438,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VIC_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3448,7 +3448,7 @@
       "threshold": 0.500000000000001,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_VSS_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3458,7 +3458,7 @@
       "threshold": 0.5000000000000007,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_WNG_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     },
     {
@@ -3468,7 +3468,7 @@
       "threshold": 0.5000000000000012,
       "n_anomaly_hours": 0,
       "source_file": "PRA_Night_YAK_20251201.json",
-      "last_confirmed": "2025-12-01T14:44:51.595721",
+      "last_confirmed": "2025-12-01T15:04:16.403518",
       "has_correlated_eq": false
     }
   ]
