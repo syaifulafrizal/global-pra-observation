@@ -37,6 +37,14 @@ if (Test-Path Env:FORCE_RERUN) {
     Write-Log "Note: Using cached results if available (set FORCE_RERUN=1 to force rerun)" "Gray"
 }
 
+# Detect Python with required packages (MUST be before first use)
+$pythonExe = $null
+if (Test-Path "C:\Users\SYAIFUL\anaconda3\python.exe") {
+    $pythonExe = "C:\Users\SYAIFUL\anaconda3\python.exe"
+} else {
+    $pythonExe = "python"
+}
+
 # Preflight: make sure the latest raw data exists for every station
 Write-Log ""
 Write-Log "Preflight: Checking station data availability (today vs yesterday)..." "Yellow"
@@ -52,13 +60,6 @@ Write-Log ""
 Write-Log "Step 1/4: Running PRA Analysis (pra_nighttime.py)..." "Yellow"
 Write-Log "This may take several minutes for all stations..." "Gray"
 
-# Detect Python with required packages
-$pythonExe = $null
-if (Test-Path "C:\Users\SYAIFUL\anaconda3\python.exe") {
-    $pythonExe = "C:\Users\SYAIFUL\anaconda3\python.exe"
-} else {
-    $pythonExe = "python"
-}
 & $pythonExe pra_nighttime.py
 if ($LASTEXITCODE -ne 0) {
     Write-Log "ERROR: PRA analysis failed!" "Red"
