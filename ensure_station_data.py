@@ -56,12 +56,22 @@ def ensure_station_files():
             if date_obj > today_local:
                 continue
 
+            # OPTIMIZATION: Check if PRA output already exists for this date
+            # If PRA analysis has been run and output exists, skip downloading raw data
+            pra_output_file = Path(f'results/{code}_{date_obj.strftime("%Y%m%d")}.json')
+            if pra_output_file.exists() and pra_output_file.stat().st_size > 0:
+                # PRA output exists, no need to download raw data
+                continue
+
             target_dt = datetime.combine(date_obj, datetime.min.time()).replace(tzinfo=station_tz)
             filename = f'{code}_{date_obj.strftime("%Y%m%d")}.iaga2002'
             data_path = data_folder / filename
+            
+            # Check if raw data file already exists
             if data_path.exists() and data_path.stat().st_size > 0:
                 continue
 
+            # Only download if neither PRA output nor raw data exists
             result = download_data(code, target_dt, data_folder)
             if result and result.exists():
                 total_downloads += 1
