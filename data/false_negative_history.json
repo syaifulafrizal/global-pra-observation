@@ -1,0 +1,17 @@
+{
+  "last_updated": "2025-12-01T09:26:57.373874",
+  "entries": [
+    {
+      "station": "GUA",
+      "earthquake_time": "2025-11-09 22:53:37.690",
+      "first_logged": "2025-12-01T09:26:57.369838",
+      "earthquake_magnitude": 5.4,
+      "earthquake_distance_km": 17.535052219453394,
+      "earthquake_place": "23 km N of Yigo Village, Guam",
+      "earthquake_latitude": 13.7454,
+      "earthquake_longitude": 144.848,
+      "last_confirmed": "2025-12-01T09:26:57.369838",
+      "source_file": "false_negatives.csv"
+    }
+  ]
+}
