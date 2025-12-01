@@ -1235,7 +1235,7 @@ async function renderDashboard(date = null) {
         const anomalyEntries = Array.isArray(anomalyHistory?.entries) ? anomalyHistory.entries : [];
         const falseNegativeEntries = Array.isArray(falseNegativeHistory?.entries) ? falseNegativeHistory.entries : [];
 
-        // Deduplicate false positives by station+date
+        // Deduplicate false positives by station+date to fix inflated count
         const falsePositiveEntries = anomalyEntries.filter(entry => entry && entry.has_correlated_eq !== true);
         const uniqueFalsePositives = new Map();
         falsePositiveEntries.forEach(entry => {
