@@ -189,7 +189,18 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
         station_folder = Path('INTERMAGNET_DOWNLOADS') / station
         if not station_folder.exists():
             continue
-        json_files = sorted(station_folder.glob('PRA_Night_*.json'))
+        # CRITICAL FIX: Only process files for available dates
+        if date_filter:
+            # Only check files for specific dates
+            json_files = []
+            for date in date_filter:
+                date_str = date.replace('-', '')
+                pattern = f'PRA_Night_{station}_{date_str}.json'
+                matching_files = list(station_folder.glob(pattern))
+                json_files.extend(matching_files)
+        else:
+            # Fallback: process all files
+            json_files = sorted(station_folder.glob('PRA_Night_*.json'))
         for json_file in json_files:
             try:
                 with open(json_file, 'r', encoding='utf-8') as f:
