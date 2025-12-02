@@ -200,7 +200,18 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
                 json_files.extend(matching_files)
         else:
             # Fallback: process all files
-            json_files = sorted(station_folder.glob('PRA_Night_*.json'))
+            # CRITICAL FIX: Only process files for available dates
+            if date_filter:
+                # Only check files for specific dates
+                json_files = []
+                for date in date_filter:
+                    date_str = date.replace('-', '')
+                    pattern = f'PRA_Night_{station}_{date_str}.json'
+                    matching_files = list(station_folder.glob(pattern))
+                    json_files.extend(matching_files)
+            else:
+                # Fallback: process all files
+                json_files = sorted(station_folder.glob('PRA_Night_*.json'))
         for json_file in json_files:
             try:
                 with open(json_file, 'r', encoding='utf-8') as f:
@@ -226,8 +237,9 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
             is_anomalous = bool(station_data.get('is_anomalous') or station_data.get('isAnomalous'))
             n_hours = station_data.get('nAnomHours') or station_data.get('n_anom_hours') or 0
             
-            # Only add if actually anomalous
-            if not is_anomalous and (not n_hours or n_hours == 0):
+            # CRITICAL FIX: Skip if NOT anomalous OR if n_hours is 0
+            # Must be anomalous AND have hours > 0 to be added
+            if not is_anomalous or n_hours == 0:
                 continue
             
             # Only process if it's a new anomaly from recent dates
