@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-02T17:00:38.913762",
+  "last_updated": "2025-12-03T11:03:32.400484",
   "entries": [
     {
       "station": "GUA",
@@ -10,7 +10,19 @@
       "earthquake_place": "23 km N of Yigo Village, Guam",
       "earthquake_latitude": 13.7454,
       "earthquake_longitude": 144.848,
-      "last_confirmed": "2025-12-02T17:00:38.910247",
+      "last_confirmed": "2025-12-03T11:03:32.396484",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2025-12-02 10:03:01.402",
+      "first_logged": "2025-12-03T11:03:32.396484",
+      "earthquake_magnitude": 5.2,
+      "earthquake_distance_km": 166.56280982066735,
+      "earthquake_place": "47 km SSE of Nemuro, Japan",
+      "earthquake_latitude": 42.9104,
+      "earthquake_longitude": 145.7217,
+      "last_confirmed": "2025-12-03T11:03:32.396484",
       "source_file": "false_negatives.csv"
     }
   ]
