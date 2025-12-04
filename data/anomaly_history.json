@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-03T11:03:32.371421",
+  "last_updated": "2025-12-04T01:09:04.480647",
   "entries": [
     {
       "station": "API",
@@ -8,7 +8,7 @@
       "threshold": 0.4361584746080849,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_API_20251128.json",
-      "last_confirmed": "2025-12-03T11:03:32.240754",
+      "last_confirmed": "2025-12-04T01:09:04.357770",
       "has_correlated_eq": false
     }
   ]

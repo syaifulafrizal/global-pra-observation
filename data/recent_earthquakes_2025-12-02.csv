@@ -1,6 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2025-12-02 23:35:29.716,-20.8402,-178.964,630.985,5.6,Fiji region,earthquake,
-2025-12-02 13:16:24.673,0.3775,98.7143,50.901,5.1,"103 km ESE of Teluk Dalam, Indonesia",earthquake,
+2025-12-02 13:16:24.003,0.3448,98.6636,47.942,5.1,"99 km ESE of Teluk Dalam, Indonesia",earthquake,
 2025-12-02 11:10:42.322,50.2516,156.5921,44.799,5.3,"57 km SE of Severo-Kuril’sk, Russia",earthquake,
 2025-12-02 10:03:01.402,42.9104,145.7217,23.906,5.2,"47 km SSE of Nemuro, Japan",earthquake,
 2025-12-02 07:34:30.945,9.2884,-40.7369,10.0,5.2,central Mid-Atlantic Ridge,earthquake,
