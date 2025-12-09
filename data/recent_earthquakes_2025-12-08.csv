@@ -1,7 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2025-12-08 23:59:06.930,40.843,142.7043,46.371,5.6,"107 km NE of Kuji, Japan",earthquake,
-2025-12-08 22:07:17.179,41.0271,143.0487,35.0,5.1,"122 km S of Honchō, Japan",earthquake,
-2025-12-08 21:52:40.386,41.0074,143.0999,10.0,6.6,"125 km S of Honchō, Japan",earthquake,
+2025-12-08 22:07:17.220,41.0385,142.86,35.0,5.0,"121 km S of Honchō, Japan",earthquake,
+2025-12-08 21:52:41.302,41.0034,143.1637,19.0,6.6,"126 km S of Honchō, Japan",earthquake,
 2025-12-08 20:31:36.728,11.153,138.5774,10.0,5.0,"187 km NNE of Colonia, Micronesia",earthquake,
 2025-12-08 18:56:29.919,41.0125,143.0558,33.716,5.8,"124 km S of Honchō, Japan",earthquake,
 2025-12-08 18:41:16.021,-58.8089,-25.3411,35.0,5.5,South Sandwich Islands region,earthquake,
