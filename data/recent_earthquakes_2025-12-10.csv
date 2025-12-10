@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-10 06:38:27.064,-28.8659,-71.3475,42.911,5.2,"65 km WSW of Vallenar, Chile",earthquake,

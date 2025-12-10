@@ -1,5 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2025-12-08 23:59:06.930,40.843,142.7043,46.371,5.6,"107 km NE of Kuji, Japan",earthquake,
+2025-12-08 23:59:06.362,40.8274,142.7062,45.536,5.6,"106 km NE of Kuji, Japan",earthquake,
 2025-12-08 22:07:17.220,41.0385,142.86,35.0,5.0,"121 km S of Honchō, Japan",earthquake,
 2025-12-08 21:52:41.302,41.0034,143.1637,19.0,6.6,"126 km S of Honchō, Japan",earthquake,
 2025-12-08 20:31:36.728,11.153,138.5774,10.0,5.0,"187 km NNE of Colonia, Micronesia",earthquake,
@@ -12,4 +12,4 @@ time,latitude,longitude,depth,magnitude,place,type,id
 2025-12-08 11:24:54.558,23.806,121.6799,10.0,5.3,"20 km SSE of Hualien City, Taiwan",earthquake,
 2025-12-08 10:21:34.075,37.1115,30.8065,113.197,5.1,"23 km SSE of Kocaaliler, Turkey",earthquake,
 2025-12-08 01:32:20.618,51.4783,159.4124,27.87,5.2,"175 km SSE of Vilyuchinsk, Russia",earthquake,
-2025-12-08 00:56:52.056,60.33880233764648,-139.53318786621094,5.0,5.751633751051714,"88 km N of Yakutat, Alaska",earthquake,
+2025-12-08 00:56:50.417,60.3398,-139.5944,10.0,5.8,"88 km N of Yakutat, Alaska",earthquake,
