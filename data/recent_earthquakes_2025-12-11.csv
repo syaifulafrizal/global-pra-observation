@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-11 11:59:22.093,32.9675,88.7268,10,5.1,western Xizang,earthquake,
