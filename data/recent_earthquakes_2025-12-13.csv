@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-13 14:04:33.795,-58.9067,-25.7707,74.821,5.0,South Sandwich Islands region,earthquake,
+2025-12-13 12:18:46.390,-21.2245,-69.0504,95.911,5.4,"82 km W of Ollagüe, Chile",earthquake,
+2025-12-13 10:50:59.731,51.9234,178.3373,109.647,5.5,"Rat Islands, Aleutian Islands, Alaska",earthquake,
