@@ -132,7 +132,7 @@ async function loadData(date = null) {
                 const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
                 if (stationResponse.ok) {
                     stationData = await stationResponse.json();
-                    stationDateUsed = date;
+                    stationDateUsed = stationData?.date || date;
                     hasAnyData = true;
                     console.debug(`Station ${station}: Using selected date ${date}`);
                 } else {
@@ -153,7 +153,7 @@ async function loadData(date = null) {
                     const stationResponse = await fetch(`data/${station}_${yesterdayStr}.json`, { cache: 'no-cache' });
                     if (stationResponse.ok) {
                         stationData = await stationResponse.json();
-                        stationDateUsed = yesterdayStr;
+                        stationDateUsed = stationData?.date || yesterdayStr;
                         hasAnyData = true;
                         yesterdaySuccess = true;
                         console.debug(`Station ${station}: Using yesterday's data from ${yesterdayStr} (selected date ${date} not available)`);
@@ -210,7 +210,7 @@ async function loadData(date = null) {
                         const stationResponse = await fetch(`data/${station}_${tryDate}.json`, { cache: 'no-cache' });
                         if (stationResponse.ok) {
                             stationData = await stationResponse.json();
-                            stationDateUsed = tryDate;
+                            stationDateUsed = stationData?.date || tryDate;
                             hasAnyData = true;
                             console.debug(`Station ${station}: Using fallback data from ${tryDate} (${Math.round((targetDateObj - new Date(tryDate)) / (1000 * 60 * 60 * 24))} days before selected date ${date})`);
                             break; // Found data, stop trying
@@ -1812,4 +1812,3 @@ async function downloadAnomaliesCSV() {
         alert('Error downloading anomalies CSV. Please try again.');
     }
 }
-
