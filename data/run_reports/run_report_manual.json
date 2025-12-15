@@ -1,0 +1,28 @@
+{
+  "run_id": "manual",
+  "generated_at": "2025-12-15T16:34:34.704412",
+  "latest_date": "2025-12-16",
+  "available_dates": [
+    "2025-12-16",
+    "2025-12-15",
+    "2025-12-14",
+    "2025-12-13",
+    "2025-12-12",
+    "2025-12-11",
+    "2025-12-10"
+  ],
+  "stations_processed": 51,
+  "metrics": {
+    "anomalies_last_day": 0,
+    "anomalies_last_7_days": 0,
+    "correlated_last_7_days": 0,
+    "false_positives_last_7_days": 0,
+    "false_negatives_last_7_days": 0,
+    "total_anomalies": 1,
+    "total_correlated": 0,
+    "total_false_positives": 1,
+    "total_false_negatives": 2
+  },
+  "recent_anomalies": [],
+  "recent_false_negatives": []
+}

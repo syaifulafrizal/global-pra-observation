@@ -24,6 +24,8 @@ matplotlib.use('Agg')  # Non-interactive backend
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+from logging_utils import configure_logger, attach_stdout_logger
+
 # Configuration
 BASE_URL = 'https://imag-data.bgs.ac.uk:443/GIN_V1/GINServices'
 OMNI_BASE_URL = 'https://omniweb.gsfc.nasa.gov/cgi/nx1.cgi'
@@ -67,6 +69,13 @@ OPTS = {
 
 # Default stations
 DEFAULT_STATIONS = ['KAK']
+
+# Run + logging setup
+RUN_ID = os.getenv('PRA_RUN_ID') or datetime.utcnow().strftime('%Y%m%d%H%M%S')
+os.environ['PRA_RUN_ID'] = RUN_ID
+LOGGER = configure_logger('pra_nighttime', run_id=RUN_ID)
+attach_stdout_logger(LOGGER)
+RUN_REPORT_DIR = Path('data') / 'run_reports'
 
 def get_data_folder(station_code):
     """Get data folder path for a station"""

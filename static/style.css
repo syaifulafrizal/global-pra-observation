@@ -240,6 +240,59 @@ input:checked+.slider:before {
     border-left: 4px solid var(--accent-warning, #f39c12);
 }
 
+.run-health {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px var(--shadow);
+    margin-bottom: 24px;
+}
+
+.run-health h3 {
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.run-health .health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.run-health .health-item {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.run-health .health-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.run-health .health-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.run-health .health-meta {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.run-health .history-links a {
+    color: var(--accent-secondary);
+    text-decoration: none;
+    margin-right: 12px;
+    font-size: 0.9rem;
+}
+
+.run-health .history-links a:hover {
+    text-decoration: underline;
+}
+
 .metric-card.warning .value {
     color: var(--accent-warning, #f39c12);
 }

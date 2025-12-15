@@ -22,6 +22,13 @@ HISTORY_SKIP_FILES = {
     ANOMALY_HISTORY_FILENAME,
     FALSE_NEGATIVE_HISTORY_FILENAME
 }
+RUN_ID = os.getenv('PRA_RUN_ID', 'manual')
+HISTORY_DIR = Path('data') / 'history'
+HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+ANOMALY_HISTORY_PATH = HISTORY_DIR / ANOMALY_HISTORY_FILENAME
+FALSE_NEGATIVE_HISTORY_PATH = HISTORY_DIR / FALSE_NEGATIVE_HISTORY_FILENAME
+RUN_REPORT_DIR = Path('data') / 'run_reports'
+RUN_REPORT_SNAPSHOT = 'run_report_latest.json'
 
 def parse_date_from_filename(filename):
     """Extract date from filename in format YYYY-MM-DD"""
@@ -126,6 +133,96 @@ def parse_any_date(value):
         except ValueError:
             continue
     return None
+
+
+def normalize_date_string(value):
+    """Convert various date strings to YYYY-MM-DD."""
+    date = parse_any_date(value)
+    if date:
+        return date.strftime('%Y-%m-%d')
+    return None
+
+
+def build_run_report(stations, available_dates, anomaly_history, false_negative_history, data_dir):
+    """Build and persist run report summarizing recent performance."""
+    timestamp = datetime.utcnow().isoformat()
+    latest_date = available_dates[0] if available_dates else None
+    window_dates = set(available_dates or [])
+
+    def in_window(value):
+        if not window_dates:
+            return False
+        normalized = normalize_date_string(value)
+        return normalized in window_dates
+
+    anomalies_last_day = 0
+    anomalies_last_week = 0
+    correlated_last_week = 0
+    for entry in anomaly_history:
+        entry_date = normalize_date_string(entry.get('date'))
+        if entry_date == latest_date:
+            anomalies_last_day += 1
+        if entry_date and entry_date in window_dates:
+            anomalies_last_week += 1
+            if entry.get('has_correlated_eq'):
+                correlated_last_week += 1
+
+    false_negatives_last_week = sum(
+        1 for entry in false_negative_history
+        if in_window(entry.get('earthquake_time') or entry.get('date'))
+    )
+
+    total_correlated = sum(1 for entry in anomaly_history if entry.get('has_correlated_eq'))
+    total_false_positives = len(anomaly_history) - total_correlated
+
+    recent_anomalies = [
+        entry for entry in anomaly_history
+        if in_window(entry.get('date'))
+    ]
+    recent_anomalies.sort(key=lambda e: e.get('date', ''), reverse=True)
+
+    recent_false_negatives = [
+        entry for entry in false_negative_history
+        if in_window(entry.get('earthquake_time') or entry.get('date'))
+    ]
+    recent_false_negatives.sort(
+        key=lambda e: (e.get('earthquake_time') or e.get('date') or ''),
+        reverse=True
+    )
+
+    report = {
+        'run_id': RUN_ID,
+        'generated_at': timestamp,
+        'latest_date': latest_date,
+        'available_dates': available_dates,
+        'stations_processed': len(stations),
+        'metrics': {
+            'anomalies_last_day': anomalies_last_day,
+            'anomalies_last_7_days': anomalies_last_week,
+            'correlated_last_7_days': correlated_last_week,
+            'false_positives_last_7_days': anomalies_last_week - correlated_last_week,
+            'false_negatives_last_7_days': false_negatives_last_week,
+            'total_anomalies': len(anomaly_history),
+            'total_correlated': total_correlated,
+            'total_false_positives': total_false_positives,
+            'total_false_negatives': len(false_negative_history),
+        },
+        'recent_anomalies': recent_anomalies[:50],
+        'recent_false_negatives': recent_false_negatives[:50],
+    }
+
+    RUN_REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    report_path = RUN_REPORT_DIR / f'run_report_{RUN_ID}.json'
+    with open(report_path, 'w', encoding='utf-8') as f:
+        json.dump(report, f, indent=2)
+
+    snapshot_path = RUN_REPORT_DIR / RUN_REPORT_SNAPSHOT
+    with open(snapshot_path, 'w', encoding='utf-8') as f:
+        json.dump(report, f, indent=2)
+
+    # Copy snapshot into prepared data directory for frontend use
+    shutil.copy(snapshot_path, data_dir / RUN_REPORT_SNAPSHOT)
+    return report
 
 def station_has_correlation(station_folder, target_date):
     """Check if a station has an earthquake correlation for a specific date"""
@@ -308,7 +405,11 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
         if not history_path.exists():
             sorted_entries = sorted(entries, key=lambda e: (e.get('date', ''), e.get('station', '')))
             save_history_entries(history_path, sorted_entries)
-    return load_history_entries(history_path)
+    entries = load_history_entries(history_path)
+    # Persist to history directory for long-term aggregation
+    if entries:
+        save_history_entries(ANOMALY_HISTORY_PATH, entries)
+    return entries
 
 def update_false_negative_history(stations, data_dir):
     """Ensure false negative history stays cumulative"""
@@ -361,7 +462,10 @@ def update_false_negative_history(stations, data_dir):
     else:
         if not history_path.exists():
             save_history_entries(history_path, entries)
-    return load_history_entries(history_path)
+    entries = load_history_entries(history_path)
+    if entries:
+        save_history_entries(FALSE_NEGATIVE_HISTORY_PATH, entries)
+    return entries
 
 def get_stations():
     """Get list of stations - auto-detect from processed data or use env var"""
@@ -509,8 +613,9 @@ def prepare_web_output():
         print(f'[INFO] Cleaned up {deleted} old files')
 
     # Keep cumulative anomaly and false negative histories
-    update_anomaly_history(stations, data_dir, available_dates)
-    update_false_negative_history(stations, data_dir)
+    anomaly_history = update_anomaly_history(stations, data_dir, available_dates)
+    false_negative_history = update_false_negative_history(stations, data_dir)
+    run_report = build_run_report(stations, available_dates, anomaly_history, false_negative_history, data_dir)
     
     # Load station metadata from root stations.json
     metadata_dict = {}
@@ -595,7 +700,7 @@ def prepare_web_output():
         raise FileNotFoundError(f"Template not found: {template_path}")
     
     print(f'[OK] Web output prepared in {OUTPUT_DIR}')
-    return OUTPUT_DIR
+    return OUTPUT_DIR, anomaly_history, false_negative_history, run_report
 
 def main():
     """Main function - prepare files for local serving"""
@@ -604,7 +709,8 @@ def main():
     print('='*60)
     
     # Prepare web output
-    output_dir = prepare_web_output()
+    output_dir, anomaly_history, false_negative_history, run_report = prepare_web_output()
+
     
     print('\n[OK] Files prepared successfully!')
     print(f'\nOutput directory: {output_dir.absolute()}')
