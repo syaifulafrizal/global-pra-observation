@@ -1,3 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-15 23:41:48.025,37.4757,20.2299,13.259,5.3,"59 km WSW of Lithakiá, Greece",earthquake,
+2025-12-15 23:06:14.731,14.35,145.8393,99.621,5.7,"72 km SSE of San Jose Village, Northern Mariana Islands",earthquake,
+2025-12-15 19:48:31.105,-28.3051,62.7944,10.0,5.0,Southwest Indian Ridge,earthquake,
+2025-12-15 19:33:07.473,51.7399,161.2395,34.0,5.6,"230 km SE of Petropavlovsk-Kamchatsky, Russia",earthquake,
 2025-12-15 08:11:16.702,51.8963,160.3771,10.0,5.3,"176 km SE of Petropavlovsk-Kamchatsky, Russia",earthquake,
 2025-12-15 00:43:17.581,-58.7165,-25.7228,94.055,5.2,South Sandwich Islands region,earthquake,
