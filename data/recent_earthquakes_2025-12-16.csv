@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-16 13:45:25.539,-43.7796,-16.3132,10,5.0,southern Mid-Atlantic Ridge,earthquake,
+2025-12-16 13:44:14.962,-43.6538,-16.2663,10,5.1,southern Mid-Atlantic Ridge,earthquake,
+2025-12-16 09:18:45.154,-11.7108,163.3531,10,5.3,"209 km SE of Kirakira, Solomon Islands",earthquake,
+2025-12-16 05:38:47.519,40.8882,143.0113,10,5.1,"130 km NE of Kuji, Japan",earthquake,
