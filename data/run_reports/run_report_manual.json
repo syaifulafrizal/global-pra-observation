@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-16T05:17:22.082324",
-  "latest_date": "2025-12-16",
+  "generated_at": "2025-12-16T17:06:32.160653",
+  "latest_date": "2025-12-17",
   "available_dates": [
+    "2025-12-17",
     "2025-12-16",
     "2025-12-15",
     "2025-12-14",
     "2025-12-13",
     "2025-12-12",
-    "2025-12-11",
-    "2025-12-10"
+    "2025-12-11"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -34,7 +34,7 @@
       "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
       "earthquake_latitude": 14.35,
       "earthquake_longitude": 145.8393,
-      "last_confirmed": "2025-12-16T05:17:22.065093",
+      "last_confirmed": "2025-12-16T17:06:32.140788",
       "source_file": "false_negatives.csv"
     }
   ]
