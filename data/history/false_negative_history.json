@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-16T17:06:32.159651",
+  "last_updated": "2025-12-18T04:28:30.590406",
   "entries": [
     {
       "station": "GUA",
@@ -22,7 +22,7 @@
       "earthquake_place": "47 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.9104,
       "earthquake_longitude": 145.7217,
-      "last_confirmed": "2025-12-16T17:06:32.140788",
+      "last_confirmed": "2025-12-18T04:28:30.572375",
       "source_file": "false_negatives.csv"
     },
     {
@@ -34,7 +34,7 @@
       "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
       "earthquake_latitude": 14.35,
       "earthquake_longitude": 145.8393,
-      "last_confirmed": "2025-12-16T17:06:32.140788",
+      "last_confirmed": "2025-12-18T04:28:30.572375",
       "source_file": "false_negatives.csv"
     }
   ]
