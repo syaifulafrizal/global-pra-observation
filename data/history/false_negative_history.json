@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-20T23:50:45.286644",
+  "last_updated": "2025-12-21T01:07:13.948798",
   "entries": [
     {
       "station": "GUA",
@@ -34,7 +34,31 @@
       "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
       "earthquake_latitude": 14.35,
       "earthquake_longitude": 145.8393,
-      "last_confirmed": "2025-12-20T23:50:45.269509",
+      "last_confirmed": "2025-12-21T01:07:13.930562",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2025-12-20 12:30:32.074",
+      "first_logged": "2025-12-21T01:07:13.930562",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 196.0146437156127,
+      "earthquake_place": "73 km SSE of Nemuro, Japan",
+      "earthquake_latitude": 42.7295,
+      "earthquake_longitude": 145.985,
+      "last_confirmed": "2025-12-21T01:07:13.930562",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2025-12-20 12:58:54.973",
+      "first_logged": "2025-12-21T01:07:13.930562",
+      "earthquake_magnitude": 5.2,
+      "earthquake_distance_km": 196.17025304951017,
+      "earthquake_place": "74 km SSE of Nemuro, Japan",
+      "earthquake_latitude": 42.724,
+      "earthquake_longitude": 145.9807,
+      "last_confirmed": "2025-12-21T01:07:13.930562",
       "source_file": "false_negatives.csv"
     }
   ]
