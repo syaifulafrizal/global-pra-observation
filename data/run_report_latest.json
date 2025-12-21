@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-21T01:07:13.949805",
+  "generated_at": "2025-12-21T09:05:23.213879",
   "latest_date": "2025-12-21",
   "available_dates": [
     "2025-12-21",
@@ -34,7 +34,7 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2025-12-21T01:07:13.930562",
+      "last_confirmed": "2025-12-21T09:05:23.195851",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,7 +46,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2025-12-21T01:07:13.930562",
+      "last_confirmed": "2025-12-21T09:05:23.195851",
       "source_file": "false_negatives.csv"
     },
     {
@@ -58,7 +58,7 @@
       "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
       "earthquake_latitude": 14.35,
       "earthquake_longitude": 145.8393,
-      "last_confirmed": "2025-12-21T01:07:13.930562",
+      "last_confirmed": "2025-12-21T09:05:23.195851",
       "source_file": "false_negatives.csv"
     }
   ]
