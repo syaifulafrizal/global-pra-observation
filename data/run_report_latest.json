@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-21T09:05:23.213879",
-  "latest_date": "2025-12-21",
+  "generated_at": "2025-12-21T16:16:38.182986",
+  "latest_date": "2025-12-22",
   "available_dates": [
+    "2025-12-22",
     "2025-12-21",
     "2025-12-20",
     "2025-12-19",
     "2025-12-18",
     "2025-12-17",
-    "2025-12-16",
-    "2025-12-15"
+    "2025-12-16"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,7 +17,7 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 3,
+    "false_negatives_last_7_days": 2,
     "total_anomalies": 1,
     "total_correlated": 0,
     "total_false_positives": 1,
@@ -34,7 +34,7 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2025-12-21T09:05:23.195851",
+      "last_confirmed": "2025-12-21T16:16:38.163426",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,19 +46,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2025-12-21T09:05:23.195851",
-      "source_file": "false_negatives.csv"
-    },
-    {
-      "station": "GUA",
-      "earthquake_time": "2025-12-15 23:06:14.731",
-      "first_logged": "2025-12-16T05:17:22.065093",
-      "earthquake_magnitude": 5.7,
-      "earthquake_distance_km": 134.7000869784241,
-      "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
-      "earthquake_latitude": 14.35,
-      "earthquake_longitude": 145.8393,
-      "last_confirmed": "2025-12-21T09:05:23.195851",
+      "last_confirmed": "2025-12-21T16:16:38.163426",
       "source_file": "false_negatives.csv"
     }
   ]

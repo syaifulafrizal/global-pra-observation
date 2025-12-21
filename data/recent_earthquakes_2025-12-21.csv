@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-21 13:12:48.034,-61.9834,161.4175,10.0,5.1,Balleny Islands region,earthquake,
+2025-12-21 12:21:46.994,1.4656,126.2882,54.947,5.6,"129 km E of Bitung, Indonesia",earthquake,
 2025-12-21 06:58:48.287,34.7941,141.6701,10.0,5.1,"126 km ESE of Ōhara, Japan",earthquake,
 2025-12-21 05:25:22.170,-5.5896,151.8535,10.0,5.2,"145 km SSW of Kokopo, Papua New Guinea",earthquake,
 2025-12-21 04:03:38.997,43.4298,148.0405,10.0,5.1,"114 km ESE of Shikotan, Russia",earthquake,
