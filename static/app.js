@@ -104,155 +104,104 @@ async function loadData(date = null) {
             selectedDate = date;
         }
 
-        // Load data for the selected date, with station-specific fallback to previous days
-        // Only try dates that are in available_dates to avoid unnecessary 404s
-        const dateData = {};
-        const stationDates = {}; // Track which date each station is using
-        let hasAnyData = false;
+        // OPTIMIZATION: Load aggregated data file for the selected date
+        // This replaces 100+ individual station requests with a single request
+        console.log(`Loading aggregated data for ${date}...`);
+        const aggregatedUrl = `data/aggregated_${date}.json`;
 
-        // Sort available dates in descending order (most recent first) for efficient fallback
-        const sortedAvailableDates = [...availableDates].sort().reverse();
+        try {
+            const aggregatedResponse = await fetch(aggregatedUrl, { cache: 'no-cache' });
 
-        // Calculate yesterday's date for smarter fallback
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
+            if (aggregatedResponse.ok) {
+                const aggregatedData = await aggregatedResponse.json();
+                console.log(`✓ Loaded aggregated data for ${date} (${Object.keys(aggregatedData.stations || {}).length} stations)`);
 
-        // For each station, try to load data for selected date first
-        // If not available, prefer yesterday's date, then fallback to most recent available date
-        // This ensures we don't jump too far back in time
-        for (const station of (metadata.stations || [])) {
-            let stationData = null;
-            let stationDateUsed = null;
+                // Transform aggregated data to match expected format
+                const dateData = aggregatedData.stations || {};
+                const stationDates = {};
 
-            // First, always try the selected date (even if not in available_dates)
-            // This ensures that if a user selects a date, we try to load it
-            try {
-                const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
-                if (stationResponse.ok) {
-                    stationData = await stationResponse.json();
-                    stationDateUsed = stationData?.date || date;
-                    hasAnyData = true;
-                    console.debug(`Station ${station}: Using selected date ${date}`);
-                } else {
-                    console.debug(`Station ${station}: Selected date ${date} returned status ${stationResponse.status} (${stationResponse.statusText})`);
-                }
-            } catch (error) {
-                console.debug(`Station ${station}: Error fetching selected date ${date}:`, error);
-                // Continue to fallback
-            }
-
-            // If selected date doesn't have data, try yesterday first (even if not in availableDates)
-            // This ensures we prefer yesterday over older dates
-            let yesterdayTried = false;
-            let yesterdaySuccess = false;
-            if (!stationData && yesterdayStr !== date) {
-                yesterdayTried = true;
-                try {
-                    const stationResponse = await fetch(`data/${station}_${yesterdayStr}.json`, { cache: 'no-cache' });
-                    if (stationResponse.ok) {
-                        stationData = await stationResponse.json();
-                        stationDateUsed = stationData?.date || yesterdayStr;
-                        hasAnyData = true;
-                        yesterdaySuccess = true;
-                        console.debug(`Station ${station}: Using yesterday's data from ${yesterdayStr} (selected date ${date} not available)`);
-                    } else {
-                        console.debug(`Station ${station}: Yesterday (${yesterdayStr}) returned status ${stationResponse.status}`);
-                    }
-                } catch (error) {
-                    console.debug(`Station ${station}: Error fetching yesterday (${yesterdayStr}):`, error);
-                    // Continue to other fallbacks - will retry in fallback loop
-                }
-            }
-
-            // If still no data, fallback to most recent available date
-            // Try dates in order: closest to selected date first, then work backwards
-            if (!stationData && sortedAvailableDates.length > 0) {
-                const targetDate = date || yesterdayStr;
-                const targetDateObj = new Date(targetDate);
-
-                // Create a list of dates to try, sorted by proximity to target date
-                const datesToTry = [...sortedAvailableDates]
-                    .filter(tryDate => tryDate !== date && tryDate !== yesterdayStr) // Skip already tried
-                    .map(tryDate => {
-                        const tryDateObj = new Date(tryDate);
-                        const daysDiff = Math.abs((targetDateObj - tryDateObj) / (1000 * 60 * 60 * 24));
-                        return { date: tryDate, daysDiff };
-                    })
-                    .filter(item => item.daysDiff <= 3) // Only within 3 days
-                    .sort((a, b) => a.daysDiff - b.daysDiff); // Closest first
-
-                // Also try dates that might exist but aren't in availableDates
-                // Try dates from selected date backwards (1 day, 2 days, 3 days ago)
-                // If yesterday was tried but failed, retry it here (might be a cache/network issue)
-                for (let daysBack = 1; daysBack <= 3; daysBack++) {
-                    const tryDateObj = new Date(targetDateObj);
-                    tryDateObj.setDate(tryDateObj.getDate() - daysBack);
-                    const tryDate = tryDateObj.toISOString().split('T')[0];
-
-                    // Skip if already successfully loaded, or if it's the selected date
-                    // But retry yesterday if it was tried but failed (yesterdayTried && !yesterdaySuccess)
-                    if (tryDate === date || (tryDate === yesterdayStr && yesterdaySuccess) ||
-                        datesToTry.some(item => item.date === tryDate)) {
-                        continue;
-                    }
-
-                    datesToTry.push({ date: tryDate, daysDiff: daysBack });
+                // Track which date each station is using (all using same date from aggregated file)
+                for (const station of Object.keys(dateData)) {
+                    stationDates[station] = aggregatedData.date || date;
                 }
 
-                // Sort again by daysDiff to ensure closest dates are tried first
-                datesToTry.sort((a, b) => a.daysDiff - b.daysDiff);
+                // Store earthquake correlations and false negatives for later use
+                window.earthquakeCorrelations = aggregatedData.earthquake_correlations || {};
+                window.falseNegatives = aggregatedData.false_negatives || {};
 
-                // Now try each date in order
-                for (const { date: tryDate } of datesToTry) {
-                    try {
-                        const stationResponse = await fetch(`data/${station}_${tryDate}.json`, { cache: 'no-cache' });
-                        if (stationResponse.ok) {
-                            stationData = await stationResponse.json();
-                            stationDateUsed = stationData?.date || tryDate;
-                            hasAnyData = true;
-                            console.debug(`Station ${station}: Using fallback data from ${tryDate} (${Math.round((targetDateObj - new Date(tryDate)) / (1000 * 60 * 60 * 24))} days before selected date ${date})`);
-                            break; // Found data, stop trying
-                        } else {
-                            console.debug(`Station ${station}: Fallback date ${tryDate} returned status ${stationResponse.status}`);
-                        }
-                    } catch (error) {
-                        console.debug(`Station ${station}: Error fetching fallback date ${tryDate}:`, error);
-                        continue;
-                    }
-                }
+                return {
+                    stations: metadata.stations || Object.keys(dateData),
+                    data: dateData,
+                    metadata: aggregatedData.metadata || metadata.metadata || {},
+                    available_dates: availableDates,
+                    most_recent_date: mostRecentDate,
+                    selected_date: date,
+                    station_dates: stationDates
+                };
+            } else {
+                console.warn(`Aggregated data not found for ${date}, falling back to individual files`);
+                // Fall back to old method if aggregated file doesn't exist
+                return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
             }
-
-            // Store station data and date used
-            if (stationData) {
-                dateData[station] = stationData;
-                stationDates[station] = stationDateUsed;
-            }
+        } catch (error) {
+            console.warn(`Error loading aggregated data for ${date}:`, error);
+            // Fall back to old method on error
+            return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
         }
-
-        // If no data found for any station, return null
-        if (!hasAnyData) {
-            return null;
-        }
-
-        // Return data in the same format as before
-        return {
-            stations: metadata.stations || [],
-            data: dateData,
-            metadata: metadata.metadata || [],
-            available_dates: availableDates,
-            most_recent_date: mostRecentDate,
-            selected_date: date,
-            station_dates: stationDates  // Which date each station is using
-        };
     } catch (error) {
         console.error('Error loading data:', error);
         return null;
     }
 }
 
+// Fallback function for loading individual station files (kept for compatibility)
+async function loadDataFallback(date, metadata, availableDates, mostRecentDate) {
+    console.log('Using fallback method: loading individual station files...');
+
+    const dateData = {};
+    const stationDates = {};
+    let hasAnyData = false;
+
+    // Only try the selected date (no complex fallback logic)
+    for (const station of (metadata.stations || [])) {
+        try {
+            const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
+            if (stationResponse.ok) {
+                const stationData = await stationResponse.json();
+                dateData[station] = stationData;
+                stationDates[station] = stationData?.date || date;
+                hasAnyData = true;
+            }
+        } catch (error) {
+            // Silently skip stations without data
+            console.debug(`Station ${station}: No data for ${date}`);
+        }
+    }
+
+    if (!hasAnyData) {
+        return null;
+    }
+
+    return {
+        stations: metadata.stations || [],
+        data: dateData,
+        metadata: metadata.metadata || [],
+        available_dates: availableDates,
+        most_recent_date: mostRecentDate,
+        selected_date: date,
+        station_dates: stationDates
+    };
+}
+
 async function loadEarthquakeCorrelations(station, date = null) {
+    // OPTIMIZATION: Use cached data from aggregated file if available
+    if (window.earthquakeCorrelations && window.earthquakeCorrelations[station]) {
+        const correlations = window.earthquakeCorrelations[station];
+        // Filter by magnitude >= 5.0 for reliability
+        return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
+    }
+
+    // Fallback: Load from individual CSV file
     try {
         // Try date-specific file first if date is provided
         if (date) {
@@ -287,6 +236,12 @@ async function loadEarthquakeCorrelations(station, date = null) {
 }
 
 async function loadFalseNegatives(station, date = null) {
+    // OPTIMIZATION: Use cached data from aggregated file if available
+    if (window.falseNegatives && window.falseNegatives[station]) {
+        return window.falseNegatives[station];
+    }
+
+    // Fallback: Load from individual CSV file
     try {
         // Try date-specific file first if date is provided
         if (date) {
