@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEMPA - Geomagnetic Earthquake Monitoring & Precursor Analysis</title>
+    <meta name="description" content="Sistem Pemantauan Gempa Bumi Geomagnetik - Real-time earthquake precursor detection using geomagnetic field analysis">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="light-mode">
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>
+                    <span class="icon">🌋</span>
+                    GEMPA
+                </h1>
+                <p class="subtitle">Geomagnetic Earthquake Monitoring & Precursor Analysis</p>
+                <p class="subtitle-malay">Sistem Pemantauan Gempa Bumi Geomagnetik</p>
+                
+                <div class="header-controls">
+                    <div class="date-selector-container">
+                        <label for="date-selector">Select Date:</label>
+                        <select id="date-selector">
+                            <option value="">Loading dates...</option>
+                        </select>
+                    </div>
+                    <div class="mode-toggle-container">
+                        <span class="mode-label">Dark</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
+            </div>
+        </header>
+
+        <!-- Summary Stats Boxes -->
+        <div class="summary-stats" id="summary-stats">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        <div class="run-health" id="run-health">
+            <!-- Run report summary -->
+        </div>
+
+        <!-- Analytics Section with Charts -->
+        <div class="analytics-section">
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">7-Day Anomaly Trend</h3>
+                    <canvas id="trend-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Station Status</h3>
+                    <canvas id="distribution-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Detection Success Rate</h3>
+                    <canvas id="success-rate-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Magnitude Distribution</h3>
+                    <canvas id="magnitude-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content-layout">
+            <!-- Map Section -->
+            <div class="map-section">
+                <div class="section-header">
+                    <h2>Station Map</h2>
+                    <div class="section-actions">
+                        <button class="btn-download" id="download-anomalies-btn" title="Download Anomalies CSV">
+                            📥 Download Anomalies
+                        </button>
+                    </div>
+                </div>
+                <div id="map-container" class="map-container"></div>
+                <div class="map-legend" id="map-legend"></div>
+            </div>
+
+            <!-- Plot Panel Section -->
+            <div class="plot-panel-section">
+                <div class="plot-panel">
+                    <div class="plot-panel-header">
+                        <h2 class="panel-title">Station Analysis</h2>
+                    </div>
+                    <div class="plot-panel-content">
+                        <div class="selector-container">
+                            <label class="selector-label">Select Station:</label>
+                            <select class="station-selector" id="station-selector">
+                                <option value="">Select a station...</option>
+                            </select>
+                        </div>
+                        <div class="selected-station-plot" id="selected-station-plot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p class="method-info">
+                Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT)<br>
+                Frequency Band: 0.095-0.110 Hz | Time Window: 20:00-04:00 Local Time
+            </p>
+            
+            <div class="acknowledgements">
+                <h3>Acknowledgements</h3>
+                <ul>
+                    <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a> (International Real-time Magnetic Observatory Network)</li>
+                    <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United States Geological Survey)</li>
+                    <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra Malaysia</a></li>
+                </ul>
+            </div>
+            
+            <div class="author">
+                <p>Developed by <a href="https://github.com/syaifulafrizal" target="_blank">Nur Syaiful Afrizal</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="static/app.js"></script>
+</body>
+</html>
