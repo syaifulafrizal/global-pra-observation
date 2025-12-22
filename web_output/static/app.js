@@ -11,6 +11,8 @@ let anomalousStations = [];
 let availableDates = [];
 let selectedDate = null;
 let mostRecentDate = null;
+let isAggregatedDataLoaded = false;
+
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -115,6 +117,7 @@ async function loadData(date = null) {
             if (aggregatedResponse.ok) {
                 const aggregatedData = await aggregatedResponse.json();
                 console.log(`✓ Loaded aggregated data for ${date} (${Object.keys(aggregatedData.stations || {}).length} stations)`);
+                isAggregatedDataLoaded = true;
 
                 // Transform aggregated data to match expected format
                 const dateData = aggregatedData.stations || {};
@@ -140,11 +143,13 @@ async function loadData(date = null) {
                 };
             } else {
                 console.warn(`Aggregated data not found for ${date}, falling back to individual files`);
+                isAggregatedDataLoaded = false;
                 // Fall back to old method if aggregated file doesn't exist
                 return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
             }
         } catch (error) {
             console.warn(`Error loading aggregated data for ${date}:`, error);
+            isAggregatedDataLoaded = false;
             // Fall back to old method on error
             return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
         }
@@ -201,6 +206,12 @@ async function loadEarthquakeCorrelations(station, date = null) {
         return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
     }
 
+    // If we loaded aggregated data successfully but found no correlations for this station,
+    // assume there are none (don't make 404 requests)
+    if (isAggregatedDataLoaded) {
+        return [];
+    }
+
     // Fallback: Load from individual CSV file
     try {
         // Try date-specific file first if date is provided
@@ -239,6 +250,12 @@ async function loadFalseNegatives(station, date = null) {
     // OPTIMIZATION: Use cached data from aggregated file if available
     if (window.falseNegatives && window.falseNegatives[station]) {
         return window.falseNegatives[station];
+    }
+
+    // If we loaded aggregated data successfully but found no false negatives for this station,
+    // assume there are none (don't make 404 requests)
+    if (isAggregatedDataLoaded) {
+        return [];
     }
 
     // Fallback: Load from individual CSV file
