@@ -752,6 +752,21 @@ def prepare_web_output():
     # This combines all station data per date into single JSON files
     generate_aggregated_data_files(stations, available_dates, data_dir)
     
+    # Filter available_dates to only those that have aggregated files
+    # This prevents the frontend from trying to load dates that failed generation (e.g. no data yet for today)
+    valid_dates = []
+    for date in available_dates:
+        if (data_dir / f'aggregated_{date}.json').exists():
+            valid_dates.append(date)
+    
+    if len(valid_dates) < len(available_dates):
+        print(f'[INFO] Filtered available_dates from {len(available_dates)} to {len(valid_dates)} based on data availability')
+        available_dates = valid_dates
+        if available_dates:
+            most_recent_date = available_dates[0]
+        else:
+            most_recent_date = None
+    
     # Load station metadata from root stations.json
     metadata_dict = {}
     if Path('stations.json').exists():
