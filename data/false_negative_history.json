@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-12-21T16:16:38.167429",
+  "last_updated": "2025-12-22T06:33:09.000563",
   "entries": [
     {
       "station": "GUA",
@@ -34,7 +34,7 @@
       "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
       "earthquake_latitude": 14.35,
       "earthquake_longitude": 145.8393,
-      "last_confirmed": "2025-12-21T16:16:38.163426",
+      "last_confirmed": "2025-12-22T06:33:08.995534",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,7 +46,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2025-12-21T16:16:38.163426",
+      "last_confirmed": "2025-12-22T06:33:08.995534",
       "source_file": "false_negatives.csv"
     },
     {
@@ -58,7 +58,19 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2025-12-21T16:16:38.163426",
+      "last_confirmed": "2025-12-22T06:33:08.995534",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "KNY",
+      "earthquake_time": "2025-12-21 06:58:48.287",
+      "first_logged": "2025-12-22T06:33:08.995534",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 165.17432168540054,
+      "earthquake_place": "126 km ESE of \u014chara, Japan",
+      "earthquake_latitude": 34.7941,
+      "earthquake_longitude": 141.6701,
+      "last_confirmed": "2025-12-22T06:33:08.995534",
       "source_file": "false_negatives.csv"
     }
   ]

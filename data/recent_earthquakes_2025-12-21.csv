@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-21 23:07:27.277,-5.6522,151.7103,9.958,5.3,"157 km SSW of Kokopo, Papua New Guinea",earthquake,
+2025-12-21 17:53:56.946,8.3893,127.6988,9.0,5.6,"141 km E of Barcelona, Philippines",earthquake,
+2025-12-21 17:10:31.763,-10.4175,160.7244,18.899,5.0,"131 km W of Kirakira, Solomon Islands",earthquake,
 2025-12-21 13:12:48.034,-61.9834,161.4175,10.0,5.1,Balleny Islands region,earthquake,
 2025-12-21 12:21:46.994,1.4656,126.2882,54.947,5.6,"129 km E of Bitung, Indonesia",earthquake,
 2025-12-21 06:58:48.287,34.7941,141.6701,10.0,5.1,"126 km ESE of Ōhara, Japan",earthquake,
