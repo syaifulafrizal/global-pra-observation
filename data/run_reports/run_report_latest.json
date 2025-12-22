@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-21T16:16:38.182986",
+  "generated_at": "2025-12-22T06:33:09.017232",
   "latest_date": "2025-12-22",
   "available_dates": [
     "2025-12-22",
@@ -17,14 +17,26 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 2,
+    "false_negatives_last_7_days": 3,
     "total_anomalies": 1,
     "total_correlated": 0,
     "total_false_positives": 1,
-    "total_false_negatives": 5
+    "total_false_negatives": 6
   },
   "recent_anomalies": [],
   "recent_false_negatives": [
+    {
+      "station": "KNY",
+      "earthquake_time": "2025-12-21 06:58:48.287",
+      "first_logged": "2025-12-22T06:33:08.995534",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 165.17432168540054,
+      "earthquake_place": "126 km ESE of \u014chara, Japan",
+      "earthquake_latitude": 34.7941,
+      "earthquake_longitude": 141.6701,
+      "last_confirmed": "2025-12-22T06:33:08.995534",
+      "source_file": "false_negatives.csv"
+    },
     {
       "station": "MMB",
       "earthquake_time": "2025-12-20 12:58:54.973",
@@ -34,7 +46,7 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2025-12-21T16:16:38.163426",
+      "last_confirmed": "2025-12-22T06:33:08.995534",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,7 +58,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2025-12-21T16:16:38.163426",
+      "last_confirmed": "2025-12-22T06:33:08.995534",
       "source_file": "false_negatives.csv"
     }
   ]
