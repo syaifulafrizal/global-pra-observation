@@ -505,6 +505,137 @@ def get_stations():
     # Last resort: raise error
     raise ValueError("No stations found. Please ensure data has been processed.")
 
+def generate_aggregated_data_files(stations, available_dates, data_dir):
+    """Generate aggregated JSON files per date for faster frontend loading
+    
+    Creates a single JSON file per date containing all station data, earthquake correlations,
+    and metadata. This reduces frontend network requests from 100+ to 1 per date.
+    
+    Args:
+        stations: List of station codes
+        available_dates: List of dates to generate aggregated files for
+        data_dir: Directory containing individual station JSON files
+    
+    Returns:
+        Number of aggregated files generated
+    """
+    print('[INFO] Generating aggregated data files...')
+    generated_count = 0
+    
+    # Load station metadata once
+    metadata_dict = {}
+    if Path('stations.json').exists():
+        try:
+            with open('stations.json', 'r', encoding='utf-8') as f:
+                stations_metadata = json.load(f)
+                
+            # Handle different formats of stations.json
+            if isinstance(stations_metadata, dict):
+                if 'stations' in stations_metadata:
+                    if isinstance(stations_metadata['stations'], list):
+                        for station_obj in stations_metadata['stations']:
+                            if isinstance(station_obj, dict) and 'code' in station_obj:
+                                code = station_obj['code']
+                                metadata_dict[code] = {
+                                    'name': station_obj.get('name', ''),
+                                    'country': station_obj.get('country', ''),
+                                    'latitude': station_obj.get('latitude', 0),
+                                    'longitude': station_obj.get('longitude', 0),
+                                    'timezone': station_obj.get('timezone', '')
+                                }
+                    elif isinstance(stations_metadata['stations'], dict):
+                        metadata_dict = stations_metadata['stations']
+                elif 'metadata' in stations_metadata and isinstance(stations_metadata['metadata'], list):
+                    for station_obj in stations_metadata['metadata']:
+                        if isinstance(station_obj, dict) and 'code' in station_obj:
+                            code = station_obj['code']
+                            metadata_dict[code] = {
+                                'name': station_obj.get('name', ''),
+                                'country': station_obj.get('country', ''),
+                                'latitude': station_obj.get('latitude', 0),
+                                'longitude': station_obj.get('longitude', 0),
+                                'timezone': station_obj.get('timezone', '')
+                            }
+        except Exception as e:
+            print(f'[WARNING] Could not load station metadata: {e}')
+    
+    # Generate aggregated file for each date
+    for date in available_dates:
+        aggregated_data = {
+            'date': date,
+            'generated_at': datetime.utcnow().isoformat(),
+            'stations': {},
+            'earthquake_correlations': {},
+            'false_negatives': {},
+            'metadata': metadata_dict
+        }
+        
+        stations_with_data = 0
+        
+        # Collect data for each station
+        for station in stations:
+            # Try to load station JSON for this date
+            station_json = data_dir / f'{station}_{date}.json'
+            if station_json.exists():
+                try:
+                    with open(station_json, 'r', encoding='utf-8') as f:
+                        station_data = json.load(f)
+                    aggregated_data['stations'][station] = station_data
+                    stations_with_data += 1
+                except Exception as e:
+                    print(f'[WARNING] Could not load {station_json.name}: {e}')
+            
+            # Load earthquake correlations CSV
+            eq_corr_csv = data_dir / f'{station}_earthquake_correlations.csv'
+            if eq_corr_csv.exists():
+                try:
+                    with open(eq_corr_csv, 'r', encoding='utf-8') as f:
+                        reader = csv.DictReader(f)
+                        correlations = []
+                        for row in reader:
+                            # Filter by date and magnitude >= 5.0
+                            anomaly_date = parse_any_date(
+                                row.get('anomaly_date') or 
+                                row.get('anomaly_date ') or 
+                                row.get('anomalyDate')
+                            )
+                            if anomaly_date and anomaly_date.strftime('%Y-%m-%d') == date:
+                                magnitude = safe_float(row.get('earthquake_magnitude') or row.get('magnitude'))
+                                if magnitude is None or magnitude >= 5.0:
+                                    correlations.append(dict(row))
+                        
+                        if correlations:
+                            aggregated_data['earthquake_correlations'][station] = correlations
+                except Exception as e:
+                    print(f'[WARNING] Could not load {eq_corr_csv.name}: {e}')
+            
+            # Load false negatives CSV
+            fn_csv = data_dir / f'{station}_false_negatives.csv'
+            if fn_csv.exists():
+                try:
+                    with open(fn_csv, 'r', encoding='utf-8') as f:
+                        reader = csv.DictReader(f)
+                        false_negs = [dict(row) for row in reader]
+                        if false_negs:
+                            aggregated_data['false_negatives'][station] = false_negs
+                except Exception as e:
+                    print(f'[WARNING] Could not load {fn_csv.name}: {e}')
+        
+        # Only save if we have data for at least one station
+        if stations_with_data > 0:
+            output_file = data_dir / f'aggregated_{date}.json'
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(aggregated_data, f, indent=2)
+            
+            file_size_kb = output_file.stat().st_size / 1024
+            print(f'[INFO] Generated {output_file.name} ({stations_with_data} stations, {file_size_kb:.1f} KB)')
+            generated_count += 1
+        else:
+            print(f'[WARNING] No data found for date {date}, skipping aggregated file')
+    
+    print(f'[INFO] Generated {generated_count} aggregated data files')
+    return generated_count
+
 def prepare_web_output():
     """Prepare static files for web deployment with date-specific handling"""
     print('Preparing web output...')
@@ -616,6 +747,10 @@ def prepare_web_output():
     anomaly_history = update_anomaly_history(stations, data_dir, available_dates)
     false_negative_history = update_false_negative_history(stations, data_dir)
     run_report = build_run_report(stations, available_dates, anomaly_history, false_negative_history, data_dir)
+    
+    # Generate aggregated data files for faster frontend loading
+    # This combines all station data per date into single JSON files
+    generate_aggregated_data_files(stations, available_dates, data_dir)
     
     # Load station metadata from root stations.json
     metadata_dict = {}
