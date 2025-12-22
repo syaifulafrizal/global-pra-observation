@@ -1,0 +1,7 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-12 19:03:12.514,32.3582,137.5083,368.543,5.3,"203 km SE of Kushimoto, Japan",earthquake,
+2025-12-12 17:43:14.445,50.8502,156.8973,79.56,5.2,"57 km ENE of Severo-Kuril’sk, Russia",earthquake,
+2025-12-12 13:55:55.566,-59.6574,-26.1874,52.028,5.1,South Sandwich Islands region,earthquake,
+2025-12-12 03:21:40.952,41.028,142.8998,45.582,5.5,"122 km S of Honchō, Japan",earthquake,
+2025-12-12 02:44:11.625,40.9175,142.7451,10.678,6.7,"114 km ENE of Hachinohe, Japan",earthquake,
+2025-12-12 00:25:25.534,48.3132,157.2134,10.0,5.0,"274 km SSE of Severo-Kuril’sk, Russia",earthquake,

@@ -1,0 +1,5 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-10 14:52:24.213,40.8471,142.7117,36.089,5.7,"108 km NE of Kuji, Japan",earthquake,
+2025-12-10 13:30:17.377,-6.3921,154.8637,107.147,5.3,"69 km W of Panguna, Papua New Guinea",earthquake,
+2025-12-10 08:27:06.742,6.8277,-73.0581,140.692,5.5,"11 km NNE of Jordán, Colombia",earthquake,
+2025-12-10 06:38:27.064,-28.8659,-71.3475,42.911,5.2,"65 km WSW of Vallenar, Chile",earthquake,
