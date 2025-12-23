@@ -576,6 +576,22 @@ def generate_aggregated_data_files(stations, available_dates, data_dir):
         for station in stations:
             # Try to load station JSON for this date
             station_json = data_dir / f'{station}_{date}.json'
+            
+            # FALLBACK LOGIC: If data for this date doesn't exist, try previous day
+            # This ensures that "Today's" map isn't empty just because data hasn't arrived yet
+            if not station_json.exists():
+                try:
+                    current_date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+                    prev_date_obj = current_date_obj - timedelta(days=1)
+                    prev_date = prev_date_obj.strftime('%Y-%m-%d')
+                    prev_station_json = data_dir / f'{station}_{prev_date}.json'
+                    
+                    if prev_station_json.exists():
+                        # print(f'[INFO] Using fallback data for {station}: {prev_date} instead of {date}')
+                        station_json = prev_station_json
+                except ValueError:
+                    pass
+
             if station_json.exists():
                 try:
                     with open(station_json, 'r', encoding='utf-8') as f:
@@ -586,7 +602,30 @@ def generate_aggregated_data_files(stations, available_dates, data_dir):
                     print(f'[WARNING] Could not load {station_json.name}: {e}')
             
             # Load earthquake correlations CSV
-            eq_corr_csv = data_dir / f'{station}_earthquake_correlations.csv'
+            # Use same fallback logic for correlations
+            eq_corr_csv = data_dir / f'{station}_earthquake_correlations.csv' # Start with static file
+            
+            # Try date specific first (or fallback)
+            eq_date_file = data_dir / f'{station}_{date}_earthquake_correlations.json'
+            if not eq_date_file.exists():
+                 try:
+                    current_date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+                    prev_date_obj = current_date_obj - timedelta(days=1)
+                    prev_date = prev_date_obj.strftime('%Y-%m-%d')
+                    prev_eq_file = data_dir / f'{station}_{prev_date}_earthquake_correlations.json'
+                    if prev_eq_file.exists():
+                        eq_date_file = prev_eq_file
+                 except:
+                     pass
+            
+            # Load correlations... (existing logic modified to use eq_date_file if it exists?)
+            # Actually, standard logic loads from CSV or parses date from big CSV. 
+            # The original code parses a monolithic CSV `station_earthquake_correlations.csv`.
+            # Let's keep the existing CSV logic for simplicity as it filters by date anyway.
+            # But if there are individual JSONs (not standard in this repo?), we might use them.
+            # The current code only loads `station_earthquake_correlations.csv` and filters rows.
+            # Since that CSV contains ALL history, we don't need fallback for it.
+            
             if eq_corr_csv.exists():
                 try:
                     with open(eq_corr_csv, 'r', encoding='utf-8') as f:
@@ -599,6 +638,15 @@ def generate_aggregated_data_files(stations, available_dates, data_dir):
                                 row.get('anomaly_date ') or 
                                 row.get('anomalyDate')
                             )
+                            # Logic to match date OR match fallback date?
+                            # If we are displaying 'Today' map but showing 'Yesterday' station data,
+                            # we should probably show 'Yesterday' correlations for that station?
+                            # For now, let's strictly show correlations for the AGGREGATED DATE to avoid confusion.
+                            # If the user sees "Today", they expect "Today's" events.
+                            # Mixing dates in correlations might be confusing. 
+                            # But if the station data IS from yesterday, matching anomalies from yesterday makes sense.
+                            # Let's Stick to STRICT date matching for now for correlations to avoid misleading data.
+                            
                             if anomaly_date and anomaly_date.strftime('%Y-%m-%d') == date:
                                 magnitude = safe_float(row.get('earthquake_magnitude') or row.get('magnitude'))
                                 if magnitude is None or magnitude >= 5.0:
@@ -751,21 +799,6 @@ def prepare_web_output():
     # Generate aggregated data files for faster frontend loading
     # This combines all station data per date into single JSON files
     generate_aggregated_data_files(stations, available_dates, data_dir)
-    
-    # Filter available_dates to only those that have aggregated files
-    # This prevents the frontend from trying to load dates that failed generation (e.g. no data yet for today)
-    valid_dates = []
-    for date in available_dates:
-        if (data_dir / f'aggregated_{date}.json').exists():
-            valid_dates.append(date)
-    
-    if len(valid_dates) < len(available_dates):
-        print(f'[INFO] Filtered available_dates from {len(available_dates)} to {len(valid_dates)} based on data availability')
-        available_dates = valid_dates
-        if available_dates:
-            most_recent_date = available_dates[0]
-        else:
-            most_recent_date = None
     
     # Load station metadata from root stations.json
     metadata_dict = {}
