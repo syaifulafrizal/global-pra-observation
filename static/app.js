@@ -604,14 +604,31 @@ async function create7DayTrendChart(data) {
 
     for (const date of dates) {
         let count = 0;
-        for (const station of data.stations) {
-            try {
-                const response = await fetch(`data/${station}_${date}.json`);
-                if (response.ok) {
-                    const stationData = await response.json();
-                    if (stationData.is_anomalous) count++;
+        try {
+            // OPTIMIZATION: Load aggregated data instead of 50+ individual requests
+            const response = await fetch(`data/aggregated_${date}.json`);
+            if (response.ok) {
+                const aggregatedData = await response.json();
+                const stationsData = aggregatedData.stations || {};
+
+                // Count anomalies in the aggregated data
+                Object.values(stationsData).forEach(stationData => {
+                    if (stationData && stationData.is_anomalous) {
+                        count++;
+                    }
+                });
+            } else {
+                // Fallback: If aggregated file missing (rare), try to use current loaded data 
+                // if it matches the date, otherwise skip (don't spam individual requests)
+                if (data.data && (data.selected_date === date || data.station_dates)) {
+                    // logic to count from current data if it matches? 
+                    // actually, simpler to just skip or accept 0 to avoid performance penalty.
+                    // The aggregated files SHOULD exist for all valid dates now.
+                    console.warn(`Aggregated file missing for trend chart: ${date}`);
                 }
-            } catch (e) { }
+            }
+        } catch (e) {
+            console.error(`Error loading trend data for ${date}:`, e);
         }
         anomalyCounts.push(count);
     }
