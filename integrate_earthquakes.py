@@ -70,8 +70,8 @@ def main():
         }
     
     # Clean old earthquake stats files to ensure fresh calculation
-    web_data_dir = Path('web_output') / 'data'
-    web_data_dir.mkdir(parents=True, exist_ok=True)
+    # SAVE TO ROOT for persistence
+    web_data_dir = Path('.')
     old_stats_file = web_data_dir / 'today_earthquake_stats.json'
     old_recent_eq_file = web_data_dir / 'recent_earthquakes.csv'
     if old_stats_file.exists():
@@ -87,8 +87,8 @@ def main():
     from earthquake_integration import get_global_earthquakes_today, calculate_distance, fetch_usgs_earthquakes
     
     today = datetime.now().date()
-    web_data_dir = Path('web_output') / 'data'
-    web_data_dir.mkdir(parents=True, exist_ok=True)
+    # SAVE TO ROOT for persistence
+    web_data_dir = Path('.')
     
     # Process each of the last 7 days
     for days_back in range(7):
