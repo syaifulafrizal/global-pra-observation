@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-22T17:57:15.908520",
+  "generated_at": "2025-12-23T02:27:37.511814",
   "latest_date": "2025-12-23",
   "available_dates": [
     "2025-12-23",
@@ -34,7 +34,7 @@
       "earthquake_place": "126 km ESE of \u014chara, Japan",
       "earthquake_latitude": 34.7941,
       "earthquake_longitude": 141.6701,
-      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "last_confirmed": "2025-12-23T02:27:37.494043",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,7 +46,7 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "last_confirmed": "2025-12-23T02:27:37.494043",
       "source_file": "false_negatives.csv"
     },
     {
@@ -58,7 +58,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "last_confirmed": "2025-12-23T02:27:37.494043",
       "source_file": "false_negatives.csv"
     }
   ]
