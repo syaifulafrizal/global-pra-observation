@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-24 15:00:35.225,11.7649,143.364,10.0,5.7,"218 km SW of Merizo Village, Guam",earthquake,
+2025-12-24 13:33:58.121,13.0455,144.6313,50.646,5.0,"24 km S of Merizo Village, Guam",earthquake,
+2025-12-24 09:47:06.464,22.8505,121.2069,10.0,6.0,"2025 Taitung, Taiwan Earthquake",earthquake,
