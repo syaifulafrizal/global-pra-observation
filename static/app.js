@@ -627,10 +627,31 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
 
     markers[stationCode] = marker;
 
-    // Draw 200km red dashed circle around the station
-    if (window.addEarthquakeCircle) {
-        window.addEarthquakeCircle(metadata.latitude, metadata.longitude);
-    }
+    // Add 200km red dashed circle on hover
+    let hoverCircle = null;
+
+    marker.on('mouseover', function () {
+        if (hoverCircle) {
+            map.removeLayer(hoverCircle);
+        }
+        hoverCircle = L.circle([metadata.latitude, metadata.longitude], {
+            color: '#e74c3c',
+            weight: 2,
+            opacity: 0.8,
+            fillColor: '#e74c3c',
+            fillOpacity: 0.1,
+            radius: 200000,
+            dashArray: '10, 10',
+            interactive: false // Allow events to pass through
+        }).addTo(map);
+    });
+
+    marker.on('mouseout', function () {
+        if (hoverCircle) {
+            map.removeLayer(hoverCircle);
+            hoverCircle = null;
+        }
+    });
 }
 
 function getEarthquakeColor(magnitude) {
