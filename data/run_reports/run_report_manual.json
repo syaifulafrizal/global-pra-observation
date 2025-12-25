@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-25T05:45:56.004733",
+  "generated_at": "2025-12-25T06:23:37.522735",
   "latest_date": "2025-12-25",
   "available_dates": [
     "2025-12-25",
@@ -28,13 +28,13 @@
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2025-12-25T05:45:55.984174",
+      "first_logged": "2025-12-25T06:23:37.502892",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2025-12-25T05:45:55.984174",
+      "last_confirmed": "2025-12-25T06:23:37.502892",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,7 +46,7 @@
       "earthquake_place": "126 km ESE of \u014chara, Japan",
       "earthquake_latitude": 34.7941,
       "earthquake_longitude": 141.6701,
-      "last_confirmed": "2025-12-25T05:45:55.984174",
+      "last_confirmed": "2025-12-25T06:23:37.502892",
       "source_file": "false_negatives.csv"
     },
     {
@@ -58,7 +58,7 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2025-12-25T05:45:55.984174",
+      "last_confirmed": "2025-12-25T06:23:37.502892",
       "source_file": "false_negatives.csv"
     },
     {
@@ -70,7 +70,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2025-12-25T05:45:55.984174",
+      "last_confirmed": "2025-12-25T06:23:37.502892",
       "source_file": "false_negatives.csv"
     }
   ]

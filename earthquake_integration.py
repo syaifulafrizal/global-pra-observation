@@ -226,10 +226,50 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
                     'earthquake_place': closest['place'],
                     'days_before_anomaly': closest['days_from_anomaly'],
                     'total_earthquakes': len(eq_df),
-                    'reliable_earthquakes': len(eq_df_reliable)
+                    'reliable_earthquakes': len(eq_df_reliable),
+                    'status': 'TP'  # True Positive: Anomaly followed by EQ
                 }
                 correlations.append(correlation)
-    
+            else:
+                 # Anomaly + No Reliable EQ (>=5.0) nearby = False Positive
+                 # BUT we must ensure 14 days have actually passed before calling it FP
+                 days_since_anomaly = (datetime.now().date() - anomaly_date.date()).days
+                 status = 'FP' if days_since_anomaly >= 14 else 'Pending'
+                 
+                 correlation = {
+                    'anomaly_date': anomaly_date,
+                    'anomaly_range': anomaly['Range'],
+                    'anomaly_times': anomaly.get('Times', ''),
+                    'earthquake_time': None,
+                    'earthquake_magnitude': None,
+                    'earthquake_distance_km': None,
+                    'earthquake_place': None,
+                    'days_before_anomaly': None,
+                    'total_earthquakes': 0,
+                    'reliable_earthquakes': 0,
+                    'status': status
+                }
+                correlations.append(correlation)
+        else:
+            # No EQ at all found
+            days_since_anomaly = (datetime.now().date() - anomaly_date.date()).days
+            status = 'FP' if days_since_anomaly >= 14 else 'Pending'
+            
+            correlation = {
+                'anomaly_date': anomaly_date,
+                'anomaly_range': anomaly['Range'],
+                'anomaly_times': anomaly.get('Times', ''),
+                'earthquake_time': None,
+                'earthquake_magnitude': None,
+                'earthquake_distance_km': None,
+                'earthquake_place': None,
+                'days_before_anomaly': None,
+                'total_earthquakes': 0,
+                'reliable_earthquakes': 0,
+                'status': status
+            }
+            correlations.append(correlation)
+
     if correlations:
         return pd.DataFrame(correlations)
     return pd.DataFrame()
@@ -316,17 +356,38 @@ def find_false_negatives(station_code, results_folder, days_lookback=14):
     
     # Find earthquakes without corresponding anomalies
     false_negatives = []
+    
+    # Pre-parse all anomaly dates for this station
+    anomaly_dates = []
+    if anomaly_file.exists():
+        try:
+            anomalies = pd.read_csv(anomaly_file)
+            for _, anomaly in anomalies.iterrows():
+                try:
+                    date_str = anomaly['Range'].split()[0]
+                    anomaly_date = pd.to_datetime(date_str, format='%d/%m/%Y').date()
+                    anomaly_dates.append(anomaly_date)
+                except:
+                    continue
+        except:
+            pass
+            
     for _, eq in eq_df.iterrows():
         eq_date = eq['time'].date()
-        # Check if there's an anomaly within 14 days after the earthquake
-        has_anomaly = False
+        # Definition: False Negative if EQ occurred but NO anomaly was detected in the preceding 14 days
+        # (Meaning: We missed it)
+        
+        has_anomaly_before = False
         for anom_date in anomaly_dates:
-            days_diff = (anom_date - eq_date).days
+            # Check if anomaly occurred 1-14 days BEFORE event
+            # Logic: Anomaly (Day T) -> Prediction for [T, T+14]
+            # So for an EQ on Day E, we look for Anomaly on [E-14, E]
+            days_diff = (eq_date - anom_date).days
             if 0 <= days_diff <= 14:
-                has_anomaly = True
+                has_anomaly_before = True
                 break
         
-        if not has_anomaly:
+        if not has_anomaly_before:
             false_negatives.append({
                 'earthquake_time': eq['time'],
                 'earthquake_magnitude': eq['magnitude'],
