@@ -447,6 +447,27 @@ function initMap() {
             maxZoom: 10
         }).addTo(map);
 
+        // Define addEarthquakeCircle function
+        window.addEarthquakeCircle = function (lat, lng) {
+            if (!map) return;
+            // Create a dashed red circle with 200km radius centered on station
+            const circle = L.circle([lat, lng], {
+                color: '#e74c3c',       // Red color
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#e74c3c',
+                fillOpacity: 0.1,
+                radius: 200000,         // 200km in meters
+                dashArray: '10, 10'     // Dashed line pattern
+            }).addTo(map);
+
+            if (!markers.earthquakeCircles) {
+                markers.earthquakeCircles = [];
+            }
+            markers.earthquakeCircles.push(circle);
+            return circle;
+        };
+
         // Legend is now outside the map - see createStandaloneLegend() function
 
         // Clear existing markers and circles
@@ -477,7 +498,7 @@ function initMap() {
     }
 }
 
-function addStationToMap(stationCode, stationData, eqCorrelations, dataContext = null) {
+function addStationToMap(stationCode, stationData, eqCorrelations, dataContext = null, falseNegatives = []) {
     if (!map) {
         console.warn('Map not initialized, skipping marker for', stationCode);
         return;
@@ -489,13 +510,23 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         return;
     }
 
+    // Determine status
     const hasAnomaly = stationData && stationData.is_anomalous;
     const hasEQ = eqCorrelations && eqCorrelations.length > 0;
+    const hasFN = falseNegatives && falseNegatives.length > 0;
 
     // Earthquake-themed colors
     let color = 'gray'; // No anomaly
     if (hasAnomaly) {
-        color = hasEQ ? 'eq-reliable' : 'eq-false'; // Orange if EQ found, red if false alarm
+        // Check if we have a True Positive or False Positive
+        const isTP = hasEQ && eqCorrelations.some(eq => eq.status === 'TP' || !eq.status); // Default to TP if status not set (legacy)
+        const isFP = hasEQ && eqCorrelations.every(eq => eq.status === 'FP');
+
+        if (isTP) color = 'eq-reliable'; // Orange/Red
+        else if (isFP) color = 'eq-false'; // Red (Alarm without EQ)
+        else if (!hasEQ) color = 'eq-false'; // Red (Alarm without EQ)
+    } else if (hasFN) {
+        color = 'eq-false'; // Red for False Negative (Missed EQ)
     }
 
     // Create custom icon with earthquake theme (triangle shape for stations)
@@ -511,7 +542,7 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
     const isUsingFallback = dataContext?.selected_date && stationDateUsed !== dataContext.selected_date;
 
     // Create popup content with earthquake info
-    let popupContent = `<div style="min-width: 220px; font-family: Arial, sans-serif;"><strong style="color: #c0392b; font-size: 1.1em;">${metadata.name || stationCode} (${stationCode})</strong><br>`;
+    let popupContent = `<div style="min-width: 240px; font-family: Arial, sans-serif;"><strong style="color: #c0392b; font-size: 1.1em;">${metadata.name || stationCode} (${stationCode})</strong><br>`;
     popupContent += `<span style="color: #7f8c8d;">${metadata.country || 'Unknown'}</span><br>`;
     popupContent += `<small>📍 ${metadata.latitude ? metadata.latitude.toFixed(3) : 'N/A'}, ${metadata.longitude ? metadata.longitude.toFixed(3) : 'N/A'}</small><br>`;
 
@@ -533,8 +564,16 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
 
         // Filter by magnitude >= 5.0 for display
         const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
+
         if (hasEQ && reliableCorrelations.length > 0) {
-            popupContent += `<hr style="margin: 8px 0; border-color: #e67e22;"><strong style="color: #e67e22;">🌋 EQ Correlation Found (M≥5.0): ${reliableCorrelations.length}</strong><br>`;
+            // Check status (TP/FP)
+            const status = reliableCorrelations[0].status || 'TP';
+            const statusLabel = status === 'TP' ? 'True Positive' : (status === 'FP' ? 'False Positive' : status);
+            const statusColor = status === 'TP' ? '#e67e22' : '#e74c3c';
+
+            popupContent += `<hr style="margin: 8px 0; border-color: ${statusColor};"><strong style="color: ${statusColor};">${statusLabel}</strong><br>`;
+            popupContent += `<span style="font-size: 0.9em;">Correlation Found (M≥5.0): ${reliableCorrelations.length}</span><br>`;
+
             reliableCorrelations.slice(0, 3).forEach((eq) => {
                 const mag = eq.earthquake_magnitude || 'N/A';
                 const dist = parseFloat(eq.earthquake_distance_km || 0).toFixed(1);
@@ -545,12 +584,39 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
                 popupContent += `... and ${reliableCorrelations.length - 3} more<br>`;
             }
         } else {
-            popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">⚠️ False Alarm</strong><br>`;
-            popupContent += `No EQ M≥5.0 within 200km within 14 days`;
+            // Anomaly but no EQ -> Check if 14 days passed for FP
+            // We can check backend status if available, or infer
+            // For now, if no reliable correlations, it's a False Positive or Pending.
+            // The backend usually sets 'FP' or 'Pending' in the correlations list even if empty EQ?
+            // No, my backend change ADDS an entry for FP/Pending. So 'reliableCorrelations' should handle it.
+            // Wait, reliableCorrelations filters by mag >= 5.0. If backend added an FP entry with no mag, it might be filtered out?
+            // Need to check backend change again.
+            // Backend sets: earthquake_magnitude: None. parseFloat(None) = NaN. NaN >= 5.0 is false.
+            // So reliableCorrelations will be EMPTY for FP/Pending entries.
+            // I need to check eqCorrelations for non-EQ entries (status entries).
+            const statusEntry = eqCorrelations.find(eq => eq.status);
+            if (statusEntry) {
+                const status = statusEntry.status;
+                const label = status === 'FP' ? 'False Positive' : 'Pending';
+                popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">${label}</strong><br>`;
+                popupContent += status === 'FP' ? `No EQ M≥5.0 within 200km within 14 days` : `Monitoring for upcoming EQ...`;
+            } else {
+                popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">⚠️ False Alarm</strong><br>`;
+                popupContent += `No EQ M≥5.0 within 200km within 14 days`;
+            }
         }
     } else {
         popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);"><span style="color: var(--text-secondary);">✅ Status: Normal</span><br>`;
-        popupContent += `No anomalies detected`;
+        if (hasFN) {
+            popupContent += `<hr style="margin: 8px 0; border-color: #c0392b;"><strong style="color: #c0392b;">❌ False Negative</strong><br>`;
+            popupContent += `${falseNegatives.length} EQ(s) missed:<br>`;
+            falseNegatives.forEach(eq => {
+                const time = typeof eq.earthquake_time === 'string' ? eq.earthquake_time.split('T')[0] : eq.earthquake_time;
+                popupContent += `🔴 M${eq.earthquake_magnitude} on ${time}<br>`;
+            });
+        } else {
+            popupContent += `No anomalies detected`;
+        }
     }
     popupContent += `</div>`;
 
@@ -560,6 +626,11 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         .bindPopup(popupContent);
 
     markers[stationCode] = marker;
+
+    // Draw 200km red dashed circle around the station
+    if (window.addEarthquakeCircle) {
+        window.addEarthquakeCircle(metadata.latitude, metadata.longitude);
+    }
 }
 
 function getEarthquakeColor(magnitude) {
@@ -1198,9 +1269,17 @@ async function renderDashboard(date = null) {
             if (reliableCorrelations.length > 0) {
                 withEQ++;
             }
+
+            // Allow FP/Pending status entries to pass through to map
+            let mapCorrelations = reliableCorrelations;
+            const statusEntries = eqCorrelations.filter(eq => eq.status === 'FP' || eq.status === 'Pending');
+            if (statusEntries.length > 0) {
+                mapCorrelations = [...reliableCorrelations, ...statusEntries];
+            }
+
             // Note: False positives are collected in the cumulative loop below (lines 983-1037)
             // to avoid double-counting when the same date is processed multiple times
-            stationDataMap[station] = { stationData, eqCorrelations: reliableCorrelations };
+            stationDataMap[station] = { stationData, eqCorrelations: mapCorrelations };
         } else {
             // Note: False negatives are collected in the cumulative loop below (lines 978-1032)
             // to avoid double-counting when the same date is processed multiple times
@@ -1409,8 +1488,8 @@ async function renderDashboard(date = null) {
             console.log('Adding station markers...', allStations.length);
             // Add all station markers
             for (const station of allStations) {
-                const { stationData, eqCorrelations } = stationDataMap[station] || { stationData: allStationsData[station], eqCorrelations: [] };
-                addStationToMap(station, stationData, eqCorrelations, data);
+                const mapData = stationDataMap[station] || { stationData: allStationsData[station], eqCorrelations: [], falseNegatives: [] };
+                addStationToMap(station, mapData.stationData, mapData.eqCorrelations, data, mapData.falseNegatives);
             }
 
             console.log('Loading earthquakes...');
