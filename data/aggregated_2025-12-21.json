@@ -1,6 +1,6 @@
 {
   "date": "2025-12-21",
-  "generated_at": "2025-12-24T17:49:48.905118",
+  "generated_at": "2025-12-25T05:45:56.469529",
   "stations": {
     "ABG": {
       "date": "2025-12-22",
@@ -3279,6 +3279,14 @@
   "earthquake_correlations": {},
   "false_negatives": {
     "GUA": [
+      {
+        "earthquake_time": "2025-12-24 13:33:58.121",
+        "earthquake_magnitude": "5.0",
+        "earthquake_distance_km": "65.22543613978408",
+        "earthquake_place": "24 km S of Merizo Village, Guam",
+        "earthquake_latitude": "13.0455",
+        "earthquake_longitude": "144.6313"
+      },
       {
         "earthquake_time": "2025-12-15 23:06:14.731",
         "earthquake_magnitude": "5.7",
