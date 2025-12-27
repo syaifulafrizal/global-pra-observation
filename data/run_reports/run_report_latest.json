@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-26T18:08:17.406111",
-  "latest_date": "2025-12-27",
+  "generated_at": "2025-12-27T18:18:46.853746",
+  "latest_date": "2025-12-28",
   "available_dates": [
+    "2025-12-28",
     "2025-12-27",
     "2025-12-26",
     "2025-12-25",
     "2025-12-24",
     "2025-12-23",
-    "2025-12-22",
-    "2025-12-21"
+    "2025-12-22"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,7 +17,7 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 2,
+    "false_negatives_last_7_days": 1,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
@@ -28,25 +28,13 @@
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2025-12-26T18:08:17.387108",
+      "first_logged": "2025-12-27T18:18:46.835739",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2025-12-26T18:08:17.387108",
-      "source_file": "false_negatives.csv"
-    },
-    {
-      "station": "KNY",
-      "earthquake_time": "2025-12-21 06:58:48.287",
-      "first_logged": "2025-12-22T17:57:15.889380",
-      "earthquake_magnitude": 5.1,
-      "earthquake_distance_km": 165.17432168540054,
-      "earthquake_place": "126 km ESE of \u014chara, Japan",
-      "earthquake_latitude": 34.7941,
-      "earthquake_longitude": 141.6701,
-      "last_confirmed": "2025-12-26T18:08:17.387108",
+      "last_confirmed": "2025-12-27T18:18:46.835739",
       "source_file": "false_negatives.csv"
     }
   ]
