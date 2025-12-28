@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2025-12-27T18:18:46.853746",
+  "generated_at": "2025-12-28T06:51:50.971148",
   "latest_date": "2025-12-28",
   "available_dates": [
     "2025-12-28",
@@ -28,13 +28,13 @@
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2025-12-27T18:18:46.835739",
+      "first_logged": "2025-12-28T06:51:50.950901",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2025-12-27T18:18:46.835739",
+      "last_confirmed": "2025-12-28T06:51:50.950901",
       "source_file": "false_negatives.csv"
     }
   ]
