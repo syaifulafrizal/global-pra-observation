@@ -525,9 +525,8 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         if (isTP) color = 'eq-reliable'; // Orange/Red
         else if (isFP) color = 'eq-false'; // Red (Alarm without EQ)
         else if (!hasEQ) color = 'eq-false'; // Red (Alarm without EQ)
-    } else if (hasFN) {
-        color = 'eq-false'; // Red for False Negative (Missed EQ)
     }
+    // False Negatives (Missed EQ) will remain 'gray' but show info in popup
 
     // Create custom icon with earthquake theme (triangle shape for stations)
     const icon = L.divIcon({
