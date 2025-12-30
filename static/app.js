@@ -338,7 +338,24 @@ function formatDate(dateStr) {
 }
 
 function formatDateForSelector(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00');
+    if (!dateStr) return 'Unknown Date';
+
+    // Clean date string to ensure YYYY-MM-DD format
+    let cleanDateStr = dateStr;
+    if (dateStr.includes('T')) {
+        cleanDateStr = dateStr.split('T')[0];
+    } else if (dateStr.includes(' ')) {
+        cleanDateStr = dateStr.split(' ')[0];
+    }
+
+    // Add T00:00:00 to force local time parsing (prevent timezone shifts)
+    const date = new Date(cleanDateStr + 'T00:00:00');
+
+    // Fallback if parsing failed
+    if (isNaN(date.getTime())) {
+        return dateStr;
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const yesterday = new Date(today);
