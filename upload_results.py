@@ -785,11 +785,21 @@ def prepare_web_output():
         eq_csv = Path(f'recent_earthquakes_{date}.csv')
         if eq_csv.exists():
             shutil.copy(eq_csv, data_dir / eq_csv.name)
+            try:
+                os.remove(eq_csv) # Clean up from root
+                print(f'[INFO] Moved/Cleaned up root file: {eq_csv.name}')
+            except Exception as e:
+                print(f'[WARNING] Failed to delete root file {eq_csv.name}: {e}')
             
         # Copy date-specific earthquake stats (for summary boxes)
         eq_stats = Path(f'earthquake_stats_{date}.json')
         if eq_stats.exists():
             shutil.copy(eq_stats, data_dir / eq_stats.name)
+            try:
+                os.remove(eq_stats) # Clean up from root
+                print(f'[INFO] Moved/Cleaned up root file: {eq_stats.name}')
+            except Exception as e:
+                print(f'[WARNING] Failed to delete root file {eq_stats.name}: {e}')
     
     # Clean up old files (older than 6 days)
     deleted = cleanup_old_files(data_dir, figures_dir, cutoff_date, skip_files=HISTORY_SKIP_FILES)
