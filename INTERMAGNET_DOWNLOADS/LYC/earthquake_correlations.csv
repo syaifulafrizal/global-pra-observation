@@ -1,0 +1,2 @@
+anomaly_date,anomaly_range,anomaly_times,earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,days_before_anomaly,total_earthquakes,reliable_earthquakes,status
+2025-11-24,24/11/2025 20:00 - 25/11/2025 04:00,22:00–23:00,,,,,,0,0,FP

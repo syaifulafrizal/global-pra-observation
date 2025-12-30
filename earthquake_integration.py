@@ -231,12 +231,12 @@ def correlate_anomalies_with_earthquakes(station_code, results_folder):
                 }
                 correlations.append(correlation)
             else:
-                 # Anomaly + No Reliable EQ (>=5.0) nearby = False Positive
-                 # BUT we must ensure 14 days have actually passed before calling it FP
-                 days_since_anomaly = (datetime.now().date() - anomaly_date.date()).days
-                 status = 'FP' if days_since_anomaly >= 14 else 'Pending'
-                 
-                 correlation = {
+                # Anomaly + No Reliable EQ (>=5.0) nearby = False Positive
+                # BUT we must ensure 14 days have actually passed before calling it FP
+                days_since_anomaly = (datetime.now().date() - anomaly_date.date()).days
+                status = 'FP' if days_since_anomaly >= 14 else 'Pending'
+                
+                correlation = {
                     'anomaly_date': anomaly_date,
                     'anomaly_range': anomaly['Range'],
                     'anomaly_times': anomaly.get('Times', ''),
