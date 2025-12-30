@@ -1,0 +1,7 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-27 17:44:37.048,29.7455,141.9521,46.141,5.1,"Izu Islands, Japan region",earthquake,
+2025-12-27 15:05:56.364,24.6574,122.0406,67.534,6.6,"31 km ESE of Yilan, Taiwan",earthquake,
+2025-12-27 10:40:49.667,-28.27,-63.1554,588.313,5.6,"37 km NW of Añatuya, Argentina",earthquake,
+2025-12-27 02:25:15.663,49.6163,158.6967,10.0,5.1,"218 km ESE of Severo-Kuril’sk, Russia",earthquake,
+2025-12-27 01:10:11.763,-5.5079,102.3468,10.0,5.2,"189 km S of Bengkulu, Indonesia",earthquake,
+2025-12-27 00:22:31.387,-5.5328,102.3143,10.0,5.6,"191 km S of Bengkulu, Indonesia",earthquake,

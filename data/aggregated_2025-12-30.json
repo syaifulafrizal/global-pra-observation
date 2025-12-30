@@ -1,6 +1,6 @@
 {
   "date": "2025-12-30",
-  "generated_at": "2025-12-30T03:19:36.879908",
+  "generated_at": "2025-12-30T03:49:33.112465",
   "stations": {
     "ABG": {
       "date": "2025-12-30",
@@ -3281,19 +3281,11 @@
     "GUA": [
       {
         "earthquake_time": "2025-12-24 13:33:58.121",
-        "earthquake_magnitude": "5.0",
+        "earthquake_magnitude": "5",
         "earthquake_distance_km": "65.22543613978408",
         "earthquake_place": "24 km S of Merizo Village, Guam",
         "earthquake_latitude": "13.0455",
         "earthquake_longitude": "144.6313"
-      },
-      {
-        "earthquake_time": "2025-12-15 23:06:14.731",
-        "earthquake_magnitude": "5.7",
-        "earthquake_distance_km": "134.7000869784241",
-        "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
-        "earthquake_latitude": "14.35",
-        "earthquake_longitude": "145.8393"
       }
     ],
     "KNY": [
