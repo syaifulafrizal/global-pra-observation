@@ -1615,6 +1615,10 @@ async function renderDashboard(date = null) {
         });
     }
 
+    // Update Run Health / Data Availability
+    const availableStationsCount = allStations.filter(s => allStationsData[s]).length;
+    updateRunHealth(data, allStations.length, availableStationsCount);
+
     // Update timestamp (UTC-based)
     const timestampEl = document.getElementById('timestamp');
     if (timestampEl) {
@@ -1916,4 +1920,62 @@ async function downloadAnomaliesCSV() {
         console.error('Error downloading anomalies CSV:', error);
         alert('Error downloading anomalies CSV. Please try again.');
     }
+}
+
+function updateRunHealth(data, totalStationsCount, loadedStationsCount) {
+    const healthEl = document.getElementById('run-health');
+    if (!healthEl) return;
+
+    if (!data) {
+        healthEl.style.display = 'none';
+        return;
+    }
+
+    healthEl.style.display = 'block';
+
+    // Calculate availability percentage
+    const availabilityPct = totalStationsCount > 0 ? Math.round((loadedStationsCount / totalStationsCount) * 100) : 0;
+    const isHybrid = data.is_hybrid_aggregation || false;
+
+    let statusColor = 'var(--accent-success)';
+    let statusIcon = '✅';
+    if (availabilityPct < 50) {
+        statusColor = '#e74c3c';
+        statusIcon = '⚠️';
+    } else if (availabilityPct < 90) {
+        statusColor = '#f39c12';
+        statusIcon = '⚠️';
+    }
+
+    let html = `
+        <h3>${statusIcon} Data Availability Report</h3>
+        <div class="health-grid">
+            <div class="health-item">
+                <div class="health-label">Stations Available</div>
+                <div class="health-value" style="color: ${statusColor}">${loadedStationsCount} / ${totalStationsCount}</div>
+                <div class="health-meta">${availabilityPct}% Coverage</div>
+            </div>
+            <div class="health-item">
+                <div class="health-label">Data Source</div>
+                <div class="health-value">${isHybrid ? 'Hybrid' : 'Standard'}</div>
+                <div class="health-meta">${isHybrid ? 'Partial data + Fallbacks' : 'Direct/Aggregated'}</div>
+            </div>
+            <div class="health-item">
+                <div class="health-label">Processing Date</div>
+                <div class="health-value">${formatDate(data.selected_date)}</div>
+                <div class="health-meta">Analysis Window</div>
+            </div>
+        </div>
+    `;
+
+    // Add specific warnings if any
+    if (isHybrid) {
+        html += `
+            <div class="alert alert-warning" style="margin-top: 10px; padding: 10px; background: rgba(243, 156, 18, 0.1); border-left: 4px solid #f39c12; border-radius: 4px;">
+                <strong>Notice:</strong> Some stations are using fallback data from previous days due to missing data for the selected date.
+            </div>
+        `;
+    }
+
+    healthEl.innerHTML = html;
 }
