@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-30 20:26:03.769,-20.6709,-63.1117,547.425,5.3,"31 km SE of Boyuibe, Bolivia",earthquake,
+2025-12-30 11:22:08.302,-7.0134,155.273,10.0,5.1,"80 km SSW of Panguna, Papua New Guinea",earthquake,
+2025-12-30 10:17:19.219,60.4206,-139.6135,5.005,5.1,"97 km N of Yakutat, Alaska",earthquake,
+2025-12-30 08:12:24.533,27.5468,128.7445,10.0,5.5,"20 km NNE of Wadomari, Japan",earthquake,
+2025-12-30 04:16:18.115,-42.6392,83.5964,10.0,5.0,Mid-Indian Ridge,earthquake,
