@@ -1,2 +1,4 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2025-12-31 04:00:27.778,-57.1861,147.711,10,5.2,west of Macquarie Island,earthquake,
+2025-12-31 14:26:56.732,40.1119,142.8885,19.297,6.0,"91 km E of Noda, Japan",earthquake,
+2025-12-31 13:51:07.438,-23.1457,170.8778,10.0,5.0,southeast of the Loyalty Islands,earthquake,
+2025-12-31 04:00:27.778,-57.1861,147.711,10.0,5.2,west of Macquarie Island,earthquake,
