@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-02 13:58:18.346,16.9017,-99.3026,35.0,6.5,"4 km NNW of Rancho Viejo, Mexico",earthquake,
+2026-01-02 07:52:04.790,-53.6401,-120.948,10.0,5.0,southern East Pacific Rise,earthquake,
+2026-01-02 00:20:55.471,-57.2655,-25.2681,40.011,5.0,South Sandwich Islands region,earthquake,
