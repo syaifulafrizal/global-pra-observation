@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-03 10:07:56.003,-45.4026,96.4723,10,5.9,southeast Indian Ridge,earthquake,
+2026-01-03 01:26:39.593,-6.4414,143.5977,10,5.0,"33 km SSW of Mendi, Papua New Guinea",earthquake,
