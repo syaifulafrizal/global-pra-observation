@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-04 01:23:35.097,-5.4787,152.1228,33.682,5.1,"126 km S of Kokopo, Papua New Guinea",earthquake,
