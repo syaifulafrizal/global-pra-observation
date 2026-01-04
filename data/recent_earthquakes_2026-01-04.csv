@@ -1,2 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-04 13:07:06.267,-43.4732,39.1653,10.0,5.7,Prince Edward Islands region,earthquake,
+2026-01-04 11:01:08.199,51.6813,159.5143,35.0,5.1,"158 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-01-04 10:35:54.464,-58.7356,-25.2678,35.0,5.1,South Sandwich Islands region,earthquake,
+2026-01-04 08:30:06.322,42.2671,85.0146,10.0,5.0,"109 km WNW of Korla, China",earthquake,
 2026-01-04 01:23:35.097,-5.4787,152.1228,33.682,5.1,"126 km S of Kokopo, Papua New Guinea",earthquake,
