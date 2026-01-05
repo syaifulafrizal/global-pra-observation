@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEMPA - Geomagnetic Earthquake Monitoring & Precursor Analysis</title>
-    <meta name="description" content="Sistem Pemantauan Gempa Bumi Geomagnetik - Real-time earthquake precursor detection using geomagnetic field analysis">
+    <title>GEMPRA - Geomagnetic Earthquake Monitoring using PRA</title>
+    <meta name="description"
+        content="Sistem Pemantauan Gempa Bumi Geomagnetik menggunakan PRA - Real-time earthquake precursor detection using Polarization Ratio Analysis">
     <link rel="stylesheet" href="static/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
+
 <body class="light-mode">
     <div class="container">
         <header>
             <div class="header-content">
                 <h1>
                     <span class="icon">🌋</span>
-                    GEMPA
+                    GEMPRA
                 </h1>
-                <p class="subtitle">Geomagnetic Earthquake Monitoring & Precursor Analysis</p>
-                <p class="subtitle-malay">Sistem Pemantauan Gempa Bumi Geomagnetik</p>
-                
+                <p class="subtitle">Geomagnetic Earthquake Monitoring using PRA</p>
+                <p class="subtitle-malay">Sistem Pemantauan Gempa Bumi Geomagnetik menggunakan PRA</p>
+                <p class="subtitle-explanation"
+                    style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px; font-style: italic;">
+                    PRA = Polarization Ratio Analysis | Analisis Nisbah Polarisasi
+                </p>
+
                 <div class="header-controls">
                     <div class="date-selector-container">
                         <label for="date-selector">Select Date:</label>
@@ -110,16 +117,19 @@
                 Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT)<br>
                 Frequency Band: 0.095-0.110 Hz | Time Window: 20:00-04:00 Local Time
             </p>
-            
+
             <div class="acknowledgements">
                 <h3>Acknowledgements</h3>
                 <ul>
-                    <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a> (International Real-time Magnetic Observatory Network)</li>
-                    <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United States Geological Survey)</li>
-                    <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra Malaysia</a></li>
+                    <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a>
+                        (International Real-time Magnetic Observatory Network)</li>
+                    <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United
+                        States Geological Survey)</li>
+                    <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra
+                            Malaysia</a></li>
                 </ul>
             </div>
-            
+
             <div class="author">
                 <p>Developed by <a href="https://github.com/syaifulafrizal" target="_blank">Nur Syaiful Afrizal</a></p>
             </div>
@@ -128,4 +138,5 @@
 
     <script src="static/app.js"></script>
 </body>
+
 </html>
