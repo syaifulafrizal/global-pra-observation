@@ -1,5 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-01-06 03:14:35.170,17.5674,145.789,223.59,5.0,"260 km N of Saipan, Northern Mariana Islands",earthquake,
-2026-01-06 01:37:47.910,35.342,133.11,23.119,5.0,"14 km SW of Yasugichō, Japan",earthquake,
-2026-01-06 01:28:48.964,35.353,133.0691,12.135,5.0,"14 km S of Matsue, Japan",earthquake,
-2026-01-06 01:18:48.664,35.3203,133.0755,10.0,5.7,"18 km S of Matsue, Japan",earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
