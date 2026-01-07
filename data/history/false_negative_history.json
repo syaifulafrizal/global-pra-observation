@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-01-06T17:44:45.988666",
+  "last_updated": "2026-01-07T16:30:30.587481",
   "entries": [
     {
       "station": "GUA",
@@ -22,7 +22,7 @@
       "earthquake_place": "73 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.985,
-      "last_confirmed": "2026-01-06T17:44:45.968652",
+      "last_confirmed": "2026-01-07T16:30:30.569628",
       "source_file": "false_negatives.csv"
     },
     {
@@ -34,7 +34,7 @@
       "earthquake_place": "74 km SSE of Nemuro, Japan",
       "earthquake_latitude": 42.724,
       "earthquake_longitude": 145.9807,
-      "last_confirmed": "2026-01-06T17:44:45.968652",
+      "last_confirmed": "2026-01-07T16:30:30.569628",
       "source_file": "false_negatives.csv"
     },
     {
@@ -46,19 +46,19 @@
       "earthquake_place": "126 km ESE of \u014chara, Japan",
       "earthquake_latitude": 34.7941,
       "earthquake_longitude": 141.6701,
-      "last_confirmed": "2026-01-06T17:44:45.968652",
+      "last_confirmed": "2026-01-07T16:30:30.569628",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2026-01-06T17:44:45.968652",
+      "first_logged": "2026-01-07T16:30:30.569628",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2026-01-06T17:44:45.968652",
+      "last_confirmed": "2026-01-07T16:30:30.569628",
       "source_file": "false_negatives.csv"
     }
   ]
