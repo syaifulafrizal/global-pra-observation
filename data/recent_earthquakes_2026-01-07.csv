@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-07 04:12:56.792,7.2863,127.0595,11.854,5.5,"53 km E of Santiago, Philippines",earthquake,
+2026-01-07 03:02:56.040,7.3902,126.7221,35.0,6.4,"16 km ESE of Baculin, Philippines",earthquake,
