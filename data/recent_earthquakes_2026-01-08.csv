@@ -1,3 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-08 17:00:01.465,37.3884,74.5618,56.248,5.3,"101 km SSE of Murghob, Tajikistan",earthquake,
+2026-01-08 14:14:55.391,-31.2688,-67.5932,10.0,5.2,"71 km S of San Agustín de Valle Fértil, Argentina",earthquake,
 2026-01-08 05:17:50.479,-4.0154,-77.8346,107.744,5.5,"104 km E of Yantzaza, Ecuador",earthquake,
 2026-01-08 03:21:26.476,-4.1206,142.0992,131.398,5.0,"80 km W of Ambunti, Papua New Guinea",earthquake,
