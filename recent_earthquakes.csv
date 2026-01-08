@@ -1,3 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-01-08 05:17:50.479,-4.0154,-77.8346,107.744,5.5,"104 km E of Yantzaza, Ecuador",earthquake,
-2026-01-08 03:21:26.476,-4.1206,142.0992,131.398,5.0,"80 km W of Ambunti, Papua New Guinea",earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
