@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-09 12:13:35.750,-31.2604,-177.8235,10,5.3,Kermadec Islands region,earthquake,
