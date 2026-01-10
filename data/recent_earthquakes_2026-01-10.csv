@@ -1,1 +1,11 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-10 15:34:08.699,51.4932,158.5536,45.323,5.0,"142 km E of Ozernovskiy, Russia",earthquake,
+2026-01-10 15:15:13.989,3.6324,126.9794,49.548,5.2,"239 km NNW of Tobelo, Indonesia",earthquake,
+2026-01-10 14:58:23.481,3.7007,126.9869,31.0,6.4,"245 km NNW of Tobelo, Indonesia",earthquake,
+2026-01-10 11:31:07.810,52.7677,160.9715,10.0,5.2,"161 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-01-10 07:57:45.395,52.7819,160.9944,10.0,5.5,"162 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-01-10 04:53:12.850,37.9238,16.2946,51.612,5.1,"17 km ESE of Brancaleone, Italy",earthquake,
+2026-01-10 03:39:09.102,49.1919,156.1482,53.955,5.0,"165 km S of Severo-Kuril’sk, Russia",earthquake,
+2026-01-10 03:22:28.512,-19.9733,66.307,10.0,5.5,Mauritius - Reunion region,earthquake,
+2026-01-10 00:44:40.234,-13.7102,166.6972,35.0,5.1,"94 km WNW of Sola, Vanuatu",earthquake,
+2026-01-10 00:06:02.891,-26.3222,-177.5009,140.198,5.6,south of the Fiji Islands,earthquake,
