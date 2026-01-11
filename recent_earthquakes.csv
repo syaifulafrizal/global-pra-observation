@@ -1,2 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-01-11 04:15:37.170,39.5919,141.7252,79.657,5.2,"19 km WSW of Miyako, Japan",earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id

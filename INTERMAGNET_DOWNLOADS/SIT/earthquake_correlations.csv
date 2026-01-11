@@ -1,0 +1,2 @@
+anomaly_date,anomaly_range,anomaly_times,earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,days_before_anomaly,total_earthquakes,reliable_earthquakes,status
+2026-01-10,10/01/2026 20:00 - 11/01/2026 04:00,12:00–13:00,,,,,,0,0,Pending
