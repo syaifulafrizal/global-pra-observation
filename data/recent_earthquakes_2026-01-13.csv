@@ -1,3 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-13 07:34:08.725,44.5495,149.2768,35.788,6.2,"133 km SE of Kuril’sk, Russia",earthquake,
+2026-01-13 07:28:22.517,-21.3112,-68.9485,118.039,5.3,"72 km W of Ollagüe, Chile",earthquake,
+2026-01-13 03:39:27.171,-29.8469,-111.8566,10.0,5.6,Easter Island region,earthquake,
 2026-01-13 01:27:16.268,2.9121,126.6719,56.312,5.2,"198 km NW of Tobelo, Indonesia",earthquake,
 2026-01-13 00:34:15.185,49.0897,156.41,10.0,5.2,"177 km S of Severo-Kuril’sk, Russia",earthquake,
