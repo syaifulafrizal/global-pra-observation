@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-01-14T09:37:18.125472",
+  "last_updated": "2026-01-14T17:21:44.297500",
   "entries": [
     {
       "station": "SIT",
       "date": "2026-01-11",
-      "first_detected": "2026-01-14T09:37:17.932275",
+      "first_detected": "2026-01-14T17:21:44.166459",
       "threshold": 11.007392993954197,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_SIT_20260111.json",
-      "last_confirmed": "2026-01-14T09:37:17.932275",
+      "last_confirmed": "2026-01-14T17:21:44.166459",
       "has_correlated_eq": false
     }
   ]
