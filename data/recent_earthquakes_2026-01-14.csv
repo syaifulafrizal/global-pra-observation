@@ -1,3 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-14 23:18:18.360,37.6477,95.1441,10.0,5.0,"282 km S of Dunhuang, China",earthquake,
+2026-01-14 22:13:13.544,42.7295,145.5273,11.617,5.6,"64 km ESE of Akkeshi, Japan",earthquake,
+2026-01-14 20:36:16.549,47.8449,154.8258,10.0,5.1,Kuril Islands,earthquake,
+2026-01-14 17:29:33.035,53.6006,161.4594,10.0,5.0,"197 km ENE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-01-14 17:27:48.640,0.3891,-25.1111,10.0,5.0,central Mid-Atlantic Ridge,earthquake,
 2026-01-14 15:29:02.283,-5.6511,147.12,172.746,5.1,"119 km N of Lae, Papua New Guinea",earthquake,
 2026-01-14 03:08:58.069,50.7928,157.0843,64.364,5.1,"68 km E of Severo-Kuril’sk, Russia",earthquake,

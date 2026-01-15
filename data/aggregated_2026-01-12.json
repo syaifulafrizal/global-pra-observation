@@ -1,6 +1,6 @@
 {
   "date": "2026-01-12",
-  "generated_at": "2026-01-14T17:21:44.619196",
+  "generated_at": "2026-01-15T14:24:17.899413",
   "stations": {
     "ABG": {
       "date": "2026-01-13",
@@ -3300,20 +3300,12 @@
     ],
     "MMB": [
       {
-        "earthquake_time": "2025-12-20 12:58:54.973",
-        "earthquake_magnitude": "5.2",
-        "earthquake_distance_km": "196.17025304951017",
-        "earthquake_place": "74 km SSE of Nemuro, Japan",
-        "earthquake_latitude": "42.724",
-        "earthquake_longitude": "145.9807"
-      },
-      {
-        "earthquake_time": "2025-12-20 12:30:32.074",
-        "earthquake_magnitude": "5.3",
-        "earthquake_distance_km": "196.0146437156127",
-        "earthquake_place": "73 km SSE of Nemuro, Japan",
+        "earthquake_time": "2026-01-14 22:13:13.544",
+        "earthquake_magnitude": "5.6",
+        "earthquake_distance_km": "170.24730435749854",
+        "earthquake_place": "64 km ESE of Akkeshi, Japan",
         "earthquake_latitude": "42.7295",
-        "earthquake_longitude": "145.985"
+        "earthquake_longitude": "145.5273"
       }
     ]
   },
