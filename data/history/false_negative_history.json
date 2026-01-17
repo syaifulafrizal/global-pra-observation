@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-01-15T14:24:16.881999",
+  "last_updated": "2026-01-17T00:39:05.684011",
   "entries": [
     {
       "station": "GUA",
@@ -46,31 +46,31 @@
       "earthquake_place": "126 km ESE of \u014chara, Japan",
       "earthquake_latitude": 34.7941,
       "earthquake_longitude": 141.6701,
-      "last_confirmed": "2026-01-15T14:24:16.838147",
+      "last_confirmed": "2026-01-17T00:39:05.660481",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2026-01-15T14:24:16.838147",
+      "first_logged": "2026-01-17T00:39:05.660481",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2026-01-15T14:24:16.838147",
+      "last_confirmed": "2026-01-17T00:39:05.660481",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "MMB",
       "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-01-15T14:24:16.838147",
+      "first_logged": "2026-01-17T00:39:05.660481",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 170.24730435749854,
       "earthquake_place": "64 km ESE of Akkeshi, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-01-15T14:24:16.838147",
+      "last_confirmed": "2026-01-17T00:39:05.660481",
       "source_file": "false_negatives.csv"
     }
   ]
