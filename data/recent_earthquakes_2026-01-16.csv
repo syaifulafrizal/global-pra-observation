@@ -1,8 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-01-16 23:50:44.895,-3.3473,128.6818,68.695,5.1,"26 km W of Amahai, Indonesia",earthquake,
 2026-01-16 23:22:24.948,56.5336,163.1539,35.0,5.2,"53 km NE of Ust’-Kamchatsk Staryy, Russia",earthquake,
-2026-01-16 19:34:14.593,41.2952,142.6496,37.852,5.4,"95 km SSW of Honchō, Japan",earthquake,
-2026-01-16 17:52:15.924,-50.0815,114.1835,10.0,5.2,western Indian-Antarctic Ridge,earthquake,
+2026-01-16 19:34:15.176,41.2751,142.6246,43.253,5.3,"97 km SSW of Honchō, Japan",earthquake,
+2026-01-16 17:52:15.849,-50.0994,114.1737,10.0,5.1,western Indian-Antarctic Ridge,earthquake,
 2026-01-16 16:41:09.608,-50.1005,114.1513,10.0,5.5,western Indian-Antarctic Ridge,earthquake,
 2026-01-16 06:08:45.198,15.7817,-88.1941,6.867,5.2,"12 km N of Cuyamel, Honduras",earthquake,
 2026-01-16 03:25:52.639,43.5426,-128.0087,10.0,6.0,"295 km W of Bandon, Oregon",earthquake,
