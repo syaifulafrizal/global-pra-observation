@@ -1,4 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-17 18:00:25.258,-55.7583,-28.8763,68.478,5.4,South Sandwich Islands region,earthquake,
 2026-01-17 06:46:41.001,52.391,160.877,23.07,5.3,"169 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
 2026-01-17 04:18:11.421,23.9051,122.437,10.0,5.0,"84 km SW of Yonakuni, Japan",earthquake,
 2026-01-17 03:34:02.525,-30.5065,-178.2309,70.079,5.2,"Kermadec Islands, New Zealand",earthquake,
