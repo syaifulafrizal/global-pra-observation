@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-01-17T18:05:23.460240",
+  "generated_at": "2026-01-18T07:07:45.496657",
   "latest_date": "2026-01-18",
   "available_dates": [
     "2026-01-18",
@@ -28,13 +28,13 @@
     {
       "station": "MMB",
       "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-01-17T18:05:23.419792",
+      "first_logged": "2026-01-18T07:07:45.476097",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 170.24730435749854,
       "earthquake_place": "64 km ESE of Akkeshi, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-01-17T18:05:23.419792",
+      "last_confirmed": "2026-01-18T07:07:45.476097",
       "source_file": "false_negatives.csv"
     }
   ]

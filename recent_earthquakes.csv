@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-18 04:16:47.465,0.6065,125.3533,72.766,5.1,"91 km SSE of Tondano, Indonesia",earthquake,
