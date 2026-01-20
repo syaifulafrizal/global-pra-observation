@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-19 19:00:21.828,6.3871,123.7579,10.0,5.3,"32 km WSW of Sangay, Philippines",earthquake,
+2026-01-19 13:02:20.746,-22.4031,170.2333,10.0,6.0,"260 km ESE of Tadine, New Caledonia",earthquake,
+2026-01-19 13:01:01.630,-22.4227,170.3413,10.0,5.0,"272 km ESE of Tadine, New Caledonia",earthquake,
+2026-01-19 11:32:06.183,27.0913,103.4181,10.0,5.2,"38 km SW of Zhaotong, China",earthquake,
+2026-01-19 11:02:49.203,-2.6159,102.1725,168.23,5.0,"102 km NNW of Curup, Indonesia",earthquake,
+2026-01-19 06:42:07.663,-16.223,-173.7599,94.191,5.1,"29 km S of Hihifo, Tonga",earthquake,
+2026-01-19 06:21:12.153,36.7055,74.4485,35.0,5.6,"47 km NNW of Barishal, Pakistan",earthquake,
