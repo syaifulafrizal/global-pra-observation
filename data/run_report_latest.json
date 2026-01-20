@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-01-20T08:29:00.334746",
-  "latest_date": "2026-01-20",
+  "generated_at": "2026-01-20T18:02:21.338614",
+  "latest_date": "2026-01-21",
   "available_dates": [
+    "2026-01-21",
     "2026-01-20",
     "2026-01-19",
     "2026-01-18",
     "2026-01-17",
     "2026-01-16",
-    "2026-01-15",
-    "2026-01-14"
+    "2026-01-15"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,25 +17,12 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 1,
+    "false_negatives_last_7_days": 0,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
     "total_false_negatives": 6
   },
   "recent_anomalies": [],
-  "recent_false_negatives": [
-    {
-      "station": "MMB",
-      "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-01-20T08:29:00.312433",
-      "earthquake_magnitude": 5.6,
-      "earthquake_distance_km": 170.24730435749854,
-      "earthquake_place": "64 km ESE of Akkeshi, Japan",
-      "earthquake_latitude": 42.7295,
-      "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-01-20T08:29:00.312433",
-      "source_file": "false_negatives.csv"
-    }
-  ]
+  "recent_false_negatives": []
 }
