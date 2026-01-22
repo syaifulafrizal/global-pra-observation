@@ -1,1 +1,9 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-21 22:44:44.354,-0.1991,122.6592,92.624,5.1,"84 km N of Luwuk, Indonesia",earthquake,
+2026-01-21 21:43:02.568,27.2574,97.0361,10.0,5.1,"102 km SSE of Hayuliang, India",earthquake,
+2026-01-21 16:37:45.752,23.109,142.6416,25.492,6.1,"Volcano Islands, Japan region",earthquake,
+2026-01-21 05:49:38.045,-6.9724,129.6467,134.249,5.1,Banda Sea,earthquake,
+2026-01-21 04:54:01.153,-59.3852,-25.9005,35.0,5.2,South Sandwich Islands region,earthquake,
+2026-01-21 01:33:04.633,6.3469,123.7705,8.755,5.4,"32 km WSW of Sangay, Philippines",earthquake,
+2026-01-21 01:05:49.011,14.4548,53.72,10.0,5.3,"196 km N of Qalansīyah, Yemen",earthquake,
+2026-01-21 00:27:04.684,14.26,53.8538,10.0,5.0,"178 km NNE of Qalansīyah, Yemen",earthquake,

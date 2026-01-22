@@ -1,5 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-20 17:51:41.941,41.4927,142.0434,66.301,5.3,"72 km ENE of Mutsu, Japan",earthquake,
 2026-01-20 17:11:38.477,-8.3278,39.3491,10.0,5.4,"49 km SSE of Mbumi, Tanzania",earthquake,
+2026-01-20 13:42:44.728,-22.334,170.2006,10.0,5.0,"255 km ESE of Tadine, New Caledonia",earthquake,
 2026-01-20 11:30:13.812,15.9301,-95.4789,41.573,5.0,"17 km SSW of Santa Gertrudis Miramar, Mexico",earthquake,
 2026-01-20 11:14:39.929,4.278,62.4666,10.0,5.0,Carlsberg Ridge,earthquake,
 2026-01-20 07:21:58.634,-5.2807,145.9951,89.957,5.9,"23 km ESE of Madang, Papua New Guinea",earthquake,
