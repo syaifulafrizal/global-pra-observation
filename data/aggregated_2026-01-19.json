@@ -1,6 +1,6 @@
 {
   "date": "2026-01-19",
-  "generated_at": "2026-01-23T07:10:29.690198",
+  "generated_at": "2026-01-23T16:48:03.740438",
   "stations": {
     "ABG": {
       "date": "2026-01-20",
@@ -3306,6 +3306,16 @@
         "earthquake_place": "64 km ESE of Akkeshi, Japan",
         "earthquake_latitude": "42.7295",
         "earthquake_longitude": "145.5273"
+      }
+    ],
+    "SHU": [
+      {
+        "earthquake_time": "2026-01-22 19:38:50.472",
+        "earthquake_magnitude": "5.2",
+        "earthquake_distance_km": "121.13980958861012",
+        "earthquake_place": "120 km SSE of Sand Point, Alaska",
+        "earthquake_latitude": "54.3122",
+        "earthquake_longitude": "-159.886"
       }
     ]
   },

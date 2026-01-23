@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-23 11:18:07.853,27.1794,53.2661,10,5.1,"56 km SE of Mohr, Iran",earthquake,
+2026-01-23 08:25:41.298,52.1462,177.3554,10,5.0,"293 km ESE of Attu Station, Alaska",earthquake,
+2026-01-23 08:19:01.851,4.8532,-82.5134,10,5.1,south of Panama,earthquake,
