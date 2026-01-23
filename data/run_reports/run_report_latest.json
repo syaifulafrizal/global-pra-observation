@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-01-23T07:10:29.172263",
-  "latest_date": "2026-01-23",
+  "generated_at": "2026-01-23T16:48:03.213616",
+  "latest_date": "2026-01-24",
   "available_dates": [
+    "2026-01-24",
     "2026-01-23",
     "2026-01-22",
     "2026-01-21",
     "2026-01-20",
     "2026-01-19",
-    "2026-01-18",
-    "2026-01-17"
+    "2026-01-18"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,12 +17,25 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 0,
+    "false_negatives_last_7_days": 1,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
-    "total_false_negatives": 6
+    "total_false_negatives": 7
   },
   "recent_anomalies": [],
-  "recent_false_negatives": []
+  "recent_false_negatives": [
+    {
+      "station": "SHU",
+      "earthquake_time": "2026-01-22 19:38:50.472",
+      "first_logged": "2026-01-23T16:48:03.192497",
+      "earthquake_magnitude": 5.2,
+      "earthquake_distance_km": 121.13980958861012,
+      "earthquake_place": "120 km SSE of Sand Point, Alaska",
+      "earthquake_latitude": 54.3122,
+      "earthquake_longitude": -159.886,
+      "last_confirmed": "2026-01-23T16:48:03.192497",
+      "source_file": "false_negatives.csv"
+    }
+  ]
 }
