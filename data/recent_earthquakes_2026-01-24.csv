@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-24 10:05:53.405,-21.0722,-178.7583,587.326,5,Fiji region,earthquake,
