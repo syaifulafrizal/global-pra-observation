@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-25 06:49:23.152,27.6907,139.9252,490.378,5.0,"Bonin Islands, Japan region",earthquake,
+2026-01-25 06:22:32.996,-6.2073,130.5569,125.127,5.1,"251 km WSW of Tual, Indonesia",earthquake,
+2026-01-25 04:13:02.738,-25.23,179.6857,509.606,5.2,south of the Fiji Islands,earthquake,

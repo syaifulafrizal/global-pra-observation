@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-01-24T16:07:52.855318",
+  "last_updated": "2026-01-25T17:59:26.948624",
   "entries": [
     {
       "station": "GUA",
@@ -46,43 +46,43 @@
       "earthquake_place": "126 km ESE of \u014chara, Japan",
       "earthquake_latitude": 34.7941,
       "earthquake_longitude": 141.6701,
-      "last_confirmed": "2026-01-24T16:07:52.850249",
+      "last_confirmed": "2026-01-25T17:59:26.943922",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2026-01-24T16:07:52.850249",
+      "first_logged": "2026-01-25T17:59:26.943922",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2026-01-24T16:07:52.850249",
+      "last_confirmed": "2026-01-25T17:59:26.943922",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "MMB",
       "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-01-24T16:07:52.850249",
+      "first_logged": "2026-01-25T17:59:26.943922",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 170.24730435749854,
       "earthquake_place": "64 km ESE of Akkeshi, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-01-24T16:07:52.850249",
+      "last_confirmed": "2026-01-25T17:59:26.943922",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SHU",
       "earthquake_time": "2026-01-22 19:38:50.472",
-      "first_logged": "2026-01-24T16:07:52.850249",
+      "first_logged": "2026-01-25T17:59:26.943922",
       "earthquake_magnitude": 5.2,
       "earthquake_distance_km": 121.13980958861012,
       "earthquake_place": "120 km SSE of Sand Point, Alaska",
       "earthquake_latitude": 54.3122,
       "earthquake_longitude": -159.886,
-      "last_confirmed": "2026-01-24T16:07:52.850249",
+      "last_confirmed": "2026-01-25T17:59:26.943922",
       "source_file": "false_negatives.csv"
     }
   ]

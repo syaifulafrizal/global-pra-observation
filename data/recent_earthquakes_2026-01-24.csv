@@ -1,2 +1,4 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-01-24 10:05:53.405,-21.0722,-178.7583,587.326,5,Fiji region,earthquake,
+2026-01-24 23:40:09.467,-36.2373,-98.4333,10.0,5.0,southeast of Easter Island,earthquake,
+2026-01-24 21:25:39.327,51.906,-175.9811,69.105,5.3,"45 km E of Adak, Alaska",earthquake,
+2026-01-24 10:05:53.405,-21.0722,-178.7583,587.326,5.0,Fiji region,earthquake,
