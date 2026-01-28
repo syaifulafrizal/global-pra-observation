@@ -1,1 +1,16 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-26 23:32:53.403,-29.2712,-177.1998,10.0,5.2,"Kermadec Islands, New Zealand",earthquake,
+2026-01-26 17:06:23.561,-6.4705,143.5525,19.0,5.6,"37 km SSW of Mendi, Papua New Guinea",earthquake,
+2026-01-26 16:29:36.689,-29.5533,-177.069,10.0,5.2,"Kermadec Islands, New Zealand",earthquake,
+2026-01-26 14:44:54.165,50.3211,158.0134,10.0,5.2,"139 km ESE of Severo-Kuril’sk, Russia",earthquake,
+2026-01-26 13:02:17.968,-21.7021,-174.6513,10.0,5.1,"50 km SE of ‘Ohonua, Tonga",earthquake,
+2026-01-26 11:25:46.260,-29.4953,-177.2429,14.061,5.4,"Kermadec Islands, New Zealand",earthquake,
+2026-01-26 10:52:59.016,-21.906,-174.7478,35.0,5.2,"66 km SSE of ‘Ohonua, Tonga",earthquake,
+2026-01-26 10:21:08.726,51.7668,160.1363,10.0,5.1,"175 km SE of Vilyuchinsk, Russia",earthquake,
+2026-01-26 07:08:58.655,-54.6529,144.0773,10.0,5.0,west of Macquarie Island,earthquake,
+2026-01-26 06:56:02.085,34.0278,103.3047,10.0,5.5,"9 km ESE of Dianga, China",earthquake,
+2026-01-26 06:07:16.475,-54.6303,143.7464,10.0,5.7,west of Macquarie Island,earthquake,
+2026-01-26 03:31:45.751,-22.0106,-174.917,10.0,5.4,"74 km S of ‘Ohonua, Tonga",earthquake,
+2026-01-26 02:49:37.179,-35.271,-17.4726,10.0,5.8,southern Mid-Atlantic Ridge,earthquake,
+2026-01-26 02:11:20.049,-35.5351,-16.8668,10.0,5.0,southern Mid-Atlantic Ridge,earthquake,
+2026-01-26 00:54:01.988,-7.5224,127.7002,169.184,5.1,"134 km NE of Lospalos, Timor Leste",earthquake,

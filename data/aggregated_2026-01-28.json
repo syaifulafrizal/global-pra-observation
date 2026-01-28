@@ -1,0 +1,1537 @@
+{
+  "date": "2026-01-28",
+  "generated_at": "2026-01-28T01:14:31.113353",
+  "stations": {
+    "ABG": {
+      "date": "2026-01-28",
+      "station": "ABG",
+      "timestamps": [
+        "2026-01-27T14:59:59",
+        "2026-01-27T15:59:59",
+        "2026-01-27T16:59:59",
+        "2026-01-27T17:59:59",
+        "2026-01-27T18:59:59",
+        "2026-01-27T19:59:59",
+        "2026-01-27T20:59:59",
+        "2026-01-27T21:59:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "AMS": {
+      "date": "2026-01-28",
+      "station": "AMS",
+      "timestamps": [
+        "2026-01-27T07:29:59",
+        "2026-01-27T08:29:59",
+        "2026-01-27T09:29:59",
+        "2026-01-27T10:29:59",
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "API": {
+      "date": "2026-01-28",
+      "station": "API",
+      "timestamps": [
+        "2026-01-27T07:29:59",
+        "2026-01-27T08:29:59",
+        "2026-01-27T09:29:59",
+        "2026-01-27T10:29:59",
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "ASP": {
+      "date": "2026-01-28",
+      "station": "ASP",
+      "timestamps": [
+        "2026-01-27T10:59:59",
+        "2026-01-27T11:59:59",
+        "2026-01-27T12:59:59",
+        "2026-01-27T13:59:59",
+        "2026-01-27T14:59:59",
+        "2026-01-27T15:59:59",
+        "2026-01-27T16:59:59",
+        "2026-01-27T17:59:59"
+      ],
+      "P": [
+        2.095747965473664,
+        2.095175003975554,
+        2.0951061228937142,
+        2.095026943300691,
+        2.0945952925993865,
+        2.0944450233528062,
+        2.0950307036310476,
+        2.0951938244724175
+      ],
+      "nZ": [
+        10446.321457978802,
+        10446.548665309163,
+        10446.648365736393,
+        10446.588297845028,
+        10446.651038527007,
+        10446.743359191418,
+        10446.875368391034,
+        10446.888538153553
+      ],
+      "nG": [
+        4984.531360677146,
+        4986.002909297333,
+        4986.214422068374,
+        4986.37419974492,
+        4987.431737021973,
+        4987.833646962085,
+        4986.502274303096,
+        4986.120336997529
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 3.7168985791888147,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "CZT": {
+      "date": "2026-01-28",
+      "station": "CZT",
+      "timestamps": [
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59",
+        "2026-01-27T19:29:59",
+        "2026-01-27T20:29:59",
+        "2026-01-27T21:29:59",
+        "2026-01-27T22:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "EYR": {
+      "date": "2026-01-28",
+      "station": "EYR",
+      "timestamps": [
+        "2026-01-27T07:29:59",
+        "2026-01-27T08:29:59",
+        "2026-01-27T09:29:59",
+        "2026-01-27T10:29:59",
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59"
+      ],
+      "P": [
+        6.473008101176915,
+        6.4769593843859266,
+        0.5000000000000007,
+        0.5000000000000007,
+        6.480863288819872,
+        6.4831521770697815,
+        6.483856843130209,
+        6.482664745083497
+      ],
+      "nZ": [
+        15483.771089818489,
+        15483.926144171088,
+        54642.31439603791,
+        54642.31439603791,
+        15484.524640432555,
+        15484.368694956846,
+        15484.023026409946,
+        15483.417838181593
+      ],
+      "nG": [
+        2392.0518633374254,
+        2390.6165262512454,
+        109284.62879207567,
+        109284.62879207567,
+        2389.268828914334,
+        2388.40123940379,
+        2388.0883555928003,
+        2388.434146609901
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 15.369326501221733,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "GNA": {
+      "date": "2026-01-28",
+      "station": "GNA",
+      "timestamps": [
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59",
+        "2026-01-27T19:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "GUA": {
+      "date": "2026-01-28",
+      "station": "GUA",
+      "timestamps": [
+        "2026-01-27T10:29:59",
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59"
+      ],
+      "P": [
+        0.04504351844913334,
+        0.04505540881559841,
+        0.04506466275327458,
+        0.045069151923903025,
+        0.04507384973376617,
+        0.045070553527777016,
+        0.04507000281958848,
+        0.04507876678924071
+      ],
+      "nZ": [
+        318.24163187527034,
+        318.3493558328212,
+        318.44515148547066,
+        318.4863503449734,
+        318.5604306146188,
+        318.60293962211085,
+        318.6342621665022,
+        318.64172184987274
+      ],
+      "nG": [
+        7065.203670416059,
+        7065.730046657728,
+        7066.404850934587,
+        7066.615118090561,
+        7067.522133037942,
+        7068.982177593085,
+        7069.763528570633,
+        7068.5545445294965
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.6898984736961483,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "IRT": {
+      "date": "2026-01-28",
+      "station": "IRT",
+      "timestamps": [
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59",
+        "2026-01-27T19:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "KAK": {
+      "date": "2026-01-28",
+      "station": "KAK",
+      "timestamps": [
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59"
+      ],
+      "P": [
+        1.4319494194959939,
+        1.4316936193908076,
+        1.431537722251547,
+        1.4313762289634298,
+        1.431199815816373,
+        1.431169347609271,
+        1.431350358505991,
+        1.4316980034874622
+      ],
+      "nZ": [
+        7090.362993611943,
+        7090.951260146221,
+        7090.970166728815,
+        7091.2296897299475,
+        7091.083408584336,
+        7090.888074830525,
+        7090.448267509719,
+        7089.553568434541
+      ],
+      "nG": [
+        4951.54570201757,
+        4952.841281197757,
+        4953.393862074424,
+        4954.134032856795,
+        4954.642482635802,
+        4954.6114767449835,
+        4953.677641098688,
+        4951.849867196261
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 2.5817103492452835,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "KNY": {
+      "date": "2026-01-28",
+      "station": "KNY",
+      "timestamps": [
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59"
+      ],
+      "P": [
+        1.0483194774240217,
+        1.0481265662384314,
+        1.048044531482143,
+        1.0479836659334363,
+        1.0479241189351238,
+        1.047908040757185,
+        1.0480365961643268,
+        1.0483139950509401
+      ],
+      "nZ": [
+        6148.129530931446,
+        6148.5338333982845,
+        6148.572388336643,
+        6148.825490415864,
+        6148.955448812703,
+        6148.830826298281,
+        6148.426459978023,
+        6147.626861659389
+      ],
+      "nG": [
+        5864.747973622421,
+        5866.213138232387,
+        5866.709098363732,
+        5867.291342693898,
+        5867.748759386442,
+        5867.7198639065045,
+        5866.61427900556,
+        5864.299141938538
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 1.7460010650791593,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "MMB": {
+      "date": "2026-01-28",
+      "station": "MMB",
+      "timestamps": [
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59"
+      ],
+      "P": [
+        2.6668813484907417,
+        2.6658952967223875,
+        2.6655725595483455,
+        2.6649315499763158,
+        2.6645894967656867,
+        2.6647112424520984,
+        2.6652689348327283,
+        2.666557026934073
+      ],
+      "nZ": [
+        10011.676409157004,
+        10012.275169824676,
+        10012.527626009027,
+        10012.246984317639,
+        10011.707302016268,
+        10011.536298317169,
+        10011.646976523853,
+        10011.870563485414
+      ],
+      "nG": [
+        3754.0764289430704,
+        3755.689573455631,
+        3756.239007692047,
+        3757.03720585492,
+        3757.316957891115,
+        3757.081119642981,
+        3756.336497859711,
+        3754.605831549293
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 5.346495682952204,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "PHU": {
+      "date": "2026-01-28",
+      "station": "PHU",
+      "timestamps": [
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59",
+        "2026-01-27T19:29:59",
+        "2026-01-27T20:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "TAN": {
+      "date": "2026-01-28",
+      "station": "TAN",
+      "timestamps": [
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59",
+        "2026-01-27T19:29:59",
+        "2026-01-27T20:29:59",
+        "2026-01-27T21:29:59",
+        "2026-01-27T22:29:59",
+        "2026-01-27T23:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.500000000000001,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "TIK": {
+      "date": "2026-01-28",
+      "station": "TIK",
+      "timestamps": [
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    },
+    "YAK": {
+      "date": "2026-01-28",
+      "station": "YAK",
+      "timestamps": [
+        "2026-01-27T11:29:59",
+        "2026-01-27T12:29:59",
+        "2026-01-27T13:29:59",
+        "2026-01-27T14:29:59",
+        "2026-01-27T15:29:59",
+        "2026-01-27T16:29:59",
+        "2026-01-27T17:29:59",
+        "2026-01-27T18:29:59"
+      ],
+      "P": [
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007,
+        0.5000000000000007
+      ],
+      "nZ": [
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791,
+        54642.31439603791
+      ],
+      "nG": [
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567,
+        109284.62879207567
+      ],
+      "isAnomalous": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "isQuiet": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "threshold": 0.5000000000000007,
+      "nAnomHours": 0,
+      "is_anomalous": false
+    }
+  },
+  "earthquake_correlations": {},
+  "false_negatives": {
+    "GUA": [
+      {
+        "earthquake_time": "2025-12-24 13:33:58.121",
+        "earthquake_magnitude": "5",
+        "earthquake_distance_km": "65.22543613978408",
+        "earthquake_place": "24 km S of Merizo Village, Guam",
+        "earthquake_latitude": "13.0455",
+        "earthquake_longitude": "144.6313"
+      }
+    ],
+    "KNY": [
+      {
+        "earthquake_time": "2025-12-21 06:58:48.287",
+        "earthquake_magnitude": "5.1",
+        "earthquake_distance_km": "165.17432168540054",
+        "earthquake_place": "126 km ESE of \u014chara, Japan",
+        "earthquake_latitude": "34.7941",
+        "earthquake_longitude": "141.6701"
+      }
+    ],
+    "MMB": [
+      {
+        "earthquake_time": "2026-01-14 22:13:13.544",
+        "earthquake_magnitude": "5.6",
+        "earthquake_distance_km": "170.24730435749854",
+        "earthquake_place": "64 km ESE of Akkeshi, Japan",
+        "earthquake_latitude": "42.7295",
+        "earthquake_longitude": "145.5273"
+      }
+    ],
+    "SHU": [
+      {
+        "earthquake_time": "2026-01-22 19:38:50.472",
+        "earthquake_magnitude": "5.2",
+        "earthquake_distance_km": "121.13980958861012",
+        "earthquake_place": "120 km SSE of Sand Point, Alaska",
+        "earthquake_latitude": "54.3122",
+        "earthquake_longitude": "-159.886"
+      }
+    ]
+  },
+  "metadata": {
+    "KAK": {
+      "name": "Kakioka",
+      "country": "Japan",
+      "latitude": 36.232,
+      "longitude": 140.186,
+      "timezone": "Asia/Tokyo"
+    },
+    "HER": {
+      "name": "Hermanus",
+      "country": "South Africa",
+      "latitude": -34.425,
+      "longitude": 19.225,
+      "timezone": "Africa/Johannesburg"
+    },
+    "NGK": {
+      "name": "Niemegk",
+      "country": "Germany",
+      "latitude": 52.073,
+      "longitude": 12.675,
+      "timezone": "Europe/Berlin"
+    },
+    "API": {
+      "name": "Apia",
+      "country": "Samoa",
+      "latitude": -13.806,
+      "longitude": -171.778,
+      "timezone": "Pacific/Apia"
+    },
+    "BOU": {
+      "name": "Boulder",
+      "country": "USA",
+      "latitude": 40.137,
+      "longitude": -105.238,
+      "timezone": "America/Denver"
+    },
+    "FRD": {
+      "name": "Fredericksburg",
+      "country": "USA",
+      "latitude": 38.205,
+      "longitude": -77.373,
+      "timezone": "America/New_York"
+    },
+    "GUA": {
+      "name": "Guam",
+      "country": "USA",
+      "latitude": 13.588,
+      "longitude": 144.867,
+      "timezone": "Pacific/Guam"
+    },
+    "HON": {
+      "name": "Honolulu",
+      "country": "USA",
+      "latitude": 21.316,
+      "longitude": -158.003,
+      "timezone": "Pacific/Honolulu"
+    },
+    "SJG": {
+      "name": "San Juan",
+      "country": "Puerto Rico",
+      "latitude": 18.113,
+      "longitude": -66.151,
+      "timezone": "America/Puerto_Rico"
+    },
+    "SIT": {
+      "name": "Sitka",
+      "country": "USA",
+      "latitude": 57.058,
+      "longitude": -135.331,
+      "timezone": "America/Anchorage"
+    },
+    "TUC": {
+      "name": "Tucson",
+      "country": "USA",
+      "latitude": 32.174,
+      "longitude": -110.734,
+      "timezone": "America/Phoenix"
+    },
+    "ABG": {
+      "name": "Alibag",
+      "country": "India",
+      "latitude": 18.637,
+      "longitude": 72.872,
+      "timezone": "Asia/Kolkata"
+    },
+    "ASP": {
+      "name": "Alice Springs",
+      "country": "Australia",
+      "latitude": -23.796,
+      "longitude": 133.888,
+      "timezone": "Australia/Darwin"
+    },
+    "CAN": {
+      "name": "Canberra",
+      "country": "Australia",
+      "latitude": -35.32,
+      "longitude": 149.004,
+      "timezone": "Australia/Sydney"
+    },
+    "CNB": {
+      "name": "Chambon-la-For\u00eat",
+      "country": "France",
+      "latitude": 48.025,
+      "longitude": 2.267,
+      "timezone": "Europe/Paris"
+    },
+    "CZT": {
+      "name": "Port-aux-Fran\u00e7ais",
+      "country": "France (Kerguelen)",
+      "latitude": -49.352,
+      "longitude": 70.26,
+      "timezone": "Indian/Kerguelen"
+    },
+    "EYR": {
+      "name": "Eyrewell",
+      "country": "New Zealand",
+      "latitude": -43.408,
+      "longitude": 172.349,
+      "timezone": "Pacific/Auckland"
+    },
+    "FUR": {
+      "name": "F\u00fcrstenfeldbruck",
+      "country": "Germany",
+      "latitude": 48.167,
+      "longitude": 11.275,
+      "timezone": "Europe/Berlin"
+    },
+    "GNA": {
+      "name": "Gnangara",
+      "country": "Australia",
+      "latitude": -31.8,
+      "longitude": 115.95,
+      "timezone": "Australia/Perth"
+    },
+    "HAD": {
+      "name": "Hartland",
+      "country": "United Kingdom",
+      "latitude": 51.001,
+      "longitude": -4.481,
+      "timezone": "Europe/London"
+    },
+    "KNY": {
+      "name": "Kanozan",
+      "country": "Japan",
+      "latitude": 35.26,
+      "longitude": 139.951,
+      "timezone": "Asia/Tokyo"
+    },
+    "LRM": {
+      "name": "L'Aquila",
+      "country": "Italy",
+      "latitude": 42.383,
+      "longitude": 13.317,
+      "timezone": "Europe/Rome"
+    },
+    "MBO": {
+      "name": "M'Bour",
+      "country": "Senegal",
+      "latitude": 14.39,
+      "longitude": -16.96,
+      "timezone": "Africa/Dakar"
+    },
+    "MMB": {
+      "name": "Memambetsu",
+      "country": "Japan",
+      "latitude": 43.91,
+      "longitude": 144.189,
+      "timezone": "Asia/Tokyo"
+    },
+    "PPT": {
+      "name": "Pamatai",
+      "country": "French Polynesia",
+      "latitude": -17.567,
+      "longitude": -149.583,
+      "timezone": "Pacific/Tahiti"
+    },
+    "TAM": {
+      "name": "Tamanrasset",
+      "country": "Algeria",
+      "latitude": 22.79,
+      "longitude": 5.53,
+      "timezone": "Africa/Algiers"
+    },
+    "TEO": {
+      "name": "Teoloyucan",
+      "country": "Mexico",
+      "latitude": 19.744,
+      "longitude": -99.183,
+      "timezone": "America/Mexico_City"
+    },
+    "VSS": {
+      "name": "Vassouras",
+      "country": "Brazil",
+      "latitude": -22.404,
+      "longitude": -43.662,
+      "timezone": "America/Sao_Paulo"
+    },
+    "WNG": {
+      "name": "Wingst",
+      "country": "Germany",
+      "latitude": 53.743,
+      "longitude": 9.073,
+      "timezone": "Europe/Berlin"
+    },
+    "YAK": {
+      "name": "Yakutsk",
+      "country": "Russia",
+      "latitude": 62.034,
+      "longitude": 129.675,
+      "timezone": "Asia/Yakutsk"
+    },
+    "AMS": {
+      "name": "Amberley",
+      "country": "New Zealand",
+      "latitude": -43.155,
+      "longitude": 172.728,
+      "timezone": "Pacific/Auckland"
+    },
+    "BEL": {
+      "name": "Belsk",
+      "country": "Poland",
+      "latitude": 51.836,
+      "longitude": 20.789,
+      "timezone": "Europe/Warsaw"
+    },
+    "CLF": {
+      "name": "Chambon-la-For\u00eat",
+      "country": "France",
+      "latitude": 48.025,
+      "longitude": 2.267,
+      "timezone": "Europe/Paris"
+    },
+    "DOU": {
+      "name": "Dourbes",
+      "country": "Belgium",
+      "latitude": 50.095,
+      "longitude": 4.595,
+      "timezone": "Europe/Brussels"
+    },
+    "ESK": {
+      "name": "Eskdalemuir",
+      "country": "United Kingdom",
+      "latitude": 55.317,
+      "longitude": -3.206,
+      "timezone": "Europe/London"
+    },
+    "FCC": {
+      "name": "Fort Churchill",
+      "country": "Canada",
+      "latitude": 58.759,
+      "longitude": -94.088,
+      "timezone": "America/Winnipeg"
+    },
+    "HLP": {
+      "name": "Hel",
+      "country": "Poland",
+      "latitude": 54.608,
+      "longitude": 18.808,
+      "timezone": "Europe/Warsaw"
+    },
+    "IRT": {
+      "name": "Irkutsk",
+      "country": "Russia",
+      "latitude": 52.167,
+      "longitude": 104.45,
+      "timezone": "Asia/Irkutsk"
+    },
+    "KGD": {
+      "name": "Karaganda",
+      "country": "Kazakhstan",
+      "latitude": 49.817,
+      "longitude": 73.083,
+      "timezone": "Asia/Almaty"
+    },
+    "LER": {
+      "name": "Lerwick",
+      "country": "United Kingdom",
+      "latitude": 60.131,
+      "longitude": -1.183,
+      "timezone": "Europe/London"
+    },
+    "LYC": {
+      "name": "Lyon",
+      "country": "France",
+      "latitude": 45.759,
+      "longitude": 4.829,
+      "timezone": "Europe/Paris"
+    },
+    "NUR": {
+      "name": "Nurmij\u00e4rvi",
+      "country": "Finland",
+      "latitude": 60.508,
+      "longitude": 24.655,
+      "timezone": "Europe/Helsinki"
+    },
+    "OUL": {
+      "name": "Oulu",
+      "country": "Finland",
+      "latitude": 64.52,
+      "longitude": 25.505,
+      "timezone": "Europe/Helsinki"
+    },
+    "PAG": {
+      "name": "Pag",
+      "country": "Croatia",
+      "latitude": 44.35,
+      "longitude": 15.05,
+      "timezone": "Europe/Zagreb"
+    },
+    "PHU": {
+      "name": "Phuthuy",
+      "country": "Vietnam",
+      "latitude": 21.033,
+      "longitude": 105.958,
+      "timezone": "Asia/Ho_Chi_Minh"
+    },
+    "PIL": {
+      "name": "Pilar",
+      "country": "Argentina",
+      "latitude": -31.68,
+      "longitude": -63.88,
+      "timezone": "America/Argentina/Cordoba"
+    },
+    "QIX": {
+      "name": "Qixian",
+      "country": "China",
+      "latitude": 37.47,
+      "longitude": 112.33,
+      "timezone": "Asia/Shanghai"
+    },
+    "RAN": {
+      "name": "Ranchi",
+      "country": "India",
+      "latitude": 23.35,
+      "longitude": 85.33,
+      "timezone": "Asia/Kolkata"
+    },
+    "SHU": {
+      "name": "Shumagin",
+      "country": "USA",
+      "latitude": 55.348,
+      "longitude": -160.464,
+      "timezone": "America/Anchorage"
+    },
+    "SOD": {
+      "name": "Sodankyl\u00e4",
+      "country": "Finland",
+      "latitude": 67.365,
+      "longitude": 26.629,
+      "timezone": "Europe/Helsinki"
+    },
+    "SPT": {
+      "name": "San Pablo-Toledo",
+      "country": "Spain",
+      "latitude": 39.544,
+      "longitude": -4.348,
+      "timezone": "Europe/Madrid"
+    },
+    "SUA": {
+      "name": "Sua",
+      "country": "Romania",
+      "latitude": 44.683,
+      "longitude": 26.25,
+      "timezone": "Europe/Bucharest"
+    },
+    "TAN": {
+      "name": "Tananarive",
+      "country": "Madagascar",
+      "latitude": -18.917,
+      "longitude": 47.55,
+      "timezone": "Indian/Antananarivo"
+    },
+    "THL": {
+      "name": "Thule",
+      "country": "Greenland",
+      "latitude": 77.48,
+      "longitude": -69.22,
+      "timezone": "America/Thule"
+    },
+    "TIK": {
+      "name": "Tixie Bay",
+      "country": "Russia",
+      "latitude": 71.587,
+      "longitude": 128.92,
+      "timezone": "Asia/Yakutsk"
+    },
+    "TRW": {
+      "name": "Trewartha",
+      "country": "United Kingdom",
+      "latitude": 50.344,
+      "longitude": -5.131,
+      "timezone": "Europe/London"
+    },
+    "VAL": {
+      "name": "Valentia",
+      "country": "Ireland",
+      "latitude": 51.938,
+      "longitude": -10.248,
+      "timezone": "Europe/Dublin"
+    },
+    "VIC": {
+      "name": "Victoria",
+      "country": "Canada",
+      "latitude": 48.65,
+      "longitude": -123.45,
+      "timezone": "America/Vancouver"
+    },
+    "VLA": {
+      "name": "Vladivostok",
+      "country": "Russia",
+      "latitude": 43.2,
+      "longitude": 131.9,
+      "timezone": "Asia/Vladivostok"
+    },
+    "YSS": {
+      "name": "Yuzhno-Sakhalinsk",
+      "country": "Russia",
+      "latitude": 46.967,
+      "longitude": 142.717,
+      "timezone": "Asia/Sakhalin"
+    }
+  }
+}
