@@ -1,1 +1,16 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-28 15:58:04.094,6.4245,123.7029,10.0,5.1,"37 km W of Sangay, Philippines",earthquake,
+2026-01-28 11:31:34.746,-55.8888,-27.6343,95.308,5.0,South Sandwich Islands region,earthquake,
+2026-01-28 10:45:49.452,40.2264,143.0649,13.399,5.1,"107 km E of Noda, Japan",earthquake,
+2026-01-28 09:14:04.015,51.4364,159.177,37.58,5.2,"174 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-01-28 08:43:45.427,6.5177,124.0105,10.0,5.1,"3 km SW of Bantogon, Philippines",earthquake,
+2026-01-28 08:38:47.943,6.5738,123.6966,10.0,5.6,"37 km W of Bantogon, Philippines",earthquake,
+2026-01-28 08:34:31.889,6.4453,123.7338,10.0,5.4,"34 km W of Sangay, Philippines",earthquake,
+2026-01-28 08:24:22.090,51.6656,160.0786,10.0,5.1,"181 km SE of Vilyuchinsk, Russia",earthquake,
+2026-01-28 07:57:40.135,51.3609,159.3213,35.0,5.0,"185 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-01-28 06:47:00.859,6.4204,123.7821,10.0,5.9,"29 km W of Sangay, Philippines",earthquake,
+2026-01-28 06:31:19.868,6.3984,123.8277,10.0,5.1,"24 km WSW of Sangay, Philippines",earthquake,
+2026-01-28 03:24:27.955,6.5071,123.9335,10.0,5.1,"11 km WSW of Bantogon, Philippines",earthquake,
+2026-01-28 02:58:42.113,-11.6377,-13.9157,10.0,5.2,Ascension Island region,earthquake,
+2026-01-28 01:58:30.490,-11.883,-14.0035,10.0,5.4,Ascension Island region,earthquake,
+2026-01-28 01:41:49.381,6.3989,123.6582,10.0,5.3,"43 km W of Sangay, Philippines",earthquake,
