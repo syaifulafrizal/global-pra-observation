@@ -1,4 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-01-28 23:43:56.847,6.3239,123.7621,10.0,5.0,"33 km WSW of Sangay, Philippines",earthquake,
+2026-01-28 22:30:25.540,2.2207,-101.7454,10.0,5.2,Galapagos Triple Junction region,earthquake,
+2026-01-28 18:30:15.722,-8.6624,118.3602,130.827,5.1,"17 km SW of Dompu, Indonesia",earthquake,
+2026-01-28 17:22:26.226,-7.3049,130.3097,29.089,5.0,"Pulau Pulau Tanimbar, Indonesia",earthquake,
 2026-01-28 15:58:04.094,6.4245,123.7029,10.0,5.1,"37 km W of Sangay, Philippines",earthquake,
 2026-01-28 11:31:34.746,-55.8888,-27.6343,95.308,5.0,South Sandwich Islands region,earthquake,
 2026-01-28 10:45:49.452,40.2264,143.0649,13.399,5.1,"107 km E of Noda, Japan",earthquake,
