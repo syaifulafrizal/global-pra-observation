@@ -1,6 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-01-27 19:54:13.063,6.5558,123.7758,10.0,5.1,"28 km W of Bantogon, Philippines",earthquake,
 2026-01-27 17:05:09.776,6.4359,123.7916,10.0,5.3,"27 km W of Sangay, Philippines",earthquake,
+2026-01-27 15:50:37.632,6.5145,123.7553,10.0,5.1,"30 km W of Bantogon, Philippines",earthquake,
 2026-01-27 04:29:23.515,50.4718,159.8124,10.0,5.1,"258 km ESE of Ozernovskiy, Russia",earthquake,
 2026-01-27 02:47:30.079,42.9163,146.2682,34.218,5.0,"72 km SE of Nemuro, Japan",earthquake,
 2026-01-27 01:31:45.686,-59.6712,-26.5039,111.93,5.2,South Sandwich Islands region,earthquake,

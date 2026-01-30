@@ -1,5 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-01-30 02:34:58.302,-34.3578,-109.5918,10.0,5.0,southern East Pacific Rise,earthquake,
+2026-01-30 12:04:02.215,-28.7586,-176.7306,10.0,5.0,Kermadec Islands region,earthquake,
+2026-01-30 02:34:58.466,-34.3543,-109.5584,10.0,5.4,southern East Pacific Rise,earthquake,
 2026-01-30 01:28:03.201,-29.439,-177.0123,35.0,5.2,"Kermadec Islands, New Zealand",earthquake,
 2026-01-30 01:15:31.179,-0.2236,124.5425,83.327,5.0,"75 km S of Modisi, Indonesia",earthquake,
 2026-01-30 00:49:16.888,6.4915,123.8572,10.0,5.1,"20 km WSW of Bantogon, Philippines",earthquake,
