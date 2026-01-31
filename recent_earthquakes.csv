@@ -1,3 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-01-31 11:54:50.354,64.6982,-17.8261,10.0,5.3,"110 km S of Akureyri, Iceland",earthquake,
-2026-01-31 06:21:40.916,-57.9427,-25.4265,89.186,5.0,South Sandwich Islands region,earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
