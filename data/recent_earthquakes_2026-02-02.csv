@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-02 08:15:41.052,-46.6443,165.4903,10,5.3,"196 km W of Riverton, New Zealand",earthquake,
