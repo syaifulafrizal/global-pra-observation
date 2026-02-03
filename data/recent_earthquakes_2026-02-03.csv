@@ -1,2 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-02-03 00:33:23.258,56.1712,161.6441,72.245,5,"52 km W of Ust’-Kamchatsk Staryy, Russia",earthquake,
+2026-02-03 15:51:30.749,20.5539,94.0242,67.829,5.2,"88 km W of Yenangyaung, Burma (Myanmar)",earthquake,
+2026-02-03 15:38:50.376,-51.3514,139.1899,10.0,5.1,western Indian-Antarctic Ridge,earthquake,
+2026-02-03 15:34:01.978,20.4657,93.9572,62.69,5.9,"95 km W of Yenangyaung, Burma (Myanmar)",earthquake,
+2026-02-03 09:03:23.298,36.7639,140.9958,59.65,5.0,"22 km E of Kitaibaraki, Japan",earthquake,
+2026-02-03 02:50:46.029,-6.6119,129.9107,141.538,5.2,Banda Sea,earthquake,
+2026-02-03 00:33:23.258,56.1712,161.6441,72.245,5.0,"52 km W of Ust’-Kamchatsk Staryy, Russia",earthquake,
