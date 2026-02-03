@@ -1,2 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-02-03 00:33:23.258,56.1712,161.6441,72.245,5,"52 km W of Ust’-Kamchatsk Staryy, Russia",earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
