@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-03T16:51:58.191981",
+  "generated_at": "2026-02-04T12:08:49.217717",
   "latest_date": "2026-02-04",
   "available_dates": [
     "2026-02-04",
@@ -17,12 +17,37 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 0,
+    "false_negatives_last_7_days": 2,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
-    "total_false_negatives": 7
+    "total_false_negatives": 9
   },
   "recent_anomalies": [],
-  "recent_false_negatives": []
+  "recent_false_negatives": [
+    {
+      "station": "KAK",
+      "earthquake_time": "2026-02-03 09:03:23.298",
+      "first_logged": "2026-02-04T12:08:49.195524",
+      "earthquake_magnitude": 5.0,
+      "earthquake_distance_km": 93.52866060374312,
+      "earthquake_place": "22 km E of Kitaibaraki, Japan",
+      "earthquake_latitude": 36.7639,
+      "earthquake_longitude": 140.9958,
+      "last_confirmed": "2026-02-04T12:08:49.195524",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "KNY",
+      "earthquake_time": "2026-02-03 09:03:23.298",
+      "first_logged": "2026-02-04T12:08:49.195524",
+      "earthquake_magnitude": 5.0,
+      "earthquake_distance_km": 191.61487639762166,
+      "earthquake_place": "22 km E of Kitaibaraki, Japan",
+      "earthquake_latitude": 36.7639,
+      "earthquake_longitude": 140.9958,
+      "last_confirmed": "2026-02-04T12:08:49.195524",
+      "source_file": "false_negatives.csv"
+    }
+  ]
 }
