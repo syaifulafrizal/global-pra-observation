@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-04 10:39:29.988,-29.5951,-178.5952,184.162,6.1,"Kermadec Islands, New Zealand",earthquake,
+2026-02-04 04:25:54.839,-5.6004,150.0844,143.776,5.1,"8 km SW of Kimbe, Papua New Guinea",earthquake,
+2026-02-04 02:07:44.796,-26.9354,-176.2788,10.0,5.3,south of the Fiji Islands,earthquake,
+2026-02-04 00:36:31.113,-6.8285,132.0522,11.096,5.1,"153 km SSW of Tual, Indonesia",earthquake,
