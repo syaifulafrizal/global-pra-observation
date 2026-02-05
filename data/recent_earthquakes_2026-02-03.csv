@@ -1,9 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-02-03 19:34:01.908,-15.3423,-173.0865,10.0,5.2,"101 km NE of Hihifo, Tonga",earthquake,
 2026-02-03 19:21:36.973,-6.215,147.5575,72.189,5.2,"49 km NW of Finschhafen, Papua New Guinea",earthquake,
-2026-02-03 15:51:30.749,20.5539,94.0242,67.829,5.2,"88 km W of Yenangyaung, Burma (Myanmar)",earthquake,
-2026-02-03 15:38:50.376,-51.3514,139.1899,10.0,5.1,western Indian-Antarctic Ridge,earthquake,
-2026-02-03 15:34:01.978,20.4657,93.9572,62.69,5.9,"95 km W of Yenangyaung, Burma (Myanmar)",earthquake,
+2026-02-03 15:51:31.021,20.5627,94.0152,71.111,5.1,"89 km W of Yenangyaung, Burma (Myanmar)",earthquake,
+2026-02-03 15:38:50.177,-51.3489,139.1004,10.0,5.1,western Indian-Antarctic Ridge,earthquake,
+2026-02-03 15:34:01.298,20.4466,93.9337,56.995,5.8,"97 km W of Yenangyaung, Burma (Myanmar)",earthquake,
 2026-02-03 09:03:23.298,36.7639,140.9958,59.65,5.0,"22 km E of Kitaibaraki, Japan",earthquake,
 2026-02-03 02:50:46.029,-6.6119,129.9107,141.538,5.2,Banda Sea,earthquake,
 2026-02-03 00:33:23.258,56.1712,161.6441,72.245,5.0,"52 km W of Ust’-Kamchatsk Staryy, Russia",earthquake,
