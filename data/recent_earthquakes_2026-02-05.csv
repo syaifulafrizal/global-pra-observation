@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-05 18:15:50.480,9.9051,125.592,152.224,5.0,"5 km S of Dinagat, Philippines",earthquake,
+2026-02-05 18:06:10.382,-8.7865,111.2264,40.0,5.8,"94 km SW of Trenggalek, Indonesia",earthquake,
