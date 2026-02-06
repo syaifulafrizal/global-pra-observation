@@ -61,11 +61,13 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 **Location**: Top right of header
 
 **How to Use**:
+
 1. Click the date dropdown menu
 2. Select from available dates (last 7 days)
 3. Dashboard automatically updates with selected date's data
 
 **Date Labels**:
+
 - **(Today)** - Current day's data
 - **(Yesterday)** - Previous day's data
 - **Date only** - Historical data
@@ -75,11 +77,13 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 **Location**: Top right, next to date selector
 
 **How to Use**:
+
 - Click the toggle switch to switch between modes
 - Setting is saved in browser localStorage
 - Automatically applied on next visit
 
 **Benefits**:
+
 - **Light Mode**: Better for daytime viewing
 - **Dark Mode**: Reduced eye strain in low-light conditions
 
@@ -88,26 +92,31 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 **Metrics Displayed**:
 
 #### Active Stations
+
 - **Value**: Number of stations with data
 - **Description**: Total monitored stations
 - **Typical Range**: 45-51 stations
 
 #### Anomalies Detected
+
 - **Value**: Number of PRA anomalies
 - **Description**: Polarization ratio anomalies detected
 - **Color**: Orange if > 0
 
 #### Events (24h)
+
 - **Value**: Global earthquakes M≥5.0
 - **Description**: USGS earthquake count
 - **Scope**: Worldwide, last 24 hours
 
 #### False Positives
+
 - **Value**: Anomalies without earthquakes
 - **Description**: False alarms
 - **Calculation**: Anomalies - True Positives
 
 #### False Negatives
+
 - **Value**: Missed earthquakes
 - **Description**: Earthquakes without prior anomalies
 - **Window**: 14-day lookback
@@ -115,12 +124,14 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### 4. Data Availability Report
 
 **Information Shown**:
+
 - **Stations Available**: Fraction with data (e.g., 51/51)
 - **Coverage Percentage**: Data availability %
 - **Data Source**: Standard or Hybrid (with fallback)
 - **Processing Date**: Analysis window date
 
 **Status Icons**:
+
 - ✅ Green: >90% coverage
 - ⚠️ Yellow: 50-90% coverage
 - ⚠️ Red: <50% coverage
@@ -128,22 +139,26 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### 5. Analytical Charts
 
 #### 7-Day Anomaly Trend
+
 - **Type**: Line chart
 - **X-axis**: Date (last 7 days)
 - **Y-axis**: Number of anomalies
 - **Purpose**: Identify temporal patterns
 
 #### Station Status
+
 - **Type**: Doughnut chart
 - **Categories**: Normal, With EQ, False Alarm
 - **Purpose**: Overall system status
 
 #### Detection Success Rate
+
 - **Type**: Gauge/pie chart
 - **Metric**: TP / (TP + FN) × 100%
 - **Purpose**: Method validation
 
 #### Magnitude Distribution
+
 - **Type**: Horizontal bar chart
 - **Categories**: M5.0-6.0, M6.0-7.0, M7.0+, M8+
 - **Purpose**: Earthquake severity distribution
@@ -151,6 +166,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### 6. Interactive Station Map
 
 **Features**:
+
 - **Global Coverage**: All 51 stations displayed
 - **Marker Colors**:
   - 🔺 **Gray**: Normal (no anomaly)
@@ -160,6 +176,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 - **Click Interaction**: Opens detailed popup
 
 **Popup Information**:
+
 - Station code and name
 - Country and coordinates
 - Anomaly status
@@ -170,6 +187,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
   - Days before anomaly
 
 **Map Controls**:
+
 - **Zoom**: Mouse wheel or +/- buttons
 - **Pan**: Click and drag
 - **Reset**: Double-click to reset view
@@ -177,11 +195,13 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### 7. Station Analysis Panel
 
 **How to Use**:
+
 1. Select station from dropdown
 2. View PRA analysis plot
 3. Examine time series data
 
 **Plot Information**:
+
 - **X-axis**: Time (20:00 - 04:00 local)
 - **Y-axis**: Polarization Ratio
 - **Red Line**: EVT threshold
@@ -193,11 +213,13 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 **Location**: "Download Anomalies" button above map
 
 **How to Use**:
+
 1. Click the download button
 2. CSV file automatically downloads
 3. Filename: `anomalies_YYYY-MM-DD.csv`
 
 **CSV Contents**:
+
 - Station code
 - Date and time
 - Polarization ratio values
@@ -211,6 +233,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### Understanding Anomaly Status
 
 #### True Positive (TP)
+
 - **Meaning**: Anomaly correctly predicted earthquake
 - **Criteria**: 
   - Anomaly detected
@@ -218,6 +241,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 - **Interpretation**: Successful precursor detection
 
 #### False Positive (FP)
+
 - **Meaning**: Anomaly without subsequent earthquake
 - **Criteria**:
   - Anomaly detected
@@ -225,6 +249,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 - **Interpretation**: False alarm or unrelated disturbance
 
 #### False Negative (FN)
+
 - **Meaning**: Earthquake occurred without prior anomaly
 - **Criteria**:
   - M≥5.0 earthquake occurred
@@ -234,10 +259,12 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### Reading the Map
 
 **Station Clustering**:
+
 - **Dense Areas**: Multiple nearby stations (e.g., Europe, Japan)
 - **Sparse Areas**: Limited coverage (e.g., oceans, remote regions)
 
 **Anomaly Patterns**:
+
 - **Isolated Anomalies**: Single station detection
 - **Clustered Anomalies**: Multiple nearby stations (stronger signal)
 
@@ -273,18 +300,22 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ### Common Issues
 
 #### "No Data Available"
+
 - **Cause**: Selected date has no processed data
 - **Solution**: Choose a different date from dropdown
 
 #### Map Not Loading
+
 - **Cause**: Slow internet or browser issue
 - **Solution**: Refresh page, check connection
 
 #### Charts Not Displaying
+
 - **Cause**: JavaScript disabled or ad blocker
 - **Solution**: Enable JavaScript, disable ad blockers
 
 #### Station Plot Not Showing
+
 - **Cause**: No plot available for selected date
 - **Solution**: Try different station or date
 
@@ -318,8 +349,3 @@ A: No, this is a research platform for method validation.
 **Institution**: Universiti Putra Malaysia  
 **GitHub**: https://github.com/syaifulafrizal  
 **Issues**: Report via GitHub Issues
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: February 5, 2026

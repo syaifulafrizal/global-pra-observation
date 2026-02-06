@@ -128,10 +128,10 @@ GEMPRA is a comprehensive full-stack web-based platform for real-time earthquake
    - JSON-based data interchange format
 
 4. **Deployment Infrastructure**
-   - Automated CI/CD pipeline via GitHub Actions
+   - Automated daily processing via Windows Task Scheduler (GMT+8)
    - Static site deployment on GitHub Pages
    - PowerShell automation scripts for batch processing
-   - Cross-platform compatibility (Windows/Linux)
+   - Local Windows environment with scheduled execution
 
 **Novel Features:**
 - Polarization Ratio Analysis (PRA) methodology for earthquake precursor detection

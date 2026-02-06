@@ -1,6 +1,7 @@
 # GEMPRA System Architecture Documentation
 
 ## Overview
+
 This document describes the technical architecture of the GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization Ratio Analysis) system.
 
 ---
@@ -78,14 +79,15 @@ This document describes the technical architecture of the GEMPRA (Geomagnetic Ea
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                   DEPLOYMENT & CI/CD LAYER                           │
+│                   DEPLOYMENT & AUTOMATION LAYER                      │
 ├─────────────────────────────────────────────────────────────────────┤
 │  ┌──────────────────────────────────────────────────────────────┐  │
-│  │              GitHub Actions Workflow                          │  │
-│  │  • Automated daily processing                                 │  │
+│  │         Windows Task Scheduler (GMT+8 Timezone)               │  │
+│  │  • Automated daily processing at scheduled time               │  │
+│  │  • PowerShell script execution                                │  │
 │  │  • Data preparation & aggregation                             │  │
-│  │  • Static site generation                                     │  │
-│  │  • Deployment to GitHub Pages                                 │  │
+│  │  • Git commit and push to GitHub                              │  │
+│  │  • Deployment to GitHub Pages (static hosting)                │  │
 │  └──────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────┘
                              │
@@ -125,10 +127,12 @@ This document describes the technical architecture of the GEMPRA (Geomagnetic Ea
 ## Component Details
 
 ### 1. Data Sources
+
 - **INTERMAGNET Network**: 51+ global magnetometer stations
 - **USGS Earthquake Database**: Real-time earthquake data (M ≥ 5.0)
 
 ### 2. Backend Processing
+
 - **Language**: Python 3.x
 - **Key Libraries**: NumPy, SciPy, Pandas, Geopy
 - **Processing Pipeline**:
@@ -139,16 +143,19 @@ This document describes the technical architecture of the GEMPRA (Geomagnetic Ea
   5. Data aggregation and export
 
 ### 3. Data Storage
+
 - **Format**: JSON (primary), CSV (historical)
 - **Structure**: Date-specific files, aggregated datasets
 - **Retention**: 7-day rolling window + historical archives
 
 ### 4. Deployment
+
 - **Platform**: GitHub Pages (static hosting)
-- **CI/CD**: GitHub Actions (automated workflows)
-- **Update Frequency**: Daily automated processing
+- **Automation**: Windows Task Scheduler (scheduled tasks at GMT+8)
+- **Update Frequency**: Daily automated processing via local Windows environment
 
 ### 5. Frontend
+
 - **Technologies**: HTML5, CSS3, JavaScript (ES6+)
 - **Libraries**: Leaflet.js (maps), Chart.js (visualizations)
 - **Features**: Responsive design, dark/light modes, interactive elements
@@ -162,6 +169,7 @@ Raw Data → Processing → Anomaly Detection → Correlation → Aggregation �
 ```
 
 ### Detailed Flow:
+
 1. **Acquisition**: Download geomagnetic data from INTERMAGNET
 2. **Processing**: Apply PRA methodology and spectral analysis
 3. **Detection**: Identify anomalies using EVT thresholds
@@ -190,9 +198,3 @@ Raw Data → Processing → Anomaly Detection → Correlation → Aggregation �
 - **Version Control**: Git-based change tracking
 - **Backup**: Historical data archives
 - **Monitoring**: Automated deployment logs
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: February 5, 2026  
-**Author**: Nur Syaiful Afrizal

@@ -3,6 +3,7 @@
 ## System Requirements
 
 ### Backend Processing Environment
+
 - **Operating System**: Windows 10/11, Linux (Ubuntu 20.04+)
 - **Python Version**: 3.8 or higher
 - **Memory**: Minimum 4GB RAM (8GB recommended)
@@ -10,6 +11,7 @@
 - **Network**: Stable internet connection for API access
 
 ### Frontend Requirements
+
 - **Browser Compatibility**:
   - Chrome 90+
   - Firefox 88+
@@ -25,11 +27,13 @@
 ### Backend Technologies
 
 #### Core Language
+
 - **Python 3.x**
   - Version: 3.8+
   - Purpose: Data processing, analysis, and automation
 
 #### Scientific Computing Libraries
+
 ```python
 numpy >= 1.21.0          # Numerical computations
 scipy >= 1.7.0           # Scientific algorithms
@@ -38,16 +42,19 @@ matplotlib >= 3.4.0      # Plotting and visualization
 ```
 
 #### Geospatial Analysis
+
 ```python
 geopy >= 2.2.0           # Distance calculations
 ```
 
 #### Data Acquisition
+
 ```python
 requests >= 2.26.0       # HTTP requests for API calls
 ```
 
 #### File I/O
+
 ```python
 json                     # JSON parsing (built-in)
 csv                      # CSV handling (built-in)
@@ -57,11 +64,13 @@ pathlib                  # Path operations (built-in)
 ### Frontend Technologies
 
 #### Core Web Technologies
+
 - **HTML5**: Semantic markup, responsive structure
 - **CSS3**: Modern styling, flexbox, grid layouts
 - **JavaScript (ES6+)**: Interactive functionality
 
 #### Visualization Libraries
+
 ```html
 <!-- Leaflet.js for Interactive Maps -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -80,6 +89,7 @@ pathlib                  # Path operations (built-in)
 **Endpoint**: `https://earthquake.usgs.gov/fdsnws/event/1/query`
 
 **Parameters**:
+
 ```python
 {
     'format': 'geojson',
@@ -111,12 +121,14 @@ pathlib                  # Path operations (built-in)
 ### Input Data
 
 #### Geomagnetic Data (IAGA-2002)
+
 ```
 DATE       TIME         DOY     H       D       Z       F
 2024-01-01 00:00:00.000  001  21234.5  -123.4  41234.5  45678.9
 ```
 
 #### Earthquake Data (GeoJSON)
+
 ```json
 {
   "type": "Feature",
@@ -136,6 +148,7 @@ DATE       TIME         DOY     H       D       Z       F
 ### Output Data
 
 #### Station Analysis JSON
+
 ```json
 {
   "station": "KAK",
@@ -149,12 +162,14 @@ DATE       TIME         DOY     H       D       Z       F
 ```
 
 #### Earthquake Correlation CSV
+
 ```csv
 anomaly_date,earthquake_time,earthquake_magnitude,earthquake_distance_km,status
 2024-01-01,2024-01-05 14:23:00,5.5,145.2,TP
 ```
 
 #### Aggregated Data JSON
+
 ```json
 {
   "date": "2024-01-01",
@@ -179,11 +194,13 @@ anomaly_date,earthquake_time,earthquake_magnitude,earthquake_distance_km,status
 **Implementation**: SciPy `scipy.signal.windows.dpss`
 
 **Parameters**:
+
 - Time-bandwidth product (NW): 3.5
 - Number of tapers: 6
 - FFT length: 512 points
 
 **Code Reference**:
+
 ```python
 from scipy.signal import windows
 from scipy.fft import fft
@@ -209,6 +226,7 @@ avg_spectrum = np.mean(spectra, axis=0)
 **Implementation**: SciPy `scipy.stats.genextreme`
 
 **Process**:
+
 1. Collect 30-day baseline data
 2. Fit GEV distribution
 3. Calculate 95th percentile threshold
@@ -219,6 +237,7 @@ avg_spectrum = np.mean(spectra, axis=0)
 **Method**: Haversine formula via Geopy
 
 **Code**:
+
 ```python
 from geopy.distance import geodesic
 
@@ -233,18 +252,21 @@ distance_km = geodesic(
 ## Performance Specifications
 
 ### Processing Speed
+
 - **Single Station Analysis**: ~2-5 seconds
 - **51 Stations (Parallel)**: ~30-60 seconds
 - **Earthquake Correlation**: ~5-10 seconds per station
 - **Data Aggregation**: ~10-15 seconds
 
 ### Data Volume
+
 - **Per Station Per Day**: ~50 KB (JSON)
 - **Aggregated File Per Day**: ~2-3 MB (all stations)
 - **7-Day Rolling Window**: ~15-20 MB total
 - **Historical Archives**: ~500 MB (6 months)
 
 ### Network Optimization
+
 - **Original Requests**: 350+ per page load
 - **Optimized Requests**: 7 per page load
 - **Reduction**: 98%
@@ -254,33 +276,45 @@ distance_km = geodesic(
 
 ## Deployment Specifications
 
-### GitHub Pages Configuration
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy GEMPRA
-on:
-  schedule:
-    - cron: '0 6 * * *'  # Daily at 6 AM UTC
-  workflow_dispatch:
+### Windows Task Scheduler Configuration
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Process data
-        run: python upload_results.py
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+```powershell
+# Scheduled Task Configuration
+# Task Name: GEMPRA Daily Processing
+# Trigger: Daily at specific time (GMT+8 timezone)
+# Action: Run PowerShell script
+
+# Example PowerShell automation script
+# File: run_daily_processing.ps1
+
+# Set working directory
+Set-Location "C:\Users\SYAIFUL\Downloads\pra-observation"
+
+# Activate Python environment (if using virtual env)
+# & ".\venv\Scripts\Activate.ps1"
+
+# Run data processing
+Write-Host "Starting GEMPRA data processing..."
+python integrate_earthquakes.py
+python upload_results.py
+
+# Git operations for deployment
+git add web_output/*
+git commit -m "Automated update: $(Get-Date -Format 'yyyy-MM-dd HH:mm') GMT+8"
+git push origin main
+
+Write-Host "Processing complete!"
 ```
 
+**Task Scheduler Settings**:
+
+- **Trigger**: Daily at configured time (e.g., 6:00 AM GMT+8)
+- **Action**: Run PowerShell script with execution policy bypass
+- **Conditions**: Run only when computer is on AC power
+- **Settings**: Allow task to run on demand, restart on failure
+
 ### File Structure
+
 ```
 web_output/
 ├── index.html
@@ -303,12 +337,14 @@ web_output/
 ## Security & Privacy
 
 ### Data Protection
+
 - **Public Data Only**: All data sources are publicly available
 - **No User Data**: No personal information collected
 - **No Authentication**: Open access platform
 - **HTTPS**: Served over secure connection via GitHub Pages
 
 ### Code Security
+
 - **Version Control**: Git-based tracking
 - **Code Review**: Manual review before deployment
 - **Dependency Management**: Regular updates for security patches
@@ -318,18 +354,14 @@ web_output/
 ## Accessibility
 
 ### WCAG 2.1 Compliance
+
 - **Color Contrast**: AA level compliance
 - **Keyboard Navigation**: Full keyboard accessibility
 - **Screen Readers**: Semantic HTML for compatibility
 - **Responsive Design**: Mobile-friendly interface
 
 ### Internationalization
+
 - **Language**: English (primary)
 - **Date Formats**: ISO 8601 standard
 - **Time Zones**: UTC with local time conversion
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: February 5, 2026  
-**Author**: Nur Syaiful Afrizal

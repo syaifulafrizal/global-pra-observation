@@ -41,7 +41,24 @@ Complete user documentation including:
 - Troubleshooting tips
 - FAQ section
 
-### 5. Screenshots (To be added)
+### 5. Source Code Samples (`5_source_code_samples.md`)
+Key source code excerpts demonstrating:
+- PRA calculation algorithms (Python)
+- Anomaly detection using EVT (Python)
+- Earthquake correlation logic (Python)
+- Data aggregation system (Python)
+- Map visualization (JavaScript)
+- Chart rendering (JavaScript)
+
+### 6. Deployment Automation (`6_deployment_automation.md`)
+Windows Task Scheduler automation documentation:
+- PowerShell automation scripts
+- Task Scheduler configuration (GMT+8)
+- Logging and monitoring
+- Error handling and troubleshooting
+- Maintenance procedures
+
+### 7. Screenshots (To be added)
 Visual evidence of the platform:
 - Dashboard interface (light/dark modes)
 - Interactive map with station markers
