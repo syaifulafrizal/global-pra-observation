@@ -1,3 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-02-06 02:27:23.605,-20.5738,-70.1359,35,5.0,"32 km S of La Tirana, Chile",earthquake,
-2026-02-06 00:33:06.410,23.511,94.9478,10,5.2,"57 km ESE of Mawlaik, Burma (Myanmar)",earthquake,
+2026-02-06 21:20:14.809,-7.7516,130.1235,27.125,5.9,"Pulau Pulau Tanimbar, Indonesia",earthquake,
+2026-02-06 04:24:33.026,53.0471,159.8442,58.734,5.1,"81 km E of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-02-06 02:27:23.605,-20.5738,-70.1359,35.0,5.0,"32 km S of La Tirana, Chile",earthquake,
+2026-02-06 00:33:06.410,23.511,94.9478,10.0,5.2,"57 km ESE of Mawlaik, Burma (Myanmar)",earthquake,
