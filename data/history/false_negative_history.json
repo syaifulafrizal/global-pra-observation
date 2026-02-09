@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-08T18:03:28.856452",
+  "last_updated": "2026-02-09T04:41:25.020764",
   "entries": [
     {
       "station": "GUA",
@@ -52,61 +52,61 @@
     {
       "station": "GUA",
       "earthquake_time": "2025-12-24 13:33:58.121",
-      "first_logged": "2026-02-08T18:03:28.838453",
+      "first_logged": "2026-02-09T04:41:24.999846",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 65.22543613978408,
       "earthquake_place": "24 km S of Merizo Village, Guam",
       "earthquake_latitude": 13.0455,
       "earthquake_longitude": 144.6313,
-      "last_confirmed": "2026-02-08T18:03:28.838453",
+      "last_confirmed": "2026-02-09T04:41:24.999846",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "MMB",
       "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-02-08T18:03:28.838453",
+      "first_logged": "2026-02-09T04:41:24.999846",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 170.24730435749854,
       "earthquake_place": "64 km ESE of Akkeshi, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-02-08T18:03:28.838453",
+      "last_confirmed": "2026-02-09T04:41:24.999846",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SHU",
       "earthquake_time": "2026-01-22 19:38:50.472",
-      "first_logged": "2026-02-08T18:03:28.838453",
+      "first_logged": "2026-02-09T04:41:24.999846",
       "earthquake_magnitude": 5.2,
       "earthquake_distance_km": 121.13980958861012,
       "earthquake_place": "120 km SSE of Sand Point, Alaska",
       "earthquake_latitude": 54.3122,
       "earthquake_longitude": -159.886,
-      "last_confirmed": "2026-02-08T18:03:28.838453",
+      "last_confirmed": "2026-02-09T04:41:24.999846",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KAK",
       "earthquake_time": "2026-02-03 09:03:23.298",
-      "first_logged": "2026-02-08T18:03:28.838453",
+      "first_logged": "2026-02-09T04:41:24.999846",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 93.52866060374312,
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-02-08T18:03:28.838453",
+      "last_confirmed": "2026-02-09T04:41:24.999846",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-02-03 09:03:23.298",
-      "first_logged": "2026-02-08T18:03:28.838453",
+      "first_logged": "2026-02-09T04:41:24.999846",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 191.61487639762166,
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-02-08T18:03:28.838453",
+      "last_confirmed": "2026-02-09T04:41:24.999846",
       "source_file": "false_negatives.csv"
     }
   ]
