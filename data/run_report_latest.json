@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-10T06:40:01.502300",
-  "latest_date": "2026-02-10",
+  "generated_at": "2026-02-11T08:52:51.321801",
+  "latest_date": "2026-02-11",
   "available_dates": [
+    "2026-02-11",
     "2026-02-10",
     "2026-02-09",
     "2026-02-08",
     "2026-02-07",
     "2026-02-06",
-    "2026-02-05",
-    "2026-02-04"
+    "2026-02-05"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,12 +17,25 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 0,
+    "false_negatives_last_7_days": 1,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
-    "total_false_negatives": 9
+    "total_false_negatives": 10
   },
   "recent_anomalies": [],
-  "recent_false_negatives": []
+  "recent_false_negatives": [
+    {
+      "station": "API",
+      "earthquake_time": "2026-02-10 21:14:42.327",
+      "first_logged": "2026-02-11T08:52:51.300454",
+      "earthquake_magnitude": 5.6,
+      "earthquake_distance_km": 179.66038639459046,
+      "earthquake_place": "142 km NE of Hihifo, Tonga",
+      "earthquake_latitude": -14.97,
+      "earthquake_longitude": -172.9395,
+      "last_confirmed": "2026-02-11T08:52:51.300454",
+      "source_file": "false_negatives.csv"
+    }
+  ]
 }

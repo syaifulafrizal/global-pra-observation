@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-10 23:09:08.757,52.3015,-175.8806,155.186,5.0,"70 km NE of Adak, Alaska",earthquake,
+2026-02-10 21:14:42.327,-14.97,-172.9395,10.0,5.6,"142 km NE of Hihifo, Tonga",earthquake,
+2026-02-10 20:44:52.774,-21.0396,-178.3348,510.944,6.2,Fiji region,earthquake,
+2026-02-10 13:46:26.946,-35.5019,-15.3187,10.0,5.0,Tristan da Cunha region,earthquake,
+2026-02-10 09:44:50.859,51.9126,159.6355,49.073,5.1,"140 km SE of Vilyuchinsk, Russia",earthquake,
+2026-02-10 08:18:17.942,18.2392,-75.5007,10.0,5.0,"84 km ENE of Manchioneal, Jamaica",earthquake,

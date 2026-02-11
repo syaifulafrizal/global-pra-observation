@@ -1,6 +1,6 @@
 {
   "date": "2026-02-06",
-  "generated_at": "2026-02-10T06:40:02.582159",
+  "generated_at": "2026-02-11T08:52:51.945935",
   "stations": {
     "ABG": {
       "date": "2026-02-06",
@@ -2431,6 +2431,16 @@
   },
   "earthquake_correlations": {},
   "false_negatives": {
+    "API": [
+      {
+        "earthquake_time": "2026-02-10 21:14:42.327",
+        "earthquake_magnitude": "5.6",
+        "earthquake_distance_km": "179.66038639459046",
+        "earthquake_place": "142 km NE of Hihifo, Tonga",
+        "earthquake_latitude": "-14.97",
+        "earthquake_longitude": "-172.9395"
+      }
+    ],
     "GUA": [
       {
         "earthquake_time": "2025-12-24 13:33:58.121",
