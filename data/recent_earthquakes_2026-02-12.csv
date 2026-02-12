@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-12 13:52:05.106,-18.211,-178.0852,554.907,5.1,"275 km E of Levuka, Fiji",earthquake,
+2026-02-12 13:34:31.114,-30.8012,-71.4451,36.885,6.2,"32 km SW of Ovalle, Chile",earthquake,
+2026-02-12 10:30:16.050,13.9605,144.7999,148.91,5.4,"47 km NNW of Yigo Village, Guam",earthquake,
