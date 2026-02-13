@@ -1,2 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-02-13 00:41:28.911,-15.3591,-173.2848,35,5,"85 km NE of Hihifo, Tonga",earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
