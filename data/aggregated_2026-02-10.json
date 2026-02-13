@@ -1,6 +1,6 @@
 {
   "date": "2026-02-10",
-  "generated_at": "2026-02-12T16:13:29.560218",
+  "generated_at": "2026-02-13T01:47:25.208785",
   "stations": {
     "ABG": {
       "date": "2026-02-11",
@@ -3260,12 +3260,12 @@
     ],
     "GUA": [
       {
-        "earthquake_time": "2025-12-24 13:33:58.121",
-        "earthquake_magnitude": "5",
-        "earthquake_distance_km": "65.22543613978408",
-        "earthquake_place": "24 km S of Merizo Village, Guam",
-        "earthquake_latitude": "13.0455",
-        "earthquake_longitude": "144.6313"
+        "earthquake_time": "2026-02-12 10:30:16.050",
+        "earthquake_magnitude": "5.4",
+        "earthquake_distance_km": "41.846276179646026",
+        "earthquake_place": "47 km NNW of Yigo Village, Guam",
+        "earthquake_latitude": "13.9605",
+        "earthquake_longitude": "144.7999"
       }
     ],
     "KAK": [
