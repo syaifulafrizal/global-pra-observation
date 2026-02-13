@@ -1,6 +1,6 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-12T16:13:29.237580",
+  "generated_at": "2026-02-13T01:47:24.900567",
   "latest_date": "2026-02-13",
   "available_dates": [
     "2026-02-13",
@@ -17,7 +17,7 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 1,
+    "false_negatives_last_7_days": 2,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
@@ -26,15 +26,27 @@
   "recent_anomalies": [],
   "recent_false_negatives": [
     {
+      "station": "GUA",
+      "earthquake_time": "2026-02-12 10:30:16.050",
+      "first_logged": "2026-02-13T01:47:24.879815",
+      "earthquake_magnitude": 5.4,
+      "earthquake_distance_km": 41.846276179646026,
+      "earthquake_place": "47 km NNW of Yigo Village, Guam",
+      "earthquake_latitude": 13.9605,
+      "earthquake_longitude": 144.7999,
+      "last_confirmed": "2026-02-13T01:47:24.879815",
+      "source_file": "false_negatives.csv"
+    },
+    {
       "station": "API",
       "earthquake_time": "2026-02-10 21:14:42.327",
-      "first_logged": "2026-02-12T16:13:29.211349",
+      "first_logged": "2026-02-13T01:47:24.879815",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 179.66038639459046,
       "earthquake_place": "142 km NE of Hihifo, Tonga",
       "earthquake_latitude": -14.97,
       "earthquake_longitude": -172.9395,
-      "last_confirmed": "2026-02-12T16:13:29.211349",
+      "last_confirmed": "2026-02-13T01:47:24.879815",
       "source_file": "false_negatives.csv"
     }
   ]
