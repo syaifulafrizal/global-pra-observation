@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-14 17:23:02.450,5.6166,127.0728,74.531,5.3,"128 km SE of Pondaguitan, Philippines",earthquake,
+2026-02-14 07:10:02.429,51.9921,178.3977,111.268,5.0,"Rat Islands, Aleutian Islands, Alaska",earthquake,
+2026-02-14 03:12:29.608,-9.5181,159.4145,12.637,5.1,"38 km WNW of Malango, Solomon Islands",earthquake,
+2026-02-14 02:27:37.951,-14.8934,166.6013,10.0,6.4,"53 km WNW of Port-Olry, Vanuatu",earthquake,
