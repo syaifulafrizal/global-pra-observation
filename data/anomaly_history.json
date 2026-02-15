@@ -1,4 +1,15 @@
 {
-  "last_updated": "2025-12-22T17:57:15.877214",
-  "entries": []
+  "last_updated": "2026-02-15T17:57:23.295645",
+  "entries": [
+    {
+      "station": "SHU",
+      "date": "2026-02-15",
+      "first_detected": "2026-02-15T17:57:23.169647",
+      "threshold": 5.95549945726733,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_SHU_20260215.json",
+      "last_confirmed": "2026-02-15T17:57:23.169647",
+      "has_correlated_eq": false
+    }
+  ]
 }
