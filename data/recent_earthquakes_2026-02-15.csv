@@ -1,4 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-02-15 15:58:48.801,48.3271,154.5612,54.981,6,"284 km SSW of Severo-Kuril’sk, Russia",earthquake,
-2026-02-15 06:14:42.668,-4.3562,102.3859,66.131,5,"62 km SSE of Bengkulu, Indonesia",earthquake,
-2026-02-15 06:03:14.818,-16.2291,-71.6166,130.55,5,"7 km ENE of Yura, Peru",earthquake,
+2026-02-15 20:54:37.098,-15.1196,-173.3102,10.0,5.3,"106 km NNE of Hihifo, Tonga",earthquake,
+2026-02-15 15:58:48.801,48.3271,154.5612,54.981,6.0,"284 km SSW of Severo-Kuril’sk, Russia",earthquake,
+2026-02-15 06:14:42.668,-4.3562,102.3859,66.131,5.0,"62 km SSE of Bengkulu, Indonesia",earthquake,
+2026-02-15 06:03:14.818,-16.2291,-71.6166,130.55,5.0,"7 km ENE of Yura, Peru",earthquake,

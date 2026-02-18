@@ -1,1 +1,10 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-16 23:47:21.263,-5.5874,133.7968,10.0,5.1,"115 km E of Tual, Indonesia",earthquake,
+2026-02-16 21:42:52.597,51.2724,157.6862,43.0,6.0,"86 km ESE of Ozernovskiy, Russia",earthquake,
+2026-02-16 21:24:57.425,-22.2285,-69.0753,103.375,5.0,"29 km NNW of Calama, Chile",earthquake,
+2026-02-16 19:23:39.705,-11.586,166.3708,40.0,5.7,"114 km SSE of Lata, Solomon Islands",earthquake,
+2026-02-16 17:32:55.014,-17.7423,-13.2451,10.0,5.5,southern Mid-Atlantic Ridge,earthquake,
+2026-02-16 14:52:55.060,-57.8668,-25.3827,27.0,5.7,South Sandwich Islands region,earthquake,
+2026-02-16 06:00:39.462,-0.4327,99.2638,59.563,5.0,"97 km WNW of Pariaman, Indonesia",earthquake,
+2026-02-16 03:58:09.491,-35.2327,-111.5735,10.0,5.1,southern East Pacific Rise,earthquake,
+2026-02-16 03:02:42.408,-25.365,-178.0749,270.983,5.2,south of the Fiji Islands,earthquake,
