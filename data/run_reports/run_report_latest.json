@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-15T17:57:23.341684",
-  "latest_date": "2026-02-16",
+  "generated_at": "2026-02-18T20:22:54.641528",
+  "latest_date": "2026-02-19",
   "available_dates": [
+    "2026-02-19",
+    "2026-02-18",
+    "2026-02-17",
     "2026-02-16",
     "2026-02-15",
     "2026-02-14",
-    "2026-02-13",
-    "2026-02-12",
-    "2026-02-11",
-    "2026-02-10"
+    "2026-02-13"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,7 +17,7 @@
     "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 1,
-    "false_negatives_last_7_days": 2,
+    "false_negatives_last_7_days": 0,
     "total_anomalies": 1,
     "total_correlated": 0,
     "total_false_positives": 1,
@@ -27,38 +27,13 @@
     {
       "station": "SHU",
       "date": "2026-02-15",
-      "first_detected": "2026-02-15T17:57:23.169647",
+      "first_detected": "2026-02-18T20:22:54.488518",
       "threshold": 5.95549945726733,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_SHU_20260215.json",
-      "last_confirmed": "2026-02-15T17:57:23.169647",
+      "last_confirmed": "2026-02-18T20:22:54.488518",
       "has_correlated_eq": false
     }
   ],
-  "recent_false_negatives": [
-    {
-      "station": "GUA",
-      "earthquake_time": "2026-02-12 10:30:16.050",
-      "first_logged": "2026-02-15T17:57:23.321650",
-      "earthquake_magnitude": 5.4,
-      "earthquake_distance_km": 41.846276179646026,
-      "earthquake_place": "47 km NNW of Yigo Village, Guam",
-      "earthquake_latitude": 13.9605,
-      "earthquake_longitude": 144.7999,
-      "last_confirmed": "2026-02-15T17:57:23.321650",
-      "source_file": "false_negatives.csv"
-    },
-    {
-      "station": "API",
-      "earthquake_time": "2026-02-10 21:14:42.327",
-      "first_logged": "2026-02-15T17:57:23.321650",
-      "earthquake_magnitude": 5.6,
-      "earthquake_distance_km": 179.66038639459046,
-      "earthquake_place": "142 km NE of Hihifo, Tonga",
-      "earthquake_latitude": -14.97,
-      "earthquake_longitude": -172.9395,
-      "last_confirmed": "2026-02-15T17:57:23.321650",
-      "source_file": "false_negatives.csv"
-    }
-  ]
+  "recent_false_negatives": []
 }
