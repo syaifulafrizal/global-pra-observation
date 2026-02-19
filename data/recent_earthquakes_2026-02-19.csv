@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-19 14:18:06.650,19.8711,-66.5455,34,5.1,"155 km N of Arecibo, Puerto Rico",earthquake,
+2026-02-19 09:09:14.725,42.2356,80.4951,10,5.0,"118 km N of Aksu, China",earthquake,
+2026-02-19 00:26:14.231,1.3709,122.1572,10,5.5,"136 km NW of Gorontalo, Indonesia",earthquake,
