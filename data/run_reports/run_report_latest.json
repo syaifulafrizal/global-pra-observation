@@ -1,37 +1,47 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-18T20:22:54.641528",
-  "latest_date": "2026-02-19",
+  "generated_at": "2026-02-19T18:15:55.350594",
+  "latest_date": "2026-02-20",
   "available_dates": [
+    "2026-02-20",
     "2026-02-19",
     "2026-02-18",
     "2026-02-17",
     "2026-02-16",
     "2026-02-15",
-    "2026-02-14",
-    "2026-02-13"
+    "2026-02-14"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 1,
+    "anomalies_last_7_days": 2,
     "correlated_last_7_days": 0,
-    "false_positives_last_7_days": 1,
+    "false_positives_last_7_days": 2,
     "false_negatives_last_7_days": 0,
-    "total_anomalies": 1,
+    "total_anomalies": 2,
     "total_correlated": 0,
-    "total_false_positives": 1,
+    "total_false_positives": 2,
     "total_false_negatives": 10
   },
   "recent_anomalies": [
     {
+      "station": "NUR",
+      "date": "2026-02-19",
+      "first_detected": "2026-02-19T18:15:55.191537",
+      "threshold": 1.0424033608039558,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_NUR_20260219.json",
+      "last_confirmed": "2026-02-19T18:15:55.191537",
+      "has_correlated_eq": false
+    },
+    {
       "station": "SHU",
       "date": "2026-02-15",
-      "first_detected": "2026-02-18T20:22:54.488518",
+      "first_detected": "2026-02-19T18:15:55.191537",
       "threshold": 5.95549945726733,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_SHU_20260215.json",
-      "last_confirmed": "2026-02-18T20:22:54.488518",
+      "last_confirmed": "2026-02-19T18:15:55.191537",
       "has_correlated_eq": false
     }
   ],
