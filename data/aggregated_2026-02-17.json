@@ -1,6 +1,6 @@
 {
   "date": "2026-02-17",
-  "generated_at": "2026-02-19T18:15:55.637637",
+  "generated_at": "2026-02-20T20:36:30.276573",
   "stations": {
     "ABG": {
       "date": "2026-02-18",
@@ -3336,6 +3336,16 @@
         "earthquake_place": "120 km SSE of Sand Point, Alaska",
         "earthquake_latitude": "54.3122",
         "earthquake_longitude": "-159.886"
+      }
+    ],
+    "SJG": [
+      {
+        "earthquake_time": "2026-02-19 14:18:06.650",
+        "earthquake_magnitude": "5.1",
+        "earthquake_distance_km": "198.99123300127954",
+        "earthquake_place": "155 km N of Arecibo, Puerto Rico",
+        "earthquake_latitude": "19.8711",
+        "earthquake_longitude": "-66.5455"
       }
     ]
   },

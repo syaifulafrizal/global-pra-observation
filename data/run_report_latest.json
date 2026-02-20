@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-19T18:15:55.350594",
-  "latest_date": "2026-02-20",
+  "generated_at": "2026-02-20T20:36:29.819220",
+  "latest_date": "2026-02-21",
   "available_dates": [
+    "2026-02-21",
     "2026-02-20",
     "2026-02-19",
     "2026-02-18",
     "2026-02-17",
     "2026-02-16",
-    "2026-02-15",
-    "2026-02-14"
+    "2026-02-15"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,33 +17,46 @@
     "anomalies_last_7_days": 2,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 2,
-    "false_negatives_last_7_days": 0,
+    "false_negatives_last_7_days": 1,
     "total_anomalies": 2,
     "total_correlated": 0,
     "total_false_positives": 2,
-    "total_false_negatives": 10
+    "total_false_negatives": 11
   },
   "recent_anomalies": [
     {
       "station": "NUR",
       "date": "2026-02-19",
-      "first_detected": "2026-02-19T18:15:55.191537",
+      "first_detected": "2026-02-20T20:36:29.656516",
       "threshold": 1.0424033608039558,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_NUR_20260219.json",
-      "last_confirmed": "2026-02-19T18:15:55.191537",
+      "last_confirmed": "2026-02-20T20:36:29.656516",
       "has_correlated_eq": false
     },
     {
       "station": "SHU",
       "date": "2026-02-15",
-      "first_detected": "2026-02-19T18:15:55.191537",
+      "first_detected": "2026-02-20T20:36:29.656516",
       "threshold": 5.95549945726733,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_SHU_20260215.json",
-      "last_confirmed": "2026-02-19T18:15:55.191537",
+      "last_confirmed": "2026-02-20T20:36:29.656516",
       "has_correlated_eq": false
     }
   ],
-  "recent_false_negatives": []
+  "recent_false_negatives": [
+    {
+      "station": "SJG",
+      "earthquake_time": "2026-02-19 14:18:06.650",
+      "first_logged": "2026-02-20T20:36:29.797614",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 198.99123300127954,
+      "earthquake_place": "155 km N of Arecibo, Puerto Rico",
+      "earthquake_latitude": 19.8711,
+      "earthquake_longitude": -66.5455,
+      "last_confirmed": "2026-02-20T20:36:29.797614",
+      "source_file": "false_negatives.csv"
+    }
+  ]
 }

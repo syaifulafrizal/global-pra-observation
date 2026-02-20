@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-20 14:57:41.646,-13.8873,172.4032,608.731,5.4,Vanuatu region,earthquake,
+2026-02-20 14:16:31.286,41.5548,142.0269,63.223,5.3,"73 km ENE of Mutsu, Japan",earthquake,
+2026-02-20 13:09:54.336,35.593,69.7614,90.712,5.8,"38 km NE of Bāzārak, Afghanistan",earthquake,
+2026-02-20 07:21:12.487,-36.9701,-96.5731,10.0,5.0,West Chile Rise,earthquake,
