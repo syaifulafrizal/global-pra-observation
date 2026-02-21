@@ -1,24 +1,14 @@
 {
-  "last_updated": "2026-02-20T20:36:29.768544",
+  "last_updated": "2026-02-21T19:10:04.525726",
   "entries": [
-    {
-      "station": "SHU",
-      "date": "2026-02-15",
-      "first_detected": "2026-02-20T20:36:29.656516",
-      "threshold": 5.95549945726733,
-      "n_anomaly_hours": 1,
-      "source_file": "PRA_Night_SHU_20260215.json",
-      "last_confirmed": "2026-02-20T20:36:29.656516",
-      "has_correlated_eq": false
-    },
     {
       "station": "NUR",
       "date": "2026-02-19",
-      "first_detected": "2026-02-20T20:36:29.656516",
+      "first_detected": "2026-02-21T19:10:04.374734",
       "threshold": 1.0424033608039558,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_NUR_20260219.json",
-      "last_confirmed": "2026-02-20T20:36:29.656516",
+      "last_confirmed": "2026-02-21T19:10:04.374734",
       "has_correlated_eq": false
     }
   ]
