@@ -1,1 +1,10 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-22 16:57:46.240,6.8285,116.2637,619.849,7.1,"55 km NNW of Kota Belud, Malaysia",earthquake,
+2026-02-22 15:35:41.512,-0.6712,99.2601,50.055,5.0,"95 km W of Pariaman, Indonesia",earthquake,
+2026-02-22 10:40:43.486,19.3715,121.1835,39.544,5.1,"84 km N of Namuac, Philippines",earthquake,
+2026-02-22 08:45:47.764,-22.1346,-176.7387,174.555,5.4,"183 km SW of Houma, Tonga",earthquake,
+2026-02-22 07:54:01.622,-21.8475,179.4956,634.606,5.3,south of the Fiji Islands,earthquake,
+2026-02-22 07:43:26.645,-21.7999,179.5487,653.785,6.0,south of the Fiji Islands,earthquake,
+2026-02-22 07:25:28.114,46.8791,153.57,10.0,5.8,Kuril Islands,earthquake,
+2026-02-22 06:43:52.678,-4.641,-76.4488,115.023,5.0,"32 km NE of Barranca, Peru",earthquake,
+2026-02-22 01:22:53.812,-15.4434,166.6076,10.0,5.1,"60 km W of Luganville, Vanuatu",earthquake,
