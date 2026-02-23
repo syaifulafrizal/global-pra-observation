@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-23 10:02:08.464,52.4087,-169.9056,10.0,5.5,"92 km SW of Nikolski, Alaska",earthquake,
+2026-02-23 09:15:04.339,-20.1016,-177.6036,393.607,5.0,"267 km WNW of Houma, Tonga",earthquake,
+2026-02-23 05:11:48.783,52.3572,-169.8574,14.0,6.1,"93 km SW of Nikolski, Alaska",earthquake,
+2026-02-23 03:12:34.535,-16.184,167.8834,186.816,5.0,"50 km E of Lakatoro, Vanuatu",earthquake,
