@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-24 07:46:48.799,-2.1052,138.8515,10.633,5.5,"205 km WNW of Abepura, Indonesia",earthquake,

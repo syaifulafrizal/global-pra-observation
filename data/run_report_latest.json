@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-02-24T05:26:43.398271",
-  "latest_date": "2026-02-24",
+  "generated_at": "2026-02-24T16:08:18.592733",
+  "latest_date": "2026-02-25",
   "available_dates": [
+    "2026-02-25",
     "2026-02-24",
     "2026-02-23",
     "2026-02-22",
     "2026-02-21",
     "2026-02-20",
-    "2026-02-19",
-    "2026-02-18"
+    "2026-02-19"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "NUR",
       "date": "2026-02-19",
-      "first_detected": "2026-02-24T05:26:43.192191",
+      "first_detected": "2026-02-24T16:08:18.391072",
       "threshold": 1.0424033608039558,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_NUR_20260219.json",
-      "last_confirmed": "2026-02-24T05:26:43.192191",
+      "last_confirmed": "2026-02-24T16:08:18.391072",
       "has_correlated_eq": false
     }
   ],
@@ -39,13 +39,13 @@
     {
       "station": "SJG",
       "earthquake_time": "2026-02-19 14:18:06.650",
-      "first_logged": "2026-02-24T05:26:43.376436",
+      "first_logged": "2026-02-24T16:08:18.567926",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 198.99123300127954,
       "earthquake_place": "155 km N of Arecibo, Puerto Rico",
       "earthquake_latitude": 19.8711,
       "earthquake_longitude": -66.5455,
-      "last_confirmed": "2026-02-24T05:26:43.376436",
+      "last_confirmed": "2026-02-24T16:08:18.567926",
       "source_file": "false_negatives.csv"
     }
   ]
