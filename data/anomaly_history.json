@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-02-23T16:35:30.306757",
+  "last_updated": "2026-02-24T05:26:43.349137",
   "entries": [
     {
       "station": "NUR",
       "date": "2026-02-19",
-      "first_detected": "2026-02-23T16:35:30.166755",
+      "first_detected": "2026-02-24T05:26:43.192191",
       "threshold": 1.0424033608039558,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_NUR_20260219.json",
-      "last_confirmed": "2026-02-23T16:35:30.166755",
+      "last_confirmed": "2026-02-24T05:26:43.192191",
       "has_correlated_eq": false
     }
   ]
