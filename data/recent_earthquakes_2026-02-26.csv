@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-26 17:04:49.884,43.7075,150.5866,10.0,5.0,"273 km SE of Kuril’sk, Russia",earthquake,
+2026-02-26 07:04:25.452,50.0615,156.8372,47.728,5.1,"84 km SE of Severo-Kuril’sk, Russia",earthquake,
+2026-02-26 05:58:47.245,51.2738,159.3975,10.0,5.0,"196 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-02-26 04:59:03.922,51.5562,159.6915,10.0,5.7,"176 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-02-26 02:49:04.986,-20.629,-176.3046,231.867,5.2,"120 km WNW of Houma, Tonga",earthquake,

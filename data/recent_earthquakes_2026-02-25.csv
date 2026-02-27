@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-25 22:40:46.696,47.3548,157.4172,10.0,5.2,east of the Kuril Islands,earthquake,
+2026-02-25 17:49:32.099,-0.3152,99.1819,72.426,5.0,"109 km WNW of Pariaman, Indonesia",earthquake,
+2026-02-25 16:51:49.402,22.999,94.8268,129.684,5.1,"83 km SSE of Mawlaik, Burma (Myanmar)",earthquake,
 2026-02-25 11:14:02.996,-5.2615,145.9051,72.12,5.5,"13 km ESE of Madang, Papua New Guinea",earthquake,
 2026-02-25 11:12:06.125,36.9655,71.5126,104.233,5.4,"28 km NNW of Ishqoshim, Tajikistan",earthquake,
 2026-02-25 09:48:08.855,-10.5411,165.886,117.797,5.0,"22 km NNE of Lata, Solomon Islands",earthquake,
