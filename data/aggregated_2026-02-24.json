@@ -1,6 +1,6 @@
 {
   "date": "2026-02-24",
-  "generated_at": "2026-02-27T20:55:16.456763",
+  "generated_at": "2026-02-28T16:50:45.138250",
   "stations": {
     "ABG": {
       "date": "2026-02-25",
@@ -3287,7 +3287,7 @@
         "earthquake_distance_km": "41.846276179646026",
         "earthquake_place": "47 km NNW of Yigo Village, Guam",
         "days_before_anomaly": "-11.56231423611111",
-        "total_earthquakes": "2",
+        "total_earthquakes": "3",
         "reliable_earthquakes": "1",
         "status": "TP"
       }

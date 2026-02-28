@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-28 12:56:59.519,25.2961,124.9628,10.0,5.1,"64 km NNW of Hirara, Japan",earthquake,
+2026-02-28 06:52:12.102,1.0569,121.0325,46.548,5.1,"233 km WNW of Gorontalo, Indonesia",earthquake,
+2026-02-28 06:23:26.154,-5.5231,151.8702,41.382,5.4,"137 km SSW of Kokopo, Papua New Guinea",earthquake,
+2026-02-28 05:53:57.696,25.1262,125.0616,35.0,5.4,"43 km NW of Hirara, Japan",earthquake,
+2026-02-28 01:49:19.831,25.1857,125.0348,10.0,5.1,"50 km NNW of Hirara, Japan",earthquake,
