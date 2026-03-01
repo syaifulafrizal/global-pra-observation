@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-01 19:38:41.112,52.0532,159.7399,39.541,5.0,"133 km SE of Vilyuchinsk, Russia",earthquake,
+2026-03-01 18:36:38.379,0.0378,-17.0322,10.0,5.2,north of Ascension Island,earthquake,
+2026-03-01 16:41:17.592,31.9809,-42.0572,10.0,5.1,northern Mid-Atlantic Ridge,earthquake,
+2026-03-01 09:00:08.119,31.1153,130.4767,127.494,5.5,"21 km SW of Ibusuki, Japan",earthquake,
+2026-03-01 05:44:43.017,-21.9023,-179.4431,596.319,6.3,Fiji region,earthquake,

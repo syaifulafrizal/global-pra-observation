@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-02-28 17:22:19.696,5.018,125.9457,76.41,5.3,"68 km SE of Sarangani, Philippines",earthquake,
+2026-02-28 17:11:55.547,9.4237,-81.8794,10.0,5.0,"26 km N of Kusapín, Panama",earthquake,
 2026-02-28 12:56:59.519,25.2961,124.9628,10.0,5.1,"64 km NNW of Hirara, Japan",earthquake,
 2026-02-28 06:52:12.102,1.0569,121.0325,46.548,5.1,"233 km WNW of Gorontalo, Indonesia",earthquake,
 2026-02-28 06:23:26.154,-5.5231,151.8702,41.382,5.4,"137 km SSW of Kokopo, Papua New Guinea",earthquake,
