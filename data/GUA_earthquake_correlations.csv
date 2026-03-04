@@ -1,2 +1,3 @@
 anomaly_date,anomaly_range,anomaly_times,earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,days_before_anomaly,total_earthquakes,reliable_earthquakes,status
-2026-02-24,24/02/2026 20:00 - 25/02/2026 04:00,15:00–16:00,2026-02-12 10:30:16.050,5.4,41.846276179646026,"47 km NNW of Yigo Village, Guam",-11.56231423611111,4,1,TP
+2026-02-24,24/02/2026 20:00 - 25/02/2026 04:00,15:00–16:00,2026-02-12 10:30:16.266,5.4,37.56329879456256,"43 km NNW of Yigo Village, Guam",-11.562311736111111,4,1,TP
+2026-03-03,03/03/2026 20:00 - 04/03/2026 04:00,17:00–18:00,,,,,,0,0,Pending
