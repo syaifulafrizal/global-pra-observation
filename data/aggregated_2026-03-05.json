@@ -1,6 +1,6 @@
 {
-  "date": "2026-03-03",
-  "generated_at": "2026-03-04T20:40:27.933677",
+  "date": "2026-03-05",
+  "generated_at": "2026-03-04T20:40:27.741448",
   "stations": {
     "ABG": {
       "date": "2026-03-04",
@@ -3210,23 +3210,7 @@
       "is_anomalous": false
     }
   },
-  "earthquake_correlations": {
-    "GUA": [
-      {
-        "anomaly_date": "2026-03-03",
-        "anomaly_range": "03/03/2026 20:00 - 04/03/2026 04:00",
-        "anomaly_times": "17:00\u201318:00",
-        "earthquake_time": "",
-        "earthquake_magnitude": "",
-        "earthquake_distance_km": "",
-        "earthquake_place": "",
-        "days_before_anomaly": "",
-        "total_earthquakes": "0",
-        "reliable_earthquakes": "0",
-        "status": "Pending"
-      }
-    ]
-  },
+  "earthquake_correlations": {},
   "false_negatives": {
     "API": [
       {

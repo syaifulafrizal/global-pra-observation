@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-04 18:56:24.827,12.6127,-88.3391,51.683,5.3,"70 km SSW of Chirilagua, El Salvador",earthquake,
+2026-03-04 17:54:36.733,52.2664,176.3634,10.0,6.4,"224 km ESE of Attu Station, Alaska",earthquake,
+2026-03-04 13:26:59.753,52.2374,176.3148,10.0,5.4,"222 km ESE of Attu Station, Alaska",earthquake,
