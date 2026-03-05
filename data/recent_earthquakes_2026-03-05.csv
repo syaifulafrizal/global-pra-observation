@@ -1,3 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-03-05 05:21:53.395,7.1236,-82.4823,10,5.2,"109 km SSE of Burica, Panama",earthquake,
-2026-03-05 00:15:42.437,43.6823,86.4613,10,5.0,"76 km SSE of Shihezi, China",earthquake,
+2026-03-05 10:54:23.568,-4.3596,-105.5328,10.0,5.0,central East Pacific Rise,earthquake,
+2026-03-05 10:48:21.013,25.2035,125.0077,10.156,5.2,"53 km NW of Hirara, Japan",earthquake,
+2026-03-05 05:21:53.395,7.1236,-82.4823,10.0,5.2,"109 km SSE of Burica, Panama",earthquake,
+2026-03-05 00:15:42.437,43.6823,86.4613,10.0,5.0,"76 km SSE of Shihezi, China",earthquake,
