@@ -1,1 +1,9 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-06 20:31:52.961,38.849,142.3146,60.393,5.0,"57 km ESE of Ōfunato, Japan",earthquake,
+2026-03-06 17:55:53.207,1.6466,128.6314,10.0,5.4,"69 km E of Tobelo, Indonesia",earthquake,
+2026-03-06 15:27:47.797,-3.0251,130.1319,10.0,5.1,"132 km ENE of Masohi, Indonesia",earthquake,
+2026-03-06 15:17:45.179,-29.9667,-177.4844,51.927,5.3,"Kermadec Islands, New Zealand",earthquake,
+2026-03-06 14:27:47.626,-11.5475,163.1628,8.682,6.3,"181 km SE of Kirakira, Solomon Islands",earthquake,
+2026-03-06 11:52:47.501,-15.2195,66.9879,10.0,5.2,Mid-Indian Ridge,earthquake,
+2026-03-06 09:56:15.823,19.7401,-74.4084,10.0,5.0,"62 km SSW of Maisí, Cuba",earthquake,
+2026-03-06 05:00:36.974,51.7182,159.6552,10.0,5.1,"159 km SSE of Vilyuchinsk, Russia",earthquake,
