@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-07 17:13:26.502,-31.6647,-67.0247,146.383,5.1,"119 km E of Caucete, Argentina",earthquake,
+2026-03-07 16:58:43.886,-2.8756,101.6747,88.787,5.2,"95 km SSE of Sungai Penuh, Indonesia",earthquake,
+2026-03-07 16:04:54.468,13.8523,120.7447,161.173,5.0,"4 km E of Hukay, Philippines",earthquake,
+2026-03-07 00:44:53.787,-15.8524,-172.9305,10.0,5.1,"93 km E of Hihifo, Tonga",earthquake,
