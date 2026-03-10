@@ -1,1 +1,12 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-08 22:41:56.986,52.1095,176.4064,10.0,5.1,"233 km ESE of Attu Station, Alaska",earthquake,
+2026-03-08 17:23:45.691,51.64,159.4509,10.0,5.1,"160 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-03-08 17:19:14.823,51.4956,159.5829,10.0,5.1,"178 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-03-08 17:08:42.581,51.621,159.3956,16.0,5.9,"160 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-03-08 13:17:08.288,39.4377,143.2346,16.0,5.7,"110 km E of Yamada, Japan",earthquake,
+2026-03-08 13:08:37.639,39.3324,143.2138,35.0,5.4,"109 km E of Yamada, Japan",earthquake,
+2026-03-08 11:24:02.856,-53.9979,7.6844,10.0,5.3,Bouvet Island region,earthquake,
+2026-03-08 09:28:26.569,-15.9945,-173.9395,134.0,5.9,"15 km WSW of Hihifo, Tonga",earthquake,
+2026-03-08 07:18:34.262,-21.8623,-176.6279,200.124,5.3,"157 km WSW of Houma, Tonga",earthquake,
+2026-03-08 06:05:06.854,2.0328,96.5387,10.0,5.2,"52 km SSE of Sinabang, Indonesia",earthquake,
+2026-03-08 03:32:31.101,39.6838,20.736,10.0,5.5,"2 km SSE of Rodotópi, Greece",earthquake,
