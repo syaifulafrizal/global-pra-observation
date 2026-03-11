@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-10 23:51:16.958,-32.9356,-178.4231,10.0,5.5,south of the Kermadec Islands,earthquake,
+2026-03-10 21:45:36.137,-9.4883,120.5923,49.917,5.0,"40 km ENE of Waingapu, Indonesia",earthquake,
+2026-03-10 05:20:04.300,-23.3455,171.5645,10.0,5.0,southeast of the Loyalty Islands,earthquake,

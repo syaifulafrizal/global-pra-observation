@@ -1,6 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-03-07 18:24:35.494,36.486,70.0616,197.059,5.1,"20 km ESE of Farkhār, Afghanistan",earthquake,
-2026-03-07 17:13:26.502,-31.6647,-67.0247,146.383,5.1,"119 km E of Caucete, Argentina",earthquake,
-2026-03-07 16:58:43.886,-2.8756,101.6747,88.787,5.2,"95 km SSE of Sungai Penuh, Indonesia",earthquake,
-2026-03-07 16:04:54.468,13.8523,120.7447,161.173,5.0,"4 km E of Hukay, Philippines",earthquake,
+2026-03-07 18:24:36.662,36.5403,70.1859,208.479,5.1,"29 km E of Farkhār, Afghanistan",earthquake,
+2026-03-07 18:04:13.613,-17.7626,-172.6813,10.0,5.0,"169 km NE of Neiafu, Tonga",earthquake,
+2026-03-07 17:13:25.310,-31.5603,-66.8824,130.639,5.1,"114 km WNW of Candelaria, Argentina",earthquake,
+2026-03-07 16:58:42.449,-2.9146,101.6406,77.51,5.2,"98 km SSE of Sungai Penuh, Indonesia",earthquake,
+2026-03-07 16:04:56.236,13.8532,120.723,179.156,5.0,"2 km ENE of Hukay, Philippines",earthquake,
+2026-03-07 15:53:49.081,12.8656,124.4095,105.641,5.1,"20 km NNE of Biri, Philippines",earthquake,
 2026-03-07 00:44:53.787,-15.8524,-172.9305,10.0,5.1,"93 km E of Hihifo, Tonga",earthquake,
