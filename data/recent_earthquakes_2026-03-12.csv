@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-12 12:14:13.058,23.7447,121.5665,20.188,5.2,"26 km S of Hualien City, Taiwan",earthquake,
+2026-03-12 10:14:18.175,39.2636,21.598,10.0,5.1,"15 km SE of Anthiró, Greece",earthquake,

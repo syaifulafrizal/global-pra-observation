@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-11 22:26:29.935,-33.4094,-178.4794,10.0,5.0,south of the Kermadec Islands,earthquake,
+2026-03-11 21:29:15.079,-33.1876,-178.3951,10.0,5.1,south of the Kermadec Islands,earthquake,
+2026-03-11 18:39:32.010,-33.0139,-178.3118,10.0,5.2,south of the Kermadec Islands,earthquake,
 2026-03-11 15:10:49.191,-16.2355,-172.8486,10.0,5.0,"106 km ESE of Hihifo, Tonga",earthquake,
 2026-03-11 07:55:18.615,40.0936,54.2446,10.0,5.1,"65 km N of Balkanabat, Turkmenistan",earthquake,
 2026-03-11 07:40:13.865,-33.0375,-178.5406,10.0,5.5,south of the Kermadec Islands,earthquake,
