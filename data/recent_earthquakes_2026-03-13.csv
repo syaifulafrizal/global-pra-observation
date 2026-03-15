@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-13 22:54:36.238,-33.2449,-177.9295,10.0,5.0,south of the Kermadec Islands,earthquake,
+2026-03-13 19:55:23.213,39.3857,143.2972,25.896,5.0,"116 km E of Yamada, Japan",earthquake,
+2026-03-13 13:39:18.599,-28.684,-71.6269,10.0,6.3,"85 km W of Vallenar, Chile",earthquake,
+2026-03-13 07:00:25.481,-35.7987,-103.0977,10.0,5.2,southeast of Easter Island,earthquake,
+2026-03-13 04:54:31.741,-28.2623,-176.6601,10.0,5.2,Kermadec Islands region,earthquake,
+2026-03-13 00:35:14.948,40.6932,36.7643,10.0,5.3,"16 km E of Erbaa, Turkey",earthquake,
