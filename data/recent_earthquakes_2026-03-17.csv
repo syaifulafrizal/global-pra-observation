@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-17 19:53:57.143,-10.4517,-13.1421,10.0,5.0,Ascension Island region,earthquake,
+2026-03-17 16:21:37.453,52.1503,176.4619,10.0,5.3,"235 km ESE of Attu Station, Alaska",earthquake,
+2026-03-17 14:32:45.271,47.1946,153.5679,43.507,5.0,Kuril Islands,earthquake,
+2026-03-17 14:18:00.180,-33.1836,-178.5337,10.0,5.0,south of the Kermadec Islands,earthquake,
+2026-03-17 04:28:25.013,19.8399,-74.3586,11.634,5.8,"49 km SSW of Maisí, Cuba",earthquake,
