@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-20 02:30:32.675,-19.2783,168.3207,10.0,6.1,"105 km WNW of Isangel, Vanuatu",earthquake,
+2026-03-20 01:15:54.090,-61.1312,-56.134,10.0,5.1,South Shetland Islands,earthquake,
+2026-03-20 00:22:02.120,-61.1525,-56.2683,4.869,6.6,South Shetland Islands,earthquake,
