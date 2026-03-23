@@ -1,1 +1,10 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-22 22:26:14.506,-15.5887,-172.8436,13.0,5.9,"109 km ENE of Hihifo, Tonga",earthquake,
+2026-03-22 16:00:18.888,-14.9649,-173.0424,10.0,5.6,"136 km NE of Hihifo, Tonga",earthquake,
+2026-03-22 15:30:37.033,-15.2263,-172.6832,10.0,6.3,"144 km NE of Hihifo, Tonga",earthquake,
+2026-03-22 15:27:56.537,-15.1719,-172.5084,10.0,6.2,"149 km SSW of Lotofagā, Samoa",earthquake,
+2026-03-22 11:39:46.591,-59.6689,-26.2588,77.499,5.1,South Sandwich Islands region,earthquake,
+2026-03-22 07:19:58.619,52.1582,160.8307,10.0,5.1,"180 km SE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-03-22 06:15:36.646,-15.3824,-173.0468,10.0,6.2,"102 km NE of Hihifo, Tonga",earthquake,
+2026-03-22 06:08:37.547,-32.0218,57.0542,10.0,5.0,Southwest Indian Ridge,earthquake,
+2026-03-22 03:03:45.069,-8.9223,-108.3926,10.0,5.7,central East Pacific Rise,earthquake,

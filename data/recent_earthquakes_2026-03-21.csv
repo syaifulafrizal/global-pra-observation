@@ -1,6 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-03-21 12:16:46.766,23.8862,-45.8413,10.0,6.7,northern Mid-Atlantic Ridge,earthquake,
+2026-03-21 20:07:25.788,-29.2715,-179.0714,302.214,5.0,Kermadec Islands region,earthquake,
+2026-03-21 18:08:53.349,-7.4983,104.9624,10.0,5.1,"156 km SW of Labuan, Indonesia",earthquake,
+2026-03-21 12:16:46.736,23.8496,-45.8331,10.0,6.6,northern Mid-Atlantic Ridge,earthquake,
 2026-03-21 11:12:04.833,29.4276,130.7265,25.517,5.4,"91 km SSE of Koshima, Japan",earthquake,
+2026-03-21 10:35:53.868,-55.4876,-124.8018,10.0,5.4,southern East Pacific Rise,earthquake,
 2026-03-21 10:25:58.666,-30.2134,-177.1604,10.0,5.0,"Kermadec Islands, New Zealand",earthquake,
 2026-03-21 10:00:37.467,-24.0759,-66.977,192.58,5.6,"68 km WNW of San Antonio de los Cobres, Argentina",earthquake,
 2026-03-21 03:21:00.605,-16.0064,166.9182,37.084,5.7,"51 km W of Norsup, Vanuatu",earthquake,
