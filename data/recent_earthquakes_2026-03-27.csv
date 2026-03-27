@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-27 15:24:33.227,39.3975,143.1958,16.096,5.1,"107 km E of Yamada, Japan",earthquake,
+2026-03-27 04:52:59.377,36.6726,74.3708,10.0,5.0,"48 km NW of Barishal, Pakistan",earthquake,
+2026-03-27 04:40:10.239,36.6474,74.4394,10.0,5.0,"42 km NNW of Barishal, Pakistan",earthquake,
