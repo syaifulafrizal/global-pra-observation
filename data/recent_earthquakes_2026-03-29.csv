@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-29 07:07:55.296,27.9924,128.1032,10,5.1,"80 km WNW of Amagi, Japan",earthquake,
