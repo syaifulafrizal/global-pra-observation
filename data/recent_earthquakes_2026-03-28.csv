@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-28 18:38:29.462,-7.4878,127.7555,159.0,5.9,"141 km NE of Lospalos, Timor Leste",earthquake,
+2026-03-28 12:57:53.577,16.3416,-98.6324,10.0,5.1,"14 km SW of San Nicolás, Mexico",earthquake,
+2026-03-28 07:35:41.405,-3.5806,140.3182,10.0,5.4,"114 km SSW of Abepura, Indonesia",earthquake,
+2026-03-28 03:33:57.912,5.6351,125.5992,203.013,5.1,"14 km SE of Kalbay, Philippines",earthquake,
