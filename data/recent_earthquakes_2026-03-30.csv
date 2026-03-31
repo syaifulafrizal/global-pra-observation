@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-30 14:43:32.837,23.9957,-45.8423,10.0,5.3,northern Mid-Atlantic Ridge,earthquake,
+2026-03-30 10:14:19.827,-47.8194,115.9394,10.0,5.1,western Indian-Antarctic Ridge,earthquake,
+2026-03-30 09:02:32.124,-15.3663,167.5229,149.049,5.0,"42 km ENE of Luganville, Vanuatu",earthquake,
+2026-03-30 08:44:13.823,-15.3139,167.5616,121.28,7.3,"48 km ENE of Luganville, Vanuatu",earthquake,
+2026-03-30 08:44:07.642,-15.2696,167.4673,115.406,5.4,"42 km NE of Luganville, Vanuatu",earthquake,
+2026-03-30 07:30:28.018,11.4154,-86.8927,57.537,5.4,"58 km SW of Masachapa, Nicaragua",earthquake,
+2026-03-30 01:12:30.840,26.2155,128.8262,10.0,5.1,"81 km SE of Taira, Japan",earthquake,
