@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-01 12:14:00.937,-0.4662,129.7022,10.0,5.1,"93 km WSW of Waisai, Indonesia",earthquake,
+2026-04-01 11:20:25.881,-7.0558,-76.1241,108.831,6.0,"27 km ESE of Picota, Peru",earthquake,
+2026-04-01 06:08:26.774,-21.6533,-179.2415,575.962,5.7,Fiji region,earthquake,
