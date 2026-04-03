@@ -1,1 +1,12 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-03 16:12:58.037,36.5479,70.852,186.371,5.8,"35 km S of Jurm, Afghanistan",earthquake,
+2026-04-03 10:59:07.488,1.5039,126.4253,35.0,5.1,"132 km NW of Ternate, Indonesia",earthquake,
+2026-04-03 10:26:42.802,38.8967,70.917,10.0,5.5,"49 km ESE of Rasht, Tajikistan",earthquake,
+2026-04-03 08:22:08.857,52.279,176.3511,10.0,5.1,"223 km ESE of Attu Station, Alaska",earthquake,
+2026-04-03 04:42:05.125,1.4051,126.0406,35.0,5.2,"101 km E of Bitung, Indonesia",earthquake,
+2026-04-03 03:37:16.087,1.0005,126.4074,35.0,5.4,"111 km WNW of Ternate, Indonesia",earthquake,
+2026-04-03 02:33:49.551,-30.2388,-179.0112,217.264,5.0,Kermadec Islands region,earthquake,
+2026-04-03 02:10:53.447,46.886,152.8112,35.0,5.1,Kuril Islands,earthquake,
+2026-04-03 01:44:13.456,1.0169,126.288,35.0,5.3,"124 km WNW of Ternate, Indonesia",earthquake,
+2026-04-03 00:32:57.016,1.2437,126.2978,35.0,5.3,"130 km WNW of Ternate, Indonesia",earthquake,
+2026-04-03 00:22:20.421,1.3163,126.4332,35.0,5.6,"120 km WNW of Ternate, Indonesia",earthquake,
