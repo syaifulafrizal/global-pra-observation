@@ -1,0 +1,5 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-06 11:18:37.401,-54.994,-129.111,10,5.9,Pacific-Antarctic Ridge,earthquake,
+2026-04-06 07:22:42.142,10.8435,123.8752,10,5.2,"0 km S of Tabonok, Philippines",earthquake,
+2026-04-06 06:15:25.459,-32.0443,-177.9761,10,5.2,south of the Kermadec Islands,earthquake,
+2026-04-06 00:42:26.628,-31.9492,-178.0646,10,5.2,Kermadec Islands region,earthquake,
