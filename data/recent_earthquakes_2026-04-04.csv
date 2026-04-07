@@ -1,8 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-04-04 22:31:20.621,-31.5203,-177.9766,30.861,5.0,Kermadec Islands region,earthquake,
-2026-04-04 18:26:13.603,-25.9274,130.8226,10.0,5.5,"77 km SSW of Yulara, Australia",earthquake,
-2026-04-04 17:14:57.460,23.9901,121.6455,22.066,5.5,"4 km ENE of Hualien City, Taiwan",earthquake,
-2026-04-04 16:23:07.259,-4.5841,153.6932,103.353,5.2,"160 km E of Kokopo, Papua New Guinea",earthquake,
+2026-04-04 18:26:13.834,-25.9643,130.843,10.0,5.5,"81 km S of Yulara, Australia",earthquake,
+2026-04-04 17:14:58.646,24.0026,121.6426,29.676,5.2,"4 km NE of Hualien City, Taiwan",earthquake,
+2026-04-04 16:23:07.684,-4.5923,153.65,108.286,5.2,"155 km E of Kokopo, Papua New Guinea",earthquake,
 2026-04-04 11:21:12.368,-2.0711,100.0086,40.845,5.2,"46 km E of Tuapejat, Indonesia",earthquake,
 2026-04-04 10:36:46.191,38.4373,141.9269,67.953,5.0,"41 km E of Onagawa Chō, Japan",earthquake,
 2026-04-04 10:34:31.609,4.8892,126.1031,99.568,6.0,"90 km SE of Sarangani, Philippines",earthquake,
