@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-08 15:14:03.918,-49.4766,125.5082,29.265,5.0,western Indian-Antarctic Ridge,earthquake,
+2026-04-08 09:05:36.878,38.8408,49.6001,10.0,5.6,"64 km SSE of Sovetabad, Azerbaijan",earthquake,
+2026-04-08 08:33:16.977,-11.273,162.9599,10.0,5.0,"145 km SE of Kirakira, Solomon Islands",earthquake,
+2026-04-08 00:11:27.976,-21.4657,168.8373,10.0,5.1,"99 km E of Tadine, New Caledonia",earthquake,
