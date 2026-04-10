@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-10 12:08:43.066,-31.9392,-178.0211,10.0,5.0,Kermadec Islands region,earthquake,
+2026-04-10 11:08:53.559,-3.3432,102.382,107.404,5.1,"20 km NW of Curup, Indonesia",earthquake,
