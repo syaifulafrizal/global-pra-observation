@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-12 20:14:10.340,54.1877,-162.3868,35.0,5.1,"97 km S of King Cove, Alaska",earthquake,
+2026-04-12 20:05:06.816,49.7449,155.7719,10.0,5.0,"106 km SSW of Severo-Kuril’sk, Russia",earthquake,
+2026-04-12 02:40:36.099,1.9632,94.7702,10.0,5.2,"187 km WSW of Sinabang, Indonesia",earthquake,
+2026-04-12 01:09:42.258,18.5002,145.5867,226.005,5.0,"Pagan region, Northern Mariana Islands",earthquake,
