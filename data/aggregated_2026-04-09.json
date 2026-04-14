@@ -1,6 +1,6 @@
 {
   "date": "2026-04-09",
-  "generated_at": "2026-04-14T08:31:26.404643",
+  "generated_at": "2026-04-14T19:26:43.662142",
   "stations": {
     "ABG": {
       "date": "2026-04-10",
@@ -3324,12 +3324,12 @@
     ],
     "SHU": [
       {
-        "earthquake_time": "2026-01-22 19:38:50.472",
-        "earthquake_magnitude": "5.2",
-        "earthquake_distance_km": "121.13980958861012",
-        "earthquake_place": "120 km SSE of Sand Point, Alaska",
-        "earthquake_latitude": "54.3122",
-        "earthquake_longitude": "-159.886"
+        "earthquake_time": "2026-04-12 20:14:10.340",
+        "earthquake_magnitude": "5.1",
+        "earthquake_distance_km": "178.8700801897824",
+        "earthquake_place": "97 km S of King Cove, Alaska",
+        "earthquake_latitude": "54.1877",
+        "earthquake_longitude": "-162.3868"
       }
     ],
     "SJG": [
