@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-15 07:59:41.365,-21.3603,170.3357,166.688,5.4,"229 km SSE of Isangel, Vanuatu",earthquake,
+2026-04-15 06:56:02.781,9.9151,-86.3803,20.0,5.7,"72 km SW of Tamarindo, Costa Rica",earthquake,
+2026-04-15 02:38:25.666,-51.7032,-75.4046,36.578,5.0,"200 km W of Puerto Natales, Chile",earthquake,
