@@ -1,40 +1,51 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-04-14T19:26:43.025907",
-  "latest_date": "2026-04-15",
+  "generated_at": "2026-04-15T17:47:48.360658",
+  "latest_date": "2026-04-16",
   "available_dates": [
+    "2026-04-16",
     "2026-04-15",
     "2026-04-14",
     "2026-04-13",
     "2026-04-12",
     "2026-04-11",
-    "2026-04-10",
-    "2026-04-09"
+    "2026-04-10"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 0,
+    "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
-    "false_positives_last_7_days": 0,
+    "false_positives_last_7_days": 1,
     "false_negatives_last_7_days": 1,
-    "total_anomalies": 0,
+    "total_anomalies": 1,
     "total_correlated": 0,
-    "total_false_positives": 0,
+    "total_false_positives": 1,
     "total_false_negatives": 11
   },
-  "recent_anomalies": [],
+  "recent_anomalies": [
+    {
+      "station": "API",
+      "date": "2026-04-15",
+      "first_detected": "2026-04-15T17:47:48.198406",
+      "threshold": 0.7974840111297982,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_API_20260415.json",
+      "last_confirmed": "2026-04-15T17:47:48.198406",
+      "has_correlated_eq": false
+    }
+  ],
   "recent_false_negatives": [
     {
       "station": "SHU",
       "earthquake_time": "2026-04-12 20:14:10.340",
-      "first_logged": "2026-04-14T19:26:43.006906",
+      "first_logged": "2026-04-15T17:47:48.339656",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 178.8700801897824,
       "earthquake_place": "97 km S of King Cove, Alaska",
       "earthquake_latitude": 54.1877,
       "earthquake_longitude": -162.3868,
-      "last_confirmed": "2026-04-14T19:26:43.006906",
+      "last_confirmed": "2026-04-15T17:47:48.339656",
       "source_file": "false_negatives.csv"
     }
   ]
