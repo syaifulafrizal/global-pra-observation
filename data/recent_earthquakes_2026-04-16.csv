@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-16 14:43:15.391,33.4772,142.225,66.763,5.0,"255 km SE of Katsuura, Japan",earthquake,
+2026-04-16 13:30:01.088,-32.2098,-178.0541,10.0,6.0,south of the Kermadec Islands,earthquake,
+2026-04-16 08:09:02.443,-14.6589,-76.767,10.0,5.2,"102 km SSW of Paracas, Peru",earthquake,
+2026-04-16 05:01:30.716,-7.0963,150.4314,10.0,5.0,"138 km SE of Kandrian, Papua New Guinea",earthquake,

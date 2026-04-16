@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-04-15T17:47:48.360658",
-  "latest_date": "2026-04-16",
+  "generated_at": "2026-04-16T17:53:45.489289",
+  "latest_date": "2026-04-17",
   "available_dates": [
+    "2026-04-17",
     "2026-04-16",
     "2026-04-15",
     "2026-04-14",
     "2026-04-13",
     "2026-04-12",
-    "2026-04-11",
-    "2026-04-10"
+    "2026-04-11"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "API",
       "date": "2026-04-15",
-      "first_detected": "2026-04-15T17:47:48.198406",
+      "first_detected": "2026-04-16T17:53:45.334656",
       "threshold": 0.7974840111297982,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_API_20260415.json",
-      "last_confirmed": "2026-04-15T17:47:48.198406",
+      "last_confirmed": "2026-04-16T17:53:45.334656",
       "has_correlated_eq": false
     }
   ],
@@ -39,13 +39,13 @@
     {
       "station": "SHU",
       "earthquake_time": "2026-04-12 20:14:10.340",
-      "first_logged": "2026-04-15T17:47:48.339656",
+      "first_logged": "2026-04-16T17:53:45.470289",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 178.8700801897824,
       "earthquake_place": "97 km S of King Cove, Alaska",
       "earthquake_latitude": 54.1877,
       "earthquake_longitude": -162.3868,
-      "last_confirmed": "2026-04-15T17:47:48.339656",
+      "last_confirmed": "2026-04-16T17:53:45.470289",
       "source_file": "false_negatives.csv"
     }
   ]
