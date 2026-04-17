@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-16 21:46:25.134,0.2141,-16.6026,10.0,5.1,north of Ascension Island,earthquake,
+2026-04-16 20:36:42.256,0.0245,-16.4939,10.0,5.2,north of Ascension Island,earthquake,
 2026-04-16 14:43:15.391,33.4772,142.225,66.763,5.0,"255 km SE of Katsuura, Japan",earthquake,
 2026-04-16 13:30:01.088,-32.2098,-178.0541,10.0,6.0,south of the Kermadec Islands,earthquake,
 2026-04-16 08:09:02.443,-14.6589,-76.767,10.0,5.2,"102 km SSW of Paracas, Peru",earthquake,
