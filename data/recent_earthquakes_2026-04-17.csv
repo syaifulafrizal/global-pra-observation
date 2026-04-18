@@ -1,2 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-04-17 12:39:26.641,13.1896,-44.8124,10,5.4,northern Mid-Atlantic Ridge,earthquake,
+2026-04-17 23:29:37.922,1.2073,126.3204,35.0,5.1,"127 km WNW of Ternate, Indonesia",earthquake,
+2026-04-17 23:21:27.293,0.0691,123.7912,121.035,5.1,"83 km WSW of Modisi, Indonesia",earthquake,
+2026-04-17 21:46:30.836,-5.9581,148.5128,94.504,5.1,"99 km NE of Finschhafen, Papua New Guinea",earthquake,
+2026-04-17 12:39:26.641,13.1896,-44.8124,10.0,5.4,northern Mid-Atlantic Ridge,earthquake,
