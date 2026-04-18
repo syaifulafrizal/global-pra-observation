@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-04-17T18:48:14.624011",
+  "last_updated": "2026-04-18T19:31:45.354186",
   "entries": [
     {
       "station": "API",
       "date": "2026-04-15",
-      "first_detected": "2026-04-17T18:48:14.506796",
+      "first_detected": "2026-04-18T19:31:45.222346",
       "threshold": 0.7974840111297982,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_API_20260415.json",
-      "last_confirmed": "2026-04-17T18:48:14.506796",
+      "last_confirmed": "2026-04-18T19:31:45.222346",
       "has_correlated_eq": false
     }
   ]
