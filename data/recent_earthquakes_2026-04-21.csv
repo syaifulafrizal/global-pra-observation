@@ -1,0 +1,6 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-21 10:30:27.397,-62.0123,164.998,10.0,5.7,Balleny Islands region,earthquake,
+2026-04-21 05:29:09.335,39.8481,143.6273,10.0,5.4,"146 km E of Miyako, Japan",earthquake,
+2026-04-21 03:17:07.811,-9.068,124.0863,77.167,5.5,"35 km WNW of Pante Makasar, Timor Leste",earthquake,
+2026-04-21 02:22:21.410,0.3364,-78.3232,129.427,5.2,"7 km WNW of Cotacachi, Ecuador",earthquake,
+2026-04-21 00:29:35.894,24.6039,94.5961,100.552,5.0,"53 km E of Wāngjing, India",earthquake,

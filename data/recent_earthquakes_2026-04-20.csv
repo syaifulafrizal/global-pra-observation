@@ -1,1 +1,10 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-20 18:47:05.797,-2.374,139.1482,10.0,5.3,"166 km W of Abepura, Indonesia",earthquake,
+2026-04-20 12:56:45.171,39.5889,143.4485,10.0,5.1,"129 km E of Yamada, Japan",earthquake,
+2026-04-20 10:44:16.040,39.4819,143.2471,47.565,5.0,"111 km E of Yamada, Japan",earthquake,
+2026-04-20 09:49:43.363,39.7888,143.2807,25.0,5.1,"115 km E of Miyako, Japan",earthquake,
+2026-04-20 08:32:46.679,39.6393,143.2591,24.452,5.6,"113 km E of Miyako, Japan",earthquake,
+2026-04-20 07:53:00.185,39.9532,143.0462,35.0,7.4,"100 km ENE of Miyako, Japan",earthquake,
+2026-04-20 07:04:23.455,-32.4235,-178.3141,10.0,5.1,south of the Kermadec Islands,earthquake,
+2026-04-20 05:19:35.993,-7.9677,124.3047,183.138,5.2,"122 km NW of Maubara, Timor Leste",earthquake,
+2026-04-20 01:21:17.359,-49.6804,117.3139,10.0,5.4,western Indian-Antarctic Ridge,earthquake,
