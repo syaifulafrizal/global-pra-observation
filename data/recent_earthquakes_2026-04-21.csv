@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-21 18:44:12.001,40.1562,143.4599,35.0,5.6,"140 km E of Noda, Japan",earthquake,
+2026-04-21 14:52:17.411,16.7709,-95.7767,81.326,5.0,"12 km SSW of Santiago Quiavicuzas, Mexico",earthquake,
 2026-04-21 10:30:27.397,-62.0123,164.998,10.0,5.7,Balleny Islands region,earthquake,
 2026-04-21 05:29:09.335,39.8481,143.6273,10.0,5.4,"146 km E of Miyako, Japan",earthquake,
 2026-04-21 03:17:07.811,-9.068,124.0863,77.167,5.5,"35 km WNW of Pante Makasar, Timor Leste",earthquake,
