@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-22 13:20:45.869,-15.4409,167.4412,120.214,5.0,"31 km ENE of Luganville, Vanuatu",earthquake,
+2026-04-22 12:18:37.573,39.9953,142.9285,57.183,5.0,"93 km ENE of Miyako, Japan",earthquake,
+2026-04-22 00:01:12.294,39.9179,143.2055,35.0,5.3,"112 km ENE of Miyako, Japan",earthquake,
