@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-21T23:54:17.676354",
+  "last_updated": "2026-04-22T18:07:18.955329",
   "entries": [
     {
       "station": "GUA",
@@ -52,85 +52,85 @@
     {
       "station": "MMB",
       "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 170.24730435749854,
       "earthquake_place": "64 km ESE of Akkeshi, Japan",
       "earthquake_latitude": 42.7295,
       "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KAK",
       "earthquake_time": "2026-02-03 09:03:23.298",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 93.52866060374312,
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-02-03 09:03:23.298",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 191.61487639762166,
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "API",
       "earthquake_time": "2026-02-10 21:14:42.327",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 179.66038639459046,
       "earthquake_place": "142 km NE of Hihifo, Tonga",
       "earthquake_latitude": -14.97,
       "earthquake_longitude": -172.9395,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "GUA",
       "earthquake_time": "2026-02-12 10:30:16.050",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.4,
       "earthquake_distance_km": 41.846276179646026,
       "earthquake_place": "47 km NNW of Yigo Village, Guam",
       "earthquake_latitude": 13.9605,
       "earthquake_longitude": 144.7999,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SJG",
       "earthquake_time": "2026-02-19 14:18:06.650",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 198.99123300127954,
       "earthquake_place": "155 km N of Arecibo, Puerto Rico",
       "earthquake_latitude": 19.8711,
       "earthquake_longitude": -66.5455,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SHU",
       "earthquake_time": "2026-04-12 20:14:10.340",
-      "first_logged": "2026-04-21T23:54:17.658598",
+      "first_logged": "2026-04-22T18:07:18.938689",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 178.8700801897824,
       "earthquake_place": "97 km S of King Cove, Alaska",
       "earthquake_latitude": 54.1877,
       "earthquake_longitude": -162.3868,
-      "last_confirmed": "2026-04-21T23:54:17.658598",
+      "last_confirmed": "2026-04-22T18:07:18.938689",
       "source_file": "false_negatives.csv"
     }
   ]
