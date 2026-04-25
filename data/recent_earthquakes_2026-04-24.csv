@@ -1,3 +1,10 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-24 13:49:41.138,-27.92,-70.9962,63.841,5.0,"76 km NNW of Vallenar, Chile",earthquake,
+2026-04-24 12:49:37.014,52.9177,161.0719,10.0,5.1,"164 km E of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-04-24 10:04:37.607,52.9131,160.9481,35.0,5.4,"156 km E of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-04-24 08:59:28.540,52.9231,161.1117,10.0,5.3,"167 km E of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-04-24 08:58:17.508,34.9902,26.1319,10.0,5.0,"24 km S of Sitia, Greece",earthquake,
+2026-04-24 05:13:10.736,40.095,142.8333,35.0,5.0,"86 km E of Noda, Japan",earthquake,
+2026-04-24 04:45:20.134,1.1341,126.3665,29.011,5.3,"119 km WNW of Ternate, Indonesia",earthquake,
 2026-04-24 03:18:53.476,34.9345,25.8274,12.827,5.8,"11 km SE of Ierápetra, Greece",earthquake,
 2026-04-24 01:51:59.835,-34.7235,-179.1959,10.0,5.4,south of the Kermadec Islands,earthquake,
