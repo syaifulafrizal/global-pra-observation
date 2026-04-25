@@ -1,3 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-04-24 03:18:53.476,34.9345,25.8274,12.827,5.8,"11 km SE of Ierápetra, Greece",earthquake,
-2026-04-24 01:51:59.835,-34.7235,-179.1959,10.0,5.4,south of the Kermadec Islands,earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
