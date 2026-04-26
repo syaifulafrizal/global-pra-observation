@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-25 20:14:39.279,-14.5752,-76.4954,10.0,5.0,"82 km SSW of Paracas, Peru",earthquake,
+2026-04-25 10:20:21.431,52.6755,158.6924,87.83,5.2,"34 km SE of Vilyuchinsk, Russia",earthquake,
+2026-04-25 08:05:56.204,53.5884,-164.9144,35.0,5.4,"83 km SE of Akutan, Alaska",earthquake,

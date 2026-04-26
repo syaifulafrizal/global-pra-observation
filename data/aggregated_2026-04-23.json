@@ -1,6 +1,6 @@
 {
   "date": "2026-04-23",
-  "generated_at": "2026-04-25T04:03:58.807734",
+  "generated_at": "2026-04-26T04:05:53.344991",
   "stations": {
     "ABG": {
       "date": "2026-04-24",
@@ -3324,12 +3324,12 @@
     ],
     "SHU": [
       {
-        "earthquake_time": "2026-04-12 20:14:10.340",
+        "earthquake_time": "2026-04-12 20:14:10.790",
         "earthquake_magnitude": "5.1",
-        "earthquake_distance_km": "178.8700801897824",
-        "earthquake_place": "97 km S of King Cove, Alaska",
-        "earthquake_latitude": "54.1877",
-        "earthquake_longitude": "-162.3868"
+        "earthquake_distance_km": "181.4507758996663",
+        "earthquake_place": "94 km SE of False Pass, Alaska",
+        "earthquake_latitude": "54.2062",
+        "earthquake_longitude": "-162.4767"
       }
     ],
     "SJG": [
