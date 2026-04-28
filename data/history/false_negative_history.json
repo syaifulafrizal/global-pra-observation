@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-26T04:05:53.089482",
+  "last_updated": "2026-04-28T04:21:08.893069",
   "entries": [
     {
       "station": "GUA",
@@ -50,87 +50,87 @@
       "source_file": "false_negatives.csv"
     },
     {
-      "station": "MMB",
-      "earthquake_time": "2026-01-14 22:13:13.544",
-      "first_logged": "2026-04-26T04:05:53.072545",
-      "earthquake_magnitude": 5.6,
-      "earthquake_distance_km": 170.24730435749854,
-      "earthquake_place": "64 km ESE of Akkeshi, Japan",
-      "earthquake_latitude": 42.7295,
-      "earthquake_longitude": 145.5273,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
-      "source_file": "false_negatives.csv"
-    },
-    {
       "station": "KAK",
       "earthquake_time": "2026-02-03 09:03:23.298",
-      "first_logged": "2026-04-26T04:05:53.072545",
+      "first_logged": "2026-04-28T04:21:08.870156",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 93.52866060374312,
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
+      "last_confirmed": "2026-04-28T04:21:08.870156",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-02-03 09:03:23.298",
-      "first_logged": "2026-04-26T04:05:53.072545",
+      "first_logged": "2026-04-28T04:21:08.870156",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 191.61487639762166,
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
+      "last_confirmed": "2026-04-28T04:21:08.870156",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "API",
       "earthquake_time": "2026-02-10 21:14:42.327",
-      "first_logged": "2026-04-26T04:05:53.072545",
+      "first_logged": "2026-04-28T04:21:08.870156",
       "earthquake_magnitude": 5.6,
       "earthquake_distance_km": 179.66038639459046,
       "earthquake_place": "142 km NE of Hihifo, Tonga",
       "earthquake_latitude": -14.97,
       "earthquake_longitude": -172.9395,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
+      "last_confirmed": "2026-04-28T04:21:08.870156",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "GUA",
       "earthquake_time": "2026-02-12 10:30:16.050",
-      "first_logged": "2026-04-26T04:05:53.072545",
+      "first_logged": "2026-04-28T04:21:08.870156",
       "earthquake_magnitude": 5.4,
       "earthquake_distance_km": 41.846276179646026,
       "earthquake_place": "47 km NNW of Yigo Village, Guam",
       "earthquake_latitude": 13.9605,
       "earthquake_longitude": 144.7999,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
+      "last_confirmed": "2026-04-28T04:21:08.870156",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SJG",
       "earthquake_time": "2026-02-19 14:18:06.650",
-      "first_logged": "2026-04-26T04:05:53.072545",
+      "first_logged": "2026-04-28T04:21:08.870156",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 198.99123300127954,
       "earthquake_place": "155 km N of Arecibo, Puerto Rico",
       "earthquake_latitude": 19.8711,
       "earthquake_longitude": -66.5455,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
+      "last_confirmed": "2026-04-28T04:21:08.870156",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SHU",
       "earthquake_time": "2026-04-12 20:14:10.790",
-      "first_logged": "2026-04-26T04:05:53.072545",
+      "first_logged": "2026-04-28T04:21:08.870156",
       "earthquake_magnitude": 5.1,
       "earthquake_distance_km": 181.4507758996663,
       "earthquake_place": "94 km SE of False Pass, Alaska",
       "earthquake_latitude": 54.2062,
       "earthquake_longitude": -162.4767,
-      "last_confirmed": "2026-04-26T04:05:53.072545",
+      "last_confirmed": "2026-04-28T04:21:08.870156",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2026-04-26 20:23:55.561",
+      "first_logged": "2026-04-28T04:21:08.870156",
+      "earthquake_magnitude": 6.1,
+      "earthquake_distance_km": 173.5405848708337,
+      "earthquake_place": "18 km W of Sarabetsu, Japan",
+      "earthquake_latitude": 42.6311,
+      "earthquake_longitude": 142.9615,
+      "last_confirmed": "2026-04-28T04:21:08.870156",
       "source_file": "false_negatives.csv"
     }
   ]
