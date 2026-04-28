@@ -1,6 +1,6 @@
 {
   "date": "2026-04-22",
-  "generated_at": "2026-04-26T04:05:53.441720",
+  "generated_at": "2026-04-28T04:21:09.472650",
   "stations": {
     "ABG": {
       "date": "2026-04-23",
@@ -3314,12 +3314,12 @@
     ],
     "MMB": [
       {
-        "earthquake_time": "2026-01-14 22:13:13.544",
-        "earthquake_magnitude": "5.6",
-        "earthquake_distance_km": "170.24730435749854",
-        "earthquake_place": "64 km ESE of Akkeshi, Japan",
-        "earthquake_latitude": "42.7295",
-        "earthquake_longitude": "145.5273"
+        "earthquake_time": "2026-04-26 20:23:55.561",
+        "earthquake_magnitude": "6.1",
+        "earthquake_distance_km": "173.5405848708337",
+        "earthquake_place": "18 km W of Sarabetsu, Japan",
+        "earthquake_latitude": "42.6311",
+        "earthquake_longitude": "142.9615"
       }
     ],
     "SHU": [
