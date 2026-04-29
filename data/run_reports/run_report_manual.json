@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-04-28T17:49:24.024240",
-  "latest_date": "2026-04-29",
+  "generated_at": "2026-04-29T17:00:30.813329",
+  "latest_date": "2026-04-30",
   "available_dates": [
+    "2026-04-30",
     "2026-04-29",
     "2026-04-28",
     "2026-04-27",
     "2026-04-26",
     "2026-04-25",
-    "2026-04-24",
-    "2026-04-23"
+    "2026-04-24"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -28,13 +28,13 @@
     {
       "station": "MMB",
       "earthquake_time": "2026-04-26 20:23:55.561",
-      "first_logged": "2026-04-28T17:49:24.003610",
+      "first_logged": "2026-04-29T17:00:30.793799",
       "earthquake_magnitude": 6.1,
       "earthquake_distance_km": 173.5405848708337,
       "earthquake_place": "18 km W of Sarabetsu, Japan",
       "earthquake_latitude": 42.6311,
       "earthquake_longitude": 142.9615,
-      "last_confirmed": "2026-04-28T17:49:24.003610",
+      "last_confirmed": "2026-04-29T17:00:30.793799",
       "source_file": "false_negatives.csv"
     }
   ]
