@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-29 16:31:05.172,-44.6347,37.2759,10,5.1,Prince Edward Islands region,earthquake,
+2026-04-29 16:27:36.033,-44.5433,37.4117,10,5.0,Prince Edward Islands region,earthquake,
+2026-04-29 16:11:26.657,-44.652,37.4301,10,5.1,Prince Edward Islands region,earthquake,
