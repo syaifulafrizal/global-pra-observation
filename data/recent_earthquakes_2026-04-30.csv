@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-04-30 13:27:01.741,-3.4749,148.8139,10.0,5.7,"234 km SE of Lorengau, Papua New Guinea",earthquake,
+2026-04-30 09:07:09.663,-18.2522,-175.1974,248.742,5.0,"135 km WNW of Neiafu, Tonga",earthquake,
