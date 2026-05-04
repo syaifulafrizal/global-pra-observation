@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-02 21:19:13.344,-37.5613,178.2023,35.0,5.1,"9 km WNW of Hicks Bay, New Zealand",earthquake,
+2026-05-02 10:31:40.811,-59.3027,-25.0767,10.0,5.0,South Sandwich Islands region,earthquake,
+2026-05-02 10:27:07.609,-5.9589,130.8204,130.863,5.2,"217 km W of Tual, Indonesia",earthquake,
+2026-05-02 09:28:40.989,34.107,135.4857,59.087,5.7,"17 km SW of Kōya, Japan",earthquake,
+2026-05-02 05:04:56.485,-30.0095,-66.5123,10.0,5.0,"43 km NNW of Chamical, Argentina",earthquake,
+2026-05-02 02:06:36.139,-24.4373,178.8233,532.819,5.1,south of the Fiji Islands,earthquake,
