@@ -1,2 +1,1 @@
-time,latitude,longitude,depth,magnitude,place,type,id
-2026-05-05 02:38:49.853,-6.4335,130.1627,153.768,5.3,Banda Sea,earthquake,
+time,latitude,longitude,magnitude,place,depth,type,id
