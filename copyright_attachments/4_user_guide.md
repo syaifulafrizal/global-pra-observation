@@ -4,6 +4,8 @@
 
 Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization Ratio Analysis). This guide will help you navigate and utilize the platform effectively.
 
+The current interface uses a polished card-based dashboard layout with a branded footer, a prominent run-health area, refined analytics panels, and a copyright notice for Universiti Putra Malaysia.
+
 **Platform URL**: https://syaifulafrizal.github.io/global-pra-observation/
 
 ---
@@ -15,8 +17,9 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    GEMPRA Header                             │
-│  🌋 GEMPRA                                                   │
+│  G GEMPRA                                                   │
 │  Geomagnetic Earthquake Monitoring using PRA                │
+│  Geomagnetic precursor observation dashboard                │
 │  [Date Selector ▼] [Dark Mode Toggle]                       │
 └─────────────────────────────────────────────────────────────┘
 │                                                               │
@@ -29,7 +32,7 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 │  ┌─────────────────────────────────────────────────────────┐│
 │  │         Data Availability Report                         ││
 │  │  Stations Available: 51/51 (100%)                        ││
-│  │  Data Source: Standard                                   ││
+│  │  Data Source: Standard / Hybrid                          ││
 │  └─────────────────────────────────────────────────────────┘│
 │                                                               │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
@@ -49,6 +52,9 @@ Welcome to GEMPRA (Geomagnetic Earthquake Monitoring Platform using Polarization
 │  │  Select Station: [Dropdown ▼]                            ││
 │  │  [PRA Analysis Plot]                                     ││
 │  └─────────────────────────────────────────────────────────┘│
+│                                                               │
+│  Footer: acknowledgements, author, and © Universiti Putra     │
+│  Malaysia notice                                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 

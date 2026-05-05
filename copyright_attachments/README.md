@@ -41,14 +41,13 @@ Complete user documentation including:
 - Troubleshooting tips
 - FAQ section
 
-### 5. Source Code Samples (`5_source_code_samples.md`)
-Key source code excerpts demonstrating:
-- PRA calculation algorithms (Python)
-- Anomaly detection using EVT (Python)
-- Earthquake correlation logic (Python)
-- Data aggregation system (Python)
-- Map visualization (JavaScript)
-- Chart rendering (JavaScript)
+### 5. Full Source Code Bundle (`5_full_source_code.md`)
+Complete source listing of the current platform including:
+- Backend processing scripts
+- Web output preparation and aggregation logic
+- Frontend HTML, CSS, and JavaScript
+- Local serving and deployment automation
+- Logging, monitoring, and helper utilities
 
 ### 6. Deployment Automation (`6_deployment_automation.md`)
 Windows Task Scheduler automation documentation:
@@ -102,13 +101,8 @@ Visual evidence of the platform:
    - Dashboard on mobile device
    - Map interaction on touch screen
 
-### Source Code Samples:
-Create a `source_code_samples/` folder with:
-- `pra_analysis.py` - Core PRA algorithm
-- `earthquake_correlation.py` - Correlation logic
-- `data_aggregation.py` - Aggregation system
-- `app.js` - Frontend main logic
-- `map_visualization.js` - Leaflet map code
+### Source Code Bundle:
+Include the generated `5_full_source_code.md` file containing the current relevant source files in one Markdown bundle for filing and review.
 
 ### Diagrams to Create:
 1. **Data Flow Diagram**
@@ -149,7 +143,7 @@ Create a `source_code_samples/` folder with:
 
 - [ ] All 4 markdown documents reviewed and finalized
 - [ ] Screenshots captured (minimum 10 images)
-- [ ] Source code samples extracted
+- [ ] Full source code bundle generated
 - [ ] Diagrams created (data flow, flowcharts)
 - [ ] All files converted to PDF format
 - [ ] File naming convention followed: `GEMPRA_[DocumentName]_[Date].pdf`
@@ -170,7 +164,7 @@ GEMPRA_Screenshots_Dashboard_Light.pdf
 GEMPRA_Screenshots_Dashboard_Dark.pdf
 GEMPRA_Screenshots_Map_Global.pdf
 GEMPRA_Screenshots_StationAnalysis.pdf
-GEMPRA_SourceCode_Samples.pdf
+GEMPRA_FullSourceCode_2026-02-05.pdf
 GEMPRA_Diagrams_DataFlow.pdf
 ```
 

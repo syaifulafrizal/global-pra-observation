@@ -93,7 +93,7 @@ Available for review:
 - System pipeline diagram (attached)
 - Source code listings (Python backend, JavaScript frontend)
 - Screenshots of all major dashboard views (light mode, dark mode, map popups, charts, station plots)
-- Copyright attachments package: System Architecture, PRA Methodology, Technical Specifications, User Guide, Source Code Samples, Deployment Automation documentation
+- Copyright attachments package: System Architecture, PRA Methodology, Technical Specifications, User Guide, Full Source Code Bundle, Deployment Automation documentation
 
 ---
 

@@ -116,9 +116,10 @@ GEMPRA is a comprehensive full-stack web-based platform for real-time earthquake
    - Interactive global station map using Leaflet.js
    - Real-time data visualization with Chart.js
    - Date-based data navigation (7-day rolling window)
-   - Responsive dashboard with dark/light mode
+   - Responsive dashboard with refined visual design and dark/light mode
    - Station-specific analysis plots
    - Earthquake correlation display with magnitude filtering
+   - Footer branding and copyright notice for Universiti Putra Malaysia
 
 3. **Data Architecture**
    - Hybrid data aggregation system (98% reduction in network requests)
@@ -145,6 +146,7 @@ This platform enables systematic validation of the PRA methodology for earthquak
 
 **Attachments:**
 - Source code repository structure
+- Full source code bundle in Markdown format
 - System architecture diagrams
 - Sample dashboard screenshots
 - Data flow diagrams
@@ -178,6 +180,7 @@ The platform is fully developed, tested, and deployed with:
 
 1. ✅ **Source Code**
    - Complete codebase (Python backend + JavaScript frontend)
+   - Full Markdown source bundle for review and filing
    - Configuration files
    - Deployment scripts
 
@@ -189,6 +192,7 @@ The platform is fully developed, tested, and deployed with:
 
 3. ✅ **Screenshots/Visual Evidence**
    - Dashboard interface (light/dark modes)
+   - Updated footer showing UPM copyright notice
    - Interactive map with station markers
    - Chart visualizations
    - Station analysis plots
@@ -251,7 +255,7 @@ The platform is fully developed, tested, and deployed with:
 - **Backend:** Python 3.x, NumPy, Pandas, SciPy, Geopy
 - **Frontend:** JavaScript (ES6+), HTML5, CSS3, Leaflet.js, Chart.js
 - **Data Sources:** INTERMAGNET, USGS Earthquake API
-- **Deployment:** GitHub Pages, GitHub Actions
+- **Deployment:** GitHub Pages, PowerShell automation, Windows Task Scheduler
 - **Version Control:** Git
 
 ### Potential Applications:
