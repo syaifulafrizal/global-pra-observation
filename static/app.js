@@ -692,13 +692,13 @@ function destroyCharts() {
 function getChartColors() {
     const isDark = document.body.classList.contains('dark-mode');
     return {
-        text: isDark ? '#f9fafb' : '#1f2937',
-        grid: isDark ? '#374151' : '#e5e7eb',
-        primary: isDark ? '#06b6d4' : '#0891b2',
-        success: isDark ? '#34d399' : '#10b981',
-        warning: isDark ? '#fbbf24' : '#f59e0b',
-        danger: isDark ? '#f87171' : '#ef4444',
-        gray: isDark ? '#9ca3af' : '#6b7280'
+        text: isDark ? '#e5edf7' : '#334155',
+        grid: isDark ? '#334155' : '#cbd5e1',
+        primary: isDark ? '#60a5fa' : '#1f5fa8',
+        success: isDark ? '#34c38f' : '#1f8a5b',
+        warning: isDark ? '#e5a93b' : '#c58a16',
+        danger: isDark ? '#f87171' : '#dc2626',
+        gray: isDark ? '#94a3b8' : '#94a3b8'
     };
 }
 
@@ -871,7 +871,7 @@ async function createMagnitudeDistributionChart(selectedDate) {
             datasets: [{
                 label: 'Count',
                 data: Object.values(magRanges),
-                backgroundColor: ['#f1c40f', '#e67e22', '#e74c3c', '#c0392b'],
+                backgroundColor: [colors.primary, colors.success, colors.warning, colors.danger],
                 borderRadius: 6
             }]
         },
