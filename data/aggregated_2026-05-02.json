@@ -1,6 +1,6 @@
 {
   "date": "2026-05-02",
-  "generated_at": "2026-05-05T16:06:22.818432",
+  "generated_at": "2026-05-06T16:16:49.561135",
   "stations": {
     "AMS": {
       "date": "2026-05-01",
@@ -2087,12 +2087,12 @@
     ],
     "MMB": [
       {
-        "earthquake_time": "2026-04-26 20:23:55.561",
+        "earthquake_time": "2026-04-26 20:23:55.589",
         "earthquake_magnitude": "6.1",
-        "earthquake_distance_km": "173.5405848708337",
-        "earthquake_place": "18 km W of Sarabetsu, Japan",
-        "earthquake_latitude": "42.6311",
-        "earthquake_longitude": "142.9615"
+        "earthquake_distance_km": "169.97284978158984",
+        "earthquake_place": "25 km WNW of Sarabetsu, Japan",
+        "earthquake_latitude": "42.7138",
+        "earthquake_longitude": "142.8827"
       }
     ],
     "SHU": [

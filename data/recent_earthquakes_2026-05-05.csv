@@ -1,5 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-05-05 15:09:37.607,-35.235,78.6258,10.0,5.1,Mid-Indian Ridge,earthquake,
+2026-05-05 15:58:27.033,-3.547,-80.6705,50.695,5.1,"14 km N of Zorritos, Peru",earthquake,
+2026-05-05 15:09:37.443,-35.269,78.5793,10.0,5.1,Mid-Indian Ridge,earthquake,
 2026-05-05 08:00:43.579,-36.7452,177.2617,10.0,5.8,"127 km ENE of Pauanui, New Zealand",earthquake,
 2026-05-05 06:44:51.479,-10.1135,119.3245,35.536,5.8,"76 km S of Tambolaka, Indonesia",earthquake,
 2026-05-05 02:38:49.853,-6.4335,130.1627,153.768,5.3,Banda Sea,earthquake,

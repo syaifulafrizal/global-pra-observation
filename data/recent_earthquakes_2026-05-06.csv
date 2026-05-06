@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-06 15:35:46.736,7.6333,126.7818,10.0,5.5,"25 km ENE of Baganga, Philippines",earthquake,
+2026-05-06 14:15:32.254,52.2595,176.518,10.0,5.8,"235 km ESE of Attu Station, Alaska",earthquake,
+2026-05-06 11:46:48.851,-32.1671,-177.9339,10.0,5.6,south of the Kermadec Islands,earthquake,
+2026-05-06 09:43:13.683,-5.7284,154.4199,103.644,5.2,"134 km WNW of Panguna, Papua New Guinea",earthquake,
