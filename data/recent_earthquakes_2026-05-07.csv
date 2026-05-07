@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-07 11:48:41.636,-17.9613,-178.0277,586.653,5.1,"281 km E of Levuka, Fiji",earthquake,
+2026-05-07 08:53:28.180,-27.3997,-176.6255,41.226,5.3,Kermadec Islands region,earthquake,
+2026-05-07 01:23:05.220,-5.7445,154.2368,142.299,5.1,"151 km WNW of Panguna, Papua New Guinea",earthquake,
