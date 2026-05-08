@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-08 12:22:31.861,-2.9127,147.7321,10,5.6,"109 km SSE of Lorengau, Papua New Guinea",earthquake,
+2026-05-08 07:17:43.055,-43.412,91.7023,10,5.9,southeast Indian Ridge,earthquake,
