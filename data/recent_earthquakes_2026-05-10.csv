@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-10 23:20:55.111,-23.4697,-179.8206,542.202,5.0,south of the Fiji Islands,earthquake,
+2026-05-10 23:15:43.825,-23.3618,-179.9969,562.91,5.1,south of the Fiji Islands,earthquake,
+2026-05-10 19:36:36.864,20.495,94.1576,58.752,5.0,"74 km W of Yenangyaung, Burma (Myanmar)",earthquake,
+2026-05-10 16:41:43.464,-16.8014,-173.4234,10.0,5.3,"101 km SSE of Hihifo, Tonga",earthquake,
+2026-05-10 16:34:33.326,-5.3168,145.5539,91.215,5.2,"27 km WSW of Madang, Papua New Guinea",earthquake,
+2026-05-10 02:42:23.775,-7.0242,132.0136,10.0,5.0,"174 km SSW of Tual, Indonesia",earthquake,
+2026-05-10 02:34:07.249,-37.7219,-73.1062,34.251,5.5,"27 km ENE of Cañete, Chile",earthquake,

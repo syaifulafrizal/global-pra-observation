@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-09 20:39:49.843,-26.8393,-176.7692,10.0,5.3,south of the Fiji Islands,earthquake,
+2026-05-09 14:22:52.509,-58.024,-25.6886,97.443,5.1,South Sandwich Islands region,earthquake,
 2026-05-09 09:12:13.117,-2.9287,147.7678,10.0,5.0,"113 km SSE of Lorengau, Papua New Guinea",earthquake,
 2026-05-09 04:42:23.298,51.0818,179.349,26.482,5.8,"292 km WSW of Adak, Alaska",earthquake,
 2026-05-09 04:42:21.975,50.981,179.214,16.3,6.1,"Rat Islands, Aleutian Islands, Alaska",earthquake,
