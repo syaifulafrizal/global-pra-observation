@@ -1,5 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-05-12 15:39:30.763,-10.6279,164.9205,63.665,5.6,"96 km W of Lata, Solomon Islands",earthquake,
+2026-05-12 21:53:44.573,-21.1489,-174.4653,10.0,5.1,"55 km ENE of ‘Ohonua, Tonga",earthquake,
+2026-05-12 21:19:36.870,-23.2041,-176.8485,154.0,5.7,"275 km SW of Houma, Tonga",earthquake,
+2026-05-12 15:39:31.100,-10.649,164.9925,68.161,5.6,"88 km W of Lata, Solomon Islands",earthquake,
 2026-05-12 08:53:56.666,4.8333,127.5121,108.574,5.0,"224 km SE of Pondaguitan, Philippines",earthquake,
 2026-05-12 06:53:32.598,23.2629,121.4893,26.329,5.1,"79 km S of Hualien City, Taiwan",earthquake,
 2026-05-12 03:45:42.646,-10.2288,161.21,60.837,5.0,"81 km WNW of Kirakira, Solomon Islands",earthquake,
