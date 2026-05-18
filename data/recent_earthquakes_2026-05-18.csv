@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-18 13:44:26.230,24.4799,109.2073,10,5.1,"26 km NW of Liuzhou, China",earthquake,
+2026-05-18 07:34:30.448,-28.5299,74.2599,10,5.2,Mid-Indian Ridge,earthquake,
+2026-05-18 02:10:41.745,-43.4009,-82.4593,10,5.4,West Chile Rise,earthquake,
+2026-05-18 02:05:24.327,16.4431,96.3164,10,5.2,"36 km SSE of Syriam, Burma (Myanmar)",earthquake,
