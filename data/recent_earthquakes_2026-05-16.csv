@@ -1,8 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-05-16 15:58:04.288,-17.8726,169.1752,10.0,5.4,"92 km E of Port-Vila, Vanuatu",earthquake,
-2026-05-16 15:17:56.098,-8.5526,160.9161,23.374,5.7,"33 km NE of Auki, Solomon Islands",earthquake,
-2026-05-16 14:50:03.503,17.5127,-61.1771,30.038,6.0,"70 km ESE of Codrington, Antigua and Barbuda",earthquake,
-2026-05-16 14:07:54.649,-17.7708,169.2036,10.0,5.2,"94 km E of Port-Vila, Vanuatu",earthquake,
+2026-05-16 15:58:04.517,-17.9035,169.0942,10.0,5.5,"84 km ESE of Port-Vila, Vanuatu",earthquake,
+2026-05-16 15:17:58.214,-8.5885,160.8774,37.762,5.7,"27 km NE of Auki, Solomon Islands",earthquake,
+2026-05-16 14:50:05.948,17.4295,-61.2938,51.245,6.0,"60 km ESE of Codrington, Antigua and Barbuda",earthquake,
+2026-05-16 14:07:54.607,-17.7886,169.1976,10.0,5.2,"93 km E of Port-Vila, Vanuatu",earthquake,
 2026-05-16 12:59:30.959,-17.8503,169.1937,10.0,5.3,"94 km E of Port-Vila, Vanuatu",earthquake,
 2026-05-16 11:25:43.857,6.8241,124.6816,10.0,5.0,"5 km WSW of Badak, Philippines",earthquake,
 2026-05-16 06:48:55.360,-31.9282,-178.203,10.0,5.0,Kermadec Islands region,earthquake,

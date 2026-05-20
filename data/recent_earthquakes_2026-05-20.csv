@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-20 10:28:49.290,-8.2248,119.2187,10,5.2,"45 km NE of Sape, Indonesia",earthquake,
+2026-05-20 09:40:32.226,-17.312,175.9863,10,5.1,"159 km WNW of Lautoka, Fiji",earthquake,
+2026-05-20 06:00:16.653,38.2157,38.6061,10,5.4,"19 km N of Sincik, Turkey",earthquake,
+2026-05-20 02:46:24.884,27.392,128.7336,42,5.9,"8 km E of Wadomari, Japan",earthquake,
