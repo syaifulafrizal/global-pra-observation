@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-23 12:40:25.493,-4.6647,102.5556,47.721,5.2,"100 km SSE of Bengkulu, Indonesia",earthquake,
+2026-05-23 07:46:01.480,19.3403333333333,-155.8425,22.64,5.96,"13 km S of Honaunau-Napoopoo, Hawaii",earthquake,
+2026-05-23 05:41:34.889,-47.488,99.9967,10.0,5.7,southeast Indian Ridge,earthquake,
