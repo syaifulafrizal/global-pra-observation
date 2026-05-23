@@ -1,0 +1,25 @@
+{
+  "date": "2026-05-23",
+  "station": "NGK",
+  "timestamps": [
+    "2026-05-23T00:30:08"
+  ],
+  "P": [
+    5.943375772539943
+  ],
+  "nZ": [
+    11629.952040142978
+  ],
+  "nG": [
+    1956.7923155518126
+  ],
+  "isAnomalous": [
+    false
+  ],
+  "isQuiet": [
+    true
+  ],
+  "threshold": 5.967875268800102,
+  "nAnomHours": 0,
+  "is_anomalous": false
+}
