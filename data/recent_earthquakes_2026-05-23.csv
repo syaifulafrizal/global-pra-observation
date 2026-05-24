@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-23 21:49:16.864,51.7344,-170.3491,7.153,5.3,"168 km SW of Nikolski, Alaska",earthquake,
+2026-05-23 19:19:06.642,-35.7131,-104.9788,10.0,5.3,southeast of Easter Island,earthquake,
 2026-05-23 12:40:25.493,-4.6647,102.5556,47.721,5.2,"100 km SSE of Bengkulu, Indonesia",earthquake,
 2026-05-23 07:46:01.480,19.3403333333333,-155.8425,22.64,5.96,"13 km S of Honaunau-Napoopoo, Hawaii",earthquake,
 2026-05-23 05:41:34.889,-47.488,99.9967,10.0,5.7,southeast Indian Ridge,earthquake,
