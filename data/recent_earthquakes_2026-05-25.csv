@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-25 21:52:20.043,-22.3883,-68.6422,109.0,6.9,"29 km ENE of Calama, Chile",earthquake,
+2026-05-25 20:39:20.664,1.1115,126.0911,31.057,5.6,"113 km ESE of Bitung, Indonesia",earthquake,
+2026-05-25 15:00:31.611,-4.7343,153.126,66.807,5.0,"104 km ESE of Kokopo, Papua New Guinea",earthquake,
+2026-05-25 09:25:39.358,-53.4118,25.0096,10.0,5.0,south of Africa,earthquake,
+2026-05-25 02:32:38.428,8.0315,126.9336,35.0,5.0,"54 km E of Santa Maria, Philippines",earthquake,
