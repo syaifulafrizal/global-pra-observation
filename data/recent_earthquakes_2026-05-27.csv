@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-27 15:01:11.567,-50.5213,139.3037,10.0,6.0,western Indian-Antarctic Ridge,earthquake,
+2026-05-27 14:51:04.419,-50.5174,139.3678,10.0,6.0,western Indian-Antarctic Ridge,earthquake,
+2026-05-27 06:24:16.451,0.4707,125.8106,19.144,5.1,"131 km SE of Bitung, Indonesia",earthquake,
+2026-05-27 05:23:30.376,-22.282,-68.7512,102.493,5.1,"26 km NE of Calama, Chile",earthquake,

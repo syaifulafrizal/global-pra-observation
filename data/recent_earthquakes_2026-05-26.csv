@@ -1,2 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-05-26 02:08:03.420,-28.3135,-176.5972,10,5.3,Kermadec Islands region,earthquake,
+2026-05-26 19:25:11.739,-17.2705,-174.2097,118.289,5.0,"152 km SSW of Hihifo, Tonga",earthquake,
+2026-05-26 19:12:31.037,-17.6654,-172.621,10.0,5.4,"180 km NE of Neiafu, Tonga",earthquake,
+2026-05-26 18:56:36.969,13.0008,57.6465,10.0,5.1,Owen Fracture Zone region,earthquake,
+2026-05-26 16:22:50.365,-58.6442,-152.5127,10.0,5.1,Pacific-Antarctic Ridge,earthquake,
+2026-05-26 02:08:03.420,-28.3135,-176.5972,10.0,5.3,Kermadec Islands region,earthquake,
