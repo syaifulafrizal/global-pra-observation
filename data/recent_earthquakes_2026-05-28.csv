@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-28 16:18:09.965,19.6577,-109.4358,10.0,5.3,Revilla Gigedo Islands region,earthquake,
+2026-05-28 01:46:18.726,-10.451,124.473,10.0,5.1,"68 km SSE of Soe, Indonesia",earthquake,
+2026-05-28 00:25:21.947,51.7852,-175.9331,58.274,5.2,"49 km ESE of Adak, Alaska",earthquake,
