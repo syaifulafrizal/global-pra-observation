@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-05-29 21:21:44.016,0.9071,-29.1814,10,5.2,central Mid-Atlantic Ridge,earthquake,
+2026-05-29 16:05:58.630,50.0568,159.5123,10,5.2,"250 km ESE of Severo-Kuril’sk, Russia",earthquake,
+2026-05-29 06:55:52.924,42.2295,88.3187,10,5.3,"106 km SW of Turpan, China",earthquake,
+2026-05-29 05:32:39.548,-18.4158,-71.4602,10,5.1,"86 km S of Pacocha, Peru",earthquake,
