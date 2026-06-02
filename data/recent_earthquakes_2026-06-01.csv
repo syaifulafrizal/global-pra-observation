@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-01 23:01:17.102,-2.0575,138.8427,29.55,5.4,"207 km WNW of Abepura, Indonesia",earthquake,
+2026-06-01 22:12:36.284,39.325,15.7796,243.0,6.2,"22 km WSW of Scarcelli, Italy",earthquake,
 2026-06-01 05:16:15.532,-18.1208,-178.1836,567.977,5.0,"264 km E of Levuka, Fiji",earthquake,
 2026-06-01 03:40:11.053,-35.387,-104.6576,10.0,5.3,southeast of Easter Island,earthquake,
 2026-06-01 03:34:30.871,30.7158,141.7476,11.0,5.7,"Izu Islands, Japan region",earthquake,
