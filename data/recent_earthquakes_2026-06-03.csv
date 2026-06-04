@@ -1,5 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-06-03 12:45:35.090,40.3601684570312,-125.044502258301,0.150000005960464,5.08,"64 km W of Petrolia, CA",earthquake,
+2026-06-03 17:23:30.992,51.2954,159.6858,10.0,5.2,"202 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-06-03 17:21:24.203,-8.2012,-74.2436,139.126,5.2,"39 km NE of San Fernando, Peru",earthquake,
+2026-06-03 12:45:36.790,40.3646666666667,-125.017833333333,10.0,5.1,"62 km W of Petrolia, CA",earthquake,
 2026-06-03 10:53:54.074,41.8967,-126.1861,10.0,5.7,"154 km WSW of Pistol River, Oregon",earthquake,
 2026-06-03 10:20:37.618,-20.4457,173.0405,10.0,5.6,Vanuatu region,earthquake,
 2026-06-03 06:58:56.791,38.8658,72.278,10.0,5.1,"76 km S of Daroot-Korgon, Kyrgyzstan",earthquake,
