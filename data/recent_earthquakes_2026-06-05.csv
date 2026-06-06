@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-05 22:22:02.934,-29.3155,-176.8622,10.0,5.0,Kermadec Islands region,earthquake,
+2026-06-05 20:58:09.571,-61.7682,161.3301,10.0,5.6,Balleny Islands region,earthquake,
+2026-06-05 20:55:03.336,16.7654,-98.4106,32.93,5.2,"2 km WSW of Santa María, Mexico",earthquake,
+2026-06-05 15:57:05.030,-7.6807,127.2652,154.139,5.3,"97 km NNE of Lospalos, Timor Leste",earthquake,
+2026-06-05 13:57:59.739,13.1856,123.8507,10.0,5.3,"7 km NNW of Manito, Philippines",earthquake,
+2026-06-05 13:40:20.252,-54.6462,-135.6401,10.0,5.3,Pacific-Antarctic Ridge,earthquake,
+2026-06-05 06:54:49.152,-31.8817,-67.0453,135.979,5.1,"103 km NNW of Villa General Roca, Argentina",earthquake,
