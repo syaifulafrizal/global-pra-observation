@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-07 14:53:56.180,49.8979,157.6645,10.0,5.5,"139 km SE of Severo-Kuril’sk, Russia",earthquake,
+2026-06-07 10:41:58.596,49.8993,157.3799,35.0,6.1,"124 km SE of Severo-Kuril’sk, Russia",earthquake,
+2026-06-07 10:02:48.827,38.7304,23.4046,10.0,5.2,"7 km W of Prokópi, Greece",earthquake,
+2026-06-07 03:56:57.053,-24.3729,-179.849,506.648,5.4,south of the Fiji Islands,earthquake,
+2026-06-07 02:53:05.880,-7.4742,128.439,161.221,5.1,"196 km NE of Lospalos, Timor Leste",earthquake,
