@@ -1,4 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-07 23:49:13.914,5.7148,125.3204,35.0,6.0,"4 km ENE of Pangyan, Philippines",earthquake,
+2026-06-07 23:48:11.405,5.5222,125.2096,81.843,6.0,"16 km WSW of Balangonan, Philippines",earthquake,
+2026-06-07 23:37:41.803,5.5918,125.0469,55.193,7.8,"26 km SW of Kablalan, Philippines",earthquake,
+2026-06-07 18:01:20.966,-29.1847,-112.2108,10.0,5.8,Easter Island region,earthquake,
+2026-06-07 17:36:39.953,27.6243,89.7236,10.0,5.6,"15 km WNW of Punākha, Bhutan",earthquake,
 2026-06-07 14:53:56.180,49.8979,157.6645,10.0,5.5,"139 km SE of Severo-Kuril’sk, Russia",earthquake,
 2026-06-07 10:41:58.596,49.8993,157.3799,35.0,6.1,"124 km SE of Severo-Kuril’sk, Russia",earthquake,
 2026-06-07 10:02:48.827,38.7304,23.4046,10.0,5.2,"7 km W of Prokópi, Greece",earthquake,
