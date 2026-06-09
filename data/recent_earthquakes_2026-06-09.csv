@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-09 10:07:29.185,5.6881,124.825,35.0,5.4,"21 km SSW of Lumatil, Philippines",earthquake,
+2026-06-09 09:24:58.682,8.769,125.685,10.0,5.1,"6 km SSW of Sibagat, Philippines",earthquake,
+2026-06-09 06:15:17.758,5.2857,125.3116,82.366,5.2,"21 km SW of Sarangani, Philippines",earthquake,
