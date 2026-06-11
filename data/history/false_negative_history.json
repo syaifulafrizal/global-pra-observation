@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-10T16:26:33.089634",
+  "last_updated": "2026-06-11T07:05:12.482306",
   "entries": [
     {
       "station": "GUA",
@@ -58,7 +58,7 @@
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     },
     {
@@ -70,7 +70,7 @@
       "earthquake_place": "22 km E of Kitaibaraki, Japan",
       "earthquake_latitude": 36.7639,
       "earthquake_longitude": 140.9958,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     },
     {
@@ -82,7 +82,7 @@
       "earthquake_place": "142 km NE of Hihifo, Tonga",
       "earthquake_latitude": -14.97,
       "earthquake_longitude": -172.9395,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     },
     {
@@ -94,7 +94,7 @@
       "earthquake_place": "47 km NNW of Yigo Village, Guam",
       "earthquake_latitude": 13.9605,
       "earthquake_longitude": 144.7999,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     },
     {
@@ -106,7 +106,7 @@
       "earthquake_place": "155 km N of Arecibo, Puerto Rico",
       "earthquake_latitude": 19.8711,
       "earthquake_longitude": -66.5455,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     },
     {
@@ -118,7 +118,7 @@
       "earthquake_place": "94 km SE of False Pass, Alaska",
       "earthquake_latitude": 54.2062,
       "earthquake_longitude": -162.4767,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     },
     {
@@ -130,7 +130,7 @@
       "earthquake_place": "25 km WNW of Sarabetsu, Japan",
       "earthquake_latitude": 42.7138,
       "earthquake_longitude": 142.8827,
-      "last_confirmed": "2026-06-10T16:26:33.072011",
+      "last_confirmed": "2026-06-11T07:05:12.457333",
       "source_file": "false_negatives.csv"
     }
   ]
