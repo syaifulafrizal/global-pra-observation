@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-04-21T14:24:29.728874",
+  "last_updated": "2026-06-12T17:31:18.488054",
   "entries": [
     {
-      "station": "API",
-      "date": "2026-04-15",
-      "first_detected": "2026-04-21T14:24:29.573485",
-      "threshold": 0.7974840111297982,
+      "station": "GUA",
+      "date": "2026-06-12",
+      "first_detected": "2026-06-12T17:31:18.341423",
+      "threshold": 0.5253338147315793,
       "n_anomaly_hours": 1,
-      "source_file": "PRA_Night_API_20260415.json",
-      "last_confirmed": "2026-04-21T14:24:29.573485",
+      "source_file": "PRA_Night_GUA_20260612.json",
+      "last_confirmed": "2026-06-12T17:31:18.341423",
       "has_correlated_eq": false
     }
   ]
