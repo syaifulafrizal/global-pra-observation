@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-13 12:05:34.332,1.0796,126.1267,35.0,5.1,"118 km ESE of Bitung, Indonesia",earthquake,
+2026-06-13 12:04:14.390,-30.6288,-71.4544,60.576,5.0,"24 km W of Ovalle, Chile",earthquake,
+2026-06-13 11:24:54.194,51.3511,-179.5103,28.374,5.1,"207 km WSW of Adak, Alaska",earthquake,
+2026-06-13 10:38:47.612,53.0785,-166.9697,41.492,5.0,"93 km SSW of Unalaska, Alaska",earthquake,
+2026-06-13 06:35:39.650,-4.5157,-79.9986,72.251,5.1,"0 km ESE of Suyo, Peru",earthquake,
+2026-06-13 02:05:53.272,5.774,125.1803,69.522,5.2,"2 km WSW of Kablalan, Philippines",earthquake,

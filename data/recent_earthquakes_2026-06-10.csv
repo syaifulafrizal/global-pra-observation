@@ -1,7 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-06-10 23:30:45.857,-19.0625,-172.365,10.0,5.4,"176 km ESE of Neiafu, Tonga",earthquake,
 2026-06-10 23:26:26.731,4.8122,125.3097,35.0,5.1,"67 km SSW of Sarangani, Philippines",earthquake,
-2026-06-10 13:45:26.037,52.5396,160.7735,10.0,5.2,"156 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-06-10 13:45:25.060,52.5126,160.7493,8.0,5.4,"155 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
 2026-06-10 11:07:56.613,5.4152,125.2355,36.458,5.0,"21 km SW of Balangonan, Philippines",earthquake,
 2026-06-10 10:34:17.371,43.6289,135.6736,343.313,5.7,"33 km ESE of Ol’ga, Russia",earthquake,
 2026-06-10 09:13:42.703,5.6757,125.3874,61.705,5.1,"7 km NW of Nuing, Philippines",earthquake,
