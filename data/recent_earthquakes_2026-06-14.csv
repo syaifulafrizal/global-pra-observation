@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-14 15:34:42.713,10.2151,122.1173,10,5.1,"27 km SE of Magdalena, Philippines",earthquake,
+2026-06-14 14:08:52.615,8.6152,126.7531,35,5.2,"53 km ENE of Hinatuan, Philippines",earthquake,
