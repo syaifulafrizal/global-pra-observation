@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-15 18:20:45.112,-23.3381,170.3866,10.0,5.0,southeast of the Loyalty Islands,earthquake,
+2026-06-15 15:30:24.374,5.658,125.2618,72.266,5.5,"5 km SSW of Pangyan, Philippines",earthquake,
+2026-06-15 09:18:38.846,6.193,126.7611,111.922,6.2,"67 km ESE of Pondaguitan, Philippines",earthquake,
