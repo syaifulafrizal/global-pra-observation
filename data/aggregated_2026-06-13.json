@@ -1,6 +1,6 @@
 {
   "date": "2026-06-13",
-  "generated_at": "2026-06-16T16:30:30.525750",
+  "generated_at": "2026-06-17T16:23:00.710104",
   "stations": {
     "ABG": {
       "date": "2026-06-14",
@@ -3294,22 +3294,22 @@
     ],
     "KAK": [
       {
-        "earthquake_time": "2026-02-03 09:03:23.298",
-        "earthquake_magnitude": "5",
-        "earthquake_distance_km": "93.52866060374312",
-        "earthquake_place": "22 km E of Kitaibaraki, Japan",
-        "earthquake_latitude": "36.7639",
-        "earthquake_longitude": "140.9958"
+        "earthquake_time": "2026-06-16 10:46:34.658",
+        "earthquake_magnitude": "5.5",
+        "earthquake_distance_km": "41.954250217927644",
+        "earthquake_place": "4 km NW of Noda, Japan",
+        "earthquake_latitude": "35.9814",
+        "earthquake_longitude": "139.8371"
       }
     ],
     "KNY": [
       {
-        "earthquake_time": "2026-02-03 09:03:23.298",
-        "earthquake_magnitude": "5",
-        "earthquake_distance_km": "191.61487639762166",
-        "earthquake_place": "22 km E of Kitaibaraki, Japan",
-        "earthquake_latitude": "36.7639",
-        "earthquake_longitude": "140.9958"
+        "earthquake_time": "2026-06-16 10:46:34.658",
+        "earthquake_magnitude": "5.5",
+        "earthquake_distance_km": "80.70312243102092",
+        "earthquake_place": "4 km NW of Noda, Japan",
+        "earthquake_latitude": "35.9814",
+        "earthquake_longitude": "139.8371"
       }
     ],
     "MMB": [
