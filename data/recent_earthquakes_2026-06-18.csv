@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-18 13:58:28.055,51.3541,-179.5739,35.299,5.0,"211 km WSW of Adak, Alaska",earthquake,
+2026-06-18 06:57:37.092,5.7634,125.1953,95.287,5.3,"1 km S of Kablalan, Philippines",earthquake,
+2026-06-18 03:43:35.838,-0.4673,-19.9332,10.0,5.4,central Mid-Atlantic Ridge,earthquake,
+2026-06-18 02:44:43.145,-0.342,-19.2026,10.0,5.1,central Mid-Atlantic Ridge,earthquake,
