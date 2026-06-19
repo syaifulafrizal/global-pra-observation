@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-19 08:03:40.851,52.7416,161.06,10.0,5.2,"167 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-06-19 07:52:57.734,52.7355,161.1149,10.0,5.8,"171 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-06-19 06:52:31.597,52.7943,160.5652,10.0,6.6,"133 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-06-19 06:51:31.085,52.69,160.8644,28.383,6.0,"156 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,

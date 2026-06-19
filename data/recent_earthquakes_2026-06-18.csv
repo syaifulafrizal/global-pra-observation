@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-18 19:17:40.105,30.6099,142.2657,10.0,5.3,"Izu Islands, Japan region",earthquake,
+2026-06-18 16:33:58.155,6.5597,126.809,10.0,5.3,"63 km ESE of Bobon, Philippines",earthquake,
 2026-06-18 13:58:28.055,51.3541,-179.5739,35.299,5.0,"211 km WSW of Adak, Alaska",earthquake,
 2026-06-18 06:57:37.092,5.7634,125.1953,95.287,5.3,"1 km S of Kablalan, Philippines",earthquake,
 2026-06-18 03:43:35.838,-0.4673,-19.9332,10.0,5.4,central Mid-Atlantic Ridge,earthquake,
