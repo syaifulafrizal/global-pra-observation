@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-20 09:37:24.290,34.7437,24.0997,10.0,5.2,"10 km S of Kastrí, Greece",earthquake,
+2026-06-20 06:43:17.271,-7.0346,-13.2711,10.0,5.5,"160 km NE of Georgetown, Saint Helena",earthquake,
+2026-06-20 04:44:08.971,-57.9998,-25.4839,59.553,5.1,South Sandwich Islands region,earthquake,
+2026-06-20 03:49:06.278,52.7287,160.6412,35.0,5.8,"140 km ESE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-06-20 01:46:32.273,-57.129,147.9179,10.0,5.7,west of Macquarie Island,earthquake,
+2026-06-20 01:40:07.238,-4.913,102.9796,55.123,5.0,"102 km SSW of Pagar Alam, Indonesia",earthquake,
