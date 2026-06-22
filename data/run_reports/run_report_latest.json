@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-06-21T16:38:05.765961",
-  "latest_date": "2026-06-22",
+  "generated_at": "2026-06-22T17:22:56.872800",
+  "latest_date": "2026-06-23",
   "available_dates": [
+    "2026-06-23",
     "2026-06-22",
     "2026-06-21",
     "2026-06-20",
     "2026-06-19",
     "2026-06-18",
-    "2026-06-17",
-    "2026-06-16"
+    "2026-06-17"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,37 +17,12 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 2,
+    "false_negatives_last_7_days": 0,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
     "total_false_negatives": 11
   },
   "recent_anomalies": [],
-  "recent_false_negatives": [
-    {
-      "station": "KAK",
-      "earthquake_time": "2026-06-16 10:46:34.658",
-      "first_logged": "2026-06-21T16:38:05.743288",
-      "earthquake_magnitude": 5.5,
-      "earthquake_distance_km": 41.954250217927644,
-      "earthquake_place": "4 km NW of Noda, Japan",
-      "earthquake_latitude": 35.9814,
-      "earthquake_longitude": 139.8371,
-      "last_confirmed": "2026-06-21T16:38:05.743288",
-      "source_file": "false_negatives.csv"
-    },
-    {
-      "station": "KNY",
-      "earthquake_time": "2026-06-16 10:46:34.658",
-      "first_logged": "2026-06-21T16:38:05.743288",
-      "earthquake_magnitude": 5.5,
-      "earthquake_distance_km": 80.70312243102092,
-      "earthquake_place": "4 km NW of Noda, Japan",
-      "earthquake_latitude": 35.9814,
-      "earthquake_longitude": 139.8371,
-      "last_confirmed": "2026-06-21T16:38:05.743288",
-      "source_file": "false_negatives.csv"
-    }
-  ]
+  "recent_false_negatives": []
 }
