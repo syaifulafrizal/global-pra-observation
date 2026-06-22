@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-22 10:22:23.506,36.4903,70.733,207.008,5.2,"42 km SSW of Jurm, Afghanistan",earthquake,

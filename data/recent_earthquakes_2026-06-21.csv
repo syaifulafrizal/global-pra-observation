@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-21 23:14:39.792,-30.5449,-178.5252,10,5.0,"Kermadec Islands, New Zealand",earthquake,
+2026-06-21 22:04:16.633,0.9775,-27.9105,10,5.4,central Mid-Atlantic Ridge,earthquake,
+2026-06-21 20:05:26.185,-60.1068,-62.4195,10,5.0,Drake Passage,earthquake,
