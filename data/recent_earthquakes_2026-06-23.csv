@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-23 15:29:02.332,37.8214,95.2983,8.098,5.2,"265 km SSE of Dunhuang, China",earthquake,
+2026-06-23 13:58:34.774,-20.6302,169.2307,21.543,5.3,"120 km S of Isangel, Vanuatu",earthquake,
+2026-06-23 07:11:14.440,-16.1772,-172.1796,10.0,5.0,"174 km E of Hihifo, Tonga",earthquake,
+2026-06-23 02:26:20.999,-27.1921,-177.7691,140.331,5.3,Kermadec Islands region,earthquake,
+2026-06-23 01:56:49.906,11.4493,140.6086,43.714,5.1,"186 km N of Fais, Micronesia",earthquake,
