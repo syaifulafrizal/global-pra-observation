@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-24 15:10:40.770,39.3636665344238,-123.229331970215,8.06999969482422,5.59,"11 km N of Redwood Valley, CA",earthquake,
+2026-06-24 06:17:22.718,-6.7815,155.1762,70.1,5.1,"61 km SSW of Panguna, Papua New Guinea",earthquake,
+2026-06-24 02:04:49.661,16.5122,119.1731,10.0,5.0,"71 km WNW of Catuday, Philippines",earthquake,
