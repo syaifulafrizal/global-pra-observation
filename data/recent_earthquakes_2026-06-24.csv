@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-06-24 15:10:40.770,39.3636665344238,-123.229331970215,8.06999969482422,5.59,"11 km N of Redwood Valley, CA",earthquake,
+2026-06-24 22:30:14.931,40.2912,142.0981,50.923,6.9,"30 km ENE of Kuji, Japan",earthquake,
+2026-06-24 22:05:11.566,10.4351,-68.4716,10.0,7.5,"28 km SE of Yumare, Venezuela",earthquake,
+2026-06-24 22:04:33.389,10.436,-68.5277,20.294,7.2,"23 km SE of Yumare, Venezuela",earthquake,
+2026-06-24 15:10:40.760,39.3623333333333,-123.228833333333,8.85,5.59,"11 km N of Redwood Valley, CA",earthquake,
 2026-06-24 06:17:22.718,-6.7815,155.1762,70.1,5.1,"61 km SSW of Panguna, Papua New Guinea",earthquake,
 2026-06-24 02:04:49.661,16.5122,119.1731,10.0,5.0,"71 km WNW of Catuday, Philippines",earthquake,
