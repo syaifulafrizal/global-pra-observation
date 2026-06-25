@@ -1,28 +1,39 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-06-24T16:36:04.766533",
-  "latest_date": "2026-06-25",
+  "generated_at": "2026-06-25T16:26:23.044323",
+  "latest_date": "2026-06-26",
   "available_dates": [
+    "2026-06-26",
     "2026-06-25",
     "2026-06-24",
     "2026-06-23",
     "2026-06-22",
     "2026-06-21",
-    "2026-06-20",
-    "2026-06-19"
+    "2026-06-20"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 0,
+    "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
-    "false_positives_last_7_days": 0,
+    "false_positives_last_7_days": 1,
     "false_negatives_last_7_days": 0,
-    "total_anomalies": 0,
+    "total_anomalies": 1,
     "total_correlated": 0,
-    "total_false_positives": 0,
+    "total_false_positives": 1,
     "total_false_negatives": 11
   },
-  "recent_anomalies": [],
+  "recent_anomalies": [
+    {
+      "station": "LYC",
+      "date": "2026-06-25",
+      "first_detected": "2026-06-25T16:26:22.864559",
+      "threshold": 15.760088032914473,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_LYC_20260625.json",
+      "last_confirmed": "2026-06-25T16:26:22.864559",
+      "has_correlated_eq": false
+    }
+  ],
   "recent_false_negatives": []
 }
