@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-26 16:06:49.450,17.9176,-68.5223,82.0,5.0,"51 km S of Boca de Yuma, Dominican Republic",earthquake,
+2026-06-26 13:29:01.877,35.5228,138.8566,50.925,5.7,"7 km N of Oshino, Japan",earthquake,
+2026-06-26 11:57:25.458,12.0312,-86.4565,120.479,5.2,"7 km NE of Villa El Carmen, Nicaragua",earthquake,
+2026-06-26 11:48:47.037,30.3661,69.6336,10.0,5.2,"52 km NNE of Barkhan, Pakistan",earthquake,
+2026-06-26 11:34:41.498,5.2392,125.1965,42.0,6.5,"34 km WSW of Sarangani, Philippines",earthquake,
+2026-06-26 06:18:59.942,-32.4752,-177.9409,10.0,5.1,south of the Kermadec Islands,earthquake,
+2026-06-26 03:46:35.803,35.6314,140.5099,43.0,5.8,"3 km SE of Yokoshiba, Japan",earthquake,
