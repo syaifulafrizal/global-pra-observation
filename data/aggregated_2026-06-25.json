@@ -1,6 +1,6 @@
 {
   "date": "2026-06-25",
-  "generated_at": "2026-06-26T17:54:13.564937",
+  "generated_at": "2026-06-27T17:54:20.965801",
   "stations": {
     "ABG": {
       "date": "2026-06-25",
@@ -3192,6 +3192,22 @@
     ],
     "KAK": [
       {
+        "earthquake_time": "2026-06-26 13:29:01.877",
+        "earthquake_magnitude": "5.7",
+        "earthquake_distance_km": "143.5382531956346",
+        "earthquake_place": "7 km N of Oshino, Japan",
+        "earthquake_latitude": "35.5228",
+        "earthquake_longitude": "138.8566"
+      },
+      {
+        "earthquake_time": "2026-06-26 03:46:35.803",
+        "earthquake_magnitude": "5.8",
+        "earthquake_distance_km": "72.76933337629175",
+        "earthquake_place": "3 km SE of Yokoshiba, Japan",
+        "earthquake_latitude": "35.6314",
+        "earthquake_longitude": "140.5099"
+      },
+      {
         "earthquake_time": "2026-06-16 10:46:34.658",
         "earthquake_magnitude": "5.5",
         "earthquake_distance_km": "41.954250217927644",
@@ -3201,6 +3217,22 @@
       }
     ],
     "KNY": [
+      {
+        "earthquake_time": "2026-06-26 13:29:01.877",
+        "earthquake_magnitude": "5.7",
+        "earthquake_distance_km": "103.61399993587099",
+        "earthquake_place": "7 km N of Oshino, Japan",
+        "earthquake_latitude": "35.5228",
+        "earthquake_longitude": "138.8566"
+      },
+      {
+        "earthquake_time": "2026-06-26 03:46:35.803",
+        "earthquake_magnitude": "5.8",
+        "earthquake_distance_km": "65.36637538481756",
+        "earthquake_place": "3 km SE of Yokoshiba, Japan",
+        "earthquake_latitude": "35.6314",
+        "earthquake_longitude": "140.5099"
+      },
       {
         "earthquake_time": "2026-06-16 10:46:34.658",
         "earthquake_magnitude": "5.5",

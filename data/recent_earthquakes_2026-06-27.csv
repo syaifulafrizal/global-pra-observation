@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-27 13:34:52.534,36.4731,70.7644,199.0,6.1,"43 km S of Jurm, Afghanistan",earthquake,
+2026-06-27 11:23:02.399,-10.655,163.1809,10.0,5.2,"139 km E of Kirakira, Solomon Islands",earthquake,
+2026-06-27 10:37:02.333,-6.7898,125.6119,525.542,5.9,"192 km N of Metinaro, Timor Leste",earthquake,
+2026-06-27 07:47:23.012,-8.9563,111.1499,65.584,5.2,"114 km SSW of Trenggalek, Indonesia",earthquake,
+2026-06-27 03:06:21.113,30.4545,69.6859,10.0,5.4,"63 km NNE of Barkhan, Pakistan",earthquake,
+2026-06-27 00:03:23.509,-10.6087,162.8277,10.0,5.1,"100 km E of Kirakira, Solomon Islands",earthquake,
