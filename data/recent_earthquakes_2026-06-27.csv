@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-27 21:10:26.101,-6.2095,104.6082,10.0,5.1,"112 km SW of Bandar Lampung, Indonesia",earthquake,
+2026-06-27 20:21:50.769,40.206,142.4136,34.0,5.8,"51 km ENE of Noda, Japan",earthquake,
 2026-06-27 13:34:52.534,36.4731,70.7644,199.0,6.1,"43 km S of Jurm, Afghanistan",earthquake,
 2026-06-27 11:23:02.399,-10.655,163.1809,10.0,5.2,"139 km E of Kirakira, Solomon Islands",earthquake,
 2026-06-27 10:37:02.333,-6.7898,125.6119,525.542,5.9,"192 km N of Metinaro, Timor Leste",earthquake,

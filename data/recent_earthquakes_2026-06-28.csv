@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-28 19:09:03.928,16.5146,119.2088,10.0,5.0,"68 km WNW of Catuday, Philippines",earthquake,
+2026-06-28 16:12:08.958,28.6031,104.8416,10.0,5.2,"8 km WNW of Changning, China",earthquake,
+2026-06-28 11:04:12.997,-40.3938,174.4645,81.184,5.0,"65 km W of Foxton Beach, New Zealand",earthquake,
+2026-06-28 07:05:45.186,-14.7852,167.4024,160.295,5.2,"45 km NE of Port-Olry, Vanuatu",earthquake,
