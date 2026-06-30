@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-06-29T16:28:44.034725",
-  "latest_date": "2026-06-30",
+  "generated_at": "2026-06-30T16:26:49.987551",
+  "latest_date": "2026-07-01",
   "available_dates": [
+    "2026-07-01",
     "2026-06-30",
     "2026-06-29",
     "2026-06-28",
     "2026-06-27",
     "2026-06-26",
-    "2026-06-25",
-    "2026-06-24"
+    "2026-06-25"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "LYC",
       "date": "2026-06-25",
-      "first_detected": "2026-06-29T16:28:43.879390",
+      "first_detected": "2026-06-30T16:26:49.720978",
       "threshold": 15.760088032914473,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_LYC_20260625.json",
-      "last_confirmed": "2026-06-29T16:28:43.879390",
+      "last_confirmed": "2026-06-30T16:26:49.720978",
       "has_correlated_eq": false
     }
   ],
@@ -39,49 +39,49 @@
     {
       "station": "KAK",
       "earthquake_time": "2026-06-26 13:29:01.877",
-      "first_logged": "2026-06-29T16:28:44.015173",
+      "first_logged": "2026-06-30T16:26:49.954872",
       "earthquake_magnitude": 5.7,
       "earthquake_distance_km": 143.5382531956346,
       "earthquake_place": "7 km N of Oshino, Japan",
       "earthquake_latitude": 35.5228,
       "earthquake_longitude": 138.8566,
-      "last_confirmed": "2026-06-29T16:28:44.015173",
+      "last_confirmed": "2026-06-30T16:26:49.954872",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-06-26 13:29:01.877",
-      "first_logged": "2026-06-29T16:28:44.015173",
+      "first_logged": "2026-06-30T16:26:49.954872",
       "earthquake_magnitude": 5.7,
       "earthquake_distance_km": 103.61399993587099,
       "earthquake_place": "7 km N of Oshino, Japan",
       "earthquake_latitude": 35.5228,
       "earthquake_longitude": 138.8566,
-      "last_confirmed": "2026-06-29T16:28:44.015173",
+      "last_confirmed": "2026-06-30T16:26:49.954872",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KAK",
       "earthquake_time": "2026-06-26 03:46:35.803",
-      "first_logged": "2026-06-29T16:28:44.015173",
+      "first_logged": "2026-06-30T16:26:49.954872",
       "earthquake_magnitude": 5.8,
       "earthquake_distance_km": 72.76933337629175,
       "earthquake_place": "3 km SE of Yokoshiba, Japan",
       "earthquake_latitude": 35.6314,
       "earthquake_longitude": 140.5099,
-      "last_confirmed": "2026-06-29T16:28:44.015173",
+      "last_confirmed": "2026-06-30T16:26:49.954872",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-06-26 03:46:35.803",
-      "first_logged": "2026-06-29T16:28:44.015173",
+      "first_logged": "2026-06-30T16:26:49.954872",
       "earthquake_magnitude": 5.8,
       "earthquake_distance_km": 65.36637538481756,
       "earthquake_place": "3 km SE of Yokoshiba, Japan",
       "earthquake_latitude": 35.6314,
       "earthquake_longitude": 140.5099,
-      "last_confirmed": "2026-06-29T16:28:44.015173",
+      "last_confirmed": "2026-06-30T16:26:49.954872",
       "source_file": "false_negatives.csv"
     }
   ]
