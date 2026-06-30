@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-30 14:41:10.582,-5.727,150.9338,35,5.4,"90 km ESE of Kimbe, Papua New Guinea",earthquake,
+2026-06-30 00:15:12.439,-55.5087,-27.2192,35,5.1,South Sandwich Islands region,earthquake,
