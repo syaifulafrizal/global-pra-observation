@@ -1,6 +1,6 @@
 {
   "date": "2026-06-27",
-  "generated_at": "2026-06-30T16:26:50.795635",
+  "generated_at": "2026-07-01T16:40:17.969133",
   "stations": {
     "ABG": {
       "date": "2026-06-27",
@@ -2755,14 +2755,6 @@
         "earthquake_place": "3 km SE of Yokoshiba, Japan",
         "earthquake_latitude": "35.6314",
         "earthquake_longitude": "140.5099"
-      },
-      {
-        "earthquake_time": "2026-06-16 10:46:34.658",
-        "earthquake_magnitude": "5.5",
-        "earthquake_distance_km": "41.954250217927644",
-        "earthquake_place": "4 km NW of Noda, Japan",
-        "earthquake_latitude": "35.9814",
-        "earthquake_longitude": "139.8371"
       }
     ],
     "KNY": [
@@ -2781,14 +2773,6 @@
         "earthquake_place": "3 km SE of Yokoshiba, Japan",
         "earthquake_latitude": "35.6314",
         "earthquake_longitude": "140.5099"
-      },
-      {
-        "earthquake_time": "2026-06-16 10:46:34.658",
-        "earthquake_magnitude": "5.5",
-        "earthquake_distance_km": "80.70312243102092",
-        "earthquake_place": "4 km NW of Noda, Japan",
-        "earthquake_latitude": "35.9814",
-        "earthquake_longitude": "139.8371"
       }
     ],
     "MMB": [

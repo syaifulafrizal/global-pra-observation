@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-01 12:08:29.986,40.1637,142.3927,43.568,6.0,"49 km E of Noda, Japan",earthquake,
+2026-07-01 10:42:43.103,-20.1466,178.6881,536.709,5.6,"224 km S of Suva, Fiji",earthquake,
+2026-07-01 02:00:38.195,-8.8555,-74.831,130.525,5.0,"16 km WNW of Tournavista, Peru",earthquake,
