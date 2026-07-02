@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-02 11:06:21.727,35.3034,27.2953,10.0,5.2,"23 km SSE of Karpathos, Greece",earthquake,
+2026-07-02 05:23:17.823,-60.9974,-23.537,10.0,5.3,South Sandwich Islands region,earthquake,
+2026-07-02 05:14:00.518,-57.8826,-8.4887,10.0,5.2,east of the South Sandwich Islands,earthquake,
+2026-07-02 02:57:42.207,-58.4797,-26.5923,183.485,5.2,South Sandwich Islands region,earthquake,
