@@ -1,1 +1,9 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-04 14:12:22.053,-45.6882,-14.6519,10.0,5.1,southern Mid-Atlantic Ridge,earthquake,
+2026-07-04 12:42:27.246,59.4293,-30.2028,10.0,5.0,Reykjanes Ridge,earthquake,
+2026-07-04 12:34:24.441,59.4329,-30.2986,10.0,5.0,Reykjanes Ridge,earthquake,
+2026-07-04 09:02:14.524,1.7873,127.4364,128.155,5.0,"64 km W of Tobelo, Indonesia",earthquake,
+2026-07-04 08:55:54.191,-2.5131,138.2529,39.448,5.1,"264 km W of Abepura, Indonesia",earthquake,
+2026-07-04 07:50:23.853,-5.5049,147.103,182.779,5.1,"135 km N of Lae, Papua New Guinea",earthquake,
+2026-07-04 03:09:33.198,-30.9133,-71.4792,49.84,5.0,"43 km SW of Ovalle, Chile",earthquake,
+2026-07-04 02:21:23.141,5.429,125.1808,10.0,5.2,"24 km SW of Balangonan, Philippines",earthquake,
