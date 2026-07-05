@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-05 15:53:33.718,-29.1964,-72.0113,10.0,5.0,"106 km NW of Coquimbo, Chile",earthquake,
+2026-07-05 15:30:13.631,31.5649,104.126,10.0,5.0,"26 km NNW of Mianzhu, Deyang, Sichuan, China",earthquake,
+2026-07-05 15:03:27.206,31.5223,104.0978,10.0,5.0,"23 km NNW of Mianzhu, Deyang, Sichuan, China",earthquake,
+2026-07-05 14:42:04.314,-29.2333,-71.9385,10.0,5.0,"98 km NW of Coquimbo, Chile",earthquake,
+2026-07-05 14:22:26.034,-19.9807,-179.03,685.692,5.8,"274 km SE of Levuka, Fiji",earthquake,
+2026-07-05 07:37:07.006,50.0397,156.0014,82.936,5.3,"71 km S of Severo-Kuril’sk, Russia",earthquake,
