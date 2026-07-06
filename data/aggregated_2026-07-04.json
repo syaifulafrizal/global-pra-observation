@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "generated_at": "2026-07-05T17:35:22.865131",
+  "generated_at": "2026-07-06T17:41:09.672645",
   "stations": {
     "ABG": {
       "date": "2026-07-04",
@@ -3032,12 +3032,12 @@
     ],
     "KAK": [
       {
-        "earthquake_time": "2026-06-26 13:29:01.877",
-        "earthquake_magnitude": "5.7",
-        "earthquake_distance_km": "143.5382531956346",
-        "earthquake_place": "7 km N of Oshino, Japan",
-        "earthquake_latitude": "35.5228",
-        "earthquake_longitude": "138.8566"
+        "earthquake_time": "2026-06-26 13:29:01.036",
+        "earthquake_magnitude": "5.2",
+        "earthquake_distance_km": "129.61914417877549",
+        "earthquake_place": "1 km S of \u014ctsuki, Japan",
+        "earthquake_latitude": "35.6048",
+        "earthquake_longitude": "138.9744"
       },
       {
         "earthquake_time": "2026-06-26 03:46:35.803",
@@ -3050,12 +3050,12 @@
     ],
     "KNY": [
       {
-        "earthquake_time": "2026-06-26 13:29:01.877",
-        "earthquake_magnitude": "5.7",
-        "earthquake_distance_km": "103.61399993587099",
-        "earthquake_place": "7 km N of Oshino, Japan",
-        "earthquake_latitude": "35.5228",
-        "earthquake_longitude": "138.8566"
+        "earthquake_time": "2026-06-26 13:29:01.036",
+        "earthquake_magnitude": "5.2",
+        "earthquake_distance_km": "96.57927194625114",
+        "earthquake_place": "1 km S of \u014ctsuki, Japan",
+        "earthquake_latitude": "35.6048",
+        "earthquake_longitude": "138.9744"
       },
       {
         "earthquake_time": "2026-06-26 03:46:35.803",

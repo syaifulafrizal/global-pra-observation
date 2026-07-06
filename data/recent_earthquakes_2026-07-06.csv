@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-06 16:15:51.905,-32.5446,-71.8252,20.998,5.1,"56 km W of La Ligua, Chile",earthquake,
+2026-07-06 14:43:38.525,-16.892,-172.07,10.0,5.1,"211 km ESE of Hihifo, Tonga",earthquake,
+2026-07-06 08:41:38.715,4.9091,125.1424,35.0,5.4,"65 km SSW of Sarangani, Philippines",earthquake,
+2026-07-06 08:11:11.032,4.9886,125.326,35.0,5.8,"48 km SSW of Sarangani, Philippines",earthquake,
