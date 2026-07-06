@@ -1,0 +1,25 @@
+{
+  "date": "2026-07-06",
+  "station": "LRM",
+  "timestamps": [
+    "2026-07-06T00:30:03"
+  ],
+  "P": [
+    1.9860012164403462
+  ],
+  "nZ": [
+    10149.174715421334
+  ],
+  "nG": [
+    5110.356746715611
+  ],
+  "isAnomalous": [
+    false
+  ],
+  "isQuiet": [
+    true
+  ],
+  "threshold": 2.001588781330073,
+  "nAnomHours": 0,
+  "is_anomalous": false
+}
