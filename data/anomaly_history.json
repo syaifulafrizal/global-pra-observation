@@ -1,24 +1,24 @@
 {
-  "last_updated": "2026-07-06T17:41:09.365921",
+  "last_updated": "2026-07-07T16:28:46.545251",
   "entries": [
     {
       "station": "GUA",
       "date": "2026-07-05",
-      "first_detected": "2026-07-06T17:41:09.250879",
+      "first_detected": "2026-07-07T16:28:46.411078",
       "threshold": 0.5026460108910245,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_GUA_20260705.json",
-      "last_confirmed": "2026-07-06T17:41:09.250879",
+      "last_confirmed": "2026-07-07T16:28:46.411078",
       "has_correlated_eq": true
     },
     {
       "station": "GUA",
       "date": "2026-07-06",
-      "first_detected": "2026-07-06T17:41:09.250879",
+      "first_detected": "2026-07-07T16:28:46.411078",
       "threshold": 0.6328967150048229,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_GUA_20260706.json",
-      "last_confirmed": "2026-07-06T17:41:09.250879",
+      "last_confirmed": "2026-07-07T16:28:46.411078",
       "has_correlated_eq": false
     }
   ]

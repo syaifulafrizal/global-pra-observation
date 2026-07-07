@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-07 08:30:56.236,59.4768,-30.3683,10.0,5.0,Reykjanes Ridge,earthquake,
+2026-07-07 07:16:26.844,3.1239,127.5573,36.821,5.4,"162 km NNW of Tobelo, Indonesia",earthquake,
+2026-07-07 05:55:40.352,59.5106,-30.2483,10.0,5.3,Reykjanes Ridge,earthquake,
+2026-07-07 05:00:43.964,59.4631,-30.2505,10.0,5.0,Reykjanes Ridge,earthquake,
+2026-07-07 01:26:45.626,-57.3319,-66.7593,10.0,5.8,"296 km SSE of Ushuaia, Argentina",earthquake,
