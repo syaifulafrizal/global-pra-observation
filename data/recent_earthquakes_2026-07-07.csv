@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-07 22:12:29.518,28.5702,104.788,10.0,5.1,"13 km W of Changning, China",earthquake,
+2026-07-07 19:44:52.435,-6.7717,105.0646,35.0,5.3,"95 km WSW of Labuan, Indonesia",earthquake,
+2026-07-07 18:11:32.787,9.8644,-84.6042,47.784,5.3,"10 km WSW of Orotina, Costa Rica",earthquake,
 2026-07-07 08:30:56.236,59.4768,-30.3683,10.0,5.0,Reykjanes Ridge,earthquake,
 2026-07-07 07:16:26.844,3.1239,127.5573,36.821,5.4,"162 km NNW of Tobelo, Indonesia",earthquake,
 2026-07-07 05:55:40.352,59.5106,-30.2483,10.0,5.3,Reykjanes Ridge,earthquake,
