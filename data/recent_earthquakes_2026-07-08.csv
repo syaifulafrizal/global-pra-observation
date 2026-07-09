@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-08 23:44:13.741,28.4707,104.7074,10.0,5.0,"1 km NNW of Xunchang, China",earthquake,
+2026-07-08 19:07:10.909,-61.7788,154.8869,10.0,5.5,Balleny Islands region,earthquake,
 2026-07-08 13:01:10.891,-6.427,68.7,10.0,5.3,Chagos Archipelago region,earthquake,
 2026-07-08 12:18:59.673,-23.5549,-174.9716,10.0,5.4,"245 km S of ‘Ohonua, Tonga",earthquake,
 2026-07-08 11:42:51.921,-20.3518,168.6887,10.0,5.2,"109 km SW of Isangel, Vanuatu",earthquake,
