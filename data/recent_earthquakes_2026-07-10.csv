@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-10 18:26:44.453,-53.1692,140.3613,10,5,west of Macquarie Island,earthquake,

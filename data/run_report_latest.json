@@ -1,25 +1,25 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-07-10T16:27:13.785035",
-  "latest_date": "2026-07-11",
+  "generated_at": "2026-07-11T16:23:59.624309",
+  "latest_date": "2026-07-12",
   "available_dates": [
+    "2026-07-12",
     "2026-07-11",
     "2026-07-10",
     "2026-07-09",
     "2026-07-08",
     "2026-07-07",
-    "2026-07-06",
-    "2026-07-05"
+    "2026-07-06"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 2,
-    "correlated_last_7_days": 1,
+    "anomalies_last_7_days": 1,
+    "correlated_last_7_days": 0,
     "false_positives_last_7_days": 1,
     "false_negatives_last_7_days": 0,
-    "total_anomalies": 2,
-    "total_correlated": 1,
+    "total_anomalies": 1,
+    "total_correlated": 0,
     "total_false_positives": 1,
     "total_false_negatives": 13
   },
@@ -27,22 +27,12 @@
     {
       "station": "GUA",
       "date": "2026-07-06",
-      "first_detected": "2026-07-10T16:27:13.517917",
+      "first_detected": "2026-07-11T16:23:59.425709",
       "threshold": 0.6328967150048229,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_GUA_20260706.json",
-      "last_confirmed": "2026-07-10T16:27:13.517917",
+      "last_confirmed": "2026-07-11T16:23:59.425709",
       "has_correlated_eq": false
-    },
-    {
-      "station": "GUA",
-      "date": "2026-07-05",
-      "first_detected": "2026-07-10T16:27:13.517917",
-      "threshold": 0.5026460108910245,
-      "n_anomaly_hours": 1,
-      "source_file": "PRA_Night_GUA_20260705.json",
-      "last_confirmed": "2026-07-10T16:27:13.517917",
-      "has_correlated_eq": true
     }
   ],
   "recent_false_negatives": []

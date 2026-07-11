@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-11 15:33:17.598,-15.3141,-173.293,10.0,5.1,"89 km NE of Hihifo, Tonga",earthquake,
+2026-07-11 10:51:12.845,5.0334,125.4897,57.099,5.4,"41 km S of Sarangani, Philippines",earthquake,
+2026-07-11 10:26:42.691,-55.5424,-28.8526,26.0,6.4,South Sandwich Islands region,earthquake,
+2026-07-11 07:58:27.116,-10.8592,-79.0295,10.0,5.1,"129 km SW of Huarmey, Peru",earthquake,
+2026-07-11 06:52:27.197,-59.6331,-26.2943,104.888,5.4,South Sandwich Islands region,earthquake,
+2026-07-11 03:14:55.443,-18.2136,-176.783,367.793,5.0,"299 km W of Neiafu, Tonga",earthquake,
