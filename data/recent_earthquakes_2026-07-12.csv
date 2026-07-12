@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-12 13:46:37.185,1.1684,121.446,35.0,5.3,"192 km WNW of Gorontalo, Indonesia",earthquake,
+2026-07-12 13:20:25.867,-9.6705,119.304,42.944,5.1,"27 km SSE of Tambolaka, Indonesia",earthquake,
+2026-07-12 11:09:45.067,-22.6035,-174.917,10.0,5.0,"139 km S of ‘Ohonua, Tonga",earthquake,
+2026-07-12 07:29:23.556,-54.6008,-118.9732,10.0,5.5,southern East Pacific Rise,earthquake,
