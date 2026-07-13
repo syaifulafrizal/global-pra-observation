@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-13 14:45:49.203,-22.7889,171.5199,10,6.3,southeast of the Loyalty Islands,earthquake,
+2026-07-13 08:53:27.913,-3.2207,148.5218,10,6.4,"191 km SE of Lorengau, Papua New Guinea",earthquake,
+2026-07-13 06:45:31.999,-22.8646,171.5471,10,5.0,southeast of the Loyalty Islands,earthquake,
+2026-07-13 00:54:02.072,12.7921,123.0436,10,5.4,"24 km W of Mabiton, Philippines",earthquake,
