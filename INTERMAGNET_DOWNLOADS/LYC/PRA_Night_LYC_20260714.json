@@ -1,0 +1,25 @@
+{
+  "date": "2026-07-14",
+  "station": "LYC",
+  "timestamps": [
+    "2026-07-14T00:30:04"
+  ],
+  "P": [
+    15.437012095066336
+  ],
+  "nZ": [
+    14275.981841976149
+  ],
+  "nG": [
+    924.7891855016909
+  ],
+  "isAnomalous": [
+    false
+  ],
+  "isQuiet": [
+    true
+  ],
+  "threshold": 15.647626253604878,
+  "nAnomHours": 0,
+  "is_anomalous": false
+}
