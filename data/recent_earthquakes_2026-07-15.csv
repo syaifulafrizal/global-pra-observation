@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-15 14:51:37.824,-59.9671,-19.003,13.061,5.7,east of the South Sandwich Islands,earthquake,
+2026-07-15 02:42:18.066,51.3809,159.5815,10.0,5.1,"190 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-07-15 01:09:20.402,-32.6034,-71.8626,26.032,5.1,"52 km NNW of Valparaíso, Chile",earthquake,
+2026-07-15 00:35:28.891,-58.7712,-29.4723,10.0,5.1,South Sandwich Islands region,earthquake,

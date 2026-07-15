@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-14 22:50:12.020,-20.748,-178.5092,574.304,5.5,Fiji region,earthquake,
+2026-07-14 18:51:07.308,54.1759,-162.6381,47.044,5.4,"90 km SSE of False Pass, Alaska",earthquake,
 2026-07-14 15:49:41.603,5.3269,125.1655,67.854,6.2,"34 km WSW of Sarangani, Philippines",earthquake,
 2026-07-14 13:15:08.009,5.69,125.4433,24.15,5.1,"3 km NNW of Sugal, Philippines",earthquake,
 2026-07-14 12:12:19.529,54.1456,-162.543,40.773,5.3,"96 km SE of False Pass, Alaska",earthquake,
