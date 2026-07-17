@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-07-16T16:26:45.561246",
-  "latest_date": "2026-07-17",
+  "generated_at": "2026-07-17T17:37:13.489031",
+  "latest_date": "2026-07-18",
   "available_dates": [
+    "2026-07-18",
     "2026-07-17",
     "2026-07-16",
     "2026-07-15",
     "2026-07-14",
     "2026-07-13",
-    "2026-07-12",
-    "2026-07-11"
+    "2026-07-12"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -28,25 +28,25 @@
     {
       "station": "SHU",
       "earthquake_time": "2026-07-14 18:51:07.308",
-      "first_logged": "2026-07-16T16:26:45.537089",
+      "first_logged": "2026-07-17T17:37:13.469032",
       "earthquake_magnitude": 5.4,
       "earthquake_distance_km": 191.3230809787733,
       "earthquake_place": "90 km SSE of False Pass, Alaska",
       "earthquake_latitude": 54.1759,
       "earthquake_longitude": -162.6381,
-      "last_confirmed": "2026-07-16T16:26:45.537089",
+      "last_confirmed": "2026-07-17T17:37:13.469032",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "SHU",
       "earthquake_time": "2026-07-14 12:12:19.529",
-      "first_logged": "2026-07-16T16:26:45.537089",
+      "first_logged": "2026-07-17T17:37:13.469032",
       "earthquake_magnitude": 5.3,
       "earthquake_distance_km": 189.29809692316422,
       "earthquake_place": "96 km SE of False Pass, Alaska",
       "earthquake_latitude": 54.1456,
       "earthquake_longitude": -162.543,
-      "last_confirmed": "2026-07-16T16:26:45.537089",
+      "last_confirmed": "2026-07-17T17:37:13.469032",
       "source_file": "false_negatives.csv"
     }
   ]
