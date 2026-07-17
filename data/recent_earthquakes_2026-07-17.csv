@@ -1,1 +1,15 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-17 17:15:19.287,14.3448,-92.9705,10.0,5.1,"72 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-17 17:03:38.011,14.3368,-93.0323,10.0,5.1,"78 km WSW of Puerto Madero, Mexico",earthquake,
+2026-07-17 16:12:56.063,5.7419,125.3523,66.134,5.3,"9 km ENE of Pangyan, Philippines",earthquake,
+2026-07-17 16:01:26.495,14.4643,-92.5836,64.924,5.1,"33 km SSW of Puerto Madero, Mexico",earthquake,
+2026-07-17 15:57:15.051,14.4311,-93.0044,10.0,5.1,"70 km WSW of Puerto Madero, Mexico",earthquake,
+2026-07-17 15:30:38.234,14.3476,-92.9089,53.729,5.0,"66 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-17 15:20:06.868,14.2369,-93.0929,10.0,6.0,"90 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-17 15:19:46.384,14.3986,-93.2998,10.0,5.1,"101 km WSW of Puerto Madero, Mexico",earthquake,
+2026-07-17 15:14:55.773,14.189,-93.0992,10.0,5.3,"93 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-17 14:48:39.769,14.6043,-92.9517,18.584,7.3,"58 km WSW of Puerto Madero, Mexico",earthquake,
+2026-07-17 13:27:41.447,-10.3499,161.8112,66.187,5.1,"16 km NW of Kirakira, Solomon Islands",earthquake,
+2026-07-17 13:16:59.268,-32.9894,-177.9086,10.0,5.0,south of the Kermadec Islands,earthquake,
+2026-07-17 12:01:14.725,14.4873,54.1453,10.0,5.3,"203 km N of Hadibu, Yemen",earthquake,
+2026-07-17 01:26:06.555,22.8587,95.9644,10.0,5.2,"42 km NE of Shwebo, Burma (Myanmar)",earthquake,

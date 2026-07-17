@@ -1,4 +1,10 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-16 21:53:58.953,-12.7868,-15.0898,10.0,5.0,southern Mid-Atlantic Ridge,earthquake,
+2026-07-16 21:49:42.977,30.7625,131.5099,35.0,5.2,"48 km E of Nishinoomote, Japan",earthquake,
+2026-07-16 21:16:33.262,-12.6241,-14.8449,10.0,5.0,southern Mid-Atlantic Ridge,earthquake,
+2026-07-16 20:21:52.035,-12.6871,-14.7175,10.0,5.3,southern Mid-Atlantic Ridge,earthquake,
+2026-07-16 19:55:32.193,-12.6918,-14.3805,11.86,5.0,southern Mid-Atlantic Ridge,earthquake,
+2026-07-16 19:44:54.568,-12.6935,-14.3837,10.0,5.0,southern Mid-Atlantic Ridge,earthquake,
 2026-07-16 11:37:21.034,60.569,-141.508,8.5,5.2,"122 km SE of McCarthy, Alaska",earthquake,
 2026-07-16 09:14:54.293,-45.0434,167.6107,76.397,5.9,"42 km NNW of Te Anau, New Zealand",earthquake,
 2026-07-16 08:57:58.825,-37.3276,179.8608,10.0,5.0,"141 km ENE of Hicks Bay, New Zealand",earthquake,
