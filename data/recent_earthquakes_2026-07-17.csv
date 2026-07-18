@@ -1,7 +1,10 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-17 22:13:06.825,14.2237,-92.9584,35.0,5.0,"79 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-17 18:26:43.919,14.3713,-92.9332,10.0,5.2,"67 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-17 17:23:30.902,14.2633,-92.713,35.128,5.0,"59 km SSW of Puerto Madero, Mexico",earthquake,
 2026-07-17 17:15:19.287,14.3448,-92.9705,10.0,5.1,"72 km SW of Puerto Madero, Mexico",earthquake,
 2026-07-17 17:03:38.011,14.3368,-93.0323,10.0,5.1,"78 km WSW of Puerto Madero, Mexico",earthquake,
-2026-07-17 16:12:56.063,5.7419,125.3523,66.134,5.3,"9 km ENE of Pangyan, Philippines",earthquake,
+2026-07-17 16:12:57.547,5.7602,125.378,79.819,5.2,"11 km SE of Kiupo, Philippines",earthquake,
 2026-07-17 16:01:26.495,14.4643,-92.5836,64.924,5.1,"33 km SSW of Puerto Madero, Mexico",earthquake,
 2026-07-17 15:57:15.051,14.4311,-93.0044,10.0,5.1,"70 km WSW of Puerto Madero, Mexico",earthquake,
 2026-07-17 15:30:38.234,14.3476,-92.9089,53.729,5.0,"66 km SW of Puerto Madero, Mexico",earthquake,
