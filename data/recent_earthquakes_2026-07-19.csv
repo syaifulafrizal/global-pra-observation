@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-19 17:45:16.923,14.1592,-92.9052,35.0,5.5,"81 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-19 02:24:36.324,-12.0429,-75.3013,10.0,5.5,"2 km WSW of Sicaya, Peru",earthquake,
+2026-07-19 02:18:54.767,14.292,-92.7591,19.593,5.3,"59 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-19 01:47:24.332,14.1155,-92.9167,10.0,5.3,"85 km SW of Puerto Madero, Mexico",earthquake,
+2026-07-19 00:39:39.917,51.3859,159.6116,10.0,5.3,"190 km SSE of Vilyuchinsk, Russia",earthquake,
