@@ -1,6 +1,6 @@
 {
   "date": "2026-07-20",
-  "generated_at": "2026-07-20T16:25:13.900636",
+  "generated_at": "2026-07-22T16:25:13.167877",
   "stations": {
     "ABG": {
       "date": "2026-07-20",
@@ -3274,22 +3274,22 @@
   "false_negatives": {
     "API": [
       {
-        "earthquake_time": "2026-02-10 21:14:42.327",
-        "earthquake_magnitude": "5.6",
-        "earthquake_distance_km": "179.66038639459046",
-        "earthquake_place": "142 km NE of Hihifo, Tonga",
-        "earthquake_latitude": "-14.97",
-        "earthquake_longitude": "-172.9395"
+        "earthquake_time": "2026-07-20 23:37:57.854",
+        "earthquake_magnitude": "5",
+        "earthquake_distance_km": "173.74078933560108",
+        "earthquake_place": "141 km SSW of Gataivai, Samoa",
+        "earthquake_latitude": "-14.9677",
+        "earthquake_longitude": "-172.8619"
       }
     ],
     "GUA": [
       {
-        "earthquake_time": "2026-02-12 10:30:16.050",
-        "earthquake_magnitude": "5.4",
-        "earthquake_distance_km": "41.846276179646026",
-        "earthquake_place": "47 km NNW of Yigo Village, Guam",
-        "earthquake_latitude": "13.9605",
-        "earthquake_longitude": "144.7999"
+        "earthquake_time": "2026-07-21 11:09:45.478",
+        "earthquake_magnitude": "5",
+        "earthquake_distance_km": "99.79814532056874",
+        "earthquake_place": "58 km SSW of Merizo Village, Guam",
+        "earthquake_latitude": "12.8216",
+        "earthquake_longitude": "144.3814"
       }
     ],
     "KAK": [

@@ -1,7 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-07-18 19:50:36.395,-60.6982,-50.9727,10.0,5.5,Scotia Sea,earthquake,
 2026-07-18 17:26:25.879,14.2392,-92.8805,10.0,5.7,"72 km SW of Puerto Madero, Mexico",earthquake,
-2026-07-18 16:08:44.116,17.9439,-81.5431,10.0,5.1,"149 km S of George Town, Cayman Islands",earthquake,
+2026-07-18 16:08:43.933,17.8906,-81.559,10.0,5.1,"155 km S of George Town, Cayman Islands",earthquake,
 2026-07-18 09:59:22.033,14.3207,-92.9174,44.887,5.2,"69 km SW of Puerto Madero, Mexico",earthquake,
 2026-07-18 06:51:50.543,14.3804,-93.1511,35.0,5.3,"87 km WSW of Puerto Madero, Mexico",earthquake,
 2026-07-18 05:46:47.673,-32.8189,-178.1149,10.0,5.2,south of the Kermadec Islands,earthquake,
