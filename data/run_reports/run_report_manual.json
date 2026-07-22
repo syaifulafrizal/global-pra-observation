@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-07-20T16:25:13.744408",
-  "latest_date": "2026-07-21",
+  "generated_at": "2026-07-22T16:25:12.678411",
+  "latest_date": "2026-07-23",
   "available_dates": [
+    "2026-07-23",
+    "2026-07-22",
     "2026-07-21",
     "2026-07-20",
     "2026-07-19",
     "2026-07-18",
-    "2026-07-17",
-    "2026-07-16",
-    "2026-07-15"
+    "2026-07-17"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,12 +17,37 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 0,
+    "false_negatives_last_7_days": 2,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
     "total_false_negatives": 14
   },
   "recent_anomalies": [],
-  "recent_false_negatives": []
+  "recent_false_negatives": [
+    {
+      "station": "GUA",
+      "earthquake_time": "2026-07-21 11:09:45.478",
+      "first_logged": "2026-07-22T16:25:12.653275",
+      "earthquake_magnitude": 5.0,
+      "earthquake_distance_km": 99.79814532056874,
+      "earthquake_place": "58 km SSW of Merizo Village, Guam",
+      "earthquake_latitude": 12.8216,
+      "earthquake_longitude": 144.3814,
+      "last_confirmed": "2026-07-22T16:25:12.653275",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "API",
+      "earthquake_time": "2026-07-20 23:37:57.854",
+      "first_logged": "2026-07-22T16:25:12.653275",
+      "earthquake_magnitude": 5.0,
+      "earthquake_distance_km": 173.74078933560108,
+      "earthquake_place": "141 km SSW of Gataivai, Samoa",
+      "earthquake_latitude": -14.9677,
+      "earthquake_longitude": -172.8619,
+      "last_confirmed": "2026-07-22T16:25:12.653275",
+      "source_file": "false_negatives.csv"
+    }
+  ]
 }
