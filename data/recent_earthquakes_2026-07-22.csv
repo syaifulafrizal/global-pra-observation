@@ -1,3 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-07-22 09:34:22.317,-27.8666,-71.7009,10,5.1,"121 km NW of Vallenar, Chile",earthquake,
-2026-07-22 04:18:22.071,4.2441,97.5238,10,5.0,"55 km WSW of Langsa, Indonesia",earthquake,
+2026-07-22 21:03:02.092,-29.6177,-177.9234,46.903,5.0,"Kermadec Islands, New Zealand",earthquake,
+2026-07-22 17:34:36.746,-23.3767,-68.5273,108.731,5.1,"61 km SSW of San Pedro de Atacama, Chile",earthquake,
+2026-07-22 09:34:22.317,-27.8666,-71.7009,10.0,5.1,"121 km NW of Vallenar, Chile",earthquake,
+2026-07-22 04:18:22.071,4.2441,97.5238,10.0,5.0,"55 km WSW of Langsa, Indonesia",earthquake,

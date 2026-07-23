@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-23 10:21:43.909,35.902,-100.976,5.6885,5.0,"38 km SSE of Spearman, Texas",earthquake,
+2026-07-23 09:30:18.969,51.604,-173.2484,35.0,5.1,"92 km SE of Atka, Alaska",earthquake,
+2026-07-23 09:22:22.460,27.8812,130.1887,10.0,5.1,"85 km SE of Tatsugō, Japan",earthquake,
+2026-07-23 06:29:57.530,8.5099,-39.3528,10.0,5.1,central Mid-Atlantic Ridge,earthquake,
