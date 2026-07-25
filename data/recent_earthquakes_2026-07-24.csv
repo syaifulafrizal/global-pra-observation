@@ -1,1 +1,12 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-24 23:44:10.140,-14.2346,166.7272,10.0,5.0,"96 km NNW of Port-Olry, Vanuatu",earthquake,
+2026-07-24 23:10:29.856,-57.3066,-66.8383,10.0,5.7,"292 km SSE of Ushuaia, Argentina",earthquake,
+2026-07-24 21:37:56.459,-14.0205,166.8006,44.637,6.0,"82 km W of Sola, Vanuatu",earthquake,
+2026-07-24 21:19:44.549,-14.0586,166.8778,16.7,5.1,"75 km WSW of Sola, Vanuatu",earthquake,
+2026-07-24 19:38:42.356,-23.9755,-66.6072,193.727,5.3,"39 km NW of San Antonio de los Cobres, Argentina",earthquake,
+2026-07-24 16:51:37.514,-38.9621,175.2332,10.0,5.7,"49 km W of Turangi, New Zealand",earthquake,
+2026-07-24 16:33:19.808,51.7216,158.127,69.804,5.1,"115 km ENE of Ozernovskiy, Russia",earthquake,
+2026-07-24 12:27:02.974,-2.6055,138.8797,10.0,5.1,"194 km W of Abepura, Indonesia",earthquake,
+2026-07-24 12:14:28.267,-2.5572,138.8159,10.0,5.4,"202 km W of Abepura, Indonesia",earthquake,
+2026-07-24 11:11:34.234,-2.5436,138.8612,10.0,5.3,"197 km W of Abepura, Indonesia",earthquake,
+2026-07-24 01:03:16.097,51.1015,-176.0652,10.0,5.0,"94 km SSE of Adak, Alaska",earthquake,
