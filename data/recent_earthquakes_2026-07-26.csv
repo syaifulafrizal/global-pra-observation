@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-26 10:57:37.061,-10.007,123.4402,10,5.3,"25 km NW of Kupang, Indonesia",earthquake,
+2026-07-26 08:35:18.849,51.4994,-173.306,10,5.8,"99 km SE of Atka, Alaska",earthquake,
+2026-07-26 01:32:44.077,-34.0707,-14.543,10,5.1,Tristan da Cunha region,earthquake,
