@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-07-26T16:23:40.343173",
-  "latest_date": "2026-07-27",
+  "generated_at": "2026-07-27T16:25:18.963866",
+  "latest_date": "2026-07-28",
   "available_dates": [
+    "2026-07-28",
     "2026-07-27",
     "2026-07-26",
     "2026-07-25",
     "2026-07-24",
     "2026-07-23",
-    "2026-07-22",
-    "2026-07-21"
+    "2026-07-22"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,25 +17,12 @@
     "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 0,
-    "false_negatives_last_7_days": 1,
+    "false_negatives_last_7_days": 0,
     "total_anomalies": 0,
     "total_correlated": 0,
     "total_false_positives": 0,
     "total_false_negatives": 14
   },
   "recent_anomalies": [],
-  "recent_false_negatives": [
-    {
-      "station": "GUA",
-      "earthquake_time": "2026-07-21 11:09:45.478",
-      "first_logged": "2026-07-26T16:23:40.320603",
-      "earthquake_magnitude": 5.0,
-      "earthquake_distance_km": 99.79814532056874,
-      "earthquake_place": "58 km SSW of Merizo Village, Guam",
-      "earthquake_latitude": 12.8216,
-      "earthquake_longitude": 144.3814,
-      "last_confirmed": "2026-07-26T16:23:40.320603",
-      "source_file": "false_negatives.csv"
-    }
-  ]
+  "recent_false_negatives": []
 }
