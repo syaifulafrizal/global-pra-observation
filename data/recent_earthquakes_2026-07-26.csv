@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-26 22:39:02.826,-22.5127,-20.2453,10,5.0,South Atlantic Ocean,earthquake,
+2026-07-26 18:19:40.684,29.9365,-42.8052,10,5.4,northern Mid-Atlantic Ridge,earthquake,
 2026-07-26 10:57:37.061,-10.007,123.4402,10,5.3,"25 km NW of Kupang, Indonesia",earthquake,
 2026-07-26 08:35:18.849,51.4994,-173.306,10,5.8,"99 km SE of Atka, Alaska",earthquake,
 2026-07-26 01:32:44.077,-34.0707,-14.543,10,5.1,Tristan da Cunha region,earthquake,

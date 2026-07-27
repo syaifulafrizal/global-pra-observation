@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-27 14:33:36.219,-5.4518,151.462,91.011,5.1,"147 km E of Kimbe, Papua New Guinea",earthquake,
+2026-07-27 08:57:43.758,-23.5454,-68.633,106.991,5.4,"82 km SSW of San Pedro de Atacama, Chile",earthquake,
+2026-07-27 08:47:18.681,-24.7345,-175.3545,10.0,5.2,south of Tonga,earthquake,
+2026-07-27 08:44:08.090,-24.6958,-175.244,10.0,5.2,south of Tonga,earthquake,
+2026-07-27 03:36:43.273,-24.5001,-175.1714,10.0,5.2,south of Tonga,earthquake,
+2026-07-27 03:12:04.308,-24.4378,-175.0899,10.0,5.0,south of Tonga,earthquake,
+2026-07-27 01:54:14.139,-24.5442,-175.1465,10.0,5.1,south of Tonga,earthquake,

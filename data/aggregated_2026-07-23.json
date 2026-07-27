@@ -1,6 +1,6 @@
 {
   "date": "2026-07-23",
-  "generated_at": "2026-07-26T16:23:40.905785",
+  "generated_at": "2026-07-27T16:25:20.917107",
   "stations": {
     "ABG": {
       "date": "2026-07-23",
@@ -3340,12 +3340,12 @@
     ],
     "SHU": [
       {
-        "earthquake_time": "2026-07-14 18:51:07.308",
+        "earthquake_time": "2026-07-14 18:51:07.459",
         "earthquake_magnitude": "5.4",
-        "earthquake_distance_km": "191.3230809787733",
-        "earthquake_place": "90 km SSE of False Pass, Alaska",
-        "earthquake_latitude": "54.1759",
-        "earthquake_longitude": "-162.6381"
+        "earthquake_distance_km": "189.81556773032787",
+        "earthquake_place": "93 km SE of False Pass, Alaska",
+        "earthquake_latitude": "54.1633",
+        "earthquake_longitude": "-162.5848"
       },
       {
         "earthquake_time": "2026-07-14 12:12:19.529",
