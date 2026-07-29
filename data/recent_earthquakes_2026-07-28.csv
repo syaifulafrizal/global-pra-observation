@@ -1,1 +1,15 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-28 20:49:24.979,63.611,-150.673,5.0,5.0,"52 km E of Denali National Park, Alaska",earthquake,
+2026-07-28 20:27:57.268,-5.7602,153.5437,10.0,5.4,"211 km SE of Kokopo, Papua New Guinea",earthquake,
+2026-07-28 20:23:42.798,-22.1845,179.5638,575.128,5.1,south of the Fiji Islands,earthquake,
+2026-07-28 19:28:08.993,-10.9261,161.3309,10.0,5.0,"82 km SW of Kirakira, Solomon Islands",earthquake,
+2026-07-28 13:24:33.262,-9.7052,-79.8217,13.804,5.3,"151 km WSW of Puerto Santa, Peru",earthquake,
+2026-07-28 08:08:35.421,32.3529,130.5868,10.0,5.6,"16 km NE of Tsunagi, Japan",earthquake,
+2026-07-28 08:04:10.636,35.4249,99.493,10.0,5.1,"198 km NW of Oula Xiuma, China",earthquake,
+2026-07-28 07:27:15.512,32.6817,130.7217,10.0,6.8,"2026 Uto, Japan Earthquake ",earthquake,
+2026-07-28 05:36:39.419,64.7107,-17.7103,10.0,5.4,"109 km S of Akureyri, Iceland",earthquake,
+2026-07-28 05:35:18.079,14.296,-92.6223,35.0,5.9,"50 km WSW of Brisas Barra de Suchiate, Mexico",earthquake,
+2026-07-28 04:42:18.739,56.064,165.0432,10.0,5.8,"160 km E of Ust’-Kamchatsk Staryy, Russia",earthquake,
+2026-07-28 03:34:05.779,35.3866,99.5513,10.0,5.8,"191 km NW of Oula Xiuma, China",earthquake,
+2026-07-28 03:16:08.857,35.3685,99.5198,10.0,5.7,"192 km NW of Oula Xiuma, China",earthquake,
+2026-07-28 01:27:51.735,-12.7784,-14.5098,10.0,5.3,southern Mid-Atlantic Ridge,earthquake,
