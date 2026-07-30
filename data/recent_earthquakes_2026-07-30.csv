@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-30 13:47:38.996,32.6877,130.642,10,5.0,"2 km WNW of Uto, Japan",earthquake,
+2026-07-30 05:08:31.888,-28.6242,-176.5759,10,5.8,Kermadec Islands region,earthquake,
+2026-07-30 04:42:12.667,-2.6018,138.8205,35,5.4,"201 km W of Abepura, Indonesia",earthquake,
+2026-07-30 02:46:24.341,-5.8112,153.5797,10,5.3,"217 km SE of Kokopo, Papua New Guinea",earthquake,

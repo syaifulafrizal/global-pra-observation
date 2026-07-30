@@ -1,4 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-29 22:42:25.141,-28.5591,-176.6372,10.0,5.2,Kermadec Islands region,earthquake,
+2026-07-29 22:27:57.690,-28.4982,-176.5171,10.0,5.9,Kermadec Islands region,earthquake,
+2026-07-29 22:08:07.628,-65.0558,-179.1239,10.0,5.6,Pacific-Antarctic Ridge,earthquake,
+2026-07-29 20:52:10.337,-24.6282,-175.2721,10.0,5.1,south of Tonga,earthquake,
+2026-07-29 17:07:35.465,-24.6958,-175.2899,10.0,5.0,south of Tonga,earthquake,
 2026-07-29 15:10:02.995,13.1384,124.6138,46.281,5.4,"53 km E of Rapu-Rapu, Philippines",earthquake,
 2026-07-29 14:11:03.513,15.2694,122.8525,10.0,5.1,"79 km NE of Casuguran, Philippines",earthquake,
 2026-07-29 13:23:56.014,5.3176,124.9945,63.992,5.0,"48 km SW of Balangonan, Philippines",earthquake,
