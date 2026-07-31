@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-31 16:15:58.641,14.6031,-93.2309,10.0,5.2,"85 km SW of El Arenal, Mexico",earthquake,
+2026-07-31 06:30:26.157,-29.4109,-176.5524,37.846,5.0,Kermadec Islands region,earthquake,
+2026-07-31 04:02:53.372,-28.3933,-176.7278,35.0,5.0,Kermadec Islands region,earthquake,
+2026-07-31 00:58:44.364,-8.3349,-74.4353,154.355,5.6,"13 km ENE of San Fernando, Peru",earthquake,

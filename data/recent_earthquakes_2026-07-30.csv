@@ -1,5 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-07-30 13:47:38.996,32.6877,130.642,10,5.0,"2 km WNW of Uto, Japan",earthquake,
-2026-07-30 05:08:31.888,-28.6242,-176.5759,10,5.8,Kermadec Islands region,earthquake,
-2026-07-30 04:42:12.667,-2.6018,138.8205,35,5.4,"201 km W of Abepura, Indonesia",earthquake,
-2026-07-30 02:46:24.341,-5.8112,153.5797,10,5.3,"217 km SE of Kokopo, Papua New Guinea",earthquake,
+2026-07-30 21:53:26.269,53.0742,159.6405,63.921,5.1,"67 km E of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-07-30 20:26:36.299,-28.5478,-176.5707,35.0,5.0,Kermadec Islands region,earthquake,
+2026-07-30 17:55:59.690,11.5807,138.9989,34.505,5.9,"247 km NNE of Colonia, Micronesia",earthquake,
+2026-07-30 17:48:15.234,-31.3231,-177.9701,46.02,5.2,Kermadec Islands region,earthquake,
+2026-07-30 13:47:38.996,32.6877,130.642,10.0,5.0,"2 km WNW of Uto, Japan",earthquake,
+2026-07-30 05:08:31.888,-28.6242,-176.5759,10.0,5.8,Kermadec Islands region,earthquake,
+2026-07-30 04:42:12.667,-2.6018,138.8205,35.0,5.4,"201 km W of Abepura, Indonesia",earthquake,
+2026-07-30 02:46:24.341,-5.8112,153.5797,10.0,5.3,"217 km SE of Kokopo, Papua New Guinea",earthquake,
