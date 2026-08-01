@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-01 15:51:11.360,-24.3942,-176.7959,69.752,5.1,south of the Fiji Islands,earthquake,
+2026-08-01 11:07:20.537,-39.5342,-15.9614,10.0,5.1,Tristan da Cunha region,earthquake,
+2026-08-01 09:50:33.985,-39.6903,-15.9764,10.0,5.1,Tristan da Cunha region,earthquake,
+2026-08-01 07:46:03.634,-22.3815,-179.1255,544.366,5.1,south of the Fiji Islands,earthquake,
+2026-08-01 04:49:01.269,49.6033,-129.4251,10.0,5.6,"200 km SW of Port McNeill, Canada",earthquake,
+2026-08-01 02:48:01.570,41.352,141.8958,82.29,5.5,"57 km E of Mutsu, Japan",earthquake,

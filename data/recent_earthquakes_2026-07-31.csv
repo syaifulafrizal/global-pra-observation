@@ -1,4 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-07-31 23:17:37.106,-3.0027,130.1237,10.0,5.1,"132 km ENE of Masohi, Indonesia",earthquake,
+2026-07-31 20:19:26.522,-2.8782,130.1637,10.0,5.3,"140 km ENE of Masohi, Indonesia",earthquake,
+2026-07-31 18:58:13.716,-58.713,-25.2881,77.66,5.1,South Sandwich Islands region,earthquake,
+2026-07-31 17:47:05.666,-29.867,-72.1202,11.851,5.0,"76 km W of Coquimbo, Chile",earthquake,
 2026-07-31 16:15:58.641,14.6031,-93.2309,10.0,5.2,"85 km SW of El Arenal, Mexico",earthquake,
 2026-07-31 06:30:26.157,-29.4109,-176.5524,37.846,5.0,Kermadec Islands region,earthquake,
 2026-07-31 04:02:53.372,-28.3933,-176.7278,35.0,5.0,Kermadec Islands region,earthquake,
