@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-02 15:35:30.843,-25.0444,-175.1322,10.0,5.0,south of Tonga,earthquake,
+2026-08-02 13:10:47.947,27.3736,-111.0607,10.0,5.1,"60 km W of Bahía de Lobos, Mexico",earthquake,
+2026-08-02 11:52:33.048,-3.2144,-12.1759,10.0,5.3,north of Ascension Island,earthquake,
+2026-08-02 10:34:14.181,-23.7388,-174.9439,10.0,5.3,"265 km S of ‘Ohonua, Tonga",earthquake,
+2026-08-02 09:17:11.235,-3.2948,-12.2442,10.0,5.0,north of Ascension Island,earthquake,
+2026-08-02 08:35:27.066,-37.73,178.3287,52.806,5.6,"14 km S of Hicks Bay, New Zealand",earthquake,
+2026-08-02 00:13:38.325,49.8672,155.1713,80.691,5.2,"112 km SW of Severo-Kuril’sk, Russia",earthquake,

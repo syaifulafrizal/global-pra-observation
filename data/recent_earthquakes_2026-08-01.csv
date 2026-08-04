@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-01 20:02:46.638,49.3239,155.327,49.724,5.2,"160 km SSW of Severo-Kuril’sk, Russia",earthquake,
+2026-08-01 19:10:52.622,32.0078,131.9999,26.229,5.2,"48 km ESE of Tsunō, Japan",earthquake,
 2026-08-01 15:51:11.360,-24.3942,-176.7959,69.752,5.1,south of the Fiji Islands,earthquake,
 2026-08-01 11:07:20.537,-39.5342,-15.9614,10.0,5.1,Tristan da Cunha region,earthquake,
 2026-08-01 09:50:33.985,-39.6903,-15.9764,10.0,5.1,Tristan da Cunha region,earthquake,

@@ -1,4 +1,15 @@
 {
-  "last_updated": "2025-12-22T17:57:15.877214",
-  "entries": []
+  "last_updated": "2026-08-04T16:26:11.366452",
+  "entries": [
+    {
+      "station": "GUA",
+      "date": "2026-08-04",
+      "first_detected": "2026-08-04T16:26:11.200480",
+      "threshold": 0.4937909869917188,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_GUA_20260804.json",
+      "last_confirmed": "2026-08-04T16:26:11.200480",
+      "has_correlated_eq": false
+    }
+  ]
 }
