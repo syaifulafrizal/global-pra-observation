@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-05 10:06:09.955,29.0027,94.681,10.0,5.0,"60 km NNE of Shi Yomi, India",earthquake,
+2026-08-05 07:43:27.317,-33.8063,179.4727,226.084,6.3,south of the Kermadec Islands,earthquake,
+2026-08-05 06:44:24.701,-49.5336,164.0845,21.906,5.2,"Auckland Islands, New Zealand region",earthquake,
+2026-08-05 04:25:04.586,5.1275,125.412,35.0,5.2,"31 km S of Sarangani, Philippines",earthquake,
+2026-08-05 04:19:21.769,5.8882,-82.4726,10.0,5.1,"238 km SSW of Río Grande, Panama",earthquake,
+2026-08-05 04:14:06.625,5.1812,125.276,10.0,6.3,"32 km SW of Sarangani, Philippines",earthquake,
