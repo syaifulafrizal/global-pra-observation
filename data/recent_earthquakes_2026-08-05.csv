@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-05 21:41:27.717,5.1283,125.227,10.0,5.6,"40 km SW of Sarangani, Philippines",earthquake,
+2026-08-05 19:46:26.861,-6.5225,143.8444,10.028,5.2,"31 km SSW of Ialibu, Papua New Guinea",earthquake,
+2026-08-05 16:50:18.349,1.7901,127.454,115.65,5.3,"62 km W of Tobelo, Indonesia",earthquake,
 2026-08-05 10:06:09.955,29.0027,94.681,10.0,5.0,"60 km NNE of Shi Yomi, India",earthquake,
 2026-08-05 07:43:27.317,-33.8063,179.4727,226.084,6.3,south of the Kermadec Islands,earthquake,
 2026-08-05 06:44:24.701,-49.5336,164.0845,21.906,5.2,"Auckland Islands, New Zealand region",earthquake,
