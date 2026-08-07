@@ -1,6 +1,6 @@
 {
   "date": "2026-08-03",
-  "generated_at": "2026-08-06T16:36:00.953846",
+  "generated_at": "2026-08-07T17:55:01.661926",
   "stations": {
     "ABG": {
       "date": "2026-08-04",
@@ -3281,7 +3281,7 @@
         "earthquake_distance_km": "99.79814532056874",
         "earthquake_place": "58 km SSW of Merizo Village, Guam",
         "days_before_anomaly": "-12.534890300925927",
-        "total_earthquakes": "1",
+        "total_earthquakes": "2",
         "reliable_earthquakes": "1",
         "status": "TP"
       }
