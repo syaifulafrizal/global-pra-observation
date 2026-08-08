@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-08-07T17:55:01.125671",
-  "latest_date": "2026-08-08",
+  "generated_at": "2026-08-08T17:50:21.308430",
+  "latest_date": "2026-08-09",
   "available_dates": [
+    "2026-08-09",
     "2026-08-08",
     "2026-08-07",
     "2026-08-06",
     "2026-08-05",
     "2026-08-04",
-    "2026-08-03",
-    "2026-08-02"
+    "2026-08-03"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "GUA",
       "date": "2026-08-04",
-      "first_detected": "2026-08-07T17:55:00.953756",
+      "first_detected": "2026-08-08T17:50:21.134533",
       "threshold": 0.4937909869917188,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_GUA_20260804.json",
-      "last_confirmed": "2026-08-07T17:55:00.953756",
+      "last_confirmed": "2026-08-08T17:50:21.134533",
       "has_correlated_eq": false
     }
   ],
