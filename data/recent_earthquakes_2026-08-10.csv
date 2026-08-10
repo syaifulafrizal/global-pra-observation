@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-10 13:18:10.451,4.8971,-76.3859,98.522,5.0,"16 km W of San José del Palmar, Colombia",earthquake,
+2026-08-10 12:34:28.125,4.8436,-76.2422,110.285,7.4,"5 km S of San José del Palmar, Colombia",earthquake,
+2026-08-10 12:12:22.220,17.5068,-45.8376,10.0,5.0,northern Mid-Atlantic Ridge,earthquake,
+2026-08-10 05:41:44.224,0.3112,-114.648,10.0,5.5,east central Pacific Ocean,earthquake,
