@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-13 12:44:59.102,-4.4318,143.8885,134.025,5.0,"45 km SSW of Angoram, Papua New Guinea",earthquake,
+2026-08-13 09:22:58.999,6.2479,125.8789,91.206,5.1,"22 km ENE of Lapuan, Philippines",earthquake,
+2026-08-13 00:35:18.815,36.7849,74.3579,58.893,5.1,"59 km NNW of Barishal, Pakistan",earthquake,
+2026-08-13 00:30:04.840,12.6084,-88.2864,56.794,5.5,"69 km SSW of Chirilagua, El Salvador",earthquake,
