@@ -1,1 +1,14 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-15 16:25:18.342,0.1542,120.2573,72.495,5.7,"125 km NNE of Palu, Indonesia",earthquake,
+2026-08-15 12:14:39.321,-8.2575,121.2565,10.0,5.2,"78 km NW of Ende, Indonesia",earthquake,
+2026-08-15 11:10:24.937,-4.411,143.9212,120.214,5.4,"41 km SSW of Angoram, Papua New Guinea",earthquake,
+2026-08-15 10:54:51.796,3.0856,99.015,172.526,6.9,"15 km NNW of Pematangsiantar, Indonesia",earthquake,
+2026-08-15 10:31:30.185,-8.264,120.3675,10.0,5.1,"39 km NNW of Ruteng, Indonesia",earthquake,
+2026-08-15 07:39:38.975,-8.0446,120.7765,10.0,5.1,"71 km NNE of Ruteng, Indonesia",earthquake,
+2026-08-15 06:28:51.109,-8.2671,121.3664,10.0,5.1,"71 km NNW of Ende, Indonesia",earthquake,
+2026-08-15 05:45:08.046,-8.3681,121.3609,10.0,5.0,"62 km NNW of Ende, Indonesia",earthquake,
+2026-08-15 03:54:13.099,-8.32,121.3458,10.0,5.0,"67 km NNW of Ende, Indonesia",earthquake,
+2026-08-15 01:17:20.014,-8.0088,120.6888,10.0,5.1,"71 km NNE of Ruteng, Indonesia",earthquake,
+2026-08-15 00:43:29.640,50.3745,156.3863,78.982,5.4,"38 km SSE of Severo-Kuril’sk, Russia",earthquake,
+2026-08-15 00:40:18.406,-8.248,121.4162,10.0,5.1,"71 km NNW of Ende, Indonesia",earthquake,
+2026-08-15 00:40:13.397,-62.9125,165.89,10.0,5.3,Balleny Islands region,earthquake,

@@ -1,1 +1,10 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-14 23:17:05.284,-8.3348,121.359,10,5.0,"65 km NNW of Ende, Indonesia",earthquake,
+2026-08-14 23:12:31.091,-8.1694,120.4166,10,5.1,"49 km N of Ruteng, Indonesia",earthquake,
+2026-08-14 23:04:40.797,37.0789,-3.6486,10,5.2,"1 km SW of Otura, Spain",earthquake,
+2026-08-14 22:53:11.834,-8.2053,120.2253,10,5.3,"49 km NE of Labuan Bajo, Indonesia",earthquake,
+2026-08-14 22:37:17.172,-8.1604,120.1908,10,5.5,"49 km NE of Labuan Bajo, Indonesia",earthquake,
+2026-08-14 22:28:37.550,-8.3186,121.5717,10,6.1,"58 km N of Ende, Indonesia",earthquake,
+2026-08-14 22:18:06.706,-8.3406,121.4284,10,5.6,"61 km NNW of Ende, Indonesia",earthquake,
+2026-08-14 22:13:50.869,-8.2849,120.1465,10,5.9,"36 km NE of Labuan Bajo, Indonesia",earthquake,
+2026-08-14 21:58:21.564,-8.3101,121.3517,10,7.7,"68 km NNW of Ende, Indonesia",earthquake,
