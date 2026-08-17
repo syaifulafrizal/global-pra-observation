@@ -1,1 +1,9 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-16 15:52:53.557,14.4177,-92.969,35.0,5.2,"67 km WSW of Puerto Madero, Mexico",earthquake,
+2026-08-16 13:38:39.493,-7.9176,120.7165,10.0,5.0,"81 km NNE of Ruteng, Indonesia",earthquake,
+2026-08-16 10:59:10.367,-5.5481,146.7476,138.737,5.1,"112 km ESE of Madang, Papua New Guinea",earthquake,
+2026-08-16 10:31:34.822,-7.8791,120.5504,10.0,5.1,"81 km N of Ruteng, Indonesia",earthquake,
+2026-08-16 10:14:36.343,-7.9399,120.5995,10.0,5.3,"75 km NNE of Ruteng, Indonesia",earthquake,
+2026-08-16 06:51:47.338,-7.9322,120.5855,10.0,5.5,"76 km N of Ruteng, Indonesia",earthquake,
+2026-08-16 03:42:59.885,-8.4615,121.5082,10.0,5.0,"45 km NNW of Ende, Indonesia",earthquake,
+2026-08-16 03:20:24.373,-14.5474,167.1934,188.148,6.1,"56 km NNE of Port-Olry, Vanuatu",earthquake,
