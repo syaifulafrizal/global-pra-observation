@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-08-09T16:21:29.867922",
+  "last_updated": "2026-08-18T16:23:12.282392",
   "entries": [
     {
-      "station": "GUA",
-      "date": "2026-08-04",
-      "first_detected": "2026-08-09T16:21:29.722236",
-      "threshold": 0.4937909869917188,
+      "station": "LYC",
+      "date": "2026-08-18",
+      "first_detected": "2026-08-18T16:23:12.144434",
+      "threshold": 15.581119503313234,
       "n_anomaly_hours": 1,
-      "source_file": "PRA_Night_GUA_20260804.json",
-      "last_confirmed": "2026-08-09T16:21:29.722236",
+      "source_file": "PRA_Night_LYC_20260818.json",
+      "last_confirmed": "2026-08-18T16:23:12.144434",
       "has_correlated_eq": false
     }
   ]
