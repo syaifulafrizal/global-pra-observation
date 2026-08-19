@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-19 03:13:29.805,-8.2837,121.4389,30.365,5.2,"66 km NNW of Ende, Indonesia",earthquake,
