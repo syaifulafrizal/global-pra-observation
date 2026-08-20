@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-20 09:49:47.975,37.8058,95.4454,10.0,5.2,"270 km SSE of Dunhuang, China",earthquake,
+2026-08-20 09:30:52.720,-8.2215,120.6701,10.0,5.3,"48 km NNE of Ruteng, Indonesia",earthquake,
+2026-08-20 08:01:33.945,-8.2196,120.4879,35.0,5.0,"43 km N of Ruteng, Indonesia",earthquake,
+2026-08-20 07:55:03.208,-8.2868,120.377,10.0,5.0,"37 km NNW of Ruteng, Indonesia",earthquake,
+2026-08-20 02:46:59.072,-8.3582,120.6104,10.0,5.7,"32 km NNE of Ruteng, Indonesia",earthquake,
+2026-08-20 00:20:24.938,-20.324,169.1514,72.946,5.0,"87 km S of Isangel, Vanuatu",earthquake,
