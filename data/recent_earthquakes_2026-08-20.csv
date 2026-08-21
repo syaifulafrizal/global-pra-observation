@@ -1,4 +1,10 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-20 23:36:41.054,-56.5921,-141.4541,10.0,5.0,Pacific-Antarctic Ridge,earthquake,
+2026-08-20 19:53:51.824,-8.214,121.3299,10.0,5.0,"78 km NNW of Ende, Indonesia",earthquake,
+2026-08-20 19:24:03.495,-8.423,121.2709,10.0,5.0,"63 km NW of Ende, Indonesia",earthquake,
+2026-08-20 18:25:19.502,-5.3709,153.5631,35.0,5.1,"183 km SE of Kokopo, Papua New Guinea",earthquake,
+2026-08-20 18:12:51.721,-8.2877,121.3981,10.0,5.6,"67 km NNW of Ende, Indonesia",earthquake,
+2026-08-20 18:00:18.626,-14.6414,-73.5236,99.0,6.7,"31 km NW of Aniso, Peru",earthquake,
 2026-08-20 09:49:47.975,37.8058,95.4454,10.0,5.2,"270 km SSE of Dunhuang, China",earthquake,
 2026-08-20 09:30:52.720,-8.2215,120.6701,10.0,5.3,"48 km NNE of Ruteng, Indonesia",earthquake,
 2026-08-20 08:01:33.945,-8.2196,120.4879,35.0,5.0,"43 km N of Ruteng, Indonesia",earthquake,
