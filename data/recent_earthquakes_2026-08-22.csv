@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-22 17:00:39.472,35.9375,140.0778,61.0,5.8,"4 km N of Toride, Japan",earthquake,
+2026-08-22 08:22:37.740,-60.3789,-47.6047,10.0,6.2,Scotia Sea,earthquake,
+2026-08-22 07:40:12.697,-60.2649,-47.2591,10.0,5.7,Scotia Sea,earthquake,
+2026-08-22 06:43:39.032,6.7397,126.7362,107.802,5.0,"45 km SE of Lukatan, Philippines",earthquake,
+2026-08-22 04:44:08.744,9.3981,125.5805,10.0,5.0,"6 km S of Kitcharao, Philippines",earthquake,
+2026-08-22 01:34:57.606,-12.7714,-14.8824,10.0,5.3,southern Mid-Atlantic Ridge,earthquake,
+2026-08-22 01:30:59.335,-8.2752,120.5614,10.0,5.2,"38 km NNE of Ruteng, Indonesia",earthquake,

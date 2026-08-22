@@ -1,14 +1,14 @@
 {
-  "last_updated": "2026-08-21T16:27:56.397865",
+  "last_updated": "2026-08-22T18:01:22.646771",
   "entries": [
     {
       "station": "LYC",
       "date": "2026-08-18",
-      "first_detected": "2026-08-21T16:27:56.262238",
+      "first_detected": "2026-08-22T18:01:22.510229",
       "threshold": 15.581119503313234,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_LYC_20260818.json",
-      "last_confirmed": "2026-08-21T16:27:56.262238",
+      "last_confirmed": "2026-08-22T18:01:22.510229",
       "has_correlated_eq": false
     }
   ]

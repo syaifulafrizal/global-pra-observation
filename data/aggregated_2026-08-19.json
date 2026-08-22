@@ -1,6 +1,6 @@
 {
   "date": "2026-08-19",
-  "generated_at": "2026-08-21T16:27:56.896803",
+  "generated_at": "2026-08-22T18:01:23.105289",
   "stations": {
     "ABG": {
       "date": "2026-08-20",
@@ -3312,20 +3312,12 @@
     ],
     "KNY": [
       {
-        "earthquake_time": "2026-06-26 13:29:01.036",
-        "earthquake_magnitude": "5.2",
-        "earthquake_distance_km": "96.57927194625114",
-        "earthquake_place": "1 km S of \u014ctsuki, Japan",
-        "earthquake_latitude": "35.6048",
-        "earthquake_longitude": "138.9744"
-      },
-      {
-        "earthquake_time": "2026-06-26 03:46:35.803",
-        "earthquake_magnitude": "5.8",
-        "earthquake_distance_km": "65.36637538481756",
-        "earthquake_place": "3 km SE of Yokoshiba, Japan",
-        "earthquake_latitude": "35.6314",
-        "earthquake_longitude": "140.5099"
+        "earthquake_time": "2026-08-21 12:02:07.072",
+        "earthquake_magnitude": "5.4",
+        "earthquake_distance_km": "175.63677564432794",
+        "earthquake_place": "148 km SSE of Tateyama, Japan",
+        "earthquake_latitude": "33.7171",
+        "earthquake_longitude": "140.3802"
       }
     ],
     "MMB": [
