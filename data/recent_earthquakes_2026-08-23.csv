@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-23 13:44:53.514,41.8344,142.8255,42.867,6.0,"33 km SSW of Honchō, Japan",earthquake,
+2026-08-23 11:22:41.913,-12.8299,-14.8524,10.0,5.3,southern Mid-Atlantic Ridge,earthquake,
+2026-08-23 08:12:38.133,-10.9015,162.9618,120.328,5.2,"124 km ESE of Kirakira, Solomon Islands",earthquake,

@@ -1,6 +1,6 @@
 {
   "date": "2026-08-21",
-  "generated_at": "2026-08-22T18:01:22.895153",
+  "generated_at": "2026-08-23T16:23:39.462823",
   "stations": {
     "ABG": {
       "date": "2026-08-21",
@@ -3126,23 +3126,23 @@
     ],
     "KAK": [
       {
-        "earthquake_time": "2026-06-26 13:29:01.036",
-        "earthquake_magnitude": "5.2",
-        "earthquake_distance_km": "129.61914417877549",
-        "earthquake_place": "1 km S of \u014ctsuki, Japan",
-        "earthquake_latitude": "35.6048",
-        "earthquake_longitude": "138.9744"
-      },
-      {
-        "earthquake_time": "2026-06-26 03:46:35.803",
+        "earthquake_time": "2026-08-22 17:00:39.472",
         "earthquake_magnitude": "5.8",
-        "earthquake_distance_km": "72.76933337629175",
-        "earthquake_place": "3 km SE of Yokoshiba, Japan",
-        "earthquake_latitude": "35.6314",
-        "earthquake_longitude": "140.5099"
+        "earthquake_distance_km": "34.10005864780999",
+        "earthquake_place": "4 km N of Toride, Japan",
+        "earthquake_latitude": "35.9375",
+        "earthquake_longitude": "140.0778"
       }
     ],
     "KNY": [
+      {
+        "earthquake_time": "2026-08-22 17:00:39.472",
+        "earthquake_magnitude": "5.8",
+        "earthquake_distance_km": "76.04280818977499",
+        "earthquake_place": "4 km N of Toride, Japan",
+        "earthquake_latitude": "35.9375",
+        "earthquake_longitude": "140.0778"
+      },
       {
         "earthquake_time": "2026-08-21 12:02:07.072",
         "earthquake_magnitude": "5.4",
