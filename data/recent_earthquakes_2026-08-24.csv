@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-24 14:10:17.299,-6.6264,127.4598,10,6.0,"215 km NNE of Lospalos, Timor Leste",earthquake,
+2026-08-24 12:29:31.627,-17.7036,-13.8368,10,5.0,southern Mid-Atlantic Ridge,earthquake,
+2026-08-24 10:02:58.888,-5.0525,129.6871,10,5.5,"207 km SSE of Amahai, Indonesia",earthquake,

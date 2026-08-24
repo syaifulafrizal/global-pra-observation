@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-23 23:20:35.668,52.1941,176.3834,13.186,5.0,"Rat Islands, Aleutian Islands, Alaska",earthquake,
+2026-08-23 21:32:20.775,-10.6943,164.6977,10.0,5.3,"120 km W of Lata, Solomon Islands",earthquake,
+2026-08-23 21:20:15.767,-8.1992,120.8354,10.0,5.2,"61 km NE of Ruteng, Indonesia",earthquake,
 2026-08-23 13:44:53.514,41.8344,142.8255,42.867,6.0,"33 km SSW of Honchō, Japan",earthquake,
 2026-08-23 11:22:41.913,-12.8299,-14.8524,10.0,5.3,southern Mid-Atlantic Ridge,earthquake,
 2026-08-23 08:12:38.133,-10.9015,162.9618,120.328,5.2,"124 km ESE of Kirakira, Solomon Islands",earthquake,
