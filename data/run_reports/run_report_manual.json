@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-08-24T16:26:19.931567",
-  "latest_date": "2026-08-25",
+  "generated_at": "2026-08-25T16:22:21.591939",
+  "latest_date": "2026-08-26",
   "available_dates": [
+    "2026-08-26",
     "2026-08-25",
     "2026-08-24",
     "2026-08-23",
     "2026-08-22",
     "2026-08-21",
-    "2026-08-20",
-    "2026-08-19"
+    "2026-08-20"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -28,37 +28,37 @@
     {
       "station": "KAK",
       "earthquake_time": "2026-08-22 17:00:39.472",
-      "first_logged": "2026-08-24T16:26:19.874416",
+      "first_logged": "2026-08-25T16:22:21.569594",
       "earthquake_magnitude": 5.8,
       "earthquake_distance_km": 34.10005864780999,
       "earthquake_place": "4 km N of Toride, Japan",
       "earthquake_latitude": 35.9375,
       "earthquake_longitude": 140.0778,
-      "last_confirmed": "2026-08-24T16:26:19.874416",
+      "last_confirmed": "2026-08-25T16:22:21.569594",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-08-22 17:00:39.472",
-      "first_logged": "2026-08-24T16:26:19.874416",
+      "first_logged": "2026-08-25T16:22:21.569594",
       "earthquake_magnitude": 5.8,
       "earthquake_distance_km": 76.04280818977499,
       "earthquake_place": "4 km N of Toride, Japan",
       "earthquake_latitude": 35.9375,
       "earthquake_longitude": 140.0778,
-      "last_confirmed": "2026-08-24T16:26:19.874416",
+      "last_confirmed": "2026-08-25T16:22:21.569594",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-08-21 12:02:07.072",
-      "first_logged": "2026-08-24T16:26:19.874416",
+      "first_logged": "2026-08-25T16:22:21.569594",
       "earthquake_magnitude": 5.4,
       "earthquake_distance_km": 175.63677564432794,
       "earthquake_place": "148 km SSE of Tateyama, Japan",
       "earthquake_latitude": 33.7171,
       "earthquake_longitude": 140.3802,
-      "last_confirmed": "2026-08-24T16:26:19.874416",
+      "last_confirmed": "2026-08-25T16:22:21.569594",
       "source_file": "false_negatives.csv"
     }
   ]
