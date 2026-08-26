@@ -1,6 +1,6 @@
 {
   "date": "2026-08-22",
-  "generated_at": "2026-08-25T16:22:22.120284",
+  "generated_at": "2026-08-26T16:25:57.030256",
   "stations": {
     "ABG": {
       "date": "2026-08-23",
@@ -3322,12 +3322,12 @@
     ],
     "MMB": [
       {
-        "earthquake_time": "2026-04-26 20:23:55.589",
-        "earthquake_magnitude": "6.1",
-        "earthquake_distance_km": "169.97284978158984",
-        "earthquake_place": "25 km WNW of Sarabetsu, Japan",
-        "earthquake_latitude": "42.7138",
-        "earthquake_longitude": "142.8827"
+        "earthquake_time": "2026-08-25 09:07:20.740",
+        "earthquake_magnitude": "5",
+        "earthquake_distance_km": "151.35455567186906",
+        "earthquake_place": "31 km S of Nemuro, Japan",
+        "earthquake_latitude": "43.045",
+        "earthquake_longitude": "145.6343"
       }
     ],
     "SHU": [

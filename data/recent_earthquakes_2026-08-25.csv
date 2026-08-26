@@ -1,5 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-08-25 15:15:54.612,-17.2913,-171.9817,10.0,5.2,"243 km SE of Hihifo, Tonga",earthquake,
+2026-08-25 15:15:54.340,-17.4086,-171.8992,10.0,5.2,"258 km SE of Hihifo, Tonga",earthquake,
+2026-08-25 14:58:54.052,-8.0758,120.6333,10.0,5.0,"62 km NNE of Ruteng, Indonesia",earthquake,
 2026-08-25 12:12:03.252,-23.3497,179.8207,528.283,5.5,south of the Fiji Islands,earthquake,
 2026-08-25 09:07:20.740,43.045,145.6343,96.855,5.0,"31 km S of Nemuro, Japan",earthquake,
 2026-08-25 07:00:10.853,22.6053,121.5709,14.608,5.5,"108 km NE of Hengchun, Taiwan",earthquake,
