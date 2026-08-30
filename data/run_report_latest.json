@@ -1,40 +1,51 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-08-28T17:51:48.225400",
-  "latest_date": "2026-08-29",
+  "generated_at": "2026-08-30T17:45:11.861576",
+  "latest_date": "2026-08-31",
   "available_dates": [
+    "2026-08-31",
+    "2026-08-30",
     "2026-08-29",
     "2026-08-28",
     "2026-08-27",
     "2026-08-26",
-    "2026-08-25",
-    "2026-08-24",
-    "2026-08-23"
+    "2026-08-25"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 0,
+    "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
-    "false_positives_last_7_days": 0,
+    "false_positives_last_7_days": 1,
     "false_negatives_last_7_days": 1,
-    "total_anomalies": 0,
+    "total_anomalies": 1,
     "total_correlated": 0,
-    "total_false_positives": 0,
+    "total_false_positives": 1,
     "total_false_negatives": 13
   },
-  "recent_anomalies": [],
+  "recent_anomalies": [
+    {
+      "station": "LYC",
+      "date": "2026-08-30",
+      "first_detected": "2026-08-30T17:45:11.630594",
+      "threshold": 15.580549912812593,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_LYC_20260830.json",
+      "last_confirmed": "2026-08-30T17:45:11.630594",
+      "has_correlated_eq": false
+    }
+  ],
   "recent_false_negatives": [
     {
       "station": "MMB",
       "earthquake_time": "2026-08-25 09:07:20.740",
-      "first_logged": "2026-08-28T17:51:48.186235",
+      "first_logged": "2026-08-30T17:45:11.829125",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 151.35455567186906,
       "earthquake_place": "31 km S of Nemuro, Japan",
       "earthquake_latitude": 43.045,
       "earthquake_longitude": 145.6343,
-      "last_confirmed": "2026-08-28T17:51:48.186235",
+      "last_confirmed": "2026-08-30T17:45:11.829125",
       "source_file": "false_negatives.csv"
     }
   ]
