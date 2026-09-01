@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-08-31 08:03:28.497,-8.241,120.6119,10,5.5,"44 km NNE of Ruteng, Indonesia",earthquake,

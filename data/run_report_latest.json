@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-08-30T17:45:11.861576",
-  "latest_date": "2026-08-31",
+  "generated_at": "2026-09-01T16:26:57.110291",
+  "latest_date": "2026-09-02",
   "available_dates": [
+    "2026-09-02",
+    "2026-09-01",
     "2026-08-31",
     "2026-08-30",
     "2026-08-29",
     "2026-08-28",
-    "2026-08-27",
-    "2026-08-26",
-    "2026-08-25"
+    "2026-08-27"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,7 +17,7 @@
     "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 1,
-    "false_negatives_last_7_days": 1,
+    "false_negatives_last_7_days": 0,
     "total_anomalies": 1,
     "total_correlated": 0,
     "total_false_positives": 1,
@@ -27,26 +27,13 @@
     {
       "station": "LYC",
       "date": "2026-08-30",
-      "first_detected": "2026-08-30T17:45:11.630594",
+      "first_detected": "2026-09-01T16:26:56.829379",
       "threshold": 15.580549912812593,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_LYC_20260830.json",
-      "last_confirmed": "2026-08-30T17:45:11.630594",
+      "last_confirmed": "2026-09-01T16:26:56.829379",
       "has_correlated_eq": false
     }
   ],
-  "recent_false_negatives": [
-    {
-      "station": "MMB",
-      "earthquake_time": "2026-08-25 09:07:20.740",
-      "first_logged": "2026-08-30T17:45:11.829125",
-      "earthquake_magnitude": 5.0,
-      "earthquake_distance_km": 151.35455567186906,
-      "earthquake_place": "31 km S of Nemuro, Japan",
-      "earthquake_latitude": 43.045,
-      "earthquake_longitude": 145.6343,
-      "last_confirmed": "2026-08-30T17:45:11.829125",
-      "source_file": "false_negatives.csv"
-    }
-  ]
+  "recent_false_negatives": []
 }
