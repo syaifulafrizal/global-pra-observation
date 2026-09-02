@@ -1,1 +1,9 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-02 12:35:56.627,-34.9815,-109.0259,10.0,5.9,southern East Pacific Rise,earthquake,
+2026-09-02 12:32:01.324,52.3538,-169.4988,35.0,5.2,"78 km SSW of Nikolski, Alaska",earthquake,
+2026-09-02 12:28:31.022,14.3909,-92.9873,10.0,5.6,"71 km WSW of Puerto Madero, Mexico",earthquake,
+2026-09-02 10:54:02.666,-56.3968,-26.904,84.064,5.2,South Sandwich Islands region,earthquake,
+2026-09-02 06:57:12.278,-44.4277,168.2503,10.0,5.2,"70 km NNW of Arthurs Point, New Zealand",earthquake,
+2026-09-02 06:13:33.779,-44.4431,168.3029,10.0,5.3,"66 km NNW of Arthurs Point, New Zealand",earthquake,
+2026-09-02 05:14:00.312,52.1186,-169.295,35.0,5.2,"95 km SSW of Nikolski, Alaska",earthquake,
+2026-09-02 00:04:55.147,-3.2239,139.3456,69.052,5.6,"159 km WSW of Abepura, Indonesia",earthquake,

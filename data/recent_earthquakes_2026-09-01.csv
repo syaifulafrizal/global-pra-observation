@@ -1,4 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-09-01 13:22:30.133,5.1623,125.672,120.779,5.2,"35 km SE of Sarangani, Philippines",earthquake,
+2026-09-01 18:37:29.222,-20.5024,169.7829,122.461,5.0,"118 km SSE of Isangel, Vanuatu",earthquake,
+2026-09-01 13:22:29.602,5.0959,125.7229,113.117,5.2,"44 km SE of Sarangani, Philippines",earthquake,
 2026-09-01 08:22:20.813,0.1685,128.8054,10.0,5.6,"82 km SE of Maba, Indonesia",earthquake,
 2026-09-01 06:44:36.948,52.2132,-169.4456,26.001,5.3,"89 km SSW of Nikolski, Alaska",earthquake,
