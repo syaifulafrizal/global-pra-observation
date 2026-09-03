@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-03 14:11:31.916,14.4605,56.4505,10.0,5.1,Owen Fracture Zone region,earthquake,
+2026-09-03 13:03:18.659,52.0562,-169.1988,10.0,5.2,"100 km SSW of Nikolski, Alaska",earthquake,
+2026-09-03 11:39:41.981,31.8458,104.5066,10.0,5.4,"21 km WNW of Jiangyou, China",earthquake,
+2026-09-03 11:24:55.479,52.1321,-169.4182,45.17,5.2,"97 km SSW of Nikolski, Alaska",earthquake,
+2026-09-03 11:17:24.056,52.2579,-169.4088,35.0,6.3,"84 km SSW of Nikolski, Alaska",earthquake,
+2026-09-03 08:16:36.417,31.3618,80.33,10.0,5.1,"115 km NE of Joshīmath, India",earthquake,
+2026-09-03 06:04:02.572,-29.7346,-71.6979,55.164,5.1,"42 km NW of Coquimbo, Chile",earthquake,
