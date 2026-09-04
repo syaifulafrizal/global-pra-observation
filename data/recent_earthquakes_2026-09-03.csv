@@ -1,4 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-03 20:21:15.216,52.0506,-169.1387,10.0,5.5,"100 km S of Nikolski, Alaska",earthquake,
+2026-09-03 18:45:39.228,52.0304,-169.2217,10.0,5.3,"104 km SSW of Nikolski, Alaska",earthquake,
+2026-09-03 18:31:04.918,-18.7662,-177.4572,619.049,5.0,Fiji region,earthquake,
+2026-09-03 17:04:40.769,37.7963,95.4671,10.0,5.2,"271 km SSE of Dunhuang, China",earthquake,
 2026-09-03 14:11:31.916,14.4605,56.4505,10.0,5.1,Owen Fracture Zone region,earthquake,
 2026-09-03 13:03:18.659,52.0562,-169.1988,10.0,5.2,"100 km SSW of Nikolski, Alaska",earthquake,
 2026-09-03 11:39:41.981,31.8458,104.5066,10.0,5.4,"21 km WNW of Jiangyou, China",earthquake,

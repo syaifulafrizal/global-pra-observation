@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-04 11:59:58.323,-28.5616,-176.6452,10,5.4,Kermadec Islands region,earthquake,
+2026-09-04 06:45:54.522,-56.1536,-26.1632,10,5.0,South Sandwich Islands region,earthquake,
+2026-09-04 05:04:54.278,-7.9867,109.0409,10,5.2,"28 km S of Cilacap, Indonesia",earthquake,
+2026-09-04 02:28:38.697,51.9555,176.3482,10,5.0,"236 km ESE of Attu Station, Alaska",earthquake,
