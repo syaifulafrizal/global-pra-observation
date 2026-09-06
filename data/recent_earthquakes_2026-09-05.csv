@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-05 17:02:11.581,-19.807,170.1576,10.0,5.6,"96 km ESE of Isangel, Vanuatu",earthquake,
+2026-09-05 14:12:07.727,-4.5469,153.6766,114.364,5.5,"157 km E of Kokopo, Papua New Guinea",earthquake,
+2026-09-05 14:06:07.776,1.0574,98.6095,91.853,5.2,"77 km SSW of Sibolga, Indonesia",earthquake,
+2026-09-05 11:37:12.553,-26.1078,-66.7176,10.0,5.1,"69 km E of Antofagasta de la Sierra, Argentina",earthquake,
+2026-09-05 10:59:15.678,-4.4202,102.7513,68.934,5.0,"70 km SW of Pagar Alam, Indonesia",earthquake,
+2026-09-05 05:00:06.778,3.5071,-83.151,10.0,5.0,off the coast of Central America,earthquake,

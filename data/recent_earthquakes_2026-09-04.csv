@@ -1,5 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-09-04 11:59:58.323,-28.5616,-176.6452,10,5.4,Kermadec Islands region,earthquake,
-2026-09-04 06:45:54.522,-56.1536,-26.1632,10,5.0,South Sandwich Islands region,earthquake,
-2026-09-04 05:04:54.278,-7.9867,109.0409,10,5.2,"28 km S of Cilacap, Indonesia",earthquake,
-2026-09-04 02:28:38.697,51.9555,176.3482,10,5.0,"236 km ESE of Attu Station, Alaska",earthquake,
+2026-09-04 23:52:29.825,44.9418,149.9838,32.0,5.5,"168 km ESE of Kuril’sk, Russia",earthquake,
+2026-09-04 23:38:40.818,9.4666,-40.8475,10.0,5.1,central Mid-Atlantic Ridge,earthquake,
+2026-09-04 16:24:41.107,1.3758,99.0453,121.712,5.1,"25 km W of Padangsidempuan, Indonesia",earthquake,
+2026-09-04 11:59:58.323,-28.5616,-176.6452,10.0,5.4,Kermadec Islands region,earthquake,
+2026-09-04 06:45:54.522,-56.1536,-26.1632,10.0,5.0,South Sandwich Islands region,earthquake,
+2026-09-04 05:04:54.278,-7.9867,109.0409,10.0,5.2,"28 km S of Cilacap, Indonesia",earthquake,
+2026-09-04 02:28:38.697,51.9555,176.3482,10.0,5.0,"236 km ESE of Attu Station, Alaska",earthquake,
