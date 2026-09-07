@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-07 05:50:44.529,-23.4192,171.6769,10.0,5.5,southeast of the Loyalty Islands,earthquake,
+2026-09-07 02:06:48.371,-30.9663,178.5443,585.146,5.0,Kermadec Islands region,earthquake,
+2026-09-07 01:30:24.930,43.9019,-128.2038,10.0,5.3,off the coast of Oregon,earthquake,
