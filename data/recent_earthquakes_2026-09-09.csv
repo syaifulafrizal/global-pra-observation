@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-09 10:06:57.170,-26.1386,-66.5049,10,5,"53 km W of Cafayate, Argentina",earthquake,
+2026-09-09 07:07:03.319,4.0172,125.3233,10,5,"154 km S of Sarangani, Philippines",earthquake,
