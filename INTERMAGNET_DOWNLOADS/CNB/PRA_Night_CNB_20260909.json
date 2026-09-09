@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-09",
+  "station": "CNB",
+  "timestamps": [
+    "2026-09-09T00:30:03"
+  ],
+  "P": [
+    5.02938241871952
+  ],
+  "nZ": [
+    15290.114894452865
+  ],
+  "nG": [
+    3040.1575425130877
+  ],
+  "isAnomalous": [
+    false
+  ],
+  "isQuiet": [
+    true
+  ],
+  "threshold": 7.098056206788655,
+  "nAnomHours": 0,
+  "is_anomalous": false
+}
