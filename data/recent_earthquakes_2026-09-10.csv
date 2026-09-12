@@ -1,4 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-10 18:44:40.243,-8.5914,127.7505,10,5.3,"83 km E of Lospalos, Timor Leste",earthquake,
+2026-09-10 18:21:18.934,-34.8341,-109.1514,10,5.4,southern East Pacific Rise,earthquake,
 2026-09-10 13:28:15.798,12.0265,143.8739,10,5.1,"162 km SSW of Merizo Village, Guam",earthquake,
 2026-09-10 08:26:53.828,9.0275,-84.0624,10,5.0,"45 km SSE of Quepos, Costa Rica",earthquake,
 2026-09-10 06:42:40.393,-3.873,-77.5027,10,5.3,"126 km WSW of Alianza Cristiana, Peru",earthquake,

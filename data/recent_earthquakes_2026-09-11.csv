@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-11 21:23:55.001,-5.0932,106.903,358.597,6.6,"115 km NNE of Teluknaga, Indonesia",earthquake,
+2026-09-11 11:56:23.115,-7.2863,128.9383,111.763,5.9,"253 km ENE of Lospalos, Timor Leste",earthquake,
+2026-09-11 10:47:12.613,51.213,-178.5429,40.892,5.3,"151 km WSW of Adak, Alaska",earthquake,
