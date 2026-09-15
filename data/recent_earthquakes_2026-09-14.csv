@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-14 22:06:53.342,-6.3071,146.5257,119.787,5.0,"69 km NW of Lae, Papua New Guinea",earthquake,
+2026-09-14 20:38:59.760,15.0879,-104.4352,10.0,5.3,"off the coast of Michoacan, Mexico",earthquake,
+2026-09-14 16:15:05.947,-8.9454,157.7415,10.0,5.2,"135 km SE of Gizo, Solomon Islands",earthquake,
 2026-09-14 10:58:03.047,2.4223,128.1704,162.179,5.6,"78 km NNE of Tobelo, Indonesia",earthquake,
 2026-09-14 09:27:38.536,-8.5419,105.8726,10.0,5.5,"187 km SSW of Pelabuhanratu, Indonesia",earthquake,
 2026-09-14 02:56:17.419,25.5449,-45.3828,10.0,5.4,northern Mid-Atlantic Ridge,earthquake,
