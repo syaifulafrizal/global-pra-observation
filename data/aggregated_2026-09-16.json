@@ -1,6 +1,6 @@
 {
   "date": "2026-09-16",
-  "generated_at": "2026-09-16T16:21:52.201164",
+  "generated_at": "2026-09-18T16:21:21.317085",
   "stations": {
     "ABG": {
       "date": "2026-09-16",
@@ -3294,30 +3294,22 @@
     ],
     "KAK": [
       {
-        "earthquake_time": "2026-08-22 17:00:39.299",
-        "earthquake_magnitude": "5.8",
-        "earthquake_distance_km": "36.174776496481535",
-        "earthquake_place": "2 km NNW of Toride, Japan",
-        "earthquake_latitude": "35.9182",
-        "earthquake_longitude": "140.0771"
+        "earthquake_time": "2026-09-16 15:07:38.245",
+        "earthquake_magnitude": "5",
+        "earthquake_distance_km": "24.58557583003865",
+        "earthquake_place": "5 km NE of Mitsukaid\u014d, Japan",
+        "earthquake_latitude": "36.0556",
+        "earthquake_longitude": "140.0207"
       }
     ],
     "KNY": [
       {
-        "earthquake_time": "2026-08-22 17:00:39.299",
-        "earthquake_magnitude": "5.8",
-        "earthquake_distance_km": "73.91700261074912",
-        "earthquake_place": "2 km NNW of Toride, Japan",
-        "earthquake_latitude": "35.9182",
-        "earthquake_longitude": "140.0771"
-      },
-      {
-        "earthquake_time": "2026-08-21 12:02:07.072",
-        "earthquake_magnitude": "5.4",
-        "earthquake_distance_km": "175.63677564432794",
-        "earthquake_place": "148 km SSE of Tateyama, Japan",
-        "earthquake_latitude": "33.7171",
-        "earthquake_longitude": "140.3802"
+        "earthquake_time": "2026-09-16 15:07:38.245",
+        "earthquake_magnitude": "5",
+        "earthquake_distance_km": "88.4992811758778",
+        "earthquake_place": "5 km NE of Mitsukaid\u014d, Japan",
+        "earthquake_latitude": "36.0556",
+        "earthquake_longitude": "140.0207"
       }
     ],
     "MMB": [

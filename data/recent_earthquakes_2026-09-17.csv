@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-17 14:19:52.210,52.8594,-171.3756,98,6.5,"169 km W of Nikolski, Alaska",earthquake,
+2026-09-17 06:48:41.815,-22.5873,-20.3463,10,5.0,South Atlantic Ocean,earthquake,
+2026-09-17 06:42:41.657,-14.4792,-174.8957,10,5.3,"191 km SE of Mata-Utu, Wallis and Futuna",earthquake,
+2026-09-17 06:20:48.508,1.3156,126.3092,10,5.2,"132 km E of Bitung, Indonesia",earthquake,
+2026-09-17 04:06:53.528,-17.3232,-173.4476,10,5.3,"155 km SSE of Hihifo, Tonga",earthquake,
