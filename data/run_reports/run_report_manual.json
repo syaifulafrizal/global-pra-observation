@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-09-18T16:21:21.011884",
-  "latest_date": "2026-09-19",
+  "generated_at": "2026-09-20T16:19:54.178533",
+  "latest_date": "2026-09-21",
   "available_dates": [
+    "2026-09-21",
+    "2026-09-20",
     "2026-09-19",
     "2026-09-18",
     "2026-09-17",
     "2026-09-16",
-    "2026-09-15",
-    "2026-09-14",
-    "2026-09-13"
+    "2026-09-15"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -28,25 +28,25 @@
     {
       "station": "KAK",
       "earthquake_time": "2026-09-16 15:07:38.245",
-      "first_logged": "2026-09-18T16:21:20.993361",
+      "first_logged": "2026-09-20T16:19:54.157531",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 24.58557583003865,
       "earthquake_place": "5 km NE of Mitsukaid\u014d, Japan",
       "earthquake_latitude": 36.0556,
       "earthquake_longitude": 140.0207,
-      "last_confirmed": "2026-09-18T16:21:20.993361",
+      "last_confirmed": "2026-09-20T16:19:54.157531",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-09-16 15:07:38.245",
-      "first_logged": "2026-09-18T16:21:20.993361",
+      "first_logged": "2026-09-20T16:19:54.157531",
       "earthquake_magnitude": 5.0,
       "earthquake_distance_km": 88.4992811758778,
       "earthquake_place": "5 km NE of Mitsukaid\u014d, Japan",
       "earthquake_latitude": 36.0556,
       "earthquake_longitude": 140.0207,
-      "last_confirmed": "2026-09-18T16:21:20.993361",
+      "last_confirmed": "2026-09-20T16:19:54.157531",
       "source_file": "false_negatives.csv"
     }
   ]
