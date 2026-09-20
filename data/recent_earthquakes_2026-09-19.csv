@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-19 20:24:42.449,57.1175,-33.4247,10.0,5.2,Reykjanes Ridge,earthquake,
+2026-09-19 13:56:00.869,-8.1668,120.8819,10.0,5.1,"67 km NE of Ruteng, Indonesia",earthquake,
+2026-09-19 09:59:59.264,-55.6255,-28.1116,77.621,5.0,South Sandwich Islands region,earthquake,
+2026-09-19 04:18:35.318,-1.8561,138.8882,10.0,5.2,"210 km WNW of Abepura, Indonesia",earthquake,
