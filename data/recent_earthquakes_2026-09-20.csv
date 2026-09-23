@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-20 21:06:19.931,52.6966,-162.4693,10.0,5.0,"248 km SSE of False Pass, Alaska",earthquake,
+2026-09-20 20:54:37.248,-48.4279,31.2345,10.0,5.7,south of Africa,earthquake,
+2026-09-20 13:00:45.292,-15.8682,-174.8169,10.0,5.2,"109 km W of Hihifo, Tonga",earthquake,
 2026-09-20 12:45:53.415,-5.7711,146.2041,116.019,5.4,"68 km NNE of Kainantu, Papua New Guinea",earthquake,
 2026-09-20 09:17:35.624,-5.9021,146.0922,104.329,6.4,"49 km NNE of Kainantu, Papua New Guinea",earthquake,
 2026-09-20 08:47:54.457,-25.9869,-66.6117,10.0,5.3,"64 km W of Cafayate, Argentina",earthquake,

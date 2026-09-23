@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-21 23:48:13.180,4.525,125.3573,10.0,5.3,"97 km S of Sarangani, Philippines",earthquake,
+2026-09-21 21:37:04.871,-56.5064,-24.1479,10.0,5.0,South Sandwich Islands region,earthquake,
+2026-09-21 13:38:32.404,32.5978,132.0805,42.736,5.0,"38 km E of Nobeoka, Japan",earthquake,
+2026-09-21 11:48:28.996,-22.3643,-71.8678,10.0,5.2,"167 km WNW of Mejillones, Chile",earthquake,
+2026-09-21 07:31:07.967,-0.8563,122.4959,9.863,5.0,"34 km WNW of Luwuk, Indonesia",earthquake,
+2026-09-21 01:41:36.315,-8.307,120.5793,10.0,5.5,"35 km NNE of Ruteng, Indonesia",earthquake,
