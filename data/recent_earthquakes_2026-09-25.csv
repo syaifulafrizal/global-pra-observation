@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-25 15:29:09.560,-33.9661,-72.1079,29.072,5.2,"62 km SW of San Antonio, Chile",earthquake,
+2026-09-25 11:12:15.838,-21.8904,174.0792,23.966,5.3,Vanuatu region,earthquake,
+2026-09-25 04:27:40.435,-7.4036,125.6985,10.0,5.0,"124 km N of Metinaro, Timor Leste",earthquake,
