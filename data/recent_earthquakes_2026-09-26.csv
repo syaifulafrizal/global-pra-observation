@@ -1,1 +1,12 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-26 19:37:01.212,-8.1581,120.3294,10.0,5.0,"52 km NNW of Ruteng, Indonesia",earthquake,
+2026-09-26 16:33:43.270,13.2741,51.4282,10.0,5.2,"148 km NW of Kilmia, Yemen",earthquake,
+2026-09-26 15:01:36.433,-21.3884,168.5751,10.0,5.1,"74 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-26 14:08:17.704,-4.6952,152.8383,57.78,5.6,"74 km ESE of Kokopo, Papua New Guinea",earthquake,
+2026-09-26 12:14:58.406,-21.2176,168.3226,10.0,5.2,"58 km NE of Tadine, New Caledonia",earthquake,
+2026-09-26 12:14:20.648,-21.1281,168.4681,10.0,5.0,"76 km NE of Tadine, New Caledonia",earthquake,
+2026-09-26 08:24:58.743,-21.2116,168.5478,10.0,5.0,"78 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-26 07:22:12.908,-21.2249,168.614,10.0,5.0,"84 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-26 07:08:02.558,-21.1943,168.4225,10.0,5.1,"68 km NE of Tadine, New Caledonia",earthquake,
+2026-09-26 05:50:48.716,-21.227,168.4033,10.0,5.1,"64 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-26 01:10:19.430,-21.2883,168.3721,10.0,5.3,"58 km ENE of Tadine, New Caledonia",earthquake,

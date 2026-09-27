@@ -1,4 +1,10 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-25 23:57:33.361,28.5792,104.6428,10.0,5.0,"15 km NNW of Xunchang, China",earthquake,
+2026-09-25 23:52:35.158,-21.2023,168.4346,10.0,5.4,"69 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-25 23:39:41.392,-21.3748,168.4446,10.0,5.5,"61 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-25 22:07:34.791,-21.2728,168.5744,10.0,5.1,"78 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-25 21:23:03.309,-21.2982,168.61,10.0,6.6,"80 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-25 21:01:27.262,28.5744,104.7032,10.0,5.0,"13 km N of Xunchang, China",earthquake,
 2026-09-25 15:29:09.560,-33.9661,-72.1079,29.072,5.2,"62 km SW of San Antonio, Chile",earthquake,
 2026-09-25 11:12:15.838,-21.8904,174.0792,23.966,5.3,Vanuatu region,earthquake,
 2026-09-25 04:27:40.435,-7.4036,125.6985,10.0,5.0,"124 km N of Metinaro, Timor Leste",earthquake,
