@@ -1,28 +1,39 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-09-27T16:21:04.586509",
-  "latest_date": "2026-09-28",
+  "generated_at": "2026-09-28T16:21:02.624102",
+  "latest_date": "2026-09-29",
   "available_dates": [
+    "2026-09-29",
     "2026-09-28",
     "2026-09-27",
     "2026-09-26",
     "2026-09-25",
     "2026-09-24",
-    "2026-09-23",
-    "2026-09-22"
+    "2026-09-23"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 0,
+    "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
-    "false_positives_last_7_days": 0,
+    "false_positives_last_7_days": 1,
     "false_negatives_last_7_days": 0,
-    "total_anomalies": 0,
+    "total_anomalies": 1,
     "total_correlated": 0,
-    "total_false_positives": 0,
+    "total_false_positives": 1,
     "total_false_negatives": 12
   },
-  "recent_anomalies": [],
+  "recent_anomalies": [
+    {
+      "station": "API",
+      "date": "2026-09-28",
+      "first_detected": "2026-09-28T16:21:02.453208",
+      "threshold": 1.1603384789580435,
+      "n_anomaly_hours": 1,
+      "source_file": "PRA_Night_API_20260928.json",
+      "last_confirmed": "2026-09-28T16:21:02.453208",
+      "has_correlated_eq": false
+    }
+  ],
   "recent_false_negatives": []
 }

@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-28 13:22:39.769,82.6385,-7.1923,10,5.4,north of Svalbard,earthquake,
+2026-09-28 09:13:39.402,50.171,-129.6785,10,5.2,"190 km WSW of Port McNeill, Canada",earthquake,
+2026-09-28 05:45:29.689,-21.2247,168.4274,10,5.2,"67 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-28 05:28:08.891,-21.2065,168.5459,10,5.1,"78 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-28 04:41:21.639,50.0527,-130.2208,10,5.4,"231 km WSW of Port McNeill, Canada",earthquake,
+2026-09-28 03:43:44.172,-57.6701,-25.2785,35,5.1,South Sandwich Islands region,earthquake,
+2026-09-28 03:25:06.893,-21.2245,168.3545,10,5.3,"60 km NE of Tadine, New Caledonia",earthquake,
