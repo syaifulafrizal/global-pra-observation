@@ -1,8 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-09-26 19:37:01.212,-8.1581,120.3294,10.0,5.0,"52 km NNW of Ruteng, Indonesia",earthquake,
-2026-09-26 16:33:43.270,13.2741,51.4282,10.0,5.2,"148 km NW of Kilmia, Yemen",earthquake,
-2026-09-26 15:01:36.433,-21.3884,168.5751,10.0,5.1,"74 km ENE of Tadine, New Caledonia",earthquake,
-2026-09-26 14:08:17.704,-4.6952,152.8383,57.78,5.6,"74 km ESE of Kokopo, Papua New Guinea",earthquake,
+2026-09-26 16:33:43.256,13.2872,51.4567,10.0,5.2,"148 km NW of Kilmia, Yemen",earthquake,
+2026-09-26 15:01:36.315,-21.268,168.5731,10.0,5.0,"78 km ENE of Tadine, New Caledonia",earthquake,
+2026-09-26 14:08:18.875,-4.6288,152.8611,69.51,5.6,"72 km ESE of Kokopo, Papua New Guinea",earthquake,
 2026-09-26 12:14:58.406,-21.2176,168.3226,10.0,5.2,"58 km NE of Tadine, New Caledonia",earthquake,
 2026-09-26 12:14:20.648,-21.1281,168.4681,10.0,5.0,"76 km NE of Tadine, New Caledonia",earthquake,
 2026-09-26 08:24:58.743,-21.2116,168.5478,10.0,5.0,"78 km ENE of Tadine, New Caledonia",earthquake,
