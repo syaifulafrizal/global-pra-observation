@@ -1,1 +1,7 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-09-30 10:58:50.586,-9.9243,123.6462,19.368,5.0,"27 km N of Kupang, Indonesia",earthquake,
+2026-09-30 08:15:17.486,-5.435,152.1328,28.026,5.1,"121 km S of Kokopo, Papua New Guinea",earthquake,
+2026-09-30 07:07:16.005,-63.5619,171.414,10.0,5.2,Balleny Islands region,earthquake,
+2026-09-30 06:50:03.339,-20.988,168.4237,10.0,5.0,"83 km NE of Tadine, New Caledonia",earthquake,
+2026-09-30 05:00:24.971,23.8027,122.9149,10.792,5.6,"74 km S of Yonakuni, Japan",earthquake,
+2026-09-30 04:48:06.031,-63.0088,169.2156,10.0,5.4,Balleny Islands region,earthquake,
