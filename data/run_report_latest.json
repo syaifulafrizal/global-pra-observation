@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-09-30T16:21:03.827709",
-  "latest_date": "2026-10-01",
+  "generated_at": "2026-10-01T16:21:59.496635",
+  "latest_date": "2026-10-02",
   "available_dates": [
+    "2026-10-02",
     "2026-10-01",
     "2026-09-30",
     "2026-09-29",
     "2026-09-28",
     "2026-09-27",
-    "2026-09-26",
-    "2026-09-25"
+    "2026-09-26"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "API",
       "date": "2026-09-28",
-      "first_detected": "2026-09-30T16:21:03.624168",
+      "first_detected": "2026-10-01T16:21:59.220223",
       "threshold": 1.1603384789580435,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_API_20260928.json",
-      "last_confirmed": "2026-09-30T16:21:03.624168",
+      "last_confirmed": "2026-10-01T16:21:59.220223",
       "has_correlated_eq": false
     }
   ],

@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-01 14:19:59.078,-7.0805,120.9136,10.0,5.0,"176 km NNE of Ruteng, Indonesia",earthquake,
+2026-10-01 12:27:11.864,35.7025,140.5507,41.649,5.3,"0 km NNE of Yōkaichiba, Japan",earthquake,
+2026-10-01 05:34:10.634,6.1116,123.8599,10.0,5.0,"38 km WSW of Palimbang, Philippines",earthquake,
+2026-10-01 01:29:20.694,36.0991,68.7818,49.602,5.2,"7 km ESE of Baghlān, Afghanistan",earthquake,
