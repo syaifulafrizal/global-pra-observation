@@ -1,6 +1,6 @@
 {
   "date": "2026-09-30",
-  "generated_at": "2026-10-01T16:21:59.834483",
+  "generated_at": "2026-10-02T16:20:34.929003",
   "stations": {
     "ABG": {
       "date": "2026-10-01",
@@ -3294,22 +3294,22 @@
     ],
     "KAK": [
       {
-        "earthquake_time": "2026-09-16 15:07:38.245",
-        "earthquake_magnitude": "5",
-        "earthquake_distance_km": "24.58557583003865",
-        "earthquake_place": "5 km NE of Mitsukaid\u014d, Japan",
-        "earthquake_latitude": "36.0556",
-        "earthquake_longitude": "140.0207"
+        "earthquake_time": "2026-10-01 12:27:11.864",
+        "earthquake_magnitude": "5.3",
+        "earthquake_distance_km": "67.33496416690444",
+        "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
+        "earthquake_latitude": "35.7025",
+        "earthquake_longitude": "140.5507"
       }
     ],
     "KNY": [
       {
-        "earthquake_time": "2026-09-16 15:07:38.245",
-        "earthquake_magnitude": "5",
-        "earthquake_distance_km": "88.4992811758778",
-        "earthquake_place": "5 km NE of Mitsukaid\u014d, Japan",
-        "earthquake_latitude": "36.0556",
-        "earthquake_longitude": "140.0207"
+        "earthquake_time": "2026-10-01 12:27:11.864",
+        "earthquake_magnitude": "5.3",
+        "earthquake_distance_km": "73.29497475109625",
+        "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
+        "earthquake_latitude": "35.7025",
+        "earthquake_longitude": "140.5507"
       }
     ],
     "MMB": [
