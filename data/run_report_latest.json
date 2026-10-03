@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-10-02T16:20:34.621368",
-  "latest_date": "2026-10-03",
+  "generated_at": "2026-10-03T16:20:07.538123",
+  "latest_date": "2026-10-04",
   "available_dates": [
+    "2026-10-04",
     "2026-10-03",
     "2026-10-02",
     "2026-10-01",
     "2026-09-30",
     "2026-09-29",
-    "2026-09-28",
-    "2026-09-27"
+    "2026-09-28"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "API",
       "date": "2026-09-28",
-      "first_detected": "2026-10-02T16:20:34.439881",
+      "first_detected": "2026-10-03T16:20:07.357952",
       "threshold": 1.1603384789580435,
       "n_anomaly_hours": 1,
       "source_file": "PRA_Night_API_20260928.json",
-      "last_confirmed": "2026-10-02T16:20:34.439881",
+      "last_confirmed": "2026-10-03T16:20:07.357952",
       "has_correlated_eq": false
     }
   ],
@@ -39,25 +39,25 @@
     {
       "station": "KAK",
       "earthquake_time": "2026-10-01 12:27:11.864",
-      "first_logged": "2026-10-02T16:20:34.603406",
+      "first_logged": "2026-10-03T16:20:07.519124",
       "earthquake_magnitude": 5.3,
       "earthquake_distance_km": 67.33496416690444,
       "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
       "earthquake_latitude": 35.7025,
       "earthquake_longitude": 140.5507,
-      "last_confirmed": "2026-10-02T16:20:34.603406",
+      "last_confirmed": "2026-10-03T16:20:07.519124",
       "source_file": "false_negatives.csv"
     },
     {
       "station": "KNY",
       "earthquake_time": "2026-10-01 12:27:11.864",
-      "first_logged": "2026-10-02T16:20:34.603406",
+      "first_logged": "2026-10-03T16:20:07.519124",
       "earthquake_magnitude": 5.3,
       "earthquake_distance_km": 73.29497475109625,
       "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
       "earthquake_latitude": 35.7025,
       "earthquake_longitude": 140.5507,
-      "last_confirmed": "2026-10-02T16:20:34.603406",
+      "last_confirmed": "2026-10-03T16:20:07.519124",
       "source_file": "false_negatives.csv"
     }
   ]
