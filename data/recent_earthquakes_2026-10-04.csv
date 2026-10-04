@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-04 14:06:10.385,5.3695,-82.7171,10,5.0,"295 km S of Burica, Panama",earthquake,
+2026-10-04 11:43:23.167,37.7292,36.1272,10,5.0,"21 km ESE of Feke, Turkey",earthquake,
+2026-10-04 11:12:48.270,22.8286,144.6734,10,5.5,"Volcano Islands, Japan region",earthquake,
+2026-10-04 10:13:07.298,-8.2698,120.4532,10,5.0,"37 km N of Ruteng, Indonesia",earthquake,

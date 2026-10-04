@@ -1,2 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-10-03 02:59:06.296,52.0836,160.4217,10,5,"163 km SE of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2026-10-03 23:37:34.235,4.8247,95.1622,56.274,5.3,"81 km SSW of Banda Aceh, Indonesia",earthquake,
+2026-10-03 22:55:55.358,-9.5672,118.9078,45.951,5.9,"39 km WSW of Tambolaka, Indonesia",earthquake,
+2026-10-03 20:00:44.104,51.5457,159.8296,10.0,5.1,"182 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-10-03 02:59:06.296,52.0836,160.4217,10.0,5.0,"163 km SE of Petropavlovsk-Kamchatsky, Russia",earthquake,
