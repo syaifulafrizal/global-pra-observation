@@ -1,4 +1,5 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-10-05 10:52:09.844,15.8046,147.395,10,5.0,"187 km ENE of Saipan, Northern Mariana Islands",earthquake,
-2026-10-05 05:26:44.808,-21.4208,-174.2679,10,5.0,"71 km E of ‘Ohonua, Tonga",earthquake,
-2026-10-05 01:18:50.392,-0.4325,-19.965,10,5.3,central Mid-Atlantic Ridge,earthquake,
+2026-10-05 20:22:59.243,-24.4235,179.8108,518.638,5.0,south of the Fiji Islands,earthquake,
+2026-10-05 10:52:09.844,15.8046,147.395,10.0,5.0,"187 km ENE of Saipan, Northern Mariana Islands",earthquake,
+2026-10-05 05:26:44.808,-21.4208,-174.2679,10.0,5.0,"71 km E of ‘Ohonua, Tonga",earthquake,
+2026-10-05 01:18:50.392,-0.4325,-19.965,10.0,5.3,central Mid-Atlantic Ridge,earthquake,
