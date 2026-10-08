@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-07 14:59:25.858,-6.6637,72.2362,10,5.2,Chagos Archipelago region,earthquake,
