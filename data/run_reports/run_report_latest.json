@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-10-06T16:21:10.550875",
-  "latest_date": "2026-10-07",
+  "generated_at": "2026-10-08T16:21:15.291934",
+  "latest_date": "2026-10-09",
   "available_dates": [
+    "2026-10-09",
+    "2026-10-08",
     "2026-10-07",
     "2026-10-06",
     "2026-10-05",
     "2026-10-04",
-    "2026-10-03",
-    "2026-10-02",
-    "2026-10-01"
+    "2026-10-03"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -17,7 +17,7 @@
     "anomalies_last_7_days": 1,
     "correlated_last_7_days": 0,
     "false_positives_last_7_days": 1,
-    "false_negatives_last_7_days": 2,
+    "false_negatives_last_7_days": 0,
     "total_anomalies": 1,
     "total_correlated": 0,
     "total_false_positives": 1,
@@ -27,38 +27,13 @@
     {
       "station": "LYC",
       "date": "2026-10-05",
-      "first_detected": "2026-10-06T16:21:10.378827",
+      "first_detected": "2026-10-08T16:21:14.990184",
       "threshold": 15.935966553292737,
       "n_anomaly_hours": 2,
       "source_file": "PRA_Night_LYC_20261005.json",
-      "last_confirmed": "2026-10-06T16:21:10.378827",
+      "last_confirmed": "2026-10-08T16:21:14.990184",
       "has_correlated_eq": false
     }
   ],
-  "recent_false_negatives": [
-    {
-      "station": "KAK",
-      "earthquake_time": "2026-10-01 12:27:11.864",
-      "first_logged": "2026-10-06T16:21:10.531836",
-      "earthquake_magnitude": 5.3,
-      "earthquake_distance_km": 67.33496416690444,
-      "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
-      "earthquake_latitude": 35.7025,
-      "earthquake_longitude": 140.5507,
-      "last_confirmed": "2026-10-06T16:21:10.531836",
-      "source_file": "false_negatives.csv"
-    },
-    {
-      "station": "KNY",
-      "earthquake_time": "2026-10-01 12:27:11.864",
-      "first_logged": "2026-10-06T16:21:10.531836",
-      "earthquake_magnitude": 5.3,
-      "earthquake_distance_km": 73.29497475109625,
-      "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
-      "earthquake_latitude": 35.7025,
-      "earthquake_longitude": 140.5507,
-      "last_confirmed": "2026-10-06T16:21:10.531836",
-      "source_file": "false_negatives.csv"
-    }
-  ]
+  "recent_false_negatives": []
 }
