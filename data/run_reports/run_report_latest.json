@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-10-08T16:21:15.291934",
-  "latest_date": "2026-10-09",
+  "generated_at": "2026-10-09T16:20:13.254481",
+  "latest_date": "2026-10-10",
   "available_dates": [
+    "2026-10-10",
     "2026-10-09",
     "2026-10-08",
     "2026-10-07",
     "2026-10-06",
     "2026-10-05",
-    "2026-10-04",
-    "2026-10-03"
+    "2026-10-04"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -27,11 +27,11 @@
     {
       "station": "LYC",
       "date": "2026-10-05",
-      "first_detected": "2026-10-08T16:21:14.990184",
+      "first_detected": "2026-10-09T16:20:13.094472",
       "threshold": 15.935966553292737,
       "n_anomaly_hours": 2,
       "source_file": "PRA_Night_LYC_20261005.json",
-      "last_confirmed": "2026-10-08T16:21:14.990184",
+      "last_confirmed": "2026-10-09T16:20:13.094472",
       "has_correlated_eq": false
     }
   ],
