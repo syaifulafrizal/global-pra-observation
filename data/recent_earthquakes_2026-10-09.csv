@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-09 14:49:41.714,-60.9758,154.4619,10.0,5.9,west of Macquarie Island,earthquake,
+2026-10-09 13:51:42.764,-15.5361,168.1451,10.0,5.4,"99 km NE of Norsup, Vanuatu",earthquake,
+2026-10-09 10:22:14.915,-19.9128,-68.7905,123.835,5.1,"72 km SSW of Colchane, Chile",earthquake,
+2026-10-09 05:11:04.200,0.7587,125.9365,40.049,5.2,"117 km SE of Bitung, Indonesia",earthquake,
