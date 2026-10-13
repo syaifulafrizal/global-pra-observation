@@ -1,39 +1,41 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-10-09T16:20:13.254481",
-  "latest_date": "2026-10-10",
+  "generated_at": "2026-10-13T16:40:10.000150",
+  "latest_date": "2026-10-14",
   "available_dates": [
+    "2026-10-14",
+    "2026-10-13",
+    "2026-10-12",
+    "2026-10-11",
     "2026-10-10",
     "2026-10-09",
-    "2026-10-08",
-    "2026-10-07",
-    "2026-10-06",
-    "2026-10-05",
-    "2026-10-04"
+    "2026-10-08"
   ],
   "stations_processed": 51,
   "metrics": {
     "anomalies_last_day": 0,
-    "anomalies_last_7_days": 1,
+    "anomalies_last_7_days": 0,
     "correlated_last_7_days": 0,
-    "false_positives_last_7_days": 1,
-    "false_negatives_last_7_days": 0,
-    "total_anomalies": 1,
+    "false_positives_last_7_days": 0,
+    "false_negatives_last_7_days": 1,
+    "total_anomalies": 0,
     "total_correlated": 0,
-    "total_false_positives": 1,
+    "total_false_positives": 0,
     "total_false_negatives": 12
   },
-  "recent_anomalies": [
+  "recent_anomalies": [],
+  "recent_false_negatives": [
     {
-      "station": "LYC",
-      "date": "2026-10-05",
-      "first_detected": "2026-10-09T16:20:13.094472",
-      "threshold": 15.935966553292737,
-      "n_anomaly_hours": 2,
-      "source_file": "PRA_Night_LYC_20261005.json",
-      "last_confirmed": "2026-10-09T16:20:13.094472",
-      "has_correlated_eq": false
+      "station": "GUA",
+      "earthquake_time": "2026-10-10 03:58:18.250",
+      "first_logged": "2026-10-13T16:40:09.981100",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 38.4606404726352,
+      "earthquake_place": "41 km NNE of Yigo Village, Guam",
+      "earthquake_latitude": 13.8594,
+      "earthquake_longitude": 145.0892,
+      "last_confirmed": "2026-10-13T16:40:09.981100",
+      "source_file": "false_negatives.csv"
     }
-  ],
-  "recent_false_negatives": []
+  ]
 }
