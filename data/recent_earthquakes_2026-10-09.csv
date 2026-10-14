@@ -2,6 +2,7 @@ time,latitude,longitude,depth,magnitude,place,type,id
 2026-10-09 23:12:37.790,7.4366,-80.0968,10.0,5.4,"9 km SSE of Los Asientos, Panama",earthquake,
 2026-10-09 23:10:02.875,7.3962,-80.5284,10.0,5.0,"8 km ESE of La Tronosa, Panama",earthquake,
 2026-10-09 20:42:08.725,7.7249,-81.4589,10.0,5.0,"13 km W of Río Grande, Panama",earthquake,
+2026-10-09 20:41:04.285,7.7723,-81.084,10.0,5.0,"4 km ENE of Leones Arriba, Panama",earthquake,
 2026-10-09 20:25:39.080,7.7176,-81.4687,10.0,6.6,"14 km W of Río Grande, Panama",earthquake,
 2026-10-09 20:21:37.940,7.4734,-80.5491,10.0,5.0,"6 km NE of La Tronosa, Panama",earthquake,
 2026-10-09 19:48:55.624,7.6417,-81.2677,10.0,5.2,"11 km SE of Río Grande, Panama",earthquake,
