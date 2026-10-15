@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-15 13:29:31.862,-15.0429,-173.4439,10.0,5.2,"107 km NNE of Hihifo, Tonga",earthquake,
+2026-10-15 13:06:51.678,-13.8878,166.0921,10.0,5.2,"157 km W of Sola, Vanuatu",earthquake,
+2026-10-15 11:07:01.800,64.22,-152.746,4.5,5.6,"43 km NNW of Lake Minchumina, Alaska",earthquake,
+2026-10-15 05:25:31.942,-38.5478,175.3814,286.008,5.3,"43 km SSE of Otorohanga, New Zealand",earthquake,
+2026-10-15 03:36:29.038,-13.409,-172.0686,13.211,5.1,"36 km E of Safotu, Samoa",earthquake,
