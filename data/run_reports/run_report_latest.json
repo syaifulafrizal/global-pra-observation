@@ -1,15 +1,15 @@
 {
   "run_id": "manual",
-  "generated_at": "2026-10-15T16:21:10.876749",
-  "latest_date": "2026-10-16",
+  "generated_at": "2026-10-16T16:20:34.522313",
+  "latest_date": "2026-10-17",
   "available_dates": [
+    "2026-10-17",
     "2026-10-16",
     "2026-10-15",
     "2026-10-14",
     "2026-10-13",
     "2026-10-12",
-    "2026-10-11",
-    "2026-10-10"
+    "2026-10-11"
   ],
   "stations_processed": 51,
   "metrics": {
@@ -26,15 +26,15 @@
   "recent_anomalies": [],
   "recent_false_negatives": [
     {
-      "station": "GUA",
-      "earthquake_time": "2026-10-10 03:58:18.250",
-      "first_logged": "2026-10-15T16:21:10.857174",
-      "earthquake_magnitude": 5.3,
-      "earthquake_distance_km": 38.4606404726352,
-      "earthquake_place": "41 km NNE of Yigo Village, Guam",
-      "earthquake_latitude": 13.8594,
-      "earthquake_longitude": 145.0892,
-      "last_confirmed": "2026-10-15T16:21:10.857174",
+      "station": "API",
+      "earthquake_time": "2026-10-15 03:36:29.038",
+      "first_logged": "2026-10-16T16:20:34.502809",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 54.01944691087331,
+      "earthquake_place": "36 km E of Safotu, Samoa",
+      "earthquake_latitude": -13.409,
+      "earthquake_longitude": -172.0686,
+      "last_confirmed": "2026-10-16T16:20:34.502809",
       "source_file": "false_negatives.csv"
     }
   ]
