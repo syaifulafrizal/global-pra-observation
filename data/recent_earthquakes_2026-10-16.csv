@@ -1,1 +1,3 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-16 14:09:54.288,-49.8826,163.4041,10,5.0,"Auckland Islands, New Zealand region",earthquake,
+2026-10-16 03:35:31.925,51.9848,157.2701,135,6.9,"76 km NE of Ozernovskiy, Russia",earthquake,

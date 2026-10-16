@@ -1,6 +1,6 @@
 {
   "date": "2026-10-13",
-  "generated_at": "2026-10-15T16:21:11.203240",
+  "generated_at": "2026-10-16T16:20:34.909530",
   "stations": {
     "ABG": {
       "date": "2026-10-14",
@@ -3274,12 +3274,12 @@
   "false_negatives": {
     "API": [
       {
-        "earthquake_time": "2026-07-20 23:37:57.854",
-        "earthquake_magnitude": "5",
-        "earthquake_distance_km": "173.74078933560108",
-        "earthquake_place": "141 km SSW of Gataivai, Samoa",
-        "earthquake_latitude": "-14.9677",
-        "earthquake_longitude": "-172.8619"
+        "earthquake_time": "2026-10-15 03:36:29.038",
+        "earthquake_magnitude": "5.1",
+        "earthquake_distance_km": "54.01944691087331",
+        "earthquake_place": "36 km E of Safotu, Samoa",
+        "earthquake_latitude": "-13.409",
+        "earthquake_longitude": "-172.0686"
       }
     ],
     "GUA": [
