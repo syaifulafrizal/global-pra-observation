@@ -103,42 +103,15 @@ def main():
     print('Each day will use historical data from previous days for EVT fitting.')
     print('')
     
-    # Set environment variable to force processing even if files exist
-    os.environ['FORCE_RERUN'] = '1'
-    
-    # Process each date sequentially
-    for date_idx, date in enumerate(dates_to_process):
-        print(f'\n{"="*60}')
-        print(f'Processing date {date_idx+1}/7: {date}')
-        print(f'{"="*60}')
-        
-        # Temporarily override the date in pra_nighttime by setting PROCESS_DATE
-        # Note: pra_nighttime needs to be modified to check PROCESS_DATE env var
-        # For now, we'll use a workaround: modify the date calculation in process_station
-        # Actually, let's just process normally - the dates will be processed as "today"
-        # when we run pra_nighttime, but we want to process historical dates
-        
-        # Simple approach: Just run pra_nighttime normally for now
-        # It will process "today" and use whatever historical data exists
-        # The key is that we've downloaded all 7 days of data above
-        
-        # Process all stations for this date
+    # Process actual historical dates, oldest first. Existing outputs remain
+    # untouched unless the caller explicitly requested FORCE_RERUN.
+    failed = 0
+    for date in dates_to_process:
         for station_code in stations:
-            print(f'\n  Processing {station_code}...')
-            # For now, just ensure data is downloaded - actual processing will happen
-            # when we run the normal workflow which processes "today"
-            pass
-    
-    # Actually, the simplest approach: Just run the normal analysis
-    # It will process today and build up historical data
-    # Since we've downloaded all 7 days, the historical data loading will work
-    print('')
-    print('Running standard PRA analysis (will process today and use historical data)...')
-    print('')
-    
-    from pra_nighttime import main as pra_main
-    pra_main()
-    
+            result = process_station_for_date(station_code, date)
+            if result is False:
+                failed += 1
+
     # Step 3: Download and process earthquake data
     print('')
     print('='*60)
@@ -163,16 +136,12 @@ def main():
     print('')
     print('Summary:')
     print('  ✓ Last 7 days of geomagnetic data downloaded')
-    print('  ✓ Today\'s data processed (uses historical data from previous days)')
+    print('  Historical dates processed sequentially; existing results preserved')
     print('  ✓ Last 7 days of earthquake data processed')
     print('')
-    print('Note: To process all 7 days individually, you may need to run')
-    print('      pra_nighttime.py multiple times with date overrides, or')
-    print('      wait for the daily workflow to process each day naturally.')
-    print('')
-    print('The rolling 7-day window is now set up!')
-    print('')
+    print(f'Backfill finished; failed stations/dates: {failed}')
+    return 1 if failed or result.returncode else 0
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
 

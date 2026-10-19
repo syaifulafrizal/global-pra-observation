@@ -58,7 +58,7 @@ def ensure_station_files():
 
             # OPTIMIZATION: Check if PRA output already exists for this date
             # If PRA analysis has been run and output exists, skip downloading raw data
-            pra_output_file = Path(f'results/{code}_{date_obj.strftime("%Y%m%d")}.json')
+            pra_output_file = get_data_folder(code) / f'PRA_Night_{code}_{date_obj:%Y%m%d}.json'
             if pra_output_file.exists() and pra_output_file.stat().st_size > 0:
                 # PRA output exists, no need to download raw data
                 continue

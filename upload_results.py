@@ -12,6 +12,8 @@ import csv
 from pathlib import Path
 from datetime import datetime, timedelta
 import shutil
+import math
+from result_validation import result_is_usable
 
 # Configuration
 OUTPUT_DIR = Path('web_output')  # Directory for prepared web files
@@ -24,7 +26,6 @@ HISTORY_SKIP_FILES = {
 }
 RUN_ID = os.getenv('PRA_RUN_ID', 'manual')
 HISTORY_DIR = Path('data') / 'history'
-HISTORY_DIR.mkdir(parents=True, exist_ok=True)
 ANOMALY_HISTORY_PATH = HISTORY_DIR / ANOMALY_HISTORY_FILENAME
 FALSE_NEGATIVE_HISTORY_PATH = HISTORY_DIR / FALSE_NEGATIVE_HISTORY_FILENAME
 RUN_REPORT_DIR = Path('data') / 'run_reports'
@@ -115,7 +116,8 @@ def safe_float(value):
     try:
         if value is None or value == '':
             return None
-        return float(value)
+        number = float(value)
+        return number if math.isfinite(number) else None
     except (ValueError, TypeError):
         return None
 
@@ -173,7 +175,7 @@ def build_run_report(stations, available_dates, anomaly_history, false_negative_
     )
 
     total_correlated = sum(1 for entry in anomaly_history if entry.get('has_correlated_eq'))
-    total_false_positives = len(anomaly_history) - total_correlated
+    total_false_positives = sum(entry.get('status') == 'FP' for entry in anomaly_history)
 
     recent_anomalies = [
         entry for entry in anomaly_history
@@ -200,7 +202,9 @@ def build_run_report(stations, available_dates, anomaly_history, false_negative_
             'anomalies_last_day': anomalies_last_day,
             'anomalies_last_7_days': anomalies_last_week,
             'correlated_last_7_days': correlated_last_week,
-            'false_positives_last_7_days': anomalies_last_week - correlated_last_week,
+            'false_positives_last_7_days': sum(in_window(e.get('date')) and e.get('status') == 'FP' for e in anomaly_history),
+            'pending_anomalies': sum(e.get('status') == 'Pending' for e in anomaly_history),
+            'unverified_anomalies': sum(e.get('status') == 'Unknown' for e in anomaly_history),
             'false_negatives_last_7_days': false_negatives_last_week,
             'total_anomalies': len(anomaly_history),
             'total_correlated': total_correlated,
@@ -224,36 +228,74 @@ def build_run_report(stations, available_dates, anomaly_history, false_negative_
     shutil.copy(snapshot_path, data_dir / RUN_REPORT_SNAPSHOT)
     return report
 
-def station_has_correlation(station_folder, target_date):
-    """Check if a station has an earthquake correlation for a specific date"""
-    if not target_date:
-        return False
-    csv_path = station_folder / 'earthquake_correlations.csv'
-    if not csv_path.exists():
-        return False
+def correlation_date(row):
+    """Canonical result date is the end of the local nighttime range."""
+    value = row.get('anomaly_range')
+    if value and ' - ' in str(value):
+        return normalize_date_string(str(value).split(' - ')[1].split()[0])
+    return normalize_date_string(row.get('anomaly_date') or row.get('anomalyDate'))
+
+
+def correlation_row_status(row):
+    """Legacy backward-looking matches cannot validate a forward forecast."""
+    status = row.get('status')
+    detection = row.get('detection_time_utc')
+    magnitude = safe_float(row.get('earthquake_magnitude') or row.get('magnitude'))
+    if status == 'TP' or (not status and magnitude is not None):
+        if not detection or magnitude is None or magnitude < 5:
+            return 'Unknown'
+        try:
+            from earthquake_integration import utc_naive
+            elapsed = utc_naive(row['earthquake_time']) - utc_naive(detection)
+            return 'TP' if timedelta(0) <= elapsed <= timedelta(days=14) else 'Unknown'
+        except (ValueError, KeyError, TypeError):
+            return 'Unknown'
+    if status == 'FP':
+        try:
+            from earthquake_integration import utc_naive
+            elapsed = datetime.utcnow() - utc_naive(detection)
+            return 'FP' if magnitude is None and elapsed >= timedelta(days=14) else 'Unknown'
+        except (ValueError, TypeError):
+            return 'Unknown'
+    return status if status in ('Pending', 'Unknown') else 'Unknown'
+
+
+def read_correlations(station_folder, target_date):
+    path = station_folder / 'earthquake_correlations.csv'
+    if not path.exists():
+        return []
     try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                date_value = (
-                    row.get('anomaly_date') or
-                    row.get('anomaly_date ') or
-                    row.get('anomaly_date'.upper()) or
-                    row.get('anomalyDate')
-                )
-                anomaly_date = parse_any_date(date_value)
-                if not anomaly_date:
-                    continue
-                if anomaly_date.strftime('%Y-%m-%d') != target_date:
-                    continue
-                magnitude = safe_float(row.get('earthquake_magnitude') or row.get('magnitude'))
-                if magnitude is None:
-                    magnitude = safe_float(row.get('earthquakeMag'))
-                if magnitude is None or magnitude >= 5.0:
-                    return True
-    except Exception:
-        return False
-    return False
+        with path.open(encoding='utf-8') as source:
+            rows = [dict(row) for row in csv.DictReader(source) if correlation_date(row) == target_date]
+        for row in rows:
+            row['status'] = correlation_row_status(row)
+        return rows
+    except (OSError, ValueError):
+        return []
+
+
+def station_correlation_status(station_folder, target_date):
+    statuses = [row['status'] for row in read_correlations(station_folder, target_date)]
+    for status in ('TP', 'FP', 'Pending', 'Unknown'):
+        if status in statuses:
+            return status
+    return 'Unknown'
+
+
+def station_has_correlation(station_folder, target_date):
+    return station_correlation_status(station_folder, target_date) == 'TP'
+
+
+def merge_history(path, archive, keys):
+    entries = {}
+    for entry in load_history_entries(archive) + load_history_entries(path):
+        key = tuple(entry.get(name) for name in keys)
+        if all(key):
+            previous = entries.get(key, {})
+            if str(entry.get('last_confirmed', '')) >= str(previous.get('last_confirmed', '')):
+                entries[key] = entry
+    return list(entries.values())
+
 
 def update_anomaly_history(stations, data_dir, available_dates=None):
     """Append new anomalies to the persistent history log and retroactively link earthquakes
@@ -261,7 +303,7 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
     This function:
     1. Keeps ALL anomalies ever detected (persistent history)
     2. Processes new anomalies from recent dates
-    3. Retroactively links earthquakes that occurred 14-30 days AFTER anomalies
+    3. Refreshes verified forward correlations within 14 days after detection
     
     Args:
         stations: List of station codes
@@ -269,7 +311,7 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
         available_dates: List of recent dates to check for NEW anomalies
     """
     history_path = data_dir / ANOMALY_HISTORY_FILENAME
-    entries = load_history_entries(history_path)
+    entries = merge_history(history_path, ANOMALY_HISTORY_PATH, ('station', 'date'))
     entry_map = {}
     for entry in entries:
         station = entry.get('station')
@@ -331,7 +373,7 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
             if not is_new_anomaly and already_exists:
                 continue
             
-            is_anomalous = bool(station_data.get('is_anomalous') or station_data.get('isAnomalous'))
+            is_anomalous = result_is_usable(station_data) and bool(station_data.get('is_anomalous'))
             n_hours = station_data.get('nAnomHours') or station_data.get('n_anom_hours') or 0
             
             # CRITICAL FIX: Skip if NOT anomalous OR if n_hours is 0
@@ -353,14 +395,15 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
             entry['source_file'] = json_file.name
             entry['last_confirmed'] = now_iso
             
-            # Check for earthquake correlation (14-30 days after anomaly)
-            entry['has_correlated_eq'] = station_has_correlation(station_folder, event_date)
+            # Keep match, pending, false-positive and unknown states distinct.
+            entry['status'] = station_correlation_status(station_folder, event_date)
+            entry['has_correlated_eq'] = entry['status'] == 'TP'
             
             entry_map[key] = entry
             updated = True
     
     # RETROACTIVE LINKING: Check all existing anomalies for new earthquakes
-    # This handles cases where EQ occurs 14-30 days AFTER anomaly was detected
+    # This handles events within 14 days after detection.
     print('[INFO] Checking for retroactive earthquake correlations...')
     retroactive_updates = 0
     for key, entry in entry_map.items():
@@ -375,9 +418,11 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
         
         # Re-check earthquake correlation (may have changed if new EQ occurred)
         old_status = entry.get('has_correlated_eq', False)
-        new_status = station_has_correlation(station_folder, event_date)
+        classification = station_correlation_status(station_folder, event_date)
+        new_status = classification == 'TP'
         
-        if old_status != new_status:
+        if old_status != new_status or entry.get('status') != classification:
+            entry['status'] = classification
             entry['has_correlated_eq'] = new_status
             entry['last_confirmed'] = now_iso
             updated = True
@@ -386,7 +431,7 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
     if retroactive_updates > 0:
         print(f'[INFO] Updated {retroactive_updates} anomalies with retroactive EQ correlations')
     
-    if updated:
+    if updated or entries:
         sorted_entries = sorted(
             entry_map.values(),
             key=lambda e: (e.get('date', ''), e.get('station', ''))
@@ -395,7 +440,7 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
         
         # Count true positives and false positives
         true_positives = sum(1 for e in sorted_entries if e.get('has_correlated_eq'))
-        false_positives = sum(1 for e in sorted_entries if not e.get('has_correlated_eq'))
+        false_positives = sum(e.get('status') == 'FP' for e in sorted_entries)
         
         print(f'[INFO] Updated anomaly history: {len(sorted_entries)} total anomalies')
         print(f'[INFO]   True Positives: {true_positives} (with correlated EQ)')
@@ -414,7 +459,7 @@ def update_anomaly_history(stations, data_dir, available_dates=None):
 def update_false_negative_history(stations, data_dir):
     """Ensure false negative history stays cumulative"""
     history_path = data_dir / FALSE_NEGATIVE_HISTORY_FILENAME
-    entries = load_history_entries(history_path)
+    entries = merge_history(history_path, FALSE_NEGATIVE_HISTORY_PATH, ('station', 'earthquake_time'))
     entry_map = {}
     for entry in entries:
         station = entry.get('station')
@@ -448,11 +493,12 @@ def update_false_negative_history(stations, data_dir):
                     entry['earthquake_longitude'] = safe_float(row.get('earthquake_longitude') or row.get('longitude'))
                     entry['last_confirmed'] = now_iso
                     entry['source_file'] = csv_path.name
+                    entry['coverage_verified'] = str(row.get('coverage_verified', '')).lower() == 'true'
                     entry_map[key] = entry
                     updated = True
         except Exception:
             continue
-    if updated:
+    if updated or entries:
         sorted_entries = sorted(
             entry_map.values(),
             key=lambda e: (e.get('earthquake_time', ''), e.get('station', ''))
@@ -496,7 +542,7 @@ def get_stations():
                 data = json.load(f)
                 if isinstance(data, dict) and 'stations' in data:
                     if isinstance(data['stations'], list):
-                        return data['stations']
+                        return [row['code'] if isinstance(row, dict) else row for row in data['stations']]
                     elif isinstance(data['stations'], dict):
                         return list(data['stations'].keys())
         except Exception:
@@ -505,184 +551,73 @@ def get_stations():
     # Last resort: raise error
     raise ValueError("No stations found. Please ensure data has been processed.")
 
-def generate_aggregated_data_files(stations, available_dates, data_dir):
-    """Generate aggregated JSON files per date for faster frontend loading
-    
-    Creates a single JSON file per date containing all station data, earthquake correlations,
-    and metadata. This reduces frontend network requests from 100+ to 1 per date.
-    
-    Args:
-        stations: List of station codes
-        available_dates: List of dates to generate aggregated files for
-        data_dir: Directory containing individual station JSON files
-    
-    Returns:
-        Number of aggregated files generated
-    """
-    print('[INFO] Generating aggregated data files...')
-    generated_count = 0
-    
-    # Load station metadata once
-    metadata_dict = {}
-    if Path('stations.json').exists():
-        try:
-            with open('stations.json', 'r', encoding='utf-8') as f:
-                stations_metadata = json.load(f)
-                
-            # Handle different formats of stations.json
-            if isinstance(stations_metadata, dict):
-                if 'stations' in stations_metadata:
-                    if isinstance(stations_metadata['stations'], list):
-                        for station_obj in stations_metadata['stations']:
-                            if isinstance(station_obj, dict) and 'code' in station_obj:
-                                code = station_obj['code']
-                                metadata_dict[code] = {
-                                    'name': station_obj.get('name', ''),
-                                    'country': station_obj.get('country', ''),
-                                    'latitude': station_obj.get('latitude', 0),
-                                    'longitude': station_obj.get('longitude', 0),
-                                    'timezone': station_obj.get('timezone', '')
-                                }
-                    elif isinstance(stations_metadata['stations'], dict):
-                        metadata_dict = stations_metadata['stations']
-                elif 'metadata' in stations_metadata and isinstance(stations_metadata['metadata'], list):
-                    for station_obj in stations_metadata['metadata']:
-                        if isinstance(station_obj, dict) and 'code' in station_obj:
-                            code = station_obj['code']
-                            metadata_dict[code] = {
-                                'name': station_obj.get('name', ''),
-                                'country': station_obj.get('country', ''),
-                                'latitude': station_obj.get('latitude', 0),
-                                'longitude': station_obj.get('longitude', 0),
-                                'timezone': station_obj.get('timezone', '')
-                            }
-        except Exception as e:
-            print(f'[WARNING] Could not load station metadata: {e}')
-    
-    # Generate aggregated file for each date
-    for date in available_dates:
-        aggregated_data = {
-            'date': date,
-            'generated_at': datetime.utcnow().isoformat(),
-            'stations': {},
-            'earthquake_correlations': {},
-            'false_negatives': {},
-            'metadata': metadata_dict
-        }
-        
-        stations_with_data = 0
-        
-        # Collect data for each station
-        for station in stations:
-            # Try to load station JSON for this date
-            station_json = data_dir / f'{station}_{date}.json'
-            
-            # FALLBACK LOGIC: If data for this date doesn't exist, try previous day
-            # This ensures that "Today's" map isn't empty just because data hasn't arrived yet
-            if not station_json.exists():
-                try:
-                    current_date_obj = datetime.strptime(date, '%Y-%m-%d').date()
-                    prev_date_obj = current_date_obj - timedelta(days=1)
-                    prev_date = prev_date_obj.strftime('%Y-%m-%d')
-                    prev_station_json = data_dir / f'{station}_{prev_date}.json'
-                    
-                    if prev_station_json.exists():
-                        # print(f'[INFO] Using fallback data for {station}: {prev_date} instead of {date}')
-                        station_json = prev_station_json
-                except ValueError:
-                    pass
+def load_station_metadata():
+    try:
+        data = json.loads(Path('stations.json').read_text(encoding='utf-8'))
+        return {row['code']: {key: value for key, value in row.items() if key != 'code'}
+                for row in data.get('stations', []) if isinstance(row, dict) and 'code' in row}
+    except (ValueError, OSError):
+        return {}
 
-            if station_json.exists():
-                try:
-                    with open(station_json, 'r', encoding='utf-8') as f:
-                        station_data = json.load(f)
-                    aggregated_data['stations'][station] = station_data
-                    stations_with_data += 1
-                except Exception as e:
-                    print(f'[WARNING] Could not load {station_json.name}: {e}')
-            
-            # Load earthquake correlations CSV
-            # Use same fallback logic for correlations
-            eq_corr_csv = data_dir / f'{station}_earthquake_correlations.csv' # Start with static file
-            
-            # Try date specific first (or fallback)
-            eq_date_file = data_dir / f'{station}_{date}_earthquake_correlations.json'
-            if not eq_date_file.exists():
-                 try:
-                    current_date_obj = datetime.strptime(date, '%Y-%m-%d').date()
-                    prev_date_obj = current_date_obj - timedelta(days=1)
-                    prev_date = prev_date_obj.strftime('%Y-%m-%d')
-                    prev_eq_file = data_dir / f'{station}_{prev_date}_earthquake_correlations.json'
-                    if prev_eq_file.exists():
-                        eq_date_file = prev_eq_file
-                 except:
-                     pass
-            
-            # Load correlations... (existing logic modified to use eq_date_file if it exists?)
-            # Actually, standard logic loads from CSV or parses date from big CSV. 
-            # The original code parses a monolithic CSV `station_earthquake_correlations.csv`.
-            # Let's keep the existing CSV logic for simplicity as it filters by date anyway.
-            # But if there are individual JSONs (not standard in this repo?), we might use them.
-            # The current code only loads `station_earthquake_correlations.csv` and filters rows.
-            # Since that CSV contains ALL history, we don't need fallback for it.
-            
-            if eq_corr_csv.exists():
-                try:
-                    with open(eq_corr_csv, 'r', encoding='utf-8') as f:
-                        reader = csv.DictReader(f)
-                        correlations = []
-                        for row in reader:
-                            # Filter by date and magnitude >= 5.0
-                            anomaly_date = parse_any_date(
-                                row.get('anomaly_date') or 
-                                row.get('anomaly_date ') or 
-                                row.get('anomalyDate')
-                            )
-                            # Logic to match date OR match fallback date?
-                            # If we are displaying 'Today' map but showing 'Yesterday' station data,
-                            # we should probably show 'Yesterday' correlations for that station?
-                            # For now, let's strictly show correlations for the AGGREGATED DATE to avoid confusion.
-                            # If the user sees "Today", they expect "Today's" events.
-                            # Mixing dates in correlations might be confusing. 
-                            # But if the station data IS from yesterday, matching anomalies from yesterday makes sense.
-                            # Let's Stick to STRICT date matching for now for correlations to avoid misleading data.
-                            
-                            if anomaly_date and anomaly_date.strftime('%Y-%m-%d') == date:
-                                magnitude = safe_float(row.get('earthquake_magnitude') or row.get('magnitude'))
-                                if magnitude is None or magnitude >= 5.0:
-                                    correlations.append(dict(row))
-                        
-                        if correlations:
-                            aggregated_data['earthquake_correlations'][station] = correlations
-                except Exception as e:
-                    print(f'[WARNING] Could not load {eq_corr_csv.name}: {e}')
-            
-            # Load false negatives CSV
-            fn_csv = data_dir / f'{station}_false_negatives.csv'
-            if fn_csv.exists():
-                try:
-                    with open(fn_csv, 'r', encoding='utf-8') as f:
-                        reader = csv.DictReader(f)
-                        false_negs = [dict(row) for row in reader]
-                        if false_negs:
-                            aggregated_data['false_negatives'][station] = false_negs
-                except Exception as e:
-                    print(f'[WARNING] Could not load {fn_csv.name}: {e}')
-        
-        # Only save if we have data for at least one station
-        if stations_with_data > 0:
-            output_file = data_dir / f'aggregated_{date}.json'
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(aggregated_data, f, indent=2)
-            
-            file_size_kb = output_file.stat().st_size / 1024
-            print(f'[INFO] Generated {output_file.name} ({stations_with_data} stations, {file_size_kb:.1f} KB)')
-            generated_count += 1
-        else:
-            print(f'[WARNING] No data found for date {date}, skipping aggregated file')
-    
-    print(f'[INFO] Generated {generated_count} aggregated data files')
-    return generated_count
+
+def build_aggregated_data(stations, date, data_dir, source_folder=None):
+    """Build one snapshot without writing, for preparation and local Flask use."""
+    snapshot = {'date': date, 'generated_at': datetime.utcnow().isoformat(),
+                'stations': {}, 'earthquake_correlations': {}, 'false_negatives': {},
+                'metadata': load_station_metadata(), 'station_dates': {}, 'station_quality': {}}
+    for station in stations:
+        station_folder = Path(source_folder or 'INTERMAGNET_DOWNLOADS') / station
+        actual_date = date
+        def result_path(day):
+            if source_folder is not None:
+                return station_folder / f'PRA_Night_{station}_{day.replace("-", "")}.json'
+            return data_dir / f'{station}_{day}.json'
+        path = result_path(date)
+        if not path.exists():
+            actual_date = (datetime.strptime(date, '%Y-%m-%d') - timedelta(days=1)).strftime('%Y-%m-%d')
+            path = result_path(actual_date)
+        if not path.exists():
+            snapshot['station_quality'][station] = 'missing'
+            continue
+        try:
+            result = json.loads(path.read_text(encoding='utf-8'))
+            if result.get('date') != actual_date or not result_is_usable(result):
+                snapshot['station_quality'][station] = 'invalid'
+                continue
+            snapshot['stations'][station] = result
+            snapshot['station_dates'][station] = actual_date
+            snapshot['station_quality'][station] = result.get('data_quality', {}).get('status', 'unverified')
+        except (ValueError, OSError, TypeError):
+            snapshot['station_quality'][station] = 'invalid'
+            continue
+        correlations = read_correlations(station_folder, actual_date)
+        if correlations:
+            snapshot['earthquake_correlations'][station] = correlations
+        path = station_folder / 'false_negatives.csv'
+        if path.exists():
+            try:
+                with path.open(encoding='utf-8') as source:
+                    rows = [dict(row) for row in csv.DictReader(source)
+                            if normalize_date_string(row.get('earthquake_time')) == date]
+                if rows:
+                    snapshot['false_negatives'][station] = rows
+            except (ValueError, OSError):
+                pass
+    snapshot['is_hybrid_aggregation'] = any(day != date for day in snapshot['station_dates'].values())
+    return snapshot
+
+
+def generate_aggregated_data_files(stations, available_dates, data_dir):
+    count = 0
+    for date in available_dates:
+        snapshot = build_aggregated_data(stations, date, data_dir,
+                                         source_folder=Path('INTERMAGNET_DOWNLOADS'))
+        if snapshot['stations']:
+            with (data_dir / f'aggregated_{date}.json').open('w', encoding='utf-8') as destination:
+                json.dump(snapshot, destination, indent=2)
+            count += 1
+    return count
+
 
 def prepare_web_output():
     """Prepare static files for web deployment with date-specific handling"""
@@ -702,6 +637,11 @@ def prepare_web_output():
     # Copy JS
     if Path('static/app.js').exists():
         shutil.copy('static/app.js', static_dir / 'app.js')
+
+    # Keep generated branding assets in the same portable static bundle.
+    assets_dir = Path('static/assets')
+    if assets_dir.exists():
+        shutil.copytree(assets_dir, static_dir / 'assets', dirs_exist_ok=True)
     
     # Create data and figures directories
     data_dir = OUTPUT_DIR / 'data'
@@ -731,7 +671,7 @@ def prepare_web_output():
         
         # Copy date-specific JSON files
         # Note: JSON files are named with "today's" date but contain data from yesterday 20:00 to today 04:00
-        # So we need to create copies for both today and yesterday
+        # Keep this canonical end-of-night date; never alias another night.
         json_files = list(station_folder.glob('PRA_Night_*.json'))
         for json_file in json_files:
             file_date = parse_date_from_filename(json_file.name)
@@ -745,14 +685,6 @@ def prepare_web_output():
                         shutil.copy(json_file, dest_file)
                         print(f'[INFO] Copied {station}_{file_date}.json')
                         
-                        # Also create a copy for yesterday (since the JSON contains yesterday 20:00 to today 04:00)
-                        yesterday_date_obj = file_date_obj - timedelta(days=1)
-                        yesterday_date = yesterday_date_obj.strftime('%Y-%m-%d')
-                        if yesterday_date_obj >= cutoff_date:  # Only if yesterday is also within range
-                            dest_file_yesterday = data_dir / f'{station}_{yesterday_date}.json'
-                            # Always copy/overwrite to ensure we have the latest data
-                            shutil.copy(json_file, dest_file_yesterday)
-                            print(f'[INFO] Created {station}_{yesterday_date}.json (from {file_date} data)')
                 except ValueError:
                     pass
         
@@ -785,21 +717,13 @@ def prepare_web_output():
         eq_csv = Path(f'recent_earthquakes_{date}.csv')
         if eq_csv.exists():
             shutil.copy(eq_csv, data_dir / eq_csv.name)
-            try:
-                os.remove(eq_csv) # Clean up from root
-                print(f'[INFO] Moved/Cleaned up root file: {eq_csv.name}')
-            except Exception as e:
-                print(f'[WARNING] Failed to delete root file {eq_csv.name}: {e}')
+
             
         # Copy date-specific earthquake stats (for summary boxes)
         eq_stats = Path(f'earthquake_stats_{date}.json')
         if eq_stats.exists():
             shutil.copy(eq_stats, data_dir / eq_stats.name)
-            try:
-                os.remove(eq_stats) # Clean up from root
-                print(f'[INFO] Moved/Cleaned up root file: {eq_stats.name}')
-            except Exception as e:
-                print(f'[WARNING] Failed to delete root file {eq_stats.name}: {e}')
+
     
     # Clean up old files (older than 6 days)
     deleted = cleanup_old_files(data_dir, figures_dir, cutoff_date, skip_files=HISTORY_SKIP_FILES)

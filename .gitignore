@@ -28,6 +28,8 @@ wheels/
 
 # Web output (generated)
 web_output/
+output/site-preview/
+output/dashboard-preview/
 
 # Test files
 test_*.csv

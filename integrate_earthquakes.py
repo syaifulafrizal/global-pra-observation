@@ -50,6 +50,9 @@ def main():
         
         # Find false negatives (EQ >= 5.0 occurred but no anomaly detected)
         false_negatives = find_false_negatives(station_code, results_folder, days_lookback=14)
+        # A successful empty snapshot must clear a stale operational CSV.
+        # The cumulative history remains independently preserved.
+        save_false_negatives(station_code, results_folder, false_negatives)
         
         if not correlations.empty:
             # Save correlations
@@ -60,11 +63,10 @@ def main():
         
         if not false_negatives.empty:
             # Save false negatives
-            save_false_negatives(station_code, results_folder, false_negatives)
             print(f'  [INFO] Found {len(false_negatives)} false negatives (EQ M>=5.0 without anomaly)')
         
         results_summary[station_code] = {
-            'anomalies_with_eq': len(correlations),
+            'anomalies_with_eq': int(correlations['status'].eq('TP').sum()) if not correlations.empty else 0,
             'total_correlations': len(correlations),
             'false_negatives': len(false_negatives)
         }

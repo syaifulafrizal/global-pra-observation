@@ -7,6 +7,7 @@ Uses Multitaper + EVT + nZ z-score method for anomaly detection
 import os
 import sys
 import json
+import re
 from pathlib import Path
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -25,6 +26,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 from logging_utils import configure_logger, attach_stdout_logger
+from result_validation import result_is_usable
 
 # Configuration
 BASE_URL = 'https://imag-data.bgs.ac.uk:443/GIN_V1/GINServices'
@@ -74,7 +76,6 @@ DEFAULT_STATIONS = ['KAK']
 RUN_ID = os.getenv('PRA_RUN_ID') or datetime.utcnow().strftime('%Y%m%d%H%M%S')
 os.environ['PRA_RUN_ID'] = RUN_ID
 LOGGER = configure_logger('pra_nighttime', run_id=RUN_ID)
-attach_stdout_logger(LOGGER)
 RUN_REPORT_DIR = Path('data') / 'run_reports'
 
 def get_data_folder(station_code):
@@ -129,22 +130,9 @@ def download_symh_data(start_date, end_date, cache_folder):
     
     cache_file = cache_folder / f'SYMH_{start_date.strftime("%Y%m%d")}_{end_date.strftime("%Y%m%d")}.csv'
     
-    # Check cache first
-    if cache_file.exists():
-        try:
-            df = pd.read_csv(cache_file, parse_dates=['Time'], index_col='Time')
-            if not df.empty:
-                return df
-        except:
-            pass
-    
-    # Download from OMNIWeb
-    try:
-        return download_symh_omniweb(start_date, end_date, cache_file)
-    except Exception as e:
-        print(f'Warning: SYM-H download failed: {e}')
-        # Return empty DataFrame - code will handle this gracefully
-        return pd.DataFrame(columns=['SYMH', 'Disturbed'])
+    # The downloader validates provenance and UTC timestamps before cache reuse.
+    return download_symh_omniweb(start_date, end_date, cache_file)
+
 
 def download_data(station_code, date, out_folder):
     """Download IAGA2002 data from INTERMAGNET for a specific date"""
@@ -152,7 +140,7 @@ def download_data(station_code, date, out_folder):
     out_file = out_folder / f'{station_code}_{date.strftime("%Y%m%d")}.iaga2002'
     
     # Check if file already exists and is not empty
-    if out_file.exists() and out_file.stat().st_size > 0:
+    if out_file.exists() and iaga_data_header(out_file.read_text(errors='replace')):
         print(f'[SKIP] Data already exists for {station_code} on {date_str}')
         return out_file
     
@@ -163,7 +151,7 @@ def download_data(station_code, date, out_folder):
         f"dataStartDate={date_str}",
         "dataDuration=1",
         "publicationState=adjusted",
-        "orientation=native",
+        "orientation=XYZF",
         "format=iaga2002"
     ]
     
@@ -173,13 +161,26 @@ def download_data(station_code, date, out_folder):
     try:
         response = requests.get(url, timeout=30)
         response.raise_for_status()
+        if iaga_data_header(response.text) is None:
+            raise ValueError('Response is not IAGA2002 data (possibly an error page)')
         out_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(out_file, 'wb') as f:
+        temporary = out_file.with_suffix('.iaga2002.tmp')
+        with open(temporary, 'wb') as f:
             f.write(response.content)
+        temporary.replace(out_file)
         return out_file
     except Exception as e:
         print(f'Warning: Download failed for {date_str}: {e}')
         return None
+
+def iaga_data_header(text):
+    """Locate the actual data header instead of assuming a fixed header length."""
+    for number, line in enumerate(text.splitlines()):
+        columns = line.strip().rstrip('|').split()
+        if len(columns) >= 6 and columns[:3] == ['DATE', 'TIME', 'DOY']:
+            return number, columns
+    return None
+
 
 def read_iaga2002(file_path, station_timezone):
     """Read IAGA2002 format file and return DataFrame
@@ -189,32 +190,29 @@ def read_iaga2002(file_path, station_timezone):
         station_timezone: ZoneInfo object for the station's local timezone
     """
     try:
-        # Read header to get metadata
-        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-            header_lines = [f.readline() for _ in range(26)]
-        
-        # Read data (skip 26 header lines)
+        text = Path(file_path).read_text(encoding='utf-8', errors='replace')
+        header = iaga_data_header(text)
+        if header is None:
+            raise ValueError('Missing IAGA2002 DATE/TIME header')
+        number, columns = header
         df = pd.read_csv(
-            file_path,
-            skiprows=26,
-            delim_whitespace=True,
-            header=None,
-            names=['date', 'time', 'doy', 'X', 'Y', 'Z', 'F'],
-            usecols=['date', 'time', 'X', 'Y', 'Z']
+            file_path, skiprows=number + 1, sep=r'\s+', header=None,
+            names=columns, usecols=range(len(columns))
         )
-        
-        # Combine date and time
-        df['dt'] = pd.to_datetime(df['date'] + ' ' + df['time'], 
-                                  format='%Y-%m-%d %H:%M:%S.%f',
-                                  errors='coerce')
-        # Convert from UTC (data is always in UTC) to station's local timezone
-        df['dt'] = df['dt'].dt.tz_localize('UTC').dt.tz_convert(station_timezone)
-        
-        # Keep only valid data
-        df = df[['dt', 'X', 'Y', 'Z']].copy()
-        df = df.dropna()
-        
-        return df
+        df['dt'] = pd.to_datetime(df['DATE'] + ' ' + df['TIME'], utc=True,
+                                  errors='coerce').dt.tz_convert(station_timezone)
+        components = {column[-1].upper(): column for column in columns[3:]}
+        if not all(component in components for component in ('X', 'Y', 'Z')):
+            # Request explicit XYZ data below; do not silently interpret native
+            # HDZ/other orientations as Cartesian components.
+            raise ValueError('Expected XYZ components in IAGA2002 header')
+        result = pd.DataFrame({'dt': df['dt']})
+        for component in ('X', 'Y', 'Z'):
+            values = pd.to_numeric(df[components[component]], errors='coerce')
+            result[component] = values.mask(values.abs() >= 99999)
+        # Preserve missing measurements on their original timestamps. They are
+        # screened per hour before spectral analysis, never time-compressed.
+        return result.dropna(subset=['dt']).sort_values('dt').drop_duplicates('dt')
     except Exception as e:
         print(f'Error reading {file_path}: {e}')
         return pd.DataFrame()
@@ -289,7 +287,7 @@ def compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, f_low, f_h
         seg = np.asarray(seg, dtype=np.float64)
         
         # NaN handling
-        nanFrac = np.sum(np.isnan(seg)) / seg.size
+        nanFrac = np.mean(np.isnan(seg).any(axis=1))
         if nanFrac > 0.05:
             continue
         elif nanFrac > 0:
@@ -300,8 +298,10 @@ def compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, f_low, f_h
                 seg[:, c] = seg_series.values
         
         # Extract Z and G components
-        segZ = seg[:, 2]
-        segG = np.hypot(seg[:, 0], seg[:, 1])
+        segZ = signal.detrend(seg[:, 2], type='constant')
+        segG = signal.detrend(np.hypot(seg[:, 0], seg[:, 1]), type='constant')
+        if np.ptp(segZ) == 0 or np.ptp(segG) == 0:
+            continue
         
         # Spectral estimation
         if opts['useMT']:
@@ -413,12 +413,14 @@ def compute_quiet_flags(T, GI, tol, tightFlag, tolTight, symhThr):
     
     halfHour = timedelta(minutes=30)
     
-    # If GI is empty, assume all periods are quiet (fallback)
+        # Missing geomagnetic context is unknown, never evidence of quiet.
     if GI.empty:
-        print('Warning: No SYM-H data available. Assuming all periods are quiet.')
-        isQuiet[:] = True
-        fracDisturbed[:] = 0.0
+        print('[WARNING] No SYM-H data available; quiet-period screening unavailable.')
         return isQuiet, fracDisturbed
+
+    GI = GI.copy()
+    GI.index = pd.to_datetime(GI.index, utc=True)
+    T = pd.Series(pd.to_datetime(T, utc=True))
     
     for m in range(len(T)):
         time_window_start = T.iloc[m] - halfHour
@@ -429,9 +431,10 @@ def compute_quiet_flags(T, GI, tol, tightFlag, tolTight, symhThr):
             mask = (GI.index >= time_window_start) & (GI.index <= time_window_end)
             GI_subset = GI[mask]
             
-            if len(GI_subset) > 0:
+            valid = GI_subset['SYMH'].dropna()
+            if len(valid) >= 54:  # At least 90% of an hourly minute-resolution window.
                 # Recompute disturbed using threshold
-                d = GI_subset['SYMH'] < symhThr
+                d = valid < symhThr
                 frac = d.mean()
                 fracDisturbed[m] = frac
                 
@@ -440,53 +443,55 @@ def compute_quiet_flags(T, GI, tol, tightFlag, tolTight, symhThr):
                 else:
                     isQuiet[m] = frac <= tol
             else:
-                # No data in window - assume quiet
-                isQuiet[m] = True
-                fracDisturbed[m] = 0.0
+                # Leave insufficient coverage unknown/non-quiet.
+                continue
         except Exception as e:
-            # On error, assume quiet
-            isQuiet[m] = True
-            fracDisturbed[m] = 0.0
+            print(f'[WARNING] Could not assess SYM-H coverage: {e}')
     
     return isQuiet, fracDisturbed
 
-def fit_evt_threshold(Pq, tailQ, fpr, pFloor, kSigma):
+def fit_evt_threshold(Pq, tailQ, fpr, pFloor, kSigma, return_details=False):
     """Fit EVT (GPD) threshold"""
     Pq = Pq[np.isfinite(Pq)]
+
+    def fallback():
+        value = fit_ksigma_threshold(Pq, kSigma, pFloor)
+        return (value, 'k_sigma') if return_details else value
     
     if len(Pq) < 20:
-        return fit_ksigma_threshold(Pq, kSigma, pFloor)
+        return fallback()
     
     # Tail over threshold
     u = np.quantile(Pq, tailQ)
     X = Pq[Pq > u] - u
     
     if len(X) < 30:
-        return fit_ksigma_threshold(Pq, kSigma, pFloor)
+        return fallback()
     
     # Fit GPD
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            k, sigma, loc = genpareto.fit(X, floc=0)
+            k, loc, sigma = genpareto.fit(X, floc=0)
         
         # Guard bad shapes
         if not (np.isfinite(k) and np.isfinite(sigma) and sigma > 0 and k > -0.5):
-            return fit_ksigma_threshold(Pq, kSigma, pFloor)
+            return fallback()
         
         # Target (1 - fpr) quantile in tail
-        qTail = genpareto.ppf(1 - fpr, k, scale=sigma, loc=0)
+        tail_probability = len(X) / len(Pq)
+        qTail = genpareto.ppf(1 - fpr / tail_probability, k, scale=sigma, loc=0)
         
         if not (np.isfinite(qTail) and qTail >= 0):
-            return fit_ksigma_threshold(Pq, kSigma, pFloor)
+            return fallback()
         
         thr = u + qTail
         # Only apply floor if it's positive (0.0 means no floor)
         if pFloor > 0:
             thr = max(thr, pFloor)
-        return thr
+        return (thr, 'evt') if return_details else thr
     except:
-        return fit_ksigma_threshold(Pq, kSigma, pFloor)
+        return fallback()
 
 def fit_ksigma_threshold(Pq, K, pFloor):
     """Fit k-sigma threshold"""
@@ -555,14 +560,14 @@ def load_historical_quiet_p_values(station_code, current_date, out_folder, days_
                 if 'P' in data:
                     P_values = np.array(data['P'])
                     
-                    # Prefer isQuiet if available, otherwise use ~isAnomalous as proxy
+                    if not result_is_usable(data):
+                        continue
+                    if not data.get('data_quality', {}).get('symh_verified', False):
+                        continue
+                    # Anomaly absence is not a substitute for geomagnetic context.
                     if 'isQuiet' in data:
                         is_quiet = np.array(data['isQuiet'])
                         quiet_mask = is_quiet
-                    elif 'isAnomalous' in data:
-                        # Fallback: use non-anomalous as quiet proxy
-                        is_anomalous = np.array(data['isAnomalous'])
-                        quiet_mask = ~is_anomalous
                     else:
                         # If neither available, skip this day
                         continue
@@ -602,9 +607,8 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
     # Combine with historical quiet P values if available
     if historical_Pq is not None and len(historical_Pq) > 0:
         # Combine current day's quiet P values with historical data
-        Pq_combined = np.concatenate([historical_Pq, Pq_current])
-        print(f'  Using {len(historical_Pq)} historical + {len(Pq_current)} current = {len(Pq_combined)} total quiet P values for EVT fitting')
-        print(f'  (Data from historical datapoints + current day)')
+        Pq_combined = historical_Pq
+        print(f'  Using {len(historical_Pq)} previous quiet P values (current night excluded)')
     else:
         # Fallback to current day only if no historical data
         Pq_combined = Pq_current
@@ -617,10 +621,12 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
     
     # Fit threshold using combined 7-day dataset
     if opts['useEVT']:
-        thrEff = fit_evt_threshold(Pq_combined, opts['tailQ'], opts['fprTarget'], 
-                                   opts['pFloor'], opts['kSigma'])
+        thrEff, threshold_method = fit_evt_threshold(
+            Pq_combined, opts['tailQ'], opts['fprTarget'],
+            opts['pFloor'], opts['kSigma'], return_details=True)
     else:
         thrEff = fit_ksigma_threshold(Pq_combined, opts['kSigma'], opts['pFloor'])
+        threshold_method = 'k_sigma'
     
     # nZ guard
     nzOK = nz_guard(nZ, station_code, stationZstats, opts['useNZz'], 
@@ -643,9 +649,14 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
         'nZ': nZ,
         'nG': nG,
         'isAnomalous': isAnomQuiet,
+        'symhCovered': np.isfinite(fracDist),
         'isQuiet': isQuiet  # Store isQuiet for future historical data loading
     })
     ts['Time'] = pd.to_datetime(ts['Time'])
+    ts.attrs['threshold_method'] = threshold_method
+    ts.attrs['baseline_samples'] = len(Pq_combined)
+    ts.attrs['baseline_source'] = 'historical' if historical_Pq is not None and len(historical_Pq) else 'warmup'
+    ts.attrs['nz_guard_method'] = 'z_score' if station_code in stationZstats else 'fixed_power'
     
     # Anomaly table
     idx = np.where(isAnomQuiet)[0]
@@ -742,6 +753,26 @@ def cleanup_old_data_files(station_code, current_date, out_folder, days_to_keep=
     if deleted_count > 0:
         print(f'[INFO] Cleaned up {deleted_count} old files for {station_code} (keeping last {days_to_keep} days)')
 
+def historical_z_stats(station_code, current_date, out_folder):
+    """Use only previous, screened nights to calibrate the existing nZ guard."""
+    values = []
+    for days in range(1, 7):
+        path = out_folder / f'PRA_Night_{station_code}_{current_date - timedelta(days=days):%Y%m%d}.json'
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text())
+            if not result_is_usable(data) or not data.get('data_quality', {}).get('symh_verified'):
+                continue
+            values.extend(value for value, quiet in zip(data['nZ'], data['isQuiet'])
+                          if quiet and np.isfinite(value))
+        except (ValueError, KeyError, TypeError):
+            continue
+    if len(values) >= 20 and np.std(values) > 0:
+        return {station_code: (np.mean(values), np.std(values))}
+    return {}
+
+
 def process_station(station_code):
     """Process a single station"""
     print(f'\n{"="*60}')
@@ -755,12 +786,11 @@ def process_station(station_code):
     out_folder.mkdir(parents=True, exist_ok=True)
     cache_folder = Path('INTERMAGNET_DOWNLOADS') / '_cache'
     
-    # Get dates (GMT+8 at 8am) - this is when we run the analysis
-    now = datetime.now(RUN_TIMEZONE)
-    today = now.date()
-    
-    if now.hour < 8:
-        today = today - timedelta(days=1)
+    # Select the latest completed local night; PROCESS_DATE supports backfill.
+    now = datetime.now(station_tz)
+    today = now.date() if now.hour >= 4 else now.date() - timedelta(days=1)
+    if os.getenv('PROCESS_DATE'):
+        today = datetime.strptime(os.environ['PROCESS_DATE'], '%Y-%m-%d').date()
     
     # Create datetime objects in the station's local timezone
     today_dt = datetime.combine(today, datetime.min.time()).replace(tzinfo=station_tz)
@@ -780,6 +810,9 @@ def process_station(station_code):
     symh_start = yesterday_dt - timedelta(days=1)
     symh_end = today_dt + timedelta(days=1)
     GI = download_symh_data(symh_start, symh_end, cache_folder)
+    if GI.empty:
+        print(f'[SKIP] {station_code}: no SYM-H context; no normal/anomalous classification written')
+        return None
     
     # Check if the nighttime window has already passed for this station
     # The nighttime window is 20:00 yesterday to 04:00 today (local time)
@@ -812,7 +845,11 @@ def process_station(station_code):
         return None  # Return None to indicate "skipped" (not an error)
     
     # Download station data
-    dates_to_get = [yesterday_dt, today_dt]
+    first_utc_day = start_time.astimezone(ZoneInfo('UTC')).date()
+    last_utc_day = end_time.astimezone(ZoneInfo('UTC')).date()
+    dates_to_get = [datetime.combine(first_utc_day + timedelta(days=i), datetime.min.time(),
+                                    tzinfo=ZoneInfo('UTC'))
+                    for i in range((last_utc_day - first_utc_day).days + 1)]
     data_all = pd.DataFrame()
     downloaded_files = []
     download_failed = False
@@ -848,19 +885,18 @@ def process_station(station_code):
     if end_time.tzinfo is None:
         end_time = end_time.replace(tzinfo=station_tz)
     
-    night_data = data_all[(data_all['dt'] >= start_time) & (data_all['dt'] <= end_time)].copy()
+    grid = pd.date_range(pd.Timestamp(start_time).tz_convert('UTC'),
+                         pd.Timestamp(end_time).tz_convert('UTC'),
+                         freq='s', inclusive='left')
+    data_all['dt'] = pd.to_datetime(data_all['dt'], utc=True)
+    indexed = data_all.drop_duplicates('dt').set_index('dt')[['X', 'Y', 'Z']]
+    night_data = indexed.reindex(grid).rename_axis('dt').reset_index()
+    invalid_samples = int(night_data[['X', 'Y', 'Z']].isna().any(axis=1).sum())
     
     if len(night_data) < WIN_LEN:
         print(f'[WARNING] Not enough nighttime data for {station_code} (got {len(night_data)} samples, need {WIN_LEN})')
         print(f'          This may be normal if the nighttime window is not yet complete')
         return None  # Return None to indicate "skipped" (not an error)
-    
-    # Remove invalid data
-    night_data = night_data[
-        night_data['X'].notna() & 
-        night_data['Y'].notna() & 
-        night_data['Z'].notna()
-    ].copy()
     
     recXYZ = night_data[['X', 'Y', 'Z']].values
     
@@ -887,7 +923,7 @@ def process_station(station_code):
     eq_date = today_dt
     
     # Station stats (empty for now - can be computed from historical data)
-    stationZstats = {}
+    stationZstats = historical_z_stats(station_code, today_dt, out_folder)
     
     # Load historical quiet P values from past 6 days for EVT fitting
     print(f'[INFO] Loading historical quiet P values for {station_code}...')
@@ -905,8 +941,8 @@ def process_station(station_code):
     )
     
     if ts.empty:
-        print(f'[ERROR] No valid time series for {station_code}')
-        return False
+        print(f'[SKIP] No usable, quiet spectral windows for {station_code}')
+        return None
     
     # Save results - include isQuiet for future historical data loading
     results = {
@@ -920,12 +956,33 @@ def process_station(station_code):
         'isQuiet': ts['isQuiet'].tolist(),  # Store isQuiet for historical data loading
         'threshold': float(thrEff),
         'nAnomHours': int(nAnomHours),
-        'is_anomalous': bool(is_anomalous)
+        'is_anomalous': bool(is_anomalous),
+        'analysis_version': 2,
+        'threshold_method': ts.attrs['threshold_method'],
+        'baseline_samples': ts.attrs['baseline_samples'],
+        'baseline_source': ts.attrs['baseline_source'],
+        'nz_guard_method': ts.attrs['nz_guard_method'],
+        'data_quality': {
+            'status': 'complete' if len(ts) == len(grid) // WIN_LEN and invalid_samples == 0 else 'partial',
+            'expected_hours': len(grid) // WIN_LEN,
+            'valid_hours': len(ts),
+            'invalid_samples': invalid_samples,
+            'symh_verified': bool(ts['symhCovered'].all()),
+        }
     }
     
     # Save JSON
     with open(json_file, 'w') as f:
         json.dump(results, f, indent=2)
+
+    # Retain lightweight coverage beyond the seven-day spectral-file window.
+    coverage_path = out_folder / 'analysis_coverage.csv'
+    coverage = pd.read_csv(coverage_path) if coverage_path.exists() else pd.DataFrame()
+    coverage = pd.concat([coverage, pd.DataFrame([{
+        'date': results['date'],
+        'complete': results['data_quality']['status'] == 'complete' and results['data_quality']['symh_verified'],
+    }])], ignore_index=True).drop_duplicates('date', keep='last')
+    coverage.to_csv(coverage_path, index=False)
     
     # Save CSV
     csv_file = out_folder / f'PRA_Night_{station_code}_{today_dt.strftime("%Y%m%d")}.csv'
@@ -1005,8 +1062,10 @@ def log_anomaly(station_code, out_folder, date, yesterday, thr, anom_table, ts, 
     log_file = out_folder / 'anomaly_master_table.csv'
     
     # Group anomalies by hour
-    anom_times = pd.to_datetime(anom_table['TimeOfAnomaly'])
-    anom_hours = anom_times.dt.floor('H').unique()
+    anom_times = pd.to_datetime(anom_table['TimeOfAnomaly'], utc=True)
+    detection_time = anom_times.min() + pd.Timedelta(minutes=30, seconds=1)
+    anom_times = anom_times.dt.tz_convert(get_station_timezone(station_code))
+    anom_hours = anom_times.map(lambda stamp: stamp.replace(minute=0, second=0, microsecond=0)).unique()
     time_blocks = []
     for h in anom_hours:
         h_str = h.strftime('%H:%M')
@@ -1033,6 +1092,7 @@ def log_anomaly(station_code, out_folder, date, yesterday, thr, anom_table, ts, 
         'Times': time_str,
         'Plot': fig_file.name
     }
+    new_row['DetectionTimeUTC'] = detection_time.isoformat()
     
     # Append to CSV
     if log_file.exists():
@@ -1041,7 +1101,7 @@ def log_anomaly(station_code, out_folder, date, yesterday, thr, anom_table, ts, 
     else:
         df_log = pd.DataFrame([new_row])
     
-    df_log.to_csv(log_file, index=False)
+    df_log.drop_duplicates('Range', keep='last').to_csv(log_file, index=False)
 
 def get_all_stations():
     """Get all available station codes from stations.json"""
@@ -1123,5 +1183,8 @@ def main():
     print(f'  Failed/Error: {failed_count}')
     print(f'{"="*60}')
 
+    return 1 if failed_count else 0
+
 if __name__ == '__main__':
-    main()
+    attach_stdout_logger(LOGGER)
+    sys.exit(main())

@@ -10,6 +10,8 @@ import numpy as np
 from datetime import datetime, timedelta
 from pathlib import Path
 import json
+from zoneinfo import ZoneInfo
+from result_validation import result_is_usable
 from geopy.distance import geodesic
 
 # USGS Earthquake API
@@ -52,8 +54,8 @@ def fetch_usgs_earthquakes(start_date, end_date, min_magnitude=4.0,
     """
     params = {
         'format': 'geojson',
-        'starttime': start_date.strftime('%Y-%m-%d'),
-        'endtime': end_date.strftime('%Y-%m-%d'),
+        'starttime': utc_naive(start_date).strftime('%Y-%m-%dT%H:%M:%S'),
+        'endtime': utc_naive(end_date).strftime('%Y-%m-%dT%H:%M:%S'),
         'minmagnitude': min_magnitude,
         'orderby': 'time'
     }
@@ -71,8 +73,10 @@ def fetch_usgs_earthquakes(start_date, end_date, min_magnitude=4.0,
         
         data = response.json()
         
-        if 'features' not in data or len(data['features']) == 0:
-            return pd.DataFrame()
+        if 'features' not in data:
+            raise ValueError('USGS response has no features field')
+        if not data['features']:
+            return empty_earthquakes(True)
         
         # Parse GeoJSON features
         earthquakes = []
@@ -93,313 +97,179 @@ def fetch_usgs_earthquakes(start_date, end_date, min_magnitude=4.0,
             earthquakes.append(eq)
         
         df = pd.DataFrame(earthquakes)
+        df.attrs['query_succeeded'] = True
         print(f'Found {len(df)} earthquakes')
         return df
         
     except Exception as e:
         print(f'Error fetching earthquakes: {e}')
-        return pd.DataFrame()
+        return empty_earthquakes(False)
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     """Calculate distance between two points in km"""
     return geodesic((lat1, lon1), (lat2, lon2)).kilometers
 
-def find_nearby_earthquakes(station_code, anomaly_date, days_before=14, days_after=0,
+def utc_naive(value):
+    """USGS times are UTC; keep comparisons consistent with existing CSVs."""
+    stamp = pd.Timestamp(value)
+    if pd.isna(stamp):
+        raise ValueError('Missing event time')
+    return stamp.tz_convert('UTC').tz_localize(None) if stamp.tzinfo else stamp
+
+
+def empty_earthquakes(succeeded):
+    frame = pd.DataFrame(columns=['time', 'latitude', 'longitude', 'magnitude',
+                                  'place', 'id', 'distance_km', 'days_from_anomaly'])
+    frame.attrs['query_succeeded'] = succeeded
+    return frame
+
+
+def station_timezone(station_code):
+    from load_stations import get_station_info
+    info = get_station_info(station_code) or {}
+    return ZoneInfo(info.get('timezone', 'UTC'))
+
+
+def anomaly_detection_time(anomaly, station_code):
+    """Use actual detection time, or the end of a legacy local nighttime range."""
+    explicit = anomaly.get('DetectionTimeUTC')
+    if explicit is not None and not pd.isna(explicit):
+        return utc_naive(explicit)
+    end = str(anomaly['Range']).split(' - ')[1]
+    local = pd.to_datetime(end, format='%d/%m/%Y %H:%M').tz_localize(station_timezone(station_code))
+    return utc_naive(local)
+
+
+def anomaly_result_date(anomaly):
+    end = str(anomaly['Range']).split(' - ')[1].split()[0]
+    return pd.to_datetime(end, format='%d/%m/%Y')
+
+
+def find_nearby_earthquakes(station_code, anomaly_date, days_before=0, days_after=14,
                            max_distance_km=200, min_magnitude=4.0):
-    """
-    Find earthquakes within specified distance and time window
-    
-    Parameters:
-    -----------
-    station_code : str
-        Station code (e.g., 'KAK')
-    anomaly_date : datetime
-        Date of PRA anomaly
-    days_before : int
-        Days before anomaly to search (default: 14)
-    days_after : int
-        Days after anomaly to search (default: 0)
-    max_distance_km : float
-        Maximum distance in km (default: 200)
-    min_magnitude : float
-        Minimum earthquake magnitude (default: 4.0)
-    
-    Returns:
-    --------
-    pd.DataFrame : Nearby earthquakes with distances
-    """
-    # Get station coordinates
+    """Find events relative to the detection time, without querying the future."""
     lat, lon = get_station_coordinates(station_code)
     if lat is None or lon is None:
-        print(f'Warning: Could not get coordinates for {station_code}')
-        return pd.DataFrame()
-    
-    # Define time window
-    start_date = anomaly_date - timedelta(days=days_before)
-    end_date = anomaly_date + timedelta(days=days_after)
-    
-    # Fetch earthquakes
-    eq_df = fetch_usgs_earthquakes(start_date, end_date, 
-                                   min_magnitude=min_magnitude,
-                                   latitude=lat, 
-                                   longitude=lon,
-                                   max_radius_km=max_distance_km)
-    
-    if eq_df.empty:
-        return pd.DataFrame()
-    
-    # Calculate distances
-    distances = []
-    for _, eq in eq_df.iterrows():
-        dist = calculate_distance(lat, lon, eq['latitude'], eq['longitude'])
-        distances.append(dist)
-    
-    eq_df['distance_km'] = distances
-    eq_df['days_from_anomaly'] = (eq_df['time'] - anomaly_date).dt.total_seconds() / 86400
-    
-    # Filter by distance
-    eq_df = eq_df[eq_df['distance_km'] <= max_distance_km].copy()
-    eq_df = eq_df.sort_values('time')
-    
-    return eq_df
+        return empty_earthquakes(False)
+    detection = utc_naive(anomaly_date)
+    start = detection - timedelta(days=days_before)
+    end = min(detection + timedelta(days=days_after), pd.Timestamp.utcnow().tz_localize(None))
+    if start >= end:
+        return empty_earthquakes(True)
+    events = fetch_usgs_earthquakes(start, end, min_magnitude=min_magnitude,
+                                  latitude=lat, longitude=lon, max_radius_km=max_distance_km)
+    if events.empty:
+        return events
+    events = events.copy()
+    events['time'] = pd.to_datetime(events['time'], utc=True).dt.tz_localize(None)
+    events['distance_km'] = [calculate_distance(lat, lon, row['latitude'], row['longitude'])
+                             for _, row in events.iterrows()]
+    events['days_from_anomaly'] = (events['time'] - detection).dt.total_seconds() / 86400
+    return events[(events['time'] >= start) & (events['time'] <= end)
+                  & (events['distance_km'] <= max_distance_km)].sort_values('time')
+
 
 def correlate_anomalies_with_earthquakes(station_code, results_folder):
-    """
-    Correlate PRA anomalies with nearby earthquakes
-    
-    Parameters:
-    -----------
-    station_code : str
-        Station code
-    results_folder : Path
-        Folder containing PRA results
-    
-    Returns:
-    --------
-    pd.DataFrame : Correlation results
-    """
-    # Load anomaly table
-    anomaly_file = results_folder / 'anomaly_master_table.csv'
-    if not anomaly_file.exists():
+    """A match is M>=5 within 200 km during the 14 days AFTER detection."""
+    path = results_folder / 'anomaly_master_table.csv'
+    if not path.exists():
         return pd.DataFrame()
-    
     try:
-        anomalies = pd.read_csv(anomaly_file)
-    except:
+        anomalies = pd.read_csv(path)
+    except (ValueError, OSError):
         return pd.DataFrame()
-    
-    if anomalies.empty:
-        return pd.DataFrame()
-    
-    # Process each anomaly
     correlations = []
-    
-    for _, anomaly in anomalies.iterrows():
-        # Parse date from Range column
+    now = pd.Timestamp.utcnow().tz_localize(None)
+    for _, anomaly in anomalies.drop_duplicates('Range', keep='last').iterrows():
         try:
-            # Format: "DD/MM/YYYY 20:00 - DD/MM/YYYY 04:00"
-            date_str = anomaly['Range'].split()[0]  # First date
-            anomaly_date = pd.to_datetime(date_str, format='%d/%m/%Y')
-        except:
+            detection = anomaly_detection_time(anomaly, station_code)
+            result_date = anomaly_result_date(anomaly)
+        except (ValueError, KeyError, IndexError, TypeError):
             continue
-        
-        # Find nearby earthquakes
-        eq_df = find_nearby_earthquakes(station_code, anomaly_date,
-                                       days_before=14, days_after=0,
-                                       max_distance_km=200, min_magnitude=4.0)
-        
-        if not eq_df.empty:
-            # Filter for magnitude >= 5.0 for reliability assessment
-            eq_df_reliable = eq_df[eq_df['magnitude'] >= 5.0].copy()
-            
-            if not eq_df_reliable.empty:
-                # Get closest earthquake with magnitude >= 5.0
-                closest = eq_df_reliable.loc[eq_df_reliable['distance_km'].idxmin()]
-                
-                correlation = {
-                    'anomaly_date': anomaly_date,
-                    'anomaly_range': anomaly['Range'],
-                    'anomaly_times': anomaly.get('Times', ''),
-                    'earthquake_time': closest['time'],
-                    'earthquake_magnitude': closest['magnitude'],
-                    'earthquake_distance_km': closest['distance_km'],
-                    'earthquake_place': closest['place'],
-                    'days_before_anomaly': closest['days_from_anomaly'],
-                    'total_earthquakes': len(eq_df),
-                    'reliable_earthquakes': len(eq_df_reliable),
-                    'status': 'TP'  # True Positive: Anomaly followed by EQ
-                }
-                correlations.append(correlation)
-            else:
-                # Anomaly + No Reliable EQ (>=5.0) nearby = False Positive
-                # BUT we must ensure 14 days have actually passed before calling it FP
-                days_since_anomaly = (datetime.now().date() - anomaly_date.date()).days
-                status = 'FP' if days_since_anomaly >= 14 else 'Pending'
-                
-                correlation = {
-                    'anomaly_date': anomaly_date,
-                    'anomaly_range': anomaly['Range'],
-                    'anomaly_times': anomaly.get('Times', ''),
-                    'earthquake_time': None,
-                    'earthquake_magnitude': None,
-                    'earthquake_distance_km': None,
-                    'earthquake_place': None,
-                    'days_before_anomaly': None,
-                    'total_earthquakes': 0,
-                    'reliable_earthquakes': 0,
-                    'status': status
-                }
-                correlations.append(correlation)
-        else:
-            # No EQ at all found
-            days_since_anomaly = (datetime.now().date() - anomaly_date.date()).days
-            status = 'FP' if days_since_anomaly >= 14 else 'Pending'
-            
-            correlation = {
-                'anomaly_date': anomaly_date,
-                'anomaly_range': anomaly['Range'],
-                'anomaly_times': anomaly.get('Times', ''),
-                'earthquake_time': None,
-                'earthquake_magnitude': None,
-                'earthquake_distance_km': None,
-                'earthquake_place': None,
-                'days_before_anomaly': None,
-                'total_earthquakes': 0,
-                'reliable_earthquakes': 0,
-                'status': status
-            }
-            correlations.append(correlation)
+        events = find_nearby_earthquakes(station_code, detection, days_before=0,
+                                         days_after=14, max_distance_km=200, min_magnitude=5.0)
+        reliable = events[events['magnitude'] >= 5.0] if not events.empty else events
+        complete = now >= detection + timedelta(days=14)
+        status = ('FP' if complete else 'Pending') if events.attrs.get('query_succeeded', True) else 'Unknown'
+        row = {
+            'anomaly_date': result_date, 'anomaly_range': anomaly['Range'],
+            'anomaly_times': anomaly.get('Times', ''), 'detection_time_utc': detection,
+            'earthquake_time': None, 'earthquake_magnitude': None,
+            'earthquake_distance_km': None, 'earthquake_place': None,
+            'days_before_anomaly': None, 'days_after_anomaly': None,
+            'total_earthquakes': len(events), 'reliable_earthquakes': len(reliable),
+            'status': status,
+        }
+        if not reliable.empty:
+            closest = reliable.loc[reliable['distance_km'].idxmin()]
+            row.update(earthquake_time=closest['time'], earthquake_magnitude=closest['magnitude'],
+                       earthquake_distance_km=closest['distance_km'], earthquake_place=closest['place'],
+                       days_after_anomaly=closest['days_from_anomaly'],
+                       days_before_anomaly=-closest['days_from_anomaly'], status='TP')
+        correlations.append(row)
+    return pd.DataFrame(correlations)
 
-    if correlations:
-        return pd.DataFrame(correlations)
-    return pd.DataFrame()
 
 def find_false_negatives(station_code, results_folder, days_lookback=14):
-    """
-    Find false negatives: Earthquakes with magnitude >= 5.0 that occurred 
-    but no anomaly was detected
-    
-    Parameters:
-    -----------
-    station_code : str
-        Station code
-    results_folder : Path
-        Folder containing PRA results
-    days_lookback : int
-        Number of days to look back for earthquakes (default: 14)
-    
-    Returns:
-    --------
-    pd.DataFrame : False negative earthquakes
-    """
-    # Get station coordinates
+    """Count a missed event only when the preceding 14 completed nights were observed."""
     lat, lon = get_station_coordinates(station_code)
     if lat is None or lon is None:
         return pd.DataFrame()
-    
-    # Get date range from latest processed data
-    json_files = list(results_folder.glob('PRA_Night_*.json'))
-    if not json_files:
+    coverage = {}
+    ledger = results_folder / 'analysis_coverage.csv'
+    if ledger.exists():
+        for row in pd.read_csv(ledger).to_dict('records'):
+            coverage[str(row['date'])] = str(row.get('complete')).lower() == 'true'
+    for path in results_folder.glob('PRA_Night_*.json'):
+        try:
+            result = json.loads(path.read_text())
+            quality = result.get('data_quality', {})
+            coverage[result['date']] = (result_is_usable(result) and quality.get('status') == 'complete'
+                                        and quality.get('symh_verified', False))
+        except (ValueError, KeyError, OSError):
+            continue
+    if not coverage:
         return pd.DataFrame()
-    
-    # Get latest processing date
-    latest_json = max(json_files, key=lambda p: p.stat().st_mtime)
-    try:
-        with open(latest_json, 'r') as f:
-            data = json.load(f)
-            if 'date' in data:
-                latest_date = pd.to_datetime(data['date'])
-            else:
-                latest_date = datetime.now()
-    except:
-        latest_date = datetime.now()
-    
-    # Define time window
-    end_date = latest_date
-    start_date = end_date - timedelta(days=days_lookback)
-    
-    # Fetch all earthquakes with magnitude >= 5.0
-    eq_df = fetch_usgs_earthquakes(start_date, end_date,
-                                   min_magnitude=5.0,
-                                   latitude=lat,
-                                   longitude=lon,
-                                   max_radius_km=200)
-    
-    if eq_df.empty:
-        return pd.DataFrame()
-    
-    # Calculate distances
-    distances = []
-    for _, eq in eq_df.iterrows():
-        dist = calculate_distance(lat, lon, eq['latitude'], eq['longitude'])
-        distances.append(dist)
-    
-    eq_df['distance_km'] = distances
-    eq_df = eq_df[eq_df['distance_km'] <= 200].copy()
-    
-    # Check which earthquakes had no corresponding anomaly
+    end = pd.Timestamp.utcnow().tz_localize(None)
+    events = fetch_usgs_earthquakes(end - timedelta(days=days_lookback), end,
+                                  min_magnitude=5.0, latitude=lat, longitude=lon, max_radius_km=200)
+    if events.empty:
+        frame = pd.DataFrame(columns=['earthquake_time', 'earthquake_magnitude',
+            'earthquake_distance_km', 'earthquake_place', 'earthquake_latitude',
+            'earthquake_longitude', 'earthquake_id', 'coverage_verified'])
+        frame.attrs['query_succeeded'] = events.attrs.get('query_succeeded', True)
+        return frame
+    detections = []
     anomaly_file = results_folder / 'anomaly_master_table.csv'
-    anomaly_dates = []
-    
     if anomaly_file.exists():
-        try:
-            anomalies = pd.read_csv(anomaly_file)
-            for _, anomaly in anomalies.iterrows():
-                try:
-                    date_str = anomaly['Range'].split()[0]
-                    anomaly_date = pd.to_datetime(date_str, format='%d/%m/%Y')
-                    anomaly_dates.append(anomaly_date.date())
-                except:
-                    continue
-        except:
-            pass
-    
-    # Find earthquakes without corresponding anomalies
-    false_negatives = []
-    
-    # Pre-parse all anomaly dates for this station
-    anomaly_dates = []
-    if anomaly_file.exists():
-        try:
-            anomalies = pd.read_csv(anomaly_file)
-            for _, anomaly in anomalies.iterrows():
-                try:
-                    date_str = anomaly['Range'].split()[0]
-                    anomaly_date = pd.to_datetime(date_str, format='%d/%m/%Y').date()
-                    anomaly_dates.append(anomaly_date)
-                except:
-                    continue
-        except:
-            pass
-            
-    for _, eq in eq_df.iterrows():
-        eq_date = eq['time'].date()
-        # Definition: False Negative if EQ occurred but NO anomaly was detected in the preceding 14 days
-        # (Meaning: We missed it)
-        
-        has_anomaly_before = False
-        for anom_date in anomaly_dates:
-            # Check if anomaly occurred 1-14 days BEFORE event
-            # Logic: Anomaly (Day T) -> Prediction for [T, T+14]
-            # So for an EQ on Day E, we look for Anomaly on [E-14, E]
-            days_diff = (eq_date - anom_date).days
-            if 0 <= days_diff <= 14:
-                has_anomaly_before = True
-                break
-        
-        if not has_anomaly_before:
-            false_negatives.append({
-                'earthquake_time': eq['time'],
-                'earthquake_magnitude': eq['magnitude'],
-                'earthquake_distance_km': eq['distance_km'],
-                'earthquake_place': eq['place'],
-                'earthquake_latitude': eq['latitude'],
-                'earthquake_longitude': eq['longitude']
+        for row in pd.read_csv(anomaly_file).to_dict('records'):
+            try:
+                detections.append(anomaly_detection_time(row, station_code))
+            except (ValueError, KeyError, IndexError, TypeError):
+                continue
+    missed = []
+    for _, event in events.iterrows():
+        when = utc_naive(event['time'])
+        local = when.tz_localize('UTC').tz_convert(station_timezone(station_code))
+        last_night = local.date() if local.hour >= 4 else local.date() - timedelta(days=1)
+        observed = all(coverage.get((last_night - timedelta(days=i)).isoformat(), False)
+                       for i in range(14))
+        predicted = any(timedelta(0) <= when - detection <= timedelta(days=14)
+                        for detection in detections)
+        distance = calculate_distance(lat, lon, event['latitude'], event['longitude'])
+        if observed and not predicted and distance <= 200:
+            missed.append({
+                'earthquake_time': event['time'], 'earthquake_magnitude': event['magnitude'],
+                'earthquake_distance_km': distance, 'earthquake_place': event['place'],
+                'earthquake_latitude': event['latitude'], 'earthquake_longitude': event['longitude'],
+                'earthquake_id': event.get('id'), 'coverage_verified': True,
             })
-    
-    if false_negatives:
-        return pd.DataFrame(false_negatives)
-    return pd.DataFrame()
+    frame = pd.DataFrame(missed, columns=['earthquake_time', 'earthquake_magnitude',
+        'earthquake_distance_km', 'earthquake_place', 'earthquake_latitude',
+        'earthquake_longitude', 'earthquake_id', 'coverage_verified'])
+    frame.attrs['query_succeeded'] = events.attrs.get('query_succeeded', True)
+    return frame
+
 
 def save_earthquake_correlations(station_code, results_folder, correlations_df):
     """Save earthquake correlation results"""
@@ -412,7 +282,7 @@ def save_earthquake_correlations(station_code, results_folder, correlations_df):
 
 def save_false_negatives(station_code, results_folder, false_negatives_df):
     """Save false negative earthquakes"""
-    if false_negatives_df.empty:
+    if false_negatives_df.empty and not false_negatives_df.attrs.get('query_succeeded', False):
         return
     
     output_file = results_folder / 'false_negatives.csv'

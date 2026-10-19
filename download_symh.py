@@ -1,298 +1,107 @@
 #!/usr/bin/env python3
-"""
-Download SYM-H geomagnetic index from NASA CDAWeb
-"""
+"""Acquire minute-resolution SYM-H from the NASA OMNIWeb service."""
 
-import requests
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
 from pathlib import Path
-import warnings
-warnings.filterwarnings('ignore')
+import re
 
-# NASA CDAWeb API
-CDAWEB_BASE = 'https://cdaweb.gsfc.nasa.gov/sp_phys/data/omni/omni2_h0_mrg1hr/'
+import numpy as np
+import pandas as pd
+import requests
 
-def download_symh_cdaweb(start_date, end_date, cache_folder):
-    """Download SYM-H from NASA CDAWeb"""
-    cache_file = cache_folder / f'SYMH_{start_date.strftime("%Y%m%d")}_{end_date.strftime("%Y%m%d")}.csv'
-    
-    # Check cache
-    if cache_file.exists():
+OMNIWEB_URL = 'https://omniweb.gsfc.nasa.gov/cgi/nx1.cgi'
+SOURCE = 'OMNI_MIN_SYM_H_41'
+
+
+def empty_symh():
+    return pd.DataFrame(columns=['SYMH', 'Disturbed'],
+                        index=pd.DatetimeIndex([], name='Time', tz='UTC'))
+
+
+def parse_symh_response(text):
+    """Parse only YEAR DOY HOUR MINUTE SYM/H, the one requested variable.
+
+    Variable 41 and spacecraft omni_min are specified by NASA's form:
+    https://omniweb.gsfc.nasa.gov/form/omni_min.html
+    """
+    records = []
+    for line in text.splitlines():
+        fields = line.split()
+        if len(fields) != 5 or not re.fullmatch(r'\d{4}', fields[0]):
+            continue
         try:
-            df = pd.read_csv(cache_file, parse_dates=['Time'], index_col='Time')
-            if not df.empty:
-                print(f'Using cached SYM-H data: {cache_file.name}')
-                return df
-        except:
-            pass
-    
-    print(f'Downloading SYM-H from NASA CDAWeb: {start_date.date()} to {end_date.date()}')
-    
-    try:
-        # CDAWeb uses year-based files
-        years = range(start_date.year, end_date.year + 1)
-        all_data = []
-        
-        for year in years:
-            # OMNI2 hourly data file naming: YYYY format
-            # Try different possible URLs
-            urls = [
-                f'https://cdaweb.gsfc.nasa.gov/sp_phys/data/omni/omni2_h0_mrg1hr/{year}/omni2_h0_mrg1hr_{year}_v01.cdf',
-                f'https://spdf.gsfc.nasa.gov/pub/data/omni/omni2_h0_mrg1hr/{year}/omni2_h0_mrg1hr_{year}_v01.cdf',
-            ]
-            
-            # Alternative: Use OMNIWeb web interface
-            # For now, use a simpler approach with OMNIWeb's web service
-            
-        # Use OMNIWeb web service instead (more reliable)
-        return download_symh_omniweb(start_date, end_date, cache_file)
-        
-    except Exception as e:
-        print(f'CDAWeb download failed: {e}')
-        return download_symh_omniweb(start_date, end_date, cache_file)
+            year, doy, hour, minute = map(int, fields[:4])
+            value = float(fields[4])
+            if not (1 <= doy <= 366 and 0 <= hour < 24 and 0 <= minute < 60):
+                continue
+            if not np.isfinite(value) or abs(value) >= 99999:
+                continue
+            timestamp = pd.Timestamp(datetime(year, 1, 1), tz='UTC') + pd.Timedelta(
+                days=doy - 1, hours=hour, minutes=minute)
+            records.append((timestamp, value))
+        except (ValueError, OverflowError):
+            continue
+    if not records:
+        return empty_symh()
+    result = pd.DataFrame(records, columns=['Time', 'SYMH']).set_index('Time')
+    result = result.sort_index().loc[lambda frame: ~frame.index.duplicated()]
+    result['Disturbed'] = result['SYMH'] < -30
+    result['Source'] = SOURCE
+    return result
+
 
 def download_symh_omniweb(start_date, end_date, cache_file):
-    """Download SYM-H using OMNIWeb web service"""
+    """Keep the existing API; never reinterpret an unavailable index as quiet."""
+    cache_file = Path(cache_file)
+    start = pd.Timestamp(start_date)
+    end = pd.Timestamp(end_date)
+    start = start.tz_localize('UTC') if start.tzinfo is None else start.tz_convert('UTC')
+    end = end.tz_localize('UTC') if end.tzinfo is None else end.tz_convert('UTC')
+    if start >= end:
+        return empty_symh()
+    if cache_file.exists():
+        try:
+            cached = pd.read_csv(cache_file, index_col='Time')
+            cached.index = pd.to_datetime(cached.index, utc=True)
+            # Old caches used an hourly, unrelated variable. Only reuse data
+            # with provenance from this corrected parser and full coverage.
+            if (not cached.empty and 'Source' in cached and cached['Source'].eq(SOURCE).all()
+                    and cached.index.min() <= start
+                    and cached.index.max() >= end - pd.Timedelta(minutes=1)):
+                return cached
+        except (ValueError, KeyError, OSError):
+            pass
     try:
-        # OMNIWeb web interface URL
-        base_url = 'https://omniweb.gsfc.nasa.gov/cgi/nx1.cgi'
-        
-        # OMNIWeb data is only available up to 2025-10-30 (as of Nov 2025)
-        # Limit dates to available range
-        # Make dates timezone-naive for comparison
-        if hasattr(start_date, 'tzinfo') and start_date.tzinfo is not None:
-            start_date_naive = start_date.replace(tzinfo=None)
-        else:
-            start_date_naive = start_date
-        
-        if hasattr(end_date, 'tzinfo') and end_date.tzinfo is not None:
-            end_date_naive = end_date.replace(tzinfo=None)
-        else:
-            end_date_naive = end_date
-        
-        omni_max_date = datetime(2025, 10, 30)
-        omni_min_date = datetime(1963, 11, 28)
-        
-        # Adjust dates if they're outside the available range
-        if end_date_naive > omni_max_date:
-            end_date_naive = omni_max_date
-            print(f'[INFO] OMNIWeb data only available up to {omni_max_date.date()}, adjusting end date')
-        
-        if start_date_naive < omni_min_date:
-            start_date_naive = omni_min_date
-            print(f'[INFO] OMNIWeb data starts from {omni_min_date.date()}, adjusting start date')
-        
-        # If start_date > end_date after adjustment, return empty
-        if start_date_naive > end_date_naive:
-            print(f'[WARNING] Date range adjusted to empty - OMNIWeb data not available for requested dates')
-            return pd.DataFrame(columns=['SYMH', 'Disturbed'])
-        
-        # Format dates (OMNIWeb needs dates in YYYYMMDD format)
-        start_str = start_date_naive.strftime('%Y%m%d')
-        end_str = end_date_naive.strftime('%Y%m%d')
-        
-        # Parameters for OMNIWeb
-        # SYM-H is variable 50 in OMNI2
-        params = {
-            'activity': 'retrieve',
-            'res': 'hour',
-            'spacecraft': 'omni2',
-            'start_date': start_str,
-            'end_date': end_str,
-            'vars': '50',  # SYM-H index (variable 50)
-            'format': 'ascii'
-        }
-        
-        print(f'Requesting SYM-H from OMNIWeb ({start_str} to {end_str})...')
-        response = requests.get(base_url, params=params, timeout=120)
+        response = requests.get(OMNIWEB_URL, params={
+            'activity': 'retrieve', 'res': 'min', 'spacecraft': 'omni_min',
+            'start_date': start.strftime('%Y%m%d'),
+            'end_date': end.strftime('%Y%m%d'), 'vars': '41',
+        }, timeout=45)
         response.raise_for_status()
-        
-        # Check if response is valid
-        if len(response.text) < 100:
-            raise ValueError('OMNIWeb response too short - may be an error page')
-        
-        # Parse the response - OMNIWeb returns different formats
-        lines = response.text.split('\n')
-        
-        # Debug: Save response for inspection (optional)
-        # with open('omniweb_response.txt', 'w') as f:
-        #     f.write(response.text)
-        
-        # Find data start - look for header line with "YEAR" or data lines
-        data_start = 0
-        header_found = False
-        
-        # First, look for header line
-        for i, line in enumerate(lines):
-            line_upper = line.upper().strip()
-            # Look for header indicators
-            if ('YEAR' in line_upper and 'DOY' in line_upper) or \
-               ('YEAR' in line_upper and 'HOUR' in line_upper) or \
-               (line_upper.startswith('YEAR') and len(line.split()) >= 3):
-                data_start = i + 1  # Data starts after header
-                header_found = True
-                print(f'Found header at line {i}, data starts at {data_start}')
-                break
-        
-        # If no header found, look for first numeric data line
-        if not header_found:
-            for i, line in enumerate(lines):
-                line_stripped = line.strip()
-                if not line_stripped:
-                    continue
-                # Check if line starts with 4-digit year
-                parts = line_stripped.split()
-                if len(parts) >= 3:
-                    try:
-                        # Try to parse first part as year
-                        year_test = int(parts[0])
-                        if 1950 <= year_test <= 2100:  # Reasonable year range
-                            data_start = i
-                            print(f'Found data start at line {i} (no header)')
-                            break
-                    except (ValueError, IndexError):
-                        continue
-        
-        # Last resort: skip known header lines and find first data-like line
-        if data_start == 0:
-            # OMNIWeb typically has ~50-60 header lines
-            for i, line in enumerate(lines[50:], start=50):
-                line_stripped = line.strip()
-                if line_stripped and len(line_stripped) > 10:
-                    parts = line_stripped.split()
-                    if len(parts) >= 3:
-                        try:
-                            year_test = int(parts[0])
-                            if 1950 <= year_test <= 2100:
-                                data_start = i
-                                print(f'Found data start at line {i} (after skipping headers)')
-                                break
-                        except (ValueError, IndexError):
-                            continue
-        
-        if data_start == 0:
-            # Try to get a sample of the response for debugging
-            sample = '\n'.join(lines[:30])
-            raise ValueError(f'Could not find data start in OMNI response. First 30 lines:\n{sample}')
-        
-        # Parse data lines
-        data_lines = []
-        for line in lines[data_start:]:
-            line_stripped = line.strip()
-            # Skip empty lines, comments, and non-data lines
-            if not line_stripped or line_stripped.startswith('#') or \
-               line_stripped.startswith('BEGIN') or line_stripped.startswith('END') or \
-               'YEAR' in line_stripped.upper():
-                continue
-            # Check if line has numeric data
-            parts = line_stripped.split()
-            if len(parts) >= 3:
-                try:
-                    # Try to parse first part as number
-                    float(parts[0])
-                    data_lines.append(line_stripped)
-                except (ValueError, IndexError):
-                    continue
-        
-        if not data_lines:
-            raise ValueError('No data lines found after parsing')
-        
-        # Parse columns - OMNI format varies, try different column positions
-        records = []
-        for line in data_lines[:2000]:  # Limit to avoid memory issues
-            parts = line.split()
-            if len(parts) < 3:
-                continue
-            
-            try:
-                # Try different column positions for SYM-H (usually column 40-50)
-                # But for simplicity, let's try to find year, doy, hour first
-                year = int(parts[0])
-                doy = int(parts[1])
-                hour = int(parts[2])
-                
-                # SYM-H is at column 40 in OMNI2 hourly format (0-indexed)
-                # But let's be flexible and check multiple positions
-                symh = np.nan
-                
-                # Try known positions first (OMNI2 hourly format)
-                symh_positions = [40, 41, 39, 38]  # Common positions for SYM-H
-                for pos in symh_positions:
-                    if pos < len(parts):
-                        try:
-                            val = float(parts[pos])
-                            # SYM-H typically ranges from -500 to +500, and is not 9999
-                            if -500 <= val <= 500 and val not in [9999, 999.99, 99.99]:
-                                symh = val
-                                break
-                        except (ValueError, IndexError):
-                            continue
-                
-                # If not found at known positions, search all columns
-                if np.isnan(symh):
-                    for i, part in enumerate(parts[3:min(60, len(parts))]):
-                        try:
-                            val = float(part)
-                            # SYM-H typically ranges from -500 to +500
-                            if -500 <= val <= 500 and val not in [9999, 999.99, 99.99]:
-                                symh = val
-                                break
-                        except (ValueError, IndexError):
-                            continue
-                
-                # If still no SYM-H found, skip this record
-                if np.isnan(symh):
-                    continue
-                
-                # Convert to datetime
-                dt = datetime(year, 1, 1) + timedelta(days=doy-1, hours=hour)
-                records.append({'Time': dt, 'SYMH': symh})
-                
-            except (ValueError, IndexError, OverflowError):
-                continue
-        
-        if not records:
-            raise ValueError('No valid records parsed')
-        
-        # Create DataFrame
-        df = pd.DataFrame(records)
-        df['Time'] = pd.to_datetime(df['Time'])
-        df = df.set_index('Time')
-        df = df.sort_index()
-        
-        # Add disturbed flag
-        df['Disturbed'] = df['SYMH'] < -30
-        
-        # Remove NaN rows
-        df = df.dropna(subset=['SYMH'])
-        
-        # Cache the result
-        cache_file.parent.mkdir(parents=True, exist_ok=True)
-        df.to_csv(cache_file)
-        print(f'Saved SYM-H data to cache: {cache_file.name}')
-        print(f'Retrieved {len(df)} records')
-        
-        return df
-        
-    except Exception as e:
-        print(f'OMNIWeb download failed: {e}')
-        print('Returning empty DataFrame - will use fallback (assume quiet)')
-        return pd.DataFrame(columns=['SYMH', 'Disturbed'])
+        result = parse_symh_response(response.text)
+        if result.empty:
+            print('[WARNING] NASA returned no usable minute-resolution SYM-H data')
+            return result
+        result = result.loc[(result.index >= start) & (result.index <= end)]
+        if not result.empty:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            temporary = cache_file.with_suffix('.csv.tmp')
+            result.to_csv(temporary)
+            temporary.replace(cache_file)
+        return result
+    except (requests.RequestException, ValueError, OSError) as exc:
+        print(f'[WARNING] SYM-H unavailable: {exc}')
+        return empty_symh()
+
+
+def download_symh_cdaweb(start_date, end_date, cache_folder):
+    """Compatibility wrapper for existing callers."""
+    cache_file = Path(cache_folder) / f'SYMH_{start_date:%Y%m%d}_{end_date:%Y%m%d}.csv'
+    return download_symh_omniweb(start_date, end_date, cache_file)
+
 
 if __name__ == '__main__':
-    # Test download
-    from zoneinfo import ZoneInfo
-    TZ = ZoneInfo('Asia/Tokyo')
-    
-    end_date = datetime.now(TZ)
-    start_date = end_date - timedelta(days=3)
-    
-    cache_folder = Path('INTERMAGNET_DOWNLOADS') / '_cache'
-    df = download_symh_omniweb(start_date, end_date, cache_folder / 'test_symh.csv')
-    
-    print(f'\nDownloaded {len(df)} records')
-    print(f'Date range: {df.index.min()} to {df.index.max()}')
-    print(f'SYM-H range: {df["SYMH"].min():.1f} to {df["SYMH"].max():.1f} nT')
-
+    end = datetime.utcnow()
+    data = download_symh_cdaweb(end - timedelta(days=3), end,
+                               Path('INTERMAGNET_DOWNLOADS') / '_cache')
+    print(f'Retrieved {len(data)} SYM-H observations')

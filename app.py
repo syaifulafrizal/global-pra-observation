@@ -12,22 +12,56 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 
 # Serve static files from web_output/static
 @app.route('/static/<path:filename>')
 def serve_static(filename):
-    # Try web_output first
-    web_static = Path('web_output') / 'static' / filename
-    if web_static.exists():
-        return send_from_directory('web_output/static', filename)
-    # Fallback to source static
-    return send_from_directory('static', filename)
+    # Local HTML and assets always come from the same source version.
+    source_static = Path(app.root_path) / 'static'
+    if (source_static / filename).is_file():
+        return send_from_directory(str(source_static), filename)
+    return send_from_directory('web_output/static', filename)
 
 # Serve data files from web_output/data
 @app.route('/data/<path:filename>')
 def serve_data_file(filename):
     """Serve data files - tries web_output first, then source directories"""
+    # Build current local snapshots in memory; existing prepared files are
+    # preserved and remain available as a compatibility fallback.
+    from upload_results import (build_aggregated_data, merge_history,
+                                station_correlation_status)
+    metadata = local_metadata()
+    if filename == 'stations.json' and metadata['stations']:
+        return jsonify(metadata)
+    import re
+    match = re.fullmatch(r'aggregated_(\d{4}-\d{2}-\d{2})\.json', filename)
+    if match and metadata['stations']:
+        try:
+            snapshot = build_aggregated_data(metadata['stations'], match.group(1),
+                Path('web_output/data'), source_folder=Path('INTERMAGNET_DOWNLOADS'))
+        except ValueError:
+            return 'Invalid date', 404
+        return jsonify(snapshot)
+    if filename in ('anomaly_history.json', 'false_negative_history.json'):
+        keys = ('station', 'date') if filename == 'anomaly_history.json' else ('station', 'earthquake_time')
+        entries = merge_history(Path('web_output/data') / filename, Path('data/history') / filename, keys)
+        if filename == 'anomaly_history.json':
+            for entry in entries:
+                entry['status'] = station_correlation_status(
+                    Path('INTERMAGNET_DOWNLOADS') / entry['station'], entry['date'])
+                entry['has_correlated_eq'] = entry['status'] == 'TP'
+        return jsonify({'entries': entries})
+    match = re.fullmatch(r'([A-Z0-9]{3})_(\d{4}-\d{2}-\d{2})\.json', filename)
+    if match:
+        from result_validation import result_is_usable
+        station, day = match.groups()
+        path = Path('INTERMAGNET_DOWNLOADS') / station / f'PRA_Night_{station}_{day.replace("-", "")}.json'
+        if path.exists():
+            result = json.loads(path.read_text(encoding='utf-8'))
+            if result.get('date') == day and result_is_usable(result):
+                return jsonify(result)
+            return 'Station data unavailable or invalid', 404
     # Try web_output first (prepared files)
     web_data = Path('web_output') / 'data' / filename
     if web_data.exists():
@@ -87,12 +121,41 @@ def serve_figure_file(filename):
 TZ = ZoneInfo('Asia/Tokyo')
 RUN_TIMEZONE = ZoneInfo('Asia/Singapore')
 
+def local_metadata():
+    """Discover canonical result dates without regenerating or deleting files."""
+    from upload_results import load_station_metadata
+    import re
+    stations = set()
+    dates = set()
+    latest_mtime = 0
+    selected = {code.strip() for code in os.getenv('INTERMAGNET_STATIONS', '').split(',') if code.strip()}
+    for path in Path('INTERMAGNET_DOWNLOADS').glob('*/PRA_Night_*.json'):
+        station = path.parent.name
+        if selected and station not in selected:
+            continue
+        match = re.search(r'_(\d{8})\.json$', path.name)
+        if not match:
+            continue
+        try:
+            day = datetime.strptime(match.group(1), '%Y%m%d').date().isoformat()
+        except ValueError:
+            continue
+        stations.add(station)
+        dates.add(day)
+        latest_mtime = max(latest_mtime, path.stat().st_mtime)
+    available = sorted(dates, reverse=True)[:7]
+    return {'stations': sorted(stations), 'available_dates': available,
+            'most_recent_date': available[0] if available else None,
+            'last_updated': datetime.fromtimestamp(latest_mtime, ZoneInfo('UTC')).isoformat() if latest_mtime else None,
+            'metadata': load_station_metadata()}
+
+
 def get_stations():
-    """Get list of stations"""
     stations_env = os.getenv('INTERMAGNET_STATIONS', '')
     if stations_env:
-        return [s.strip() for s in stations_env.split(',')]
-    return ['KAK']
+        return [s.strip() for s in stations_env.split(',') if s.strip()]
+    return local_metadata()['stations'] or ['KAK']
+
 
 def get_latest_results(station_code):
     """Get latest results for a station"""
@@ -137,39 +200,9 @@ def get_figures(station_code, limit=5):
 
 @app.route('/')
 def index():
-    """Main page - serve static HTML from web_output"""
-    # Serve from web_output if it exists (prepared by upload_results.py)
-    static_index = Path('web_output') / 'index.html'
-    if static_index.exists():
-        return send_from_directory('web_output', 'index.html')
-    
-    # If web_output doesn't exist, prepare it automatically
-    print('[INFO] web_output/ not found, preparing files...')
-    try:
-        from upload_results import prepare_web_output
-        prepare_web_output()
-        if static_index.exists():
-            return send_from_directory('web_output', 'index.html')
-    except Exception as e:
-        print(f'[WARNING] Could not prepare web_output: {e}')
-    
-    # Final fallback: use template (if exists)
-    stations = get_stations()
-    station_data = {}
-    
-    for station in stations:
-        results = get_latest_results(station)
-        anomalies = get_anomaly_table(station)
-        figures = get_figures(station)
-        
-        station_data[station] = {
-            'results': results,
-            'anomalies': anomalies.to_dict('records') if not anomalies.empty else [],
-            'figures': figures,
-            'has_data': results is not None
-        }
-    
-    return render_template('index.html', stations=stations, station_data=station_data)
+    """Serve the current source template alongside the current source assets."""
+    return render_template('index.html')
+
 
 @app.route('/api/stations')
 def api_stations():
@@ -195,6 +228,9 @@ def api_anomalies(station_code):
 @app.route('/figures/<station_code>/<filename>')
 def serve_figure(station_code, filename):
     """Serve figure files"""
+    source_folder = Path('INTERMAGNET_DOWNLOADS') / station_code / 'figures'
+    if (source_folder / filename).is_file():
+        return send_from_directory(str(source_folder), filename)
     # Try web_output first (for static deployment)
     web_fig = Path('web_output') / 'figures' / station_code / filename
     if web_fig.exists():
@@ -209,42 +245,8 @@ def serve_figure(station_code, filename):
 
 @app.route('/data/<filename>')
 def serve_data(filename):
-    """Serve data files - tries web_output first, then source directories"""
-    # Try web_output first (prepared files)
-    web_data = Path('web_output') / 'data' / filename
-    if web_data.exists():
-        return send_from_directory(str(web_data.parent), filename)
-    
-    # Fallback: serve directly from source directories
-    data_folder = Path('INTERMAGNET_DOWNLOADS')
-    
-    # Handle stations.json (metadata)
-    if filename == 'stations.json':
-        stations_json = Path('stations.json')
-        if stations_json.exists():
-            return send_from_directory('.', 'stations.json')
-    
-    # Handle station-specific files
-    if filename.endswith('_latest.json'):
-        station = filename.replace('_latest.json', '')
-        json_file = data_folder / station / f'PRA_Night_{station}_*.json'
-        import glob
-        files = glob.glob(str(json_file))
-        if files:
-            latest = max(files, key=lambda p: Path(p).stat().st_mtime)
-            return send_from_directory(str(Path(latest).parent), Path(latest).name)
-    elif filename.endswith('_anomalies.csv'):
-        station = filename.replace('_anomalies.csv', '')
-        anomaly_file = data_folder / station / 'anomaly_master_table.csv'
-        if anomaly_file.exists():
-            return send_from_directory(str(anomaly_file.parent), 'anomaly_master_table.csv')
-    elif filename.endswith('_earthquake_correlations.csv'):
-        station = filename.replace('_earthquake_correlations.csv', '')
-        eq_file = data_folder / station / 'earthquake_correlations.csv'
-        if eq_file.exists():
-            return send_from_directory(str(eq_file.parent), 'earthquake_correlations.csv')
-    
-    return "Data not found", 404
+    return serve_data_file(filename)
+
 
 if __name__ == '__main__':
     # Create necessary directories
@@ -258,7 +260,7 @@ if __name__ == '__main__':
     print('\nStarting Flask server...')
     print('Dashboard will be available at: http://localhost:5000')
     print('\nTip: Run "python upload_results.py" first to prepare files')
-    print('   (or Flask will prepare them automatically on first load)')
+    print('   Local snapshots are also assembled in memory without changing saved data')
     print('='*60)
     print()
     
