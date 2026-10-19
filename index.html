@@ -1,145 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEMPRA - Geomagnetic Earthquake Monitoring using PRA</title>
-    <meta name="description"
-        content="Sistem Pemantauan Gempa Bumi Geomagnetik menggunakan PRA - Real-time earthquake precursor detection using Polarization Ratio Analysis">
+    <title>GEMPRA — Geomagnetic Research Observatory</title>
+    <meta name="description" content="GEMPRA geomagnetic observation network. Nighttime polarization ratio analysis, station observations, and earthquake correlation research.">
+    <meta name="theme-color" content="#102b3b">
+    <link rel="icon" type="image/png" href="static/assets/gempra-field-emblem.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
-
 <body class="light-mode">
-    <div class="page-shell"></div>
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <h1>
-                    <span class="icon">G</span>
-                    GEMPRA
-                </h1>
-                <p class="hero-kicker">Geomagnetic precursor observation dashboard</p>
-                <p class="subtitle">Geomagnetic Earthquake Monitoring using PRA</p>
-                <p class="subtitle-malay">Sistem Pemantauan Gempa Bumi Geomagnetik menggunakan PRA</p>
-                <p class="subtitle-explanation">
-                    PRA = Polarization Ratio Analysis | Analisis Nisbah Polarisasi
-                </p>
-
-                <div class="header-controls">
-                    <div class="date-selector-container">
-                        <label for="date-selector">Select Date:</label>
-                        <select id="date-selector">
-                            <option value="">Loading dates...</option>
-                        </select>
-                    </div>
-                    <div class="mode-toggle-container">
-                        <span class="mode-label">Dark</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="dark-mode-toggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-                <p class="timestamp">Last updated: <span id="timestamp">Loading...</span></p>
-            </div>
+    <a class="skip-link" href="#overview">Skip to observations</a>
+    <nav class="app-topbar" aria-label="Main navigation">
+        <a class="brand" href="#overview" aria-label="GEMPRA overview">
+            <span class="brand-emblem"><img src="static/assets/gempra-field-emblem.png" alt="" width="48" height="48"></span>
+            <span class="brand-wordmark">GEMPRA<span>GEOMAGNETIC OBSERVATORY</span></span>
+        </a>
+        <div class="nav-links"><a class="active" href="#overview">Overview</a><a href="#network">Station network</a><a href="#methodology">Methodology</a></div>
+        <div class="topbar-actions"><span class="research-label"><span></span> RESEARCH PLATFORM</span><div class="mode-toggle-container"><span class="mode-label">Dark</span><label class="toggle-switch"><input type="checkbox" id="dark-mode-toggle" aria-label="Use dark theme"><span class="slider"></span></label></div></div>
+    </nav>
+    <main class="container" id="overview">
+        <header class="page-heading">
+            <div class="heading-copy"><p class="eyebrow">EARTH OBSERVATION / POLARIZATION RATIO ANALYSIS</p><h1>Geomagnetic observation network<span>.</span></h1><p class="subtitle">Nighttime magnetic-field observations. A clearer view of the signals.</p></div>
+            <div class="header-controls"><div class="date-selector-container"><label for="date-selector">Observation date</label><select id="date-selector"><option value="">Loading dates…</option></select></div><p class="timestamp">Snapshot updated <span id="timestamp">Loading…</span></p></div>
         </header>
-
-        <div class="summary-stats" id="summary-stats"></div>
-        <div class="run-health" id="run-health"></div>
-
-        <div class="analytics-section">
-            <div class="analytics-grid">
-                <div class="chart-card">
-                    <h3 class="chart-title">7-Day Anomaly Trend</h3>
-                    <canvas id="trend-chart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3 class="chart-title">Station Status</h3>
-                    <canvas id="distribution-chart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3 class="chart-title">Detection Success Rate</h3>
-                    <canvas id="success-rate-chart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3 class="chart-title">Magnitude Distribution</h3>
-                    <canvas id="magnitude-chart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="main-content-layout">
-            <div class="map-section">
-                <div class="section-header">
-                    <h2>Station Map</h2>
-                    <div class="section-actions">
-                        <button class="btn-download" id="download-anomalies-btn" title="Download Anomalies CSV">
-                            Download Anomalies
-                        </button>
-                    </div>
-                </div>
-                <div id="map-container" class="map-container"></div>
+        <div class="method-strip" aria-label="Analysis configuration"><span><b>BAND</b> 0.095–0.110 <small>Hz</small></span><span><b>WINDOW</b> 20:00–04:00 <small>local time</small></span><span><b>ESTIMATOR</b> Multitaper <small>NW 3.5</small></span><span><b>CONTEXT</b> SYM-H screening</span></div>
+        <section class="summary-stats" id="summary-stats" aria-label="Observation summary" aria-live="polite"></section>
+        <section class="run-health" id="run-health" aria-label="Data quality and availability"></section>
+        <div class="main-content-layout" id="network">
+            <section class="map-section" aria-labelledby="network-heading">
+                <div class="section-header"><div><p class="section-index">01 / SPATIAL OBSERVATIONS</p><h2 id="network-heading">Global station network</h2></div><button class="btn-download" id="download-anomalies-btn" title="Download Anomalies CSV"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v9m-3-3 3 3 3-3M4 13v3h12v-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Export anomalies</button></div>
+                <div id="map-container" class="map-container" aria-label="Interactive map of observation stations"></div>
                 <div class="map-legend" id="map-legend"></div>
-            </div>
-
-            <div class="plot-panel-section">
-                <div class="plot-panel">
-                    <div class="plot-panel-header">
-                        <h2 class="panel-title">Station Analysis</h2>
-                    </div>
-                    <div class="plot-panel-content">
-                        <div class="selector-container">
-                            <label class="selector-label">Select Station:</label>
-                            <select class="station-selector" id="station-selector">
-                                <option value="">Select a station...</option>
-                            </select>
-                        </div>
-                        <div class="selected-station-plot" id="selected-station-plot"></div>
-                    </div>
-                </div>
-            </div>
+            </section>
+            <section class="plot-panel-section" aria-labelledby="station-heading">
+                <div class="plot-panel"><div class="plot-panel-header"><p class="section-index">02 / STATION DETAIL</p><h2 id="station-heading">Signal inspection</h2></div><div class="plot-panel-content"><div class="selector-container"><label class="selector-label" for="station-selector">Observatory</label><select class="station-selector" id="station-selector"><option value="">Select a station…</option></select></div><div class="selected-station-plot" id="selected-station-plot"><div class="empty-state">Select an observatory to inspect its nightly observations.</div></div></div></div>
+            </section>
         </div>
-
-        <footer>
-            <p class="method-info">
-                Method: Multitaper Spectral Analysis (NW=3.5) + Extreme Value Theory (EVT)<br>
-                Frequency Band: 0.095-0.110 Hz | Time Window: 20:00-04:00 Local Time
-            </p>
-
-            <div class="footer-grid">
-                <div class="acknowledgements">
-                    <h3>Acknowledgements</h3>
-                    <ul>
-                        <li>Data provided by <a href="https://www.intermagnet.org" target="_blank">INTERMAGNET</a>
-                            (International Real-time Magnetic Observatory Network)</li>
-                        <li>Earthquake data from <a href="https://earthquake.usgs.gov" target="_blank">USGS</a> (United
-                            States Geological Survey)</li>
-                        <li>Research conducted at <a href="https://www.upm.edu.my" target="_blank">Universiti Putra
-                                Malaysia</a></li>
-                    </ul>
-                </div>
-
-                <div class="author">
-                    <p>Developed by <a href="https://github.com/syaifulafrizal" target="_blank">Nur Syaiful Afrizal</a></p>
-                </div>
+        <section class="analytics-section" aria-labelledby="analytics-heading">
+            <div class="section-heading"><div><p class="section-index">03 / NETWORK DIAGNOSTICS</p><h2 id="analytics-heading">Patterns &amp; event context</h2></div><p>Observed values. Verified classifications.</p></div>
+            <div class="analytics-grid">
+                <div class="chart-card"><h3 class="chart-title">7-Day Anomaly Trend</h3><p class="chart-subtitle">Anomalous station-nights</p><div class="chart-frame"><canvas id="trend-chart" role="img" aria-label="Anomalies recorded by observation date"></canvas></div></div>
+                <div class="chart-card"><h3 class="chart-title">Station Status</h3><p class="chart-subtitle">Availability &amp; classifications</p><div class="chart-frame"><canvas id="distribution-chart" role="img" aria-label="Distribution of station classifications"></canvas></div></div>
+                <div class="chart-card"><h3 class="chart-title">Matched Anomaly Rate</h3><p class="chart-subtitle">Matched / detected anomalies</p><div class="chart-frame"><canvas id="success-rate-chart" role="img" aria-label="Percentage of detected anomalies matched to earthquakes"></canvas></div></div>
+                <div class="chart-card"><h3 class="chart-title">Magnitude Distribution</h3><p class="chart-subtitle">USGS events · M ≥ 5.0</p><div class="chart-frame"><canvas id="magnitude-chart" role="img" aria-label="Earthquake magnitude distribution"></canvas></div></div>
             </div>
-
-            <div class="copyright-line">
-                <p>&copy; Universiti Putra Malaysia. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
-
+        </section>
+        <footer id="methodology"><div class="footer-main"><div><p class="section-index">THE SCIENCE BEHIND THE SIGNAL</p><h2>Observation first. Context always.</h2><p class="method-info">Polarization Ratio Analysis compares vertical and horizontal spectral band powers. Quiet-period screening, adaptive thresholds, and forward earthquake matching provide the analytical context.</p><div class="method-tags"><span>Multitaper · NW 3.5</span><span>EVT / k-sigma fallback</span><span>200 km · 14-day matching</span></div></div><div class="data-partners"><p class="section-index">RESEARCH &amp; DATA PARTNERS</p><a href="https://www.intermagnet.org" target="_blank" rel="noopener noreferrer">INTERMAGNET <span>Geomagnetic observatories ↗</span></a><a href="https://earthquake.usgs.gov" target="_blank" rel="noopener noreferrer">USGS <span>Earthquake catalog ↗</span></a><a href="https://www.upm.edu.my" target="_blank" rel="noopener noreferrer">Universiti Putra Malaysia <span>Research institution ↗</span></a></div></div><div class="copyright-line"><span>GEMPRA · Geomagnetic Earthquake Monitoring using PRA</span><span>Developed by Nur Syaiful Afrizal · © Universiti Putra Malaysia</span></div></footer>
+    </main>
     <script src="static/app.js"></script>
 </body>
-
 </html>
