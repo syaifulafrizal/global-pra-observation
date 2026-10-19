@@ -42,14 +42,20 @@ def parse_date_from_filename(filename):
         return f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}"
     return None
 
-def get_available_dates():
-    """Get list of available dates (last 7 days)"""
-    dates = []
-    today = datetime.now().date()
-    for i in range(7):
-        date = today - timedelta(days=i)
-        dates.append(date.strftime('%Y-%m-%d'))
-    return dates
+def get_available_dates(stations=None):
+    """Advertise the latest seven actual usable station-night dates, never guesses."""
+    dates = set()
+    for station in stations if stations is not None else get_stations():
+        for path in (Path('INTERMAGNET_DOWNLOADS') / station).glob('PRA_Night_*.json'):
+            day = parse_date_from_filename(path.name)
+            try:
+                datetime.strptime(day, '%Y-%m-%d')
+                result = json.loads(path.read_text(encoding='utf-8'))
+                if result.get('date') == day and result_is_usable(result):
+                    dates.add(day)
+            except (ValueError, TypeError, OSError):
+                continue
+    return sorted(dates, reverse=True)[:7]
 
 def cleanup_old_files(data_dir, figures_dir, cutoff_date, skip_files=None):
     """Remove files older than cutoff_date"""
@@ -622,6 +628,10 @@ def generate_aggregated_data_files(stations, available_dates, data_dir):
 def prepare_web_output():
     """Prepare static files for web deployment with date-specific handling"""
     print('Preparing web output...')
+    stations = get_stations()
+    available_dates = get_available_dates(stations)
+    if not available_dates:
+        raise ValueError('No usable station-night results; preserving the existing published output')
     
     # Create output directory
     OUTPUT_DIR.mkdir(exist_ok=True)
@@ -650,18 +660,14 @@ def prepare_web_output():
     figures_dir = OUTPUT_DIR / 'figures'
     figures_dir.mkdir(exist_ok=True)
     
-    # Get available dates (last 7 days)
-    available_dates = get_available_dates()
+    # Use dates backed by actual usable results, including during upstream delays.
     most_recent_date = available_dates[0] if available_dates else None
     
     print(f'[INFO] Available dates: {", ".join(available_dates)}')
     print(f'[INFO] Most recent date: {most_recent_date}')
     
-    # Get stations
-    stations = get_stations()
-    
     # Copy date-specific files for the last 7 days
-    cutoff_date = (datetime.now() - timedelta(days=6)).date()
+    cutoff_date = datetime.strptime(available_dates[-1], '%Y-%m-%d').date()
     
     for station in stations:
         station_folder = Path('INTERMAGNET_DOWNLOADS') / station

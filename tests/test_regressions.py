@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
 from unittest.mock import Mock, patch
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -230,6 +231,57 @@ class LocalFixture(unittest.TestCase):
             self.assertEqual(result['date'], date.isoformat())
         self.assertTrue(input_csv.exists())
         self.assertEqual(Path('web_output/static/assets/emblem.png').read_bytes(), b'fixture asset')
+
+    def test_daily_export_advertises_only_dates_with_actual_usable_results(self):
+        from validate_pages_output import validate_pages_output
+        day = '2026-04-11'
+        self.result(day)
+        self.result('2026-04-12', P=[.5,.5], nZ=[20.,20.], nG=[40.,40.])
+        Path('templates').mkdir(); Path('static').mkdir()
+        Path('templates/index.html').write_text('<html>fixture</html>')
+        Path('static/app.js').write_text('// fixture')
+        Path('static/style.css').write_text('/* fixture */')
+        output.prepare_web_output()
+        metadata = json.loads(Path('web_output/data/stations.json').read_text())
+        self.assertEqual(metadata['available_dates'], [day])
+        self.assertEqual(metadata['most_recent_date'], day)
+        self.assertTrue(Path(f'web_output/data/aggregated_{day}.json').is_file())
+        self.assertEqual(validate_pages_output('web_output')['latest'],day)
+
+    def test_publication_gate_rejects_phantom_dates_and_fallback_only_nights(self):
+        from validate_pages_output import validate_pages_output
+        web = Path('web_output'); (web/'data').mkdir(parents=True); (web/'static').mkdir()
+        for name in ['index.html','static/app.js','static/style.css']:
+            (web/name).write_text('fixture')
+        metadata={'stations':['KAK'],'available_dates':['2026-04-12'],'most_recent_date':'2026-04-12'}
+        (web/'data/stations.json').write_text(json.dumps(metadata))
+        with self.assertRaisesRegex(ValueError,'no aggregate'):
+            validate_pages_output(web)
+        (web/'data/aggregated_2026-04-12.json').write_text(json.dumps({'stations':{'KAK':sample_result('2026-04-11')}}))
+        with self.assertRaisesRegex(ValueError,'no usable observations for that night'):
+            validate_pages_output(web)
+
+    def test_export_without_results_preserves_existing_output(self):
+        web=Path('web_output');web.mkdir();existing=web/'index.html';existing.write_text('previous working site')
+        with self.assertRaisesRegex(ValueError,'No usable station-night results'):
+            output.prepare_web_output()
+        self.assertEqual(existing.read_text(),'previous working site')
+
+    @unittest.skipUnless(os.name == 'nt', 'Windows deployment gate')
+    def test_daily_deployment_stops_before_git_when_default_date_has_no_results(self):
+        import shutil
+        for name in ('deploy_to_github.ps1','validate_pages_output.py','result_validation.py'):
+            shutil.copy2(ROOT/name, Path(name))
+        web=Path('web_output');(web/'static').mkdir(parents=True);(web/'data').mkdir()
+        for name in ('index.html','static/app.js','static/style.css'):
+            (web/name).write_text('fixture')
+        (web/'data/stations.json').write_text(json.dumps({'stations':['KAK'],
+            'available_dates':['2026-10-20'],'most_recent_date':'2026-10-20'}))
+        completed=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass',
+            '-File',str(Path('deploy_to_github.ps1').resolve())],capture_output=True,text=True,errors='replace',timeout=30)
+        self.assertNotEqual(completed.returncode,0)
+        self.assertIn('Publication blocked',completed.stdout+completed.stderr)
+        self.assertFalse(Path('.git').exists())
 
     def test_static_preview_matches_local_snapshots_and_refuses_overwrites(self):
         from build_pages_preview import build_preview

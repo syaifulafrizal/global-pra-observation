@@ -31,6 +31,14 @@ if (-not (Test-Path "web_output")) {
 }
 
 # Check if git is initialized
+# Verify every advertised date before committing, changing branches or pushing.
+$validationPython = if (Test-Path "C:\Users\SYAIFUL\anaconda3\python.exe") { "C:\Users\SYAIFUL\anaconda3\python.exe" } else { "python" }
+& $validationPython (Join-Path $ScriptDir "validate_pages_output.py") "web_output"
+if ($LASTEXITCODE -ne 0) {
+    Write-Log "ERROR: Publication validation failed. Existing GitHub Pages deployment preserved." "Red"
+    exit 1
+}
+
 if (-not (Test-Path ".git")) {
     Write-Log "Initializing git repository..." "Yellow"
     git init
