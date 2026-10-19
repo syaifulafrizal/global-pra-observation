@@ -704,16 +704,16 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
             const statusEntry = eqCorrelations.find(eq => eq.status);
             if (statusEntry) {
                 const status = statusEntry.status;
-                const label = status === 'FP' ? 'False Positive' : (status === 'Pending' ? 'Pending' : 'Unverified');
+                const label = status === 'FP' ? 'False Positive' : (status === 'Pending' ? 'Pending' : 'Evaluation unavailable');
                 popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">${label}</strong><br>`;
                 popupContent += status === 'FP' ? `No EQ M≥5.0 within 200km within 14 days` : (status === 'Pending' ? `Monitoring for upcoming EQ...` : `Earthquake evaluation unavailable`);
             } else {
-                popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">Unverified forecast</strong><br>`;
-                popupContent += `No EQ M≥5.0 within 200km within 14 days`;
+                popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">Evaluation unavailable</strong><br>`;
+                popupContent += `No completed earthquake evaluation recorded`;
             }
         }
     } else {
-        popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);"><span>Status: ${!stationData ? 'Data unavailable or invalid' : (stationData.data_quality ? 'No anomaly recorded' : 'Historical result (unverified)')}</span><br>`;
+        popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);"><span>Status: ${!stationData ? 'Data unavailable or invalid' : `${observationRecordLabel(stationData)} · no anomaly recorded`}</span><br>`;
         if (hasFN) {
             popupContent += `<hr style="margin: 8px 0; border-color: #c0392b;"><strong style="color: #c0392b;">❌ False Negative</strong><br>`;
             popupContent += `${falseNegatives.length} EQ(s) missed:<br>`;
@@ -1524,7 +1524,7 @@ async function renderDashboard(date = null, {refresh = false} = {}) {
                 <div class="value">${falseNegatives}</div>
                 <div class="label">EQ M≥5.0 without anomaly</div>
                 <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
-                    Since: ${formatDateForSelector(ANALYSIS_START_DATE)}${latestFalseNegativeDate ? `<br>Latest: ${formatDateForSelector(latestFalseNegativeDate)}` : ''}${unverifiedFalseNegatives ? `<br>${unverifiedFalseNegatives} legacy/unverified records` : ''}
+                    Since: ${formatDateForSelector(ANALYSIS_START_DATE)}${latestFalseNegativeDate ? `<br>Latest: ${formatDateForSelector(latestFalseNegativeDate)}` : ''}${unverifiedFalseNegatives ? `<br>${unverifiedFalseNegatives} historical records · coverage not established` : ''}
                 </div>
             </div>
         `;
@@ -1559,7 +1559,7 @@ async function renderDashboard(date = null, {refresh = false} = {}) {
             const metadata = stationMetadata[station] || {};
             const option = document.createElement('option');
             option.value = station;
-            option.textContent = `${station} - ${metadata.name || station} (${!allStationsData[station] ? 'Unavailable' : (allStationsData[station].data_quality ? 'No anomaly recorded' : 'Unverified')})`;
+            option.textContent = `${station} - ${metadata.name || station} (${observationRecordLabel(allStationsData[station])})`;
             stationSelector.appendChild(option);
         });
 
@@ -1809,6 +1809,21 @@ function drawStationCharts(station, data) {
     });
 }
 
+function observationRecordLabel(data) {
+    if (!data) return 'Unavailable';
+    const quality = data.data_quality?.status;
+    if (quality === 'complete') return 'Complete observation';
+    if (quality === 'partial') return 'Partial observation';
+    return 'Historical observation';
+}
+
+function observationStatusText(data) {
+    const record = observationRecordLabel(data);
+    return record === 'Historical observation'
+        ? `${record} · no anomaly recorded; coverage not recorded`
+        : `${record} · no anomaly recorded`;
+}
+
 async function renderStationPlot(stationCode) {
     const generation = ++stationPlotGeneration;
     const dashboard = dashboardGeneration;
@@ -1826,16 +1841,16 @@ async function renderStationPlot(stationCode) {
     if (generation !== stationPlotGeneration || dashboard !== dashboardGeneration) return;
     const matched = correlations.some(isConfirmedCorrelation);
     const hasAnomaly = data.is_anomalous;
-    const verified = data.data_quality?.status === 'complete' && data.data_quality?.symh_verified;
-    const status = hasAnomaly ? (matched ? 'Matched anomaly' : (correlations.some(row => row.status === 'FP') ? 'False positive · 14-day window complete' : 'Anomaly · evaluation pending or unavailable')) : (verified ? 'Screened observation · no anomaly recorded' : 'Historical observation · screening unverified');
+    const complete = data.data_quality?.status === 'complete';
+    const status = hasAnomaly ? (matched ? 'Matched anomaly' : (correlations.some(row => row.status === 'FP') ? 'False positive · 14-day window complete' : 'Anomaly · evaluation pending or unavailable')) : observationStatusText(data);
     const coordinates = Number.isFinite(metadata.latitude) && Number.isFinite(metadata.longitude) ? `${metadata.latitude.toFixed(2)}°, ${metadata.longitude.toFixed(2)}°` : '';
     const threshold = Number.isFinite(Number(data.threshold)) ? Number(data.threshold).toPrecision(4) : 'N/A';
     const figure = `figures/${encodeURIComponent(stationCode)}/PRA_${encodeURIComponent(stationCode)}_${data.date.replace(/-/g, '')}.png`;
-    const method = data.threshold_method === 'evt' ? 'EVT GPD' : (data.threshold_method === 'k_sigma' ? 'k-sigma fallback' : 'Legacy / unverified');
+    const method = data.threshold_method === 'evt' ? 'EVT GPD' : (data.threshold_method === 'k_sigma' ? 'k-sigma fallback' : 'Threshold method not recorded');
     const replacement = document.createElement('div');
     replacement.innerHTML = `
         <div class="station-identity"><h3><b>${escapeText(stationCode)}</b> ${escapeText(metadata.name || stationCode)}</h3><span class="coordinates">${escapeText(coordinates)}</span></div>
-        <div class="observation-tag ${verified ? 'verified' : ''}">${escapeText(status)}</div>
+        <div class="observation-tag ${complete ? 'verified' : ''}">${escapeText(status)}</div>
         <div class="plot-label"><b>Polarization ratio</b><span class="series-key"><span><i></i>P</span><span><i class="threshold"></i>Threshold ${escapeText(threshold)}</span></span></div>
         <div class="station-chart"><canvas id="station-ratio-chart" role="img" aria-label="Hourly polarization ratio and threshold at ${escapeText(stationCode)}"></canvas></div>
         <hr class="station-separator">
@@ -1920,9 +1935,9 @@ async function renderStationsList(stations, stationsData) {
 
         if (hasAnomaly) {
             html += `<td><span class="badge badge-danger">⚠️ Anomaly</span></td>`;
-            html += `<td>${hasEQ ? '<span class="badge badge-eq">🌋 Yes (' + eqCorrelations.length + ')</span>' : '<span class="badge badge-warning">' + (eqCorrelations.some(eq => eq.status === 'FP') ? 'False Positive' : 'Pending / unverified') + '</span>'}</td>`;
+            html += `<td>${hasEQ ? '<span class="badge badge-eq">🌋 Yes (' + eqCorrelations.length + ')</span>' : '<span class="badge badge-warning">' + (eqCorrelations.some(eq => eq.status === 'FP') ? 'False Positive' : 'Evaluation pending / unavailable') + '</span>'}</td>`;
         } else {
-            html += `<td><span class="badge badge-secondary">${!data ? 'Unavailable' : (data.data_quality ? 'No anomaly recorded' : 'Unverified')}</span></td>`;
+            html += `<td><span class="badge badge-secondary">${observationRecordLabel(data)}</span></td>`;
             html += `<td>-</td>`;
         }
 
@@ -2039,13 +2054,14 @@ function updateRunHealth(data, totalStationsCount, loadedStationsCount) {
     const isHybrid = data.is_hybrid_aggregation || false;
     const qualities = Object.values(data.station_quality || {});
     const completeCount = qualities.filter(value => value === 'complete').length;
-    const unverifiedCount = qualities.filter(value => value === 'unverified').length;
+    const historicalCount = qualities.filter(value => ['unverified', 'historical'].includes(value)).length;
+    const partialCount = qualities.filter(value => value === 'partial').length;
 
     healthEl.innerHTML = `
         <div class="health-heading"><h3><i class="status-dot ${availabilityPct < 90 ? 'partial' : ''}"></i>Data availability</h3><p>Observation quality &amp; provenance</p></div>
         <div class="health-grid">
             <div class="health-item"><div class="health-label">Usable observations</div><div class="health-value"><b>${loadedStationsCount} / ${totalStationsCount}</b> stations <span class="health-meta">· ${availabilityPct}%</span></div><div class="coverage-meter"><span style="width:${availabilityPct}%"></span></div></div>
-            <div class="health-item"><div class="health-label">Quality status</div><div class="health-value">${completeCount} complete <span class="health-meta">/ ${unverifiedCount} unverified</span></div><div class="health-meta">Invalid records excluded from coverage</div></div>
+            <div class="health-item"><div class="health-label">Observation records</div><div class="health-value">${completeCount} complete <span class="health-meta">/ ${partialCount} partial / ${historicalCount} historical</span></div><div class="health-meta">Historical completeness not recorded · invalid records excluded</div></div>
             <div class="health-item"><div class="health-label">Observation window</div><div class="health-value">${formatDate(data.selected_date)}</div><div class="health-meta">${isHybrid ? 'Includes clearly dated previous-night data' : 'Canonical station-night snapshots'}</div></div>
         </div>`;
 }

@@ -171,3 +171,17 @@ test('failed requests are retried, cache is bounded and parallel reads preserve 
     assert.equal(peak, 3);
     assert.deepEqual(Array.from(values), [2,4,6,8,10,12]);
 });
+
+test('observation completeness labels do not depend on SYM-H verification', () => {
+    const page = dashboard();
+    for (const symh_verified of [true, false, undefined]) {
+        const observation = {data_quality:{status:'complete',symh_verified}};
+        assert.equal(page.observationRecordLabel(observation), 'Complete observation');
+        assert.equal(page.observationStatusText(observation), 'Complete observation · no anomaly recorded');
+    }
+    assert.equal(page.observationRecordLabel({data_quality:{status:'partial',symh_verified:true}}), 'Partial observation');
+    assert.equal(page.observationRecordLabel({P:[1,2]}), 'Historical observation');
+    assert.match(page.observationStatusText({P:[1,2]}), /coverage not recorded/);
+    assert.doesNotMatch(page.observationStatusText({P:[1,2]}), /unverified|SYM-H/);
+    assert.equal(page.observationRecordLabel(null), 'Unavailable');
+});

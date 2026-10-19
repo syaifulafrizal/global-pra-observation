@@ -95,6 +95,32 @@ async function main() {
         assert.ok(await page.locator('.brand-emblem img').evaluate(image => image.complete && image.naturalWidth > 0));
         return { dates: metadata.available_dates, stations: metadata.stations.length };
     });
+    await check('Station observation labels use completeness rather than SYM-H verification', async () => {
+        assert.doesNotMatch(await page.locator('.method-strip').innerText(), /SYM-H/);
+        assert.doesNotMatch(await page.locator('body').innerText(), /unverified/i);
+        assert.doesNotMatch(await page.locator('#station-selector').innerText(), /unverified/i);
+        const popupLabels = await page.evaluate(() => allStations.map(code=>markers[code].getPopup().getContent()).join('\n'));
+        assert.doesNotMatch(popupLabels, /unverified/i);
+        assert.doesNotMatch(await page.locator('#run-health').innerText(), /unverified|SYM-H/i);
+        await page.locator('#station-selector').selectOption('KAK');
+        assert.match(await page.locator('.observation-tag').innerText(), /Historical observation/);
+        assert.doesNotMatch(await page.locator('#selected-station-plot').innerText(), /unverified|SYM-H/i);
+        const fixture = await fixturePage({snapshot:data=>{
+            data.stations.KAK.data_quality = {status:'complete',symh_verified:false};
+            data.station_quality.KAK = 'complete';
+            data.stations.HON.data_quality = {status:'partial',symh_verified:true};
+            data.station_quality.HON = 'partial';
+        }});
+        try {
+            await ready(fixture.target);
+            await fixture.target.locator('#station-selector').selectOption('KAK');
+            assert.equal(await fixture.target.locator('.observation-tag').innerText(),'Complete observation · no anomaly recorded');
+            await fixture.target.locator('#station-selector').selectOption('HON');
+            assert.equal(await fixture.target.locator('.observation-tag').innerText(),'Partial observation · no anomaly recorded');
+            assert.match(await fixture.target.locator('#run-health').innerText(), /1 complete.*1 partial/s);
+            assert.deepEqual(fixture.errors,[]);
+        } finally { await fixture.isolated.close(); }
+    }, 'live and browser-only quality fixtures');
     for (const date of metadata.available_dates) {
         await check(`All 51 station selections and chart values on ${date}`, async () => {
             await page.locator('#date-selector').selectOption(date);
@@ -311,6 +337,9 @@ async function main() {
             await ready(fixture.target);
             const colors=await fixture.target.evaluate(()=>['KAK','HON','ASP','API'].map(code=>markers[code].getElement().innerHTML));
             assert.match(colors[0],/eq-reliable/);assert.match(colors[1],/eq-false/);assert.match(colors[2],/gray/);assert.match(colors[3],/gray/);
+            assert.doesNotMatch(await fixture.target.locator('body').innerText(), /unverified/i);
+            const popupLabels = await fixture.target.evaluate(() => ['KAK','HON','ASP','API'].map(code=>markers[code].getPopup().getContent()).join('\n'));
+            assert.doesNotMatch(popupLabels,/unverified/i);
             assert.equal(await fixture.target.evaluate(()=>charts.successRate.data.datasets[0].data[0]),25);
             for(const code of codes){await fixture.target.locator('#station-selector').selectOption(code);await fixture.target.waitForTimeout(70);}
             assert.deepEqual(fixture.errors,[]);
