@@ -13,6 +13,8 @@ let selectedDate = null;
 let mostRecentDate = null;
 let isAggregatedDataLoaded = false;
 let stationCharts = [];
+let dashboardGeneration = 0;
+let stationPlotGeneration = 0;
 
 
 // Initialize
@@ -80,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300000); // Auto-refresh every 5 minutes
 });
 
-async function loadData(date = null) {
+async function loadData(date = null, isCurrent = () => true) {
     try {
         // First, load stations.json to get available dates
         const response = await fetch(DATA_URL);
@@ -88,6 +90,7 @@ async function loadData(date = null) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const metadata = await response.json();
+        if (!isCurrent()) return null;
 
         // Extract available dates and most recent date
         availableDates = metadata.available_dates || [];
@@ -123,6 +126,7 @@ async function loadData(date = null) {
 
             if (aggregatedResponse.ok) {
                 const aggregatedData = await aggregatedResponse.json();
+                if (!isCurrent()) return null;
                 console.log(`✓ Loaded aggregated data for ${date} (${Object.keys(aggregatedData.stations || {}).length} stations)`);
                 isAggregatedDataLoaded = true;
 
@@ -152,16 +156,18 @@ async function loadData(date = null) {
                     last_updated: metadata.last_updated || aggregatedData.generated_at
                 };
             } else {
+                if (!isCurrent()) return null;
                 console.warn(`Aggregated data not found for ${date}, falling back to individual files`);
                 isAggregatedDataLoaded = false;
                 // Fall back to old method if aggregated file doesn't exist
-                return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
+                return await loadDataFallback(date, metadata, availableDates, mostRecentDate, isCurrent);
             }
         } catch (error) {
+            if (!isCurrent()) return null;
             console.warn(`Error loading aggregated data for ${date}:`, error);
             isAggregatedDataLoaded = false;
             // Fall back to old method on error
-            return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
+            return await loadDataFallback(date, metadata, availableDates, mostRecentDate, isCurrent);
         }
     } catch (error) {
         console.error('Error loading data:', error);
@@ -170,8 +176,10 @@ async function loadData(date = null) {
 }
 
 // Fallback function for loading individual station files (kept for compatibility)
-async function loadDataFallback(date, metadata, availableDates, mostRecentDate) {
+async function loadDataFallback(date, metadata, availableDates, mostRecentDate, isCurrent = () => true) {
     console.log('Using fallback method: loading individual station files...');
+    window.earthquakeCorrelations = {};
+    window.falseNegatives = {};
 
     const dateData = {};
     const stationDates = {};
@@ -179,10 +187,12 @@ async function loadDataFallback(date, metadata, availableDates, mostRecentDate) 
 
     // Only try the selected date (no complex fallback logic)
     for (const station of (metadata.stations || [])) {
+        if (!isCurrent()) return null;
         try {
             const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
             if (stationResponse.ok) {
                 const stationData = await stationResponse.json();
+                if (!isCurrent()) return null;
                 dateData[station] = stationData;
                 stationDates[station] = stationData?.date || date;
                 hasAnyData = true;
@@ -204,7 +214,8 @@ async function loadDataFallback(date, metadata, availableDates, mostRecentDate) 
         available_dates: availableDates,
         most_recent_date: mostRecentDate,
         selected_date: date,
-        station_dates: stationDates
+        station_dates: stationDates,
+        last_updated: metadata.last_updated
     };
 }
 
@@ -356,12 +367,34 @@ function parseCSV(csvText) {
 }
 
 function formatDate(dateStr) {
-    const date = new Date(dateStr);
+    const date = new Date(`${String(dateStr).split(/[T ]/)[0]}T00:00:00Z`);
+    if (!Number.isFinite(date.getTime())) return 'Unknown Date';
     return date.toLocaleDateString('en-US', {
+        timeZone: 'UTC',
         year: 'numeric',
         month: 'short',
         day: 'numeric'
     });
+}
+
+function parseUtcTimestamp(value) {
+    const stamp = String(value || '').trim().replace(' ', 'T');
+    return new Date(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(stamp) ? stamp : `${stamp}Z`);
+}
+
+function earthquakeTimes(value, longitude) {
+    const date = parseUtcTimestamp(value);
+    if (!Number.isFinite(date.getTime())) return null;
+    const offset = Math.round(longitude / 15);
+    const local = new Date(date.getTime() + offset * 3600000);
+    return {
+        utc: date.toISOString().slice(0, 19).replace('T', ' ') + ' UTC',
+        local: local.toISOString().slice(0, 19).replace('T', ' ') + ` UTC${offset >= 0 ? '+' : ''}${offset}`
+    };
+}
+
+function validEventCount(value) {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : null;
 }
 
 function formatDateForSelector(dateStr) {
@@ -733,7 +766,7 @@ function getChartColors() {
     };
 }
 
-async function create7DayTrendChart(data) {
+async function create7DayTrendChart(data, isCurrent = () => true) {
     const ctx = document.getElementById('trend-chart');
     if (!ctx) return;
 
@@ -772,10 +805,11 @@ async function create7DayTrendChart(data) {
         anomalyCounts.push(count);
     }
 
+    if (!isCurrent()) return;
     charts.trend = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: dates.map(d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+            labels: dates.map(d => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })),
             datasets: [{
                 label: 'Anomalies',
                 data: anomalyCounts,
@@ -879,12 +913,13 @@ function createDetectionRateChart(successRate) {
     });
 }
 
-async function createMagnitudeDistributionChart(selectedDate) {
+async function createMagnitudeDistributionChart(selectedDate, isCurrent = () => true) {
     const ctx = document.getElementById('magnitude-chart');
     if (!ctx) return;
 
     const colors = getChartColors();
     const earthquakes = await loadRecentEarthquakes(selectedDate);
+    if (!isCurrent()) return;
 
     const magRanges = { 'M5-5.9': 0, 'M6-6.9': 0, 'M7-7.9': 0, 'M8+': 0 };
     earthquakes.forEach(eq => {
@@ -928,12 +963,13 @@ async function createMagnitudeDistributionChart(selectedDate) {
     });
 }
 
-async function createAnalyticsCharts(data, normalCount, withEqCount, falseAlarmCount, successRate, unresolved = 0) {
+async function createAnalyticsCharts(data, normalCount, withEqCount, falseAlarmCount, successRate, unresolved = 0, isCurrent = () => true) {
     destroyCharts();
-    await create7DayTrendChart(data);
+    await create7DayTrendChart(data, isCurrent);
+    if (!isCurrent()) return;
     createStationDistributionChart(normalCount, withEqCount, falseAlarmCount, unresolved);
     createDetectionRateChart(successRate);
-    await createMagnitudeDistributionChart(data.selected_date);
+    await createMagnitudeDistributionChart(data.selected_date, isCurrent);
 }
 
 function addEarthquakeMarkers(earthquakes) {
@@ -987,39 +1023,11 @@ function addEarthquakeMarkers(earthquakes) {
             iconAnchor: [Math.max(10, Math.min(20, mag * 2.5)), Math.max(10, Math.min(20, mag * 2.5))]
         });
 
-        // Create popup with UTC and local time
-        let timeStr = 'Unknown';
-        let utcTimeStr = '';
-        let localTimeStr = '';
-
-        if (time) {
-            try {
-                // Parse time (could be ISO string or timestamp)
-                const eqTime = new Date(time);
-                if (!isNaN(eqTime.getTime())) {
-                    // Format UTC time
-                    utcTimeStr = eqTime.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
-
-                    // Format local time (at earthquake location - approximate using longitude)
-                    // Rough timezone estimate: 1 hour per 15 degrees longitude
-                    const localOffset = Math.round(lon / 15);
-                    const localTime = new Date(eqTime.getTime() + localOffset * 3600000);
-                    localTimeStr = localTime.toLocaleString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        timeZoneName: 'short'
-                    });
-
-                    timeStr = `${utcTimeStr}<br><small style="color: #666;">Local (approx): ${localTimeStr}</small>`;
-                }
-            } catch (e) {
-                timeStr = time;
-            }
-        }
+        // Source earthquake timestamps are UTC even when the CSV omits its suffix.
+        const times = earthquakeTimes(time, lon);
+        const timeStr = times
+            ? `${times.utc}<br><small style="color: #666;">Local (approx): ${times.local}</small>`
+            : 'Unknown';
 
         const popupContent = `
             <div style="min-width: 200px; font-family: Arial, sans-serif;">
@@ -1117,7 +1125,36 @@ function refreshChartTheme() {
     });
 }
 
+function resetObservationDisplay(message = 'Loading observations…') {
+    // Invalidate pending station selections as well as the old visible snapshot.
+    stationPlotGeneration++;
+    stationCharts.forEach(chart => chart.destroy());
+    stationCharts = [];
+    destroyCharts();
+    if (map) { map.remove(); map = null; }
+    markers = {};
+    allStationsData = {};
+    document.querySelectorAll('.fallback-notice').forEach(notice => notice.remove());
+    const summary = document.getElementById('summary-stats');
+    if (summary) summary.innerHTML = '';
+    const health = document.getElementById('run-health');
+    if (health) { health.innerHTML = ''; health.style.display = 'none'; }
+    const panel = document.getElementById('selected-station-plot');
+    if (panel) panel.innerHTML = `<div class="empty-state">${escapeText(message)}</div>`;
+    const legend = document.getElementById('map-legend');
+    if (legend) legend.innerHTML = '';
+    const timestamp = document.getElementById('timestamp');
+    if (timestamp) timestamp.textContent = message;
+    const stationSelector = document.getElementById('station-selector');
+    if (stationSelector) stationSelector.disabled = true;
+    const download = document.getElementById('download-anomalies-btn');
+    if (download) download.disabled = true;
+}
+
 async function renderDashboard(date = null) {
+    const generation = ++dashboardGeneration;
+    const isCurrent = () => generation === dashboardGeneration;
+    resetObservationDisplay();
     console.log('renderDashboard called with date:', date);
     // The template already has the structure, we just need to update it
     // Show loading state
@@ -1129,10 +1166,12 @@ async function renderDashboard(date = null) {
     let data;
     try {
         console.log('Loading data...');
-        data = await loadData(date);
+        data = await loadData(date, isCurrent);
+        if (!isCurrent()) return;
         console.log('Data loaded:', data ? 'Success' : 'Failed', data);
 
         if (!data) {
+            resetObservationDisplay('Observations unavailable. Select another date or retry.');
             const dateStr = date || selectedDate || 'selected date';
             console.warn('No data available for date:', dateStr);
             if (mapContainer) {
@@ -1140,7 +1179,7 @@ async function renderDashboard(date = null) {
                     <div class="no-data" style="text-align: center; padding: 40px; color: var(--text-primary);">
                         <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
                         <p style="font-size: 1.1em; margin-bottom: 10px;">
-                            No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
+                            Observations could not be loaded for <strong>${escapeText(dateStr)}</strong>.
                         </p>
                         <p style="color: var(--text-secondary); font-size: 0.9em;">
                             Please select a different date from the dropdown above.
@@ -1151,13 +1190,15 @@ async function renderDashboard(date = null) {
             return;
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        resetObservationDisplay('Observations unavailable. Select another date or retry.');
         console.error('Error in renderDashboard:', error);
         if (mapContainer) {
             mapContainer.innerHTML = `
                 <div class="error" style="text-align: center; padding: 40px; color: #e74c3c;">
                     <h2 style="margin-bottom: 20px;">❌ Error Loading Data</h2>
                     <p style="font-size: 1.1em; margin-bottom: 10px;">
-                        ${error.message || 'Unknown error occurred'}
+                        ${escapeText(error.message || 'Unknown error occurred')}
                     </p>
                     <p style="color: var(--text-secondary); font-size: 0.9em;">
                         Please check the browser console for details.
@@ -1248,7 +1289,7 @@ async function renderDashboard(date = null) {
             const option = document.createElement('option');
             option.value = date;
             option.textContent = formatDateForSelector(date);
-            if (date === data.selected_date || date === data.most_recent_date) {
+            if (date === data.selected_date) {
                 option.selected = true;
             }
             dateSelector.appendChild(option);
@@ -1292,6 +1333,7 @@ async function renderDashboard(date = null) {
             anomalousStations.push(station);
             // Load correlations for the selected date
             const eqCorrelations = await loadEarthquakeCorrelations(station, data.selected_date);
+            if (!isCurrent()) return;
             // Filter by magnitude >= 5.0 for reliability
             const reliableCorrelations = eqCorrelations.filter(isConfirmedCorrelation);
             if (reliableCorrelations.length > 0) {
@@ -1312,6 +1354,7 @@ async function renderDashboard(date = null) {
             // Note: False negatives are collected in the cumulative loop below (lines 978-1032)
             // to avoid double-counting when the same date is processed multiple times
             const fn = await loadFalseNegatives(station, data.selected_date);
+            if (!isCurrent()) return;
             stationDataMap[station] = { stationData, eqCorrelations: [], falseNegatives: fn };
         }
     }
@@ -1328,6 +1371,7 @@ async function renderDashboard(date = null) {
             getAnomalyHistory(),
             getFalseNegativeHistory()
         ]);
+        if (!isCurrent()) return;
 
         const anomalyEntries = Array.isArray(anomalyHistory?.entries) ? anomalyHistory.entries : [];
         const falseNegativeEntries = Array.isArray(falseNegativeHistory?.entries) ? falseNegativeHistory.entries : [];
@@ -1368,8 +1412,7 @@ async function renderDashboard(date = null) {
     }
 
     // Load earthquake statistics for selected date only (no fallback)
-    let eqStats = { global: 0, within200km: 0 };
-    let eqDateUsed = data.selected_date;
+    let eqStats = { global: null, within200km: null };
 
     // Only try the selected date
     try {
@@ -1377,14 +1420,14 @@ async function renderDashboard(date = null) {
         if (statsResponse.ok) {
             const statsData = await statsResponse.json();
             eqStats = {
-                global: statsData.global_count || statsData.global || 0,
-                within200km: statsData.within_200km_count || statsData.within200km || 0
+                global: validEventCount(statsData.global_count ?? statsData.global),
+                within200km: validEventCount(statsData.within_200km_count ?? statsData.within200km)
             };
-            eqDateUsed = data.selected_date;
         }
     } catch (error) {
         console.debug('Could not load earthquake statistics for selected date:', error);
     }
+    if (!isCurrent()) return;
 
     // Create summary stats boxes (like before, but better styled)
     const summaryStatsEl = document.getElementById('summary-stats');
@@ -1402,10 +1445,10 @@ async function renderDashboard(date = null) {
             </div>
             <div class="metric-card">
                 <h3>Events (24h)</h3>
-                <div class="value">${eqStats.global}</div>
+                <div class="value">${eqStats.global ?? 'N/A'}</div>
                 <div class="label">Global · M ≥ 5.0</div>
                 <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
-                    ${eqStats.within200km} within 200km of stations
+                    ${eqStats.within200km === null ? 'Event statistics unavailable' : `${eqStats.within200km} within 200km of stations`}
                 </div>
             </div>
             <div class="metric-card ${falseAlarms > 0 ? 'warning' : ''}">
@@ -1479,6 +1522,7 @@ async function renderDashboard(date = null) {
         if (defaultStation) {
             stationSelector.value = defaultStation;
             await renderStationPlot(defaultStation);
+            if (!isCurrent()) return;
         }
 
         // Create analytics charts
@@ -1487,11 +1531,16 @@ async function renderDashboard(date = null) {
         const currentFalseAlarms = Object.values(stationDataMap).filter(item => item.eqCorrelations.some(eq => eq.status === 'FP')).length;
         const unresolved = totalStations - loaded + anomalousCount - withEQ - currentFalseAlarms;
         const detectionRate = anomalousCount > 0 ? Math.round((withEQ / anomalousCount) * 100) : null;
-        await createAnalyticsCharts(data, normalStations, withEQ, currentFalseAlarms, detectionRate, unresolved);
+        await createAnalyticsCharts(data, normalStations, withEQ, currentFalseAlarms, detectionRate, unresolved, isCurrent);
+        if (!isCurrent()) return;
+        stationSelector.disabled = false;
     }
+    const download = document.getElementById('download-anomalies-btn');
+    if (download) download.disabled = false;
 
     // Initialize map - wait a bit for DOM to be ready
     setTimeout(async () => {
+        if (!isCurrent()) return;
         const mapEl = document.getElementById('map-container');
         if (!mapEl) {
             console.error('Map container not found');
@@ -1519,6 +1568,7 @@ async function renderDashboard(date = null) {
 
             // Wait for map to be ready
             await new Promise(resolve => setTimeout(resolve, 500));
+            if (!isCurrent()) return;
 
             console.log('Adding station markers...', allStations.length);
             // Add all station markers
@@ -1530,6 +1580,7 @@ async function renderDashboard(date = null) {
             console.log('Loading earthquakes...');
             // Add earthquake markers
             const recentEarthquakes = await loadRecentEarthquakes(data.selected_date);
+            if (!isCurrent()) return;
             console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
             addEarthquakeMarkers(recentEarthquakes);
 
@@ -1538,12 +1589,13 @@ async function renderDashboard(date = null) {
 
             // Invalidate map size to ensure it renders correctly
             setTimeout(() => {
-                if (map) {
+                if (isCurrent() && map) {
                     map.invalidateSize();
                     console.log('Map size invalidated');
                 }
             }, 100);
         } catch (error) {
+            if (!isCurrent()) return;
             console.error('Error initializing map:', error);
             mapEl.innerHTML = `<div style="padding: 20px; color: #e74c3c;">Error loading map: ${error.message}<br><small>${error.stack}</small></div>`;
         }
@@ -1694,6 +1746,8 @@ function drawStationCharts(station, data) {
 }
 
 async function renderStationPlot(stationCode) {
+    const generation = ++stationPlotGeneration;
+    const dashboard = dashboardGeneration;
     const panel = document.getElementById('selected-station-plot');
     if (!panel) return;
     stationCharts.forEach(chart => chart.destroy());
@@ -1705,6 +1759,7 @@ async function renderStationPlot(stationCode) {
         return;
     }
     const correlations = await loadEarthquakeCorrelations(stationCode, data.date);
+    if (generation !== stationPlotGeneration || dashboard !== dashboardGeneration) return;
     const matched = correlations.some(isConfirmedCorrelation);
     const hasAnomaly = data.is_anomalous;
     const verified = data.data_quality?.status === 'complete' && data.data_quality?.symh_verified;
@@ -1829,12 +1884,12 @@ async function downloadAnomaliesCSV() {
                                 AnomalyValue: stationData.P ? stationData.P[i] : '',
                                 nZ: stationData.nZ ? stationData.nZ[i] : '',
                                 nG: stationData.nG ? stationData.nG[i] : '',
-                                Threshold: stationData.threshold || ''
+                                Threshold: stationData.threshold ?? ''
                             };
                             allAnomalies.push(anomaly);
                         }
                     }
-                } else {
+                } else if (!isAggregatedDataLoaded) {
                     // Fallback: try to load from CSV if JSON doesn't have anomaly info
                     try {
                         const response = await fetch(`data/${station}_anomalies.csv`);
@@ -1868,7 +1923,7 @@ async function downloadAnomaliesCSV() {
             headers.join(','),
             ...allAnomalies.map(row =>
                 headers.map(header => {
-                    const value = row[header] || '';
+                    const value = row[header] ?? '';
                     // Escape commas and quotes in CSV
                     if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
                         return `"${value.replace(/"/g, '""')}"`;
@@ -1889,6 +1944,7 @@ async function downloadAnomaliesCSV() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
 
         console.log(`Downloaded ${allAnomalies.length} anomalies`);
     } catch (error) {

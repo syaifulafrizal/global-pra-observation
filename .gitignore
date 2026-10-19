@@ -30,6 +30,7 @@ wheels/
 web_output/
 output/site-preview/
 output/dashboard-preview/
+output/dogfood/
 
 # Test files
 test_*.csv
