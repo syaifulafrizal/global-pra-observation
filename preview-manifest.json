@@ -1,5 +1,5 @@
 {
-  "publication_status": "approved_for_publication",
+  "publication_status": "published",
   "observation_dates": [
     "2026-10-17",
     "2026-10-16",
@@ -11,8 +11,8 @@
   "source_files": {
     "templates/index.html": "48a2bfa2191e161e0350dc44cbcd1bf4fac7466eb24c1ac21bf38813e1c3dbc1",
     "static/style.css": "d28b6b0fa9ce4e83d9991bd1eec1bf0b19bf900a5120bb66fcad56d673fe4ccb",
-    "static/app.js": "fa9d99d3488b569f96158efba664e3047fda92338a02905c91dc40a58d246fa2",
+    "static/app.js": "60fb26b467f2f200fe93feeeaabc40c61451cd2930b7fd48a8a6d2ece6de571f",
     "static/assets/gempra-field-emblem.png": "6eef08d4063617e471c55666de46b09816de48f4e4631544df964ed863f961cb"
   },
-  "source_commit": "e5f8b9eb09fa81e9be73fcfe77589cb80fb02320"
+  "source_commit": "7946d38905a36a765ae3f3df9d3f2069906effb9"
 }
