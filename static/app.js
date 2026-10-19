@@ -207,6 +207,17 @@ async function loadData(date = null, isCurrent = () => true) {
 }
 
 // Fallback function for loading individual station files (kept for compatibility)
+function stationResultUsable(data) {
+    const powers = data?.P;
+    if (data?.data_quality?.status === 'invalid' || !Array.isArray(powers) || !powers.length ||
+        !powers.every(value => value !== null && value !== '' && Number.isFinite(Number(value)))) return false;
+    const vertical = data.nZ || [], horizontal = data.nG || [];
+    const close = (a, b) => Math.abs(Number(a) - Number(b)) <= 1e-12 * Math.max(Math.abs(a), Math.abs(b));
+    return !(vertical.length === powers.length && horizontal.length === powers.length &&
+        powers.every(value => Math.abs(Number(value) - 0.5) <= 1e-12) &&
+        vertical.every(value => close(value, vertical[0])) && horizontal.every((value, i) => close(value, 2 * vertical[i])));
+}
+
 async function loadDataFallback(date, metadata, availableDates, mostRecentDate, isCurrent = () => true) {
     console.log('Using fallback method: loading individual station files...');
     window.earthquakeCorrelations = {};
@@ -214,25 +225,35 @@ async function loadDataFallback(date, metadata, availableDates, mostRecentDate, 
 
     const dateData = {};
     const stationDates = {};
+    const stationQuality = {};
     let hasAnyData = false;
+    const previous = new Date(new Date(`${date}T00:00:00Z`).getTime() - 86400000).toISOString().slice(0, 10);
 
-    // Only try the selected date (no complex fallback logic)
-    for (const station of (metadata.stations || [])) {
+    // Match the aggregate's one-previous-night fallback and actual-date provenance.
+    await parallelMap(metadata.stations || [], async station => {
         if (!isCurrent()) return null;
-        try {
-            const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
-            if (stationResponse.ok) {
+        stationQuality[station] = 'missing';
+        for (const day of [date, previous]) {
+            try {
+                const stationResponse = await fetch(`data/${station}_${day}.json`, { cache: 'no-cache' });
+                if (!stationResponse.ok) continue;
                 const stationData = await stationResponse.json();
                 if (!isCurrent()) return null;
+                if (stationData.date !== day || !stationResultUsable(stationData)) {
+                    stationQuality[station] = 'invalid';
+                    break;
+                }
                 dateData[station] = stationData;
-                stationDates[station] = stationData?.date || date;
+                stationDates[station] = day;
+                stationQuality[station] = stationData.data_quality?.status || 'historical';
                 hasAnyData = true;
+                break;
+            } catch (error) {
+                console.debug(`Station ${station}: No data for ${day}`);
             }
-        } catch (error) {
-            // Silently skip stations without data
-            console.debug(`Station ${station}: No data for ${date}`);
         }
-    }
+    });
+    if (!isCurrent()) return null;
 
     if (!hasAnyData) {
         return null;
@@ -246,6 +267,8 @@ async function loadDataFallback(date, metadata, availableDates, mostRecentDate, 
         most_recent_date: mostRecentDate,
         selected_date: date,
         station_dates: stationDates,
+        station_quality: stationQuality,
+        is_hybrid_aggregation: Object.values(stationDates).some(day => day !== date),
         last_updated: metadata.last_updated
     };
 }
@@ -1824,6 +1847,12 @@ function observationStatusText(data) {
         : `${record} · no anomaly recorded`;
 }
 
+function thresholdBaselineLabel(data) {
+    if (data.baseline_window_days !== 14) return 'Recorded threshold · historical settings';
+    const nights = Number(data.baseline_historical_nights || 0) + (data.baseline_includes_observation ? 1 : 0);
+    return `14-night threshold · ${nights}/14 nights used · ${data.baseline_samples || 0} quiet hours`;
+}
+
 async function renderStationPlot(stationCode) {
     const generation = ++stationPlotGeneration;
     const dashboard = dashboardGeneration;
@@ -1856,7 +1885,7 @@ async function renderStationPlot(stationCode) {
         <hr class="station-separator">
         <div class="plot-label"><b>Spectral band powers</b><span class="series-key"><span><i></i>S<sub>Z</sub></span><span><i class="horizontal"></i>S<sub>G</sub></span></span></div>
         <div class="station-chart power"><canvas id="station-power-chart" role="img" aria-label="Recorded vertical and horizontal band powers"></canvas></div>
-        <div class="station-footnote"><span>${escapeText(data.date)} · ${escapeText(metadata.timezone || 'UTC')}<br>${escapeText(method)}${data.baseline_source === 'warmup' ? ' · warmup' : ''}</span><a href="${figure}" target="_blank" rel="noopener noreferrer">Original figure ↗</a></div>`;
+        <div class="station-footnote"><span>${escapeText(data.date)} · ${escapeText(metadata.timezone || 'UTC')}<br>${escapeText(method)}${data.baseline_source === 'warmup' ? ' · warmup' : ''}<br>${escapeText(thresholdBaselineLabel(data))}</span><a href="${figure}" target="_blank" rel="noopener noreferrer">Original figure ↗</a></div>`;
     if (data.date !== selectedDate) replacement.insertAdjacentHTML('afterbegin', `<div class="observation-tag">Showing ${escapeText(data.date)}; selected ${escapeText(selectedDate)}</div>`);
     for (const canvas of replacement.querySelectorAll('canvas')) {
         const existing = panel.querySelector(`#${canvas.id}`);

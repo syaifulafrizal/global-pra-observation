@@ -1,0 +1,5 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-29 11:35:33.629,43.3828,-127.0788,10.0,5.5,"218 km W of Bandon, Oregon",earthquake,
+2026-06-29 07:38:27.562,2.302,-84.3832,10.0,5.1,off the coast of Central America,earthquake,
+2026-06-29 04:23:05.855,4.4724,125.1893,9.906,5.2,"107 km SSW of Sarangani, Philippines",earthquake,
+2026-06-29 03:32:39.606,60.237,-145.91,13.3,5.3,"35 km SSW of Cordova, Alaska",earthquake,

@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-19T17:11:52.157149",
+  "last_updated": "2026-10-19T17:54:55.126038",
   "entries": [
     {
       "station": "GUA",
@@ -58,7 +58,7 @@
       "earthquake_place": "155 km N of Arecibo, Puerto Rico",
       "earthquake_latitude": 19.8711,
       "earthquake_longitude": -66.5455,
-      "last_confirmed": "2026-10-19T17:11:52.140185",
+      "last_confirmed": "2026-10-19T16:40:21.657206",
       "source_file": "false_negatives.csv",
       "coverage_verified": false
     },
@@ -95,7 +95,7 @@
       "earthquake_place": "31 km S of Nemuro, Japan",
       "earthquake_latitude": 43.045,
       "earthquake_longitude": 145.6343,
-      "last_confirmed": "2026-10-19T17:11:52.140185",
+      "last_confirmed": "2026-10-19T16:40:21.657206",
       "source_file": "false_negatives.csv",
       "coverage_verified": false
     },
@@ -120,7 +120,7 @@
       "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
       "earthquake_latitude": 35.7025,
       "earthquake_longitude": 140.5507,
-      "last_confirmed": "2026-10-19T17:11:52.140185",
+      "last_confirmed": "2026-10-19T16:40:21.657206",
       "source_file": "false_negatives.csv",
       "coverage_verified": false
     },

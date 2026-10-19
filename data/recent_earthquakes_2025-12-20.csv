@@ -1,0 +1,7 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-20 20:30:24.538,-20.1456,-68.0803,156.493,5.2,"112 km SSE of Colchane, Chile",earthquake,
+2025-12-20 12:58:54.973,42.724,145.9807,42.955,5.2,"74 km SSE of Nemuro, Japan",earthquake,
+2025-12-20 12:30:32.074,42.7295,145.985,39.776,5.3,"73 km SSE of Nemuro, Japan",earthquake,
+2025-12-20 10:33:26.265,0.4946,121.8893,124.137,5.0,"130 km W of Gorontalo, Indonesia",earthquake,
+2025-12-20 10:25:04.033,-63.6916,172.3833,10.0,5.3,Balleny Islands region,earthquake,
+2025-12-20 06:57:09.861,-63.8943,172.7072,10.0,5.6,Balleny Islands region,earthquake,

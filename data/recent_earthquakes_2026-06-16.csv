@@ -1,0 +1,10 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-06-16 11:14:17.721,37.8819,95.4313,10.0,5.0,"261 km SSE of Dunhuang, China",earthquake,
+2026-06-16 10:46:34.658,35.9814,139.8371,71.777,5.5,"4 km NW of Noda, Japan",earthquake,
+2026-06-16 09:45:26.434,37.6989,95.2125,10.0,5.4,"277 km S of Dunhuang, China",earthquake,
+2026-06-16 09:42:35.214,38.0579,95.4312,10.0,5.2,"242 km SSE of Dunhuang, China",earthquake,
+2026-06-16 09:06:55.226,37.8888,95.4028,10.0,6.3,"260 km SSE of Dunhuang, China",earthquake,
+2026-06-16 08:04:46.472,-1.1234,120.2567,48.869,5.0,"49 km ESE of Palu, Indonesia",earthquake,
+2026-06-16 04:14:01.591,-1.1746,120.2257,10.0,5.1,"49 km SE of Palu, Indonesia",earthquake,
+2026-06-16 03:30:53.802,-1.1104,120.2135,10.0,5.2,"44 km ESE of Palu, Indonesia",earthquake,
+2026-06-16 03:27:44.418,-1.1173,120.199,10.0,6.7,"43 km ESE of Palu, Indonesia",earthquake,
