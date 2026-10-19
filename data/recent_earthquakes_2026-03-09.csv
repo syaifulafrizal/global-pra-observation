@@ -1,0 +1,7 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-03-09 23:03:54.405,40.565,14.0671,381.687,6.0,"12 km W of Anacapri, Italy",earthquake,
+2026-03-09 16:37:57.413,51.6944,159.6841,36.847,5.0,"162 km SSE of Vilyuchinsk, Russia",earthquake,
+2026-03-09 15:45:43.393,42.1141,140.3109,140.617,5.9,"21 km NE of Otobe, Japan",earthquake,
+2026-03-09 10:41:27.033,-17.1017,67.0955,10.0,5.0,Mid-Indian Ridge,earthquake,
+2026-03-09 06:21:05.912,38.0499,28.9554,10.0,5.1,"10 km E of Buldan, Turkey",earthquake,
+2026-03-09 06:10:17.073,-31.4461,-69.5425,111.791,5.1,"16 km SW of Calingasta, Argentina",earthquake,

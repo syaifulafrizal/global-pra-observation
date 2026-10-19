@@ -1,0 +1,7 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2025-12-18 14:42:38.812,43.4313,147.963,40.187,5.0,"108 km ESE of Shikotan, Russia",earthquake,
+2025-12-18 12:37:22.330,52.9652,159.6969,65.905,5.9,"72 km E of Petropavlovsk-Kamchatsky, Russia",earthquake,
+2025-12-18 11:32:50.256,24.0674,121.768,32.273,5.0,"19 km ENE of Hualien City, Taiwan",earthquake,
+2025-12-18 07:27:47.218,19.9069,121.2425,40.051,5.5,"96 km SW of Basco, Philippines",earthquake,
+2025-12-18 05:30:18.100,1.4024,125.7831,76.053,5.0,"72 km E of Bitung, Indonesia",earthquake,
+2025-12-18 01:59:31.383,-20.273,169.3438,51.518,5.2,"81 km S of Isangel, Vanuatu",earthquake,

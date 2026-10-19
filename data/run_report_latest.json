@@ -1,0 +1,43 @@
+{
+  "run_id": "manual",
+  "generated_at": "2026-10-19T16:40:21.700623",
+  "latest_date": "2026-10-20",
+  "available_dates": [
+    "2026-10-20",
+    "2026-10-19",
+    "2026-10-18",
+    "2026-10-17",
+    "2026-10-16",
+    "2026-10-15",
+    "2026-10-14"
+  ],
+  "stations_processed": 51,
+  "metrics": {
+    "anomalies_last_day": 0,
+    "anomalies_last_7_days": 0,
+    "correlated_last_7_days": 0,
+    "false_positives_last_7_days": 0,
+    "pending_anomalies": 0,
+    "unverified_anomalies": 0,
+    "false_negatives_last_7_days": 1,
+    "total_anomalies": 1,
+    "total_correlated": 0,
+    "total_false_positives": 1,
+    "total_false_negatives": 12
+  },
+  "recent_anomalies": [],
+  "recent_false_negatives": [
+    {
+      "station": "API",
+      "earthquake_time": "2026-10-15 03:36:29.038",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 54.01944691087331,
+      "earthquake_place": "36 km E of Safotu, Samoa",
+      "earthquake_latitude": -13.409,
+      "earthquake_longitude": -172.0686,
+      "last_confirmed": "2026-10-17T16:20:48.306546",
+      "source_file": "false_negatives.csv"
+    }
+  ]
+}

@@ -1,1 +1,152 @@
-{"entries":[{"earthquake_distance_km":134.7000869784241,"earthquake_latitude":14.35,"earthquake_longitude":145.8393,"earthquake_magnitude":5.7,"earthquake_place":"72 km SSE of San Jose Village, Northern Mariana Islands","earthquake_time":"2025-12-15 23:06:14.731","first_logged":"2025-12-22T17:57:15.889380","last_confirmed":"2025-12-22T17:57:15.889380","source_file":"false_negatives.csv","station":"GUA"},{"earthquake_distance_km":196.0146437156127,"earthquake_latitude":42.7295,"earthquake_longitude":145.985,"earthquake_magnitude":5.3,"earthquake_place":"73 km SSE of Nemuro, Japan","earthquake_time":"2025-12-20 12:30:32.074","first_logged":"2025-12-22T17:57:15.889380","last_confirmed":"2025-12-22T17:57:15.889380","source_file":"false_negatives.csv","station":"MMB"},{"earthquake_distance_km":196.17025304951017,"earthquake_latitude":42.724,"earthquake_longitude":145.9807,"earthquake_magnitude":5.2,"earthquake_place":"74 km SSE of Nemuro, Japan","earthquake_time":"2025-12-20 12:58:54.973","first_logged":"2025-12-22T17:57:15.889380","last_confirmed":"2025-12-22T17:57:15.889380","source_file":"false_negatives.csv","station":"MMB"},{"earthquake_distance_km":165.17432168540054,"earthquake_latitude":34.7941,"earthquake_longitude":141.6701,"earthquake_magnitude":5.1,"earthquake_place":"126 km ESE of \u014chara, Japan","earthquake_time":"2025-12-21 06:58:48.287","first_logged":"2025-12-22T17:57:15.889380","last_confirmed":"2025-12-22T17:57:15.889380","source_file":"false_negatives.csv","station":"KNY"},{"earthquake_distance_km":198.99123300127954,"earthquake_latitude":19.8711,"earthquake_longitude":-66.5455,"earthquake_magnitude":5.1,"earthquake_place":"155 km N of Arecibo, Puerto Rico","earthquake_time":"2026-02-19 14:18:06.650","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"SJG"},{"earthquake_distance_km":189.29809692316422,"earthquake_latitude":54.1456,"earthquake_longitude":-162.543,"earthquake_magnitude":5.3,"earthquake_place":"96 km SE of False Pass, Alaska","earthquake_time":"2026-07-14 12:12:19.529","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"SHU"},{"earthquake_distance_km":189.81556773032787,"earthquake_latitude":54.1633,"earthquake_longitude":-162.5848,"earthquake_magnitude":5.4,"earthquake_place":"93 km SE of False Pass, Alaska","earthquake_time":"2026-07-14 18:51:07.459","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"SHU"},{"earthquake_distance_km":151.35455567186906,"earthquake_latitude":43.045,"earthquake_longitude":145.6343,"earthquake_magnitude":5.0,"earthquake_place":"31 km S of Nemuro, Japan","earthquake_time":"2026-08-25 09:07:20.740","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"MMB"},{"earthquake_distance_km":67.33496416690444,"earthquake_latitude":35.7025,"earthquake_longitude":140.5507,"earthquake_magnitude":5.3,"earthquake_place":"0 km NNE of Y\u014dkaichiba, Japan","earthquake_time":"2026-10-01 12:27:11.864","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"KAK"},{"earthquake_distance_km":73.29497475109625,"earthquake_latitude":35.7025,"earthquake_longitude":140.5507,"earthquake_magnitude":5.3,"earthquake_place":"0 km NNE of Y\u014dkaichiba, Japan","earthquake_time":"2026-10-01 12:27:11.864","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"KNY"},{"earthquake_distance_km":38.4606404726352,"earthquake_latitude":13.8594,"earthquake_longitude":145.0892,"earthquake_magnitude":5.3,"earthquake_place":"41 km NNE of Yigo Village, Guam","earthquake_time":"2026-10-10 03:58:18.250","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"GUA"},{"earthquake_distance_km":54.01944691087331,"earthquake_latitude":-13.409,"earthquake_longitude":-172.0686,"earthquake_magnitude":5.1,"earthquake_place":"36 km E of Safotu, Samoa","earthquake_time":"2026-10-15 03:36:29.038","first_logged":"2026-10-17T16:20:48.306546","last_confirmed":"2026-10-17T16:20:48.306546","source_file":"false_negatives.csv","station":"API"}]}
+{
+  "last_updated": "2026-10-19T16:40:21.679573",
+  "entries": [
+    {
+      "station": "GUA",
+      "earthquake_time": "2025-12-15 23:06:14.731",
+      "first_logged": "2025-12-22T17:57:15.889380",
+      "earthquake_magnitude": 5.7,
+      "earthquake_distance_km": 134.7000869784241,
+      "earthquake_place": "72 km SSE of San Jose Village, Northern Mariana Islands",
+      "earthquake_latitude": 14.35,
+      "earthquake_longitude": 145.8393,
+      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2025-12-20 12:30:32.074",
+      "first_logged": "2025-12-22T17:57:15.889380",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 196.0146437156127,
+      "earthquake_place": "73 km SSE of Nemuro, Japan",
+      "earthquake_latitude": 42.7295,
+      "earthquake_longitude": 145.985,
+      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2025-12-20 12:58:54.973",
+      "first_logged": "2025-12-22T17:57:15.889380",
+      "earthquake_magnitude": 5.2,
+      "earthquake_distance_km": 196.17025304951017,
+      "earthquake_place": "74 km SSE of Nemuro, Japan",
+      "earthquake_latitude": 42.724,
+      "earthquake_longitude": 145.9807,
+      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "KNY",
+      "earthquake_time": "2025-12-21 06:58:48.287",
+      "first_logged": "2025-12-22T17:57:15.889380",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 165.17432168540054,
+      "earthquake_place": "126 km ESE of \u014chara, Japan",
+      "earthquake_latitude": 34.7941,
+      "earthquake_longitude": 141.6701,
+      "last_confirmed": "2025-12-22T17:57:15.889380",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "SJG",
+      "earthquake_time": "2026-02-19 14:18:06.650",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 198.99123300127954,
+      "earthquake_place": "155 km N of Arecibo, Puerto Rico",
+      "earthquake_latitude": 19.8711,
+      "earthquake_longitude": -66.5455,
+      "last_confirmed": "2026-10-19T16:40:21.657206",
+      "source_file": "false_negatives.csv",
+      "coverage_verified": false
+    },
+    {
+      "station": "SHU",
+      "earthquake_time": "2026-07-14 12:12:19.529",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 189.29809692316422,
+      "earthquake_place": "96 km SE of False Pass, Alaska",
+      "earthquake_latitude": 54.1456,
+      "earthquake_longitude": -162.543,
+      "last_confirmed": "2026-10-17T16:20:48.306546",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "SHU",
+      "earthquake_time": "2026-07-14 18:51:07.459",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.4,
+      "earthquake_distance_km": 189.81556773032787,
+      "earthquake_place": "93 km SE of False Pass, Alaska",
+      "earthquake_latitude": 54.1633,
+      "earthquake_longitude": -162.5848,
+      "last_confirmed": "2026-10-17T16:20:48.306546",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "MMB",
+      "earthquake_time": "2026-08-25 09:07:20.740",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.0,
+      "earthquake_distance_km": 151.35455567186906,
+      "earthquake_place": "31 km S of Nemuro, Japan",
+      "earthquake_latitude": 43.045,
+      "earthquake_longitude": 145.6343,
+      "last_confirmed": "2026-10-19T16:40:21.657206",
+      "source_file": "false_negatives.csv",
+      "coverage_verified": false
+    },
+    {
+      "station": "KAK",
+      "earthquake_time": "2026-10-01 12:27:11.864",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 67.33496416690444,
+      "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
+      "earthquake_latitude": 35.7025,
+      "earthquake_longitude": 140.5507,
+      "last_confirmed": "2026-10-17T16:20:48.306546",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "KNY",
+      "earthquake_time": "2026-10-01 12:27:11.864",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 73.29497475109625,
+      "earthquake_place": "0 km NNE of Y\u014dkaichiba, Japan",
+      "earthquake_latitude": 35.7025,
+      "earthquake_longitude": 140.5507,
+      "last_confirmed": "2026-10-19T16:40:21.657206",
+      "source_file": "false_negatives.csv",
+      "coverage_verified": false
+    },
+    {
+      "station": "GUA",
+      "earthquake_time": "2026-10-10 03:58:18.250",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.3,
+      "earthquake_distance_km": 38.4606404726352,
+      "earthquake_place": "41 km NNE of Yigo Village, Guam",
+      "earthquake_latitude": 13.8594,
+      "earthquake_longitude": 145.0892,
+      "last_confirmed": "2026-10-17T16:20:48.306546",
+      "source_file": "false_negatives.csv"
+    },
+    {
+      "station": "API",
+      "earthquake_time": "2026-10-15 03:36:29.038",
+      "first_logged": "2026-10-17T16:20:48.306546",
+      "earthquake_magnitude": 5.1,
+      "earthquake_distance_km": 54.01944691087331,
+      "earthquake_place": "36 km E of Safotu, Samoa",
+      "earthquake_latitude": -13.409,
+      "earthquake_longitude": -172.0686,
+      "last_confirmed": "2026-10-17T16:20:48.306546",
+      "source_file": "false_negatives.csv"
+    }
+  ]
+}
