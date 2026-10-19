@@ -1,0 +1,15 @@
+{
+  "source_commit": "888cf9441ff87d99185a329c7fa157da0e3e9729",
+  "validation": {
+    "dates": [
+      "2026-10-17",
+      "2026-10-16",
+      "2026-10-15",
+      "2026-10-14",
+      "2026-10-13"
+    ],
+    "latest": "2026-10-17",
+    "stations": 51
+  },
+  "exporter": "upload_results.prepare_web_output"
+}
