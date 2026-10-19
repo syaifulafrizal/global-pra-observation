@@ -1,2 +1,1 @@
-earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,earthquake_latitude,earthquake_longitude
-2026-10-15 03:36:29.038,5.1,54.01944691087331,"36 km E of Safotu, Samoa",-13.409,-172.0686
+earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,earthquake_latitude,earthquake_longitude,earthquake_id,coverage_verified

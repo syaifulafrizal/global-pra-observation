@@ -1,2 +1,1 @@
-earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,earthquake_latitude,earthquake_longitude
-2026-10-01 12:27:11.864,5.3,67.33496416690444,"0 km NNE of Yōkaichiba, Japan",35.7025,140.5507
+earthquake_time,earthquake_magnitude,earthquake_distance_km,earthquake_place,earthquake_latitude,earthquake_longitude,earthquake_id,coverage_verified

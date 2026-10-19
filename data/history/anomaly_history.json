@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-09T16:20:13.226034",
+  "last_updated": "2026-10-19T16:40:21.620907",
   "entries": [
     {
       "station": "LYC",
@@ -8,8 +8,9 @@
       "threshold": 15.935966553292737,
       "n_anomaly_hours": 2,
       "source_file": "PRA_Night_LYC_20261005.json",
-      "last_confirmed": "2026-10-09T16:20:13.094472",
-      "has_correlated_eq": false
+      "last_confirmed": "2026-10-19T16:40:17.966074",
+      "has_correlated_eq": false,
+      "status": "FP"
     }
   ]
 }
