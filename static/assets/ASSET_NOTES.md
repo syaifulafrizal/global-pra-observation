@@ -2,7 +2,10 @@
 
 `gempra-field-emblem.png` was generated with the built-in ImageGen tool for this
 project. The original generated PNG and its alpha transparency are preserved.
-The dashboard uses it only as a compact header emblem and favicon.
+The dashboard uses deterministic LANCZOS derivatives: `gempra-emblem-96.png`
+(96px for the 45px header at high DPI) and `gempra-favicon-32.png` (32px).
+Both retain alpha transparency. The 1,254px source remains unchanged for future
+exports; it is no longer downloaded by the page.
 
 ## Final generation prompt
 
