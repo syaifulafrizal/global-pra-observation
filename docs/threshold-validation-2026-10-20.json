@@ -1,0 +1,40 @@
+{
+  "baseline_commit": "888cf9441ff87d99185a329c7fa157da0e3e9729",
+  "unchanged_functions": [
+    "read_iaga2002",
+    "spectral_setup",
+    "multitaper_psd",
+    "compute_pseries",
+    "fit_evt_threshold",
+    "fit_ksigma_threshold",
+    "nz_guard",
+    "persistence_rule",
+    "historical_z_stats",
+    "save_plot"
+  ],
+  "unchanged_files_sha256_lf": {
+    "earthquake_integration.py": "7cd584a18a583b8b73b096dd91d59083e08d0e3e8420a4273cf1e733b0f53073",
+    "integrate_earthquakes.py": "195f197de285624de60b2143877b5e45585df5d3744126260b205f6161d4a9da",
+    "deploy_all.bat": "5ca79ce3058da461ac9d7a5903c6271f14b34c7771a2ee6dd6ffb00b6a35963d",
+    "deploy_all.ps1": "f378a186a3d6fdfb0bf276691dd2e1ead552574fdceb71f081cb4f1106c4bab1",
+    "run_daily_analysis.bat": "48af2b3bc9539d5b6ddcaaaca54c09c8531aee5b80e2b25b3bc8f1cde1a960f0",
+    "run_daily_analysis.ps1": "56916d8fd3e02cf587418ed82e453841094b3973c5c0b67b8d6b2c666d707902",
+    "deploy_to_github.ps1": "ac1efb03d42b70c69d4de55806985654f9dc1e003b975ca75789baeb9676817c",
+    "validate_pages_output.py": "c2a7a63ec46c935a066d355e78de56dc341066aa684e9493ea8aea92d7044b3f"
+  },
+  "unchanged_export_functions": [
+    "get_available_dates",
+    "build_aggregated_data"
+  ],
+  "intentional_changes": [
+    "Threshold samples: 13 previous local nights plus the observation night",
+    "Unavailable/insufficient SYM-H: assume quiet and preserve absent-coverage provenance",
+    "Historical P eligibility: accept stored assumed-quiet decisions",
+    "Retain 14 nights of JSON; existing CSV/figure and dashboard windows unchanged",
+    "Version 3 output records baseline window, contributing nights, samples and quiet policy",
+    "Dashboard explains the policy and actual baseline coverage; larger responsive map",
+    "Known INTERMAGNET unknown-observatory responses stay unavailable without aborting publication of other stations; other failures still fail",
+    "Dashboard individual-file fallback matches aggregate dates and validity; absent optional earthquake summaries export explicit unknown counts"
+  ],
+  "expected_effect": "Thresholds, eligible hours and resulting anomaly flags may change. Existing observations are not recomputed."
+}

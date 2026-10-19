@@ -723,12 +723,20 @@ def prepare_web_output():
         eq_csv = Path(f'recent_earthquakes_{date}.csv')
         if eq_csv.exists():
             shutil.copy(eq_csv, data_dir / eq_csv.name)
+        elif not (data_dir / eq_csv.name).exists():
+            (data_dir / eq_csv.name).write_text('time,latitude,longitude,depth,magnitude,place\n', encoding='utf-8')
 
             
         # Copy date-specific earthquake stats (for summary boxes)
         eq_stats = Path(f'earthquake_stats_{date}.json')
         if eq_stats.exists():
             shutil.copy(eq_stats, data_dir / eq_stats.name)
+        elif not (data_dir / eq_stats.name).exists():
+            # Missing context is explicitly unknown, never a measured zero.
+            (data_dir / eq_stats.name).write_text(json.dumps({
+                'analysis_date': date, 'global_count': None, 'within_200km_count': None,
+                'data_status': 'unavailable',
+            }, indent=2), encoding='utf-8')
 
     
     # Clean up old files (older than 6 days)

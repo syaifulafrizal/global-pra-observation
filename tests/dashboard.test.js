@@ -185,3 +185,35 @@ test('observation completeness labels do not depend on SYM-H verification', () =
     assert.doesNotMatch(page.observationStatusText({P:[1,2]}), /unverified|SYM-H/);
     assert.equal(page.observationRecordLabel(null), 'Unavailable');
 });
+
+test('threshold labels describe actual baseline coverage and preserve old snapshot provenance', () => {
+    const page = dashboard();
+    assert.equal(page.thresholdBaselineLabel({}), 'Recorded threshold · historical settings');
+    assert.equal(page.thresholdBaselineLabel({baseline_window_days:14, baseline_historical_nights:13,
+        baseline_includes_observation:true, baseline_samples:112}), '14-night threshold · 14/14 nights used · 112 quiet hours');
+    assert.equal(page.thresholdBaselineLabel({baseline_window_days:14, baseline_historical_nights:2,
+        baseline_includes_observation:true, baseline_samples:20}), '14-night threshold · 3/14 nights used · 20 quiet hours');
+});
+
+test('individual fallback retains previous-night dates, quality and rejects invalid spectra', async () => {
+    const page = dashboard(), requests = [];
+    const previous = {date:'2026-04-10', P:[1,2], nZ:[4,5], nG:[4,4], data_quality:{status:'partial'}};
+    const invalid = {date:'2026-04-11', P:[.5,.5], nZ:[20,20], nG:[40,40]};
+    page.fetch = async url => {
+        requests.push(url);
+        const result = url === 'data/KAK_2026-04-10.json' ? previous : url === 'data/BAD_2026-04-11.json' ? invalid : null;
+        return {ok: Boolean(result), json: async () => result};
+    };
+    const data = await page.loadDataFallback('2026-04-11',{stations:['KAK','BAD','ABSENT']},['2026-04-11'],'2026-04-11');
+    assert.equal(Object.keys(data.data).join(','),'KAK');
+    assert.equal(data.station_dates.KAK,'2026-04-10');
+    assert.equal(data.station_quality.KAK,'partial');
+    assert.equal(data.station_quality.BAD,'invalid');
+    assert.equal(data.station_quality.ABSENT,'missing');
+    assert.equal(data.is_hybrid_aggregation,true);
+    assert.ok(!requests.includes('data/BAD_2026-04-10.json'));
+    assert.ok(!requests.some(url=>url.includes('2026-04-09')));
+    assert.equal(page.stationResultUsable({P:[null]}),false);
+    assert.equal(page.stationResultUsable({P:[1],data_quality:{status:'invalid'}}),false);
+    assert.equal(page.stationResultUsable(previous),true);
+});

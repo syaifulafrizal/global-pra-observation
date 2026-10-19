@@ -43,6 +43,8 @@ STEP = 3600  # 1-hour step
 F_LOW = 0.095  # Hz
 F_HIGH = 0.110  # Hz
 MT_NW = 3.5  # Multitaper time-half bandwidth product
+THRESHOLD_DAYS = 14  # 13 previous nights plus the observation night
+_unavailable_observatories = set()  # Provider lookup failures, scoped to this run.
 
 # Analysis options
 OPTS = {
@@ -161,6 +163,11 @@ def download_data(station_code, date, out_folder):
     
     try:
         response = requests.get(url, timeout=30)
+        if response.status_code == 400 and re.search(
+                rf'Unable to find observatory:\s*{re.escape(station_code)}\b', response.text):
+            _unavailable_observatories.add(station_code)
+            print(f'[WARNING] INTERMAGNET does not provide observatory {station_code}; leaving its observation unavailable')
+            return None
         response.raise_for_status()
         if iaga_data_header(response.text) is None:
             raise ValueError('Response is not IAGA2002 data (possibly an error page)')
@@ -445,15 +452,14 @@ def apply_guard(mask, guardMin):
     return out
 
 def compute_quiet_flags(T, GI, tol, tightFlag, tolTight, symhThr):
-    """Compute quiet flags based on SYM-H disturbance fraction"""
-    isQuiet = np.zeros(len(T), dtype=bool)
+    """Screen covered hours with SYM-H; assume quiet when context is unavailable."""
+    isQuiet = np.ones(len(T), dtype=bool)
     fracDisturbed = np.full(len(T), np.nan)
     
     halfHour = timedelta(minutes=30)
     
-        # Missing geomagnetic context is unknown, never evidence of quiet.
     if GI.empty:
-        print('[WARNING] No SYM-H data available; quiet-period screening unavailable.')
+        print('[INFO] No SYM-H data available; assuming quiet for this observation.')
         return isQuiet, fracDisturbed
 
     GI = GI.copy()
@@ -481,7 +487,7 @@ def compute_quiet_flags(T, GI, tol, tightFlag, tolTight, symhThr):
                 else:
                     isQuiet[m] = frac <= tol
             else:
-                # Leave insufficient coverage unknown/non-quiet.
+                # Retain the quiet assumption, with NaN marking absent context.
                 continue
         except Exception as e:
             print(f'[WARNING] Could not assess SYM-H coverage: {e}')
@@ -570,14 +576,14 @@ def persistence_rule(T, isAnomQuiet, eq_date, K, Ddays):
     idx = (T >= t0) & (T <= eq_date)
     return np.sum(isAnomQuiet & idx) >= K
 
-def load_historical_quiet_p_values(station_code, current_date, out_folder, days_back=6):
+def load_historical_quiet_p_values(station_code, current_date, out_folder, days_back=THRESHOLD_DAYS - 1):
     """Load quiet P values from past days for EVT fitting
     
     Args:
         station_code: Station code
         current_date: Current date (datetime object in station timezone)
         out_folder: Output folder path
-        days_back: Number of past days to load (default 6, for 7 days total including current)
+        days_back: Previous nights to load (13, plus the observation night = 14)
     
     Returns:
         tuple: (numpy array of quiet P values from past days, number of days loaded)
@@ -585,7 +591,7 @@ def load_historical_quiet_p_values(station_code, current_date, out_folder, days_
     historical_Pq = []
     days_loaded = 0
     
-    for i in range(1, days_back + 1):  # Go back 1 to 6 days
+    for i in range(1, days_back + 1):
         past_date = current_date - timedelta(days=i)
         json_file = out_folder / f'PRA_Night_{station_code}_{past_date.strftime("%Y%m%d")}.json'
         
@@ -594,17 +600,16 @@ def load_historical_quiet_p_values(station_code, current_date, out_folder, days_
                 with open(json_file, 'r') as f:
                     data = json.load(f)
                 
-                # Extract P values and isQuiet flags (preferred) or isAnomalous flags (fallback)
+                # Retain the stored quiet decision, including the assumed-quiet policy.
                 if 'P' in data:
                     P_values = np.array(data['P'])
                     
                     if not result_is_usable(data):
                         continue
-                    if not data.get('data_quality', {}).get('symh_verified', False):
-                        continue
-                    # Anomaly absence is not a substitute for geomagnetic context.
                     if 'isQuiet' in data:
-                        is_quiet = np.array(data['isQuiet'])
+                        is_quiet = np.array(data['isQuiet'], dtype=bool)
+                        if is_quiet.shape != P_values.shape:
+                            continue
                         quiet_mask = is_quiet
                     else:
                         # If neither available, skip this day
@@ -645,8 +650,8 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
     # Combine with historical quiet P values if available
     if historical_Pq is not None and len(historical_Pq) > 0:
         # Combine current day's quiet P values with historical data
-        Pq_combined = historical_Pq
-        print(f'  Using {len(historical_Pq)} previous quiet P values (current night excluded)')
+        Pq_combined = np.concatenate((historical_Pq, Pq_current))
+        print(f'  Using {len(historical_Pq)} previous + {len(Pq_current)} observation-night quiet P values')
     else:
         # Fallback to current day only if no historical data
         Pq_combined = Pq_current
@@ -657,7 +662,7 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
     if len(Pq_combined) == 0:
         return False, pd.DataFrame(), pd.DataFrame(), np.nan, 0
     
-    # Fit threshold using combined 7-day dataset
+    # Fit the same threshold formula using the combined 14-night dataset.
     if opts['useEVT']:
         thrEff, threshold_method = fit_evt_threshold(
             Pq_combined, opts['tailQ'], opts['fprTarget'],
@@ -693,7 +698,7 @@ def analyze_row(recXYZ, tUTC_start, tLocal_start, eq_date, sUTC, eUTC, GI,
     ts['Time'] = pd.to_datetime(ts['Time'])
     ts.attrs['threshold_method'] = threshold_method
     ts.attrs['baseline_samples'] = len(Pq_combined)
-    ts.attrs['baseline_source'] = 'historical' if historical_Pq is not None and len(historical_Pq) else 'warmup'
+    ts.attrs['baseline_source'] = 'historical_and_current' if historical_Pq is not None and len(historical_Pq) else 'warmup'
     ts.attrs['nz_guard_method'] = 'z_score' if station_code in stationZstats else 'fixed_power'
     
     # Anomaly table
@@ -727,7 +732,7 @@ def cleanup_downloaded_files(out_folder):
             print(f'Warning: Could not delete {f.name}: {e}')
 
 def cleanup_old_data_files(station_code, current_date, out_folder, days_to_keep=7):
-    """Clean up old JSON, CSV, and figure files, keeping only the last N days
+    """Retain 14 nights of small JSON results; keep CSV/figure retention unchanged.
     
     Args:
         station_code: Station code
@@ -736,6 +741,7 @@ def cleanup_old_data_files(station_code, current_date, out_folder, days_to_keep=
         days_to_keep: Number of days to keep (default 7, for 7-day rolling window)
     """
     cutoff_date = current_date - timedelta(days=days_to_keep)
+    json_cutoff_date = min(cutoff_date, current_date - timedelta(days=THRESHOLD_DAYS - 1))
     deleted_count = 0
     
     # Clean up JSON files
@@ -747,7 +753,7 @@ def cleanup_old_data_files(station_code, current_date, out_folder, days_to_keep=
             file_date = datetime.strptime(date_str, '%Y%m%d').date()
             file_date_dt = datetime.combine(file_date, datetime.min.time()).replace(tzinfo=current_date.tzinfo)
             
-            if file_date_dt < cutoff_date:
+            if file_date_dt < json_cutoff_date:
                 json_file.unlink()
                 deleted_count += 1
                 print(f'  Deleted old JSON: {json_file.name}')
@@ -789,7 +795,7 @@ def cleanup_old_data_files(station_code, current_date, out_folder, days_to_keep=
                 continue
     
     if deleted_count > 0:
-        print(f'[INFO] Cleaned up {deleted_count} old files for {station_code} (keeping last {days_to_keep} days)')
+        print(f'[INFO] Cleaned up {deleted_count} old files for {station_code} (JSON: {THRESHOLD_DAYS} nights; CSV/figures: {days_to_keep} days)')
 
 def historical_z_stats(station_code, current_date, out_folder):
     """Use only previous, screened nights to calibrate the existing nZ guard."""
@@ -848,9 +854,6 @@ def process_station(station_code):
     symh_start = yesterday_dt - timedelta(days=1)
     symh_end = today_dt + timedelta(days=1)
     GI = download_symh_data(symh_start, symh_end, cache_folder)
-    if GI.empty:
-        print(f'[SKIP] {station_code}: no SYM-H context; no normal/anomalous classification written')
-        return None
     
     # Check if the nighttime window has already passed for this station
     # The nighttime window is 20:00 yesterday to 04:00 today (local time)
@@ -909,6 +912,9 @@ def process_station(station_code):
     
     data_all = pd.concat(daily_frames, ignore_index=True) if daily_frames else pd.DataFrame()
     if data_all.empty:
+        if station_code in _unavailable_observatories:
+            print(f'[SKIP] {station_code}: observatory unavailable from INTERMAGNET')
+            return None
         if download_failed:
             print(f'[ERROR] No data available for {station_code} - download failed')
             return False
@@ -964,9 +970,9 @@ def process_station(station_code):
     # Station stats (empty for now - can be computed from historical data)
     stationZstats = historical_z_stats(station_code, today_dt, out_folder)
     
-    # Load historical quiet P values from past 6 days for EVT fitting
+    # Use 13 previous local nights plus this observation night for threshold fitting.
     print(f'[INFO] Loading historical quiet P values for {station_code}...')
-    historical_Pq, days_loaded = load_historical_quiet_p_values(station_code, today_dt, out_folder, days_back=6)
+    historical_Pq, days_loaded = load_historical_quiet_p_values(station_code, today_dt, out_folder)
     
     if days_loaded > 0:
         print(f'[INFO] Found historical data from {days_loaded} past day(s) for {station_code}')
@@ -996,10 +1002,14 @@ def process_station(station_code):
         'threshold': float(thrEff),
         'nAnomHours': int(nAnomHours),
         'is_anomalous': bool(is_anomalous),
-        'analysis_version': 2,
+        'analysis_version': 3,
         'threshold_method': ts.attrs['threshold_method'],
         'baseline_samples': ts.attrs['baseline_samples'],
         'baseline_source': ts.attrs['baseline_source'],
+        'baseline_window_days': THRESHOLD_DAYS,
+        'baseline_historical_nights': days_loaded,
+        'baseline_includes_observation': bool(ts['isQuiet'].any()),
+        'quiet_policy': 'assume_quiet_when_symh_unavailable',
         'nz_guard_method': ts.attrs['nz_guard_method'],
         'data_quality': {
             'status': 'complete' if len(ts) == len(grid) // WIN_LEN and invalid_samples == 0 else 'partial',
@@ -1007,6 +1017,8 @@ def process_station(station_code):
             'valid_hours': len(ts),
             'invalid_samples': invalid_samples,
             'symh_verified': bool(ts['symhCovered'].all()),
+            'symh_covered_hours': int(ts['symhCovered'].sum()),
+            'assumed_quiet_hours': int((~ts['symhCovered']).sum()),
         }
     }
     
@@ -1014,7 +1026,7 @@ def process_station(station_code):
     with open(json_file, 'w') as f:
         json.dump(results, f, indent=2)
 
-    # Retain lightweight coverage beyond the seven-day spectral-file window.
+    # Preserve the existing conservative earthquake-coverage accounting.
     coverage_path = out_folder / 'analysis_coverage.csv'
     coverage = pd.read_csv(coverage_path) if coverage_path.exists() else pd.DataFrame()
     coverage = pd.concat([coverage, pd.DataFrame([{

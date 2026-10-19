@@ -92,6 +92,26 @@ class LocalFixture(unittest.TestCase):
             self.assertIsNone(pra.download_data('KAK', datetime(2026, 4, 10), self.station))
         self.assertFalse(list(self.station.glob('*.iaga2002')))
 
+    def test_provider_unknown_observatory_does_not_abort_other_stations(self):
+        response = Mock(status_code=400, text='<em>Unable to find observatory: KAK</em>')
+        with patch.object(pra, '_unavailable_observatories', set()), \
+             patch.object(pra, 'get_station_timezone', return_value=ZoneInfo('UTC')), \
+             patch.object(pra, 'download_symh_data', return_value=symh.empty_symh()), \
+             patch.object(pra.requests, 'get', return_value=response):
+            self.assertIsNone(pra.process_station('KAK'))
+        response.raise_for_status.assert_not_called()
+        self.assertFalse(list(self.station.glob('PRA_Night_*.json')))
+
+    def test_other_download_failures_still_fail_the_station(self):
+        response = Mock(status_code=503, text='Unavailable')
+        response.raise_for_status.side_effect = RuntimeError('503 unavailable')
+        with patch.object(pra, '_unavailable_observatories', set()), \
+             patch.object(pra, 'get_station_timezone', return_value=ZoneInfo('UTC')), \
+             patch.object(pra, 'download_symh_data', return_value=symh.empty_symh()), \
+             patch.object(pra.requests, 'get', return_value=response):
+            self.assertFalse(pra.process_station('KAK'))
+        self.assertFalse(list(self.station.glob('PRA_Night_*.json')))
+
     def test_native_non_xyz_is_not_silently_misread(self):
         path = Path('hdz.iaga2002')
         path.write_text('DATE TIME DOY KAKH KAKD KAKZ\n2026-04-10 20:00:00 100 3 4 5\n')
@@ -102,10 +122,10 @@ class LocalFixture(unittest.TestCase):
         self.assertFalse(result_is_usable(data))
         self.assertTrue(result_is_usable(sample_result('2026-04-11')))
 
-    def test_missing_symh_is_unknown(self):
+    def test_missing_symh_assumes_quiet_without_fabricating_coverage(self):
         quiet, fractions = pra.compute_quiet_flags(pd.Series(pd.to_datetime(['2026-04-10T20:30:00Z'])),
                                                    symh.empty_symh(), .05, False, .02, -30)
-        self.assertFalse(quiet.any())
+        self.assertTrue(quiet.all())
         self.assertTrue(np.isnan(fractions).all())
 
     def test_naive_disturbed_symh_and_sparse_coverage(self):
@@ -115,7 +135,7 @@ class LocalFixture(unittest.TestCase):
         self.assertFalse(quiet.any())
         self.assertEqual(fractions[0], 1.)
         quiet, fractions = pra.compute_quiet_flags(times, data.iloc[:2], .05, False, .02, -30)
-        self.assertFalse(quiet.any())
+        self.assertTrue(quiet.all())
         self.assertTrue(np.isnan(fractions[0]))
 
     def test_minute_symh_parser_and_recent_request(self):
@@ -145,7 +165,7 @@ class LocalFixture(unittest.TestCase):
         expected = np.quantile(values, .75) - 2 * np.log(.05 / .25)
         self.assertAlmostEqual(value, expected)
 
-    def test_current_outlier_does_not_raise_historical_threshold(self):
+    def test_threshold_includes_observation_night_and_preserves_anomaly_rule(self):
         times = pd.Series(pd.date_range('2026-04-10T20:30Z', periods=2, freq='h'))
         series = (np.array([100., 110.]), np.array([10., 10.]), np.ones(2), times,
                   np.ones(2, dtype=bool), np.zeros(2))
@@ -153,8 +173,65 @@ class LocalFixture(unittest.TestCase):
         with patch.object(pra, 'compute_pseries', return_value=series):
             result = pra.analyze_row(None, None, None, pd.Timestamp('2026-04-11T00:00Z'),
                 None, None, None, .095, .110, {}, pra.OPTS, 'KAK', history)
-        self.assertAlmostEqual(result[3], history.mean() + 4 * history.std())
-        self.assertEqual(result[2].attrs['baseline_source'], 'historical')
+        combined = np.concatenate((history, series[0]))
+        expected = combined.mean() + 4 * combined.std()
+        self.assertAlmostEqual(result[3], expected)
+        self.assertEqual(result[2].attrs['baseline_source'], 'historical_and_current')
+        self.assertEqual(result[2].attrs['baseline_samples'], len(combined))
+        np.testing.assert_array_equal(result[2].isAnomalous, (series[0] > expected) & (series[1] > 2.5))
+
+    def test_threshold_history_uses_exactly_13_previous_calendar_nights(self):
+        today = datetime(2026, 4, 11, tzinfo=ZoneInfo('UTC'))
+        for offset in range(-1, 16):
+            day = (today - timedelta(days=offset)).date().isoformat()
+            # Assumed quiet observations remain eligible; disturbed hours do not.
+            self.result(day, P=[float(offset + 2), 999.], isQuiet=[True, False],
+                        data_quality={'status': 'complete', 'symh_verified': False})
+        before = {p: p.read_bytes() for p in self.station.glob('*.json')}
+        values, nights = pra.load_historical_quiet_p_values('KAK', today, self.station)
+        self.assertEqual(nights, 13)
+        np.testing.assert_array_equal(values, np.arange(3., 16.))
+        self.assertEqual(before, {p: p.read_bytes() for p in before})
+
+    def test_history_gaps_are_not_replaced_by_older_or_invalid_nights(self):
+        today = datetime(2026, 4, 11, tzinfo=ZoneInfo('UTC'))
+        self.result('2026-04-10')
+        self.result('2026-04-08', data_quality={'status': 'invalid'})
+        self.result('2026-04-07', isQuiet=[False, False])
+        self.result('2026-04-06', isQuiet=[True])
+        self.result('2026-03-28')  # 14 days before: excluded even with gaps.
+        values, nights = pra.load_historical_quiet_p_values('KAK', today, self.station)
+        self.assertEqual(nights, 1)
+        np.testing.assert_array_equal(values, [1., 1.2])
+
+    def test_evt_receives_historical_and_current_quiet_samples(self):
+        times = pd.Series(pd.date_range('2026-04-10T20:30Z', periods=3, freq='h'))
+        series = (np.array([1., 999., 3.]), np.ones(3) * 10, np.ones(3), times,
+                  np.array([True, False, True]), np.array([np.nan, 1., 0.]))
+        history = np.arange(104.)
+        with patch.object(pra, 'compute_pseries', return_value=series), \
+             patch.object(pra, 'fit_evt_threshold', return_value=(2., 'evt')) as fit:
+            result = pra.analyze_row(None, None, None, times.iloc[-1], None, None, None,
+                                     .095, .110, {}, pra.OPTS, 'KAK', history)
+        np.testing.assert_array_equal(fit.call_args.args[0], np.r_[history, 1., 3.])
+        self.assertEqual(fit.call_args.args[1:], (.75, .05, 0., 4.))
+        np.testing.assert_array_equal(result[2].isAnomalous, [False, False, True])
+
+    def test_json_retention_supports_next_14_night_threshold(self):
+        today = datetime(2026, 4, 11, tzinfo=ZoneInfo('UTC'))
+        for offset in (0, 7, 8, 13, 14):
+            day = (today - timedelta(days=offset)).date().isoformat()
+            path = self.result(day)
+            path.with_suffix('.csv').write_text('fixture')
+            figures = self.station / 'figures'
+            figures.mkdir(exist_ok=True)
+            (figures / f'PRA_KAK_{day.replace("-", "")}.png').write_bytes(b'fixture')
+        pra.cleanup_old_data_files('KAK', today, self.station)
+        self.assertTrue((self.station / 'PRA_Night_KAK_20260329.json').exists())
+        self.assertFalse((self.station / 'PRA_Night_KAK_20260328.json').exists())
+        self.assertFalse((self.station / 'PRA_Night_KAK_20260403.csv').exists())
+        self.assertFalse((self.station / 'figures/PRA_KAK_20260403.png').exists())
+        self.assertTrue((self.station / 'PRA_Night_KAK_20260404.csv').exists())
 
     def test_forward_event_matches_and_earlier_event_does_not(self):
         self.anomaly()
@@ -248,6 +325,22 @@ class LocalFixture(unittest.TestCase):
         self.assertTrue(Path(f'web_output/data/aggregated_{day}.json').is_file())
         self.assertEqual(validate_pages_output('web_output')['latest'],day)
 
+    def test_missing_optional_earthquake_context_exports_unknown_and_preserves_saved_data(self):
+        self.result('2026-04-11')
+        Path('static').mkdir(); Path('templates').mkdir()
+        Path('templates/index.html').write_text('<html>fixture</html>')
+        output.prepare_web_output()
+        stats_path = Path('web_output/data/earthquake_stats_2026-04-11.json')
+        stats = json.loads(stats_path.read_text())
+        self.assertIsNone(stats['global_count'])
+        self.assertIsNone(stats['within_200km_count'])
+        self.assertEqual(stats['data_status'], 'unavailable')
+        self.assertTrue(Path('web_output/data/recent_earthquakes_2026-04-11.csv').exists())
+        saved = {'analysis_date':'2026-04-11','global_count':3,'within_200km_count':1}
+        stats_path.write_text(json.dumps(saved))
+        output.prepare_web_output()
+        self.assertEqual(json.loads(stats_path.read_text()), saved)
+
     def test_publication_gate_rejects_phantom_dates_and_fallback_only_nights(self):
         from validate_pages_output import validate_pages_output
         web = Path('web_output'); (web/'data').mkdir(parents=True); (web/'static').mkdir()
@@ -338,7 +431,7 @@ class LocalFixture(unittest.TestCase):
             self.assertTrue(pra.process_station('KAK'))
         self.assertEqual(path.read_bytes(), before)
 
-    def test_synthetic_eight_hour_night_runs_through_existing_pipeline(self):
+    def test_synthetic_eight_hour_night_runs_through_existing_pipeline(self, missing_context=False):
         start = pd.Timestamp('2026-04-10T20:00Z')
         times = pd.date_range(start, periods=8 * 3600, freq='s')
         seconds = np.arange(len(times))
@@ -349,6 +442,10 @@ class LocalFixture(unittest.TestCase):
         raw = Path('synthetic.iaga2002')
         values.to_csv(raw, sep=' ', index=False)
         context = pd.DataFrame({'SYMH': 0.}, index=pd.date_range(start - timedelta(hours=1), periods=601, freq='min'))
+        if missing_context:
+            context = symh.empty_symh()
+            for offset in range(1, 14):
+                self.result((start.date() + timedelta(days=1 - offset)).isoformat())
         with patch.object(pra, 'get_station_timezone', return_value=ZoneInfo('UTC')), \
              patch.object(pra, 'download_data', return_value=raw), \
              patch.object(pra, 'download_symh_data', return_value=context):
@@ -356,11 +453,21 @@ class LocalFixture(unittest.TestCase):
         result = json.loads((self.station / 'PRA_Night_KAK_20260411.json').read_text())
         self.assertEqual(len(result['P']), 8)
         self.assertEqual(result['data_quality']['status'], 'complete')
-        self.assertTrue(result['data_quality']['symh_verified'])
+        self.assertEqual(result['data_quality']['symh_verified'], not missing_context)
+        self.assertEqual(result['data_quality']['assumed_quiet_hours'], 8 if missing_context else 0)
         self.assertEqual(result['threshold_method'], 'k_sigma')
-        self.assertEqual(result['baseline_source'], 'warmup')
+        self.assertEqual(result['baseline_source'], 'historical_and_current' if missing_context else 'warmup')
+        self.assertEqual(result['baseline_window_days'], 14)
+        self.assertTrue(result['baseline_includes_observation'])
+        self.assertEqual(result['baseline_historical_nights'], 13 if missing_context else 0)
+        self.assertEqual(result['baseline_samples'], 34 if missing_context else 8)
+        baseline = np.r_[np.tile([1., 1.2], 13), result['P']] if missing_context else result['P']
+        self.assertAlmostEqual(result['threshold'], np.mean(baseline) + 4 * np.std(baseline))
         self.assertTrue((self.station / 'figures/PRA_KAK_20260411.png').exists())
         self.assertTrue((self.station / 'analysis_coverage.csv').exists())
+
+    def test_missing_symh_night_completes_with_13_previous_nights(self):
+        self.test_synthetic_eight_hour_night_runs_through_existing_pipeline(missing_context=True)
 
     def test_station_failure_returns_nonzero_workflow_status(self):
         with patch.object(pra, 'process_station', return_value=False):

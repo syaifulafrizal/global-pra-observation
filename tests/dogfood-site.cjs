@@ -25,11 +25,18 @@ async function check(name, operation, mode = 'live') {
 }
 async function ready(target = page) {
     await target.waitForFunction(() => document.querySelectorAll('.station-marker').length > 0 &&
-        document.getElementById('station-ratio-chart') && charts.magnitude && Array.isArray(markers.earthquakes), null, { timeout: 25000 });
+        document.getElementById('station-ratio-chart') && charts.magnitude && (!markers.earthquakes || Array.isArray(markers.earthquakes)), null, { timeout: 25000 });
 }
 async function waitDate(date, target = page) {
     await target.waitForFunction(day => selectedDate === day && document.querySelector('.health-item:last-child .health-value')?.textContent === formatDate(day), date, { timeout: 15000 });
     await target.waitForTimeout(800);
+}
+async function dateWithEarthquakes(target = page) {
+    for (const day of metadata.available_dates) {
+        await target.locator('#date-selector').selectOption(day); await waitDate(day, target);
+        if (await target.evaluate(() => (markers.earthquakes || []).length > 0)) return day;
+    }
+    throw new Error('No observation date has earthquake data for popup/tooltip checks');
 }
 async function tooltip(target, chartExpression) {
     await target.evaluate(expression => eval(expression).canvas.scrollIntoView({ block: 'center', behavior: 'instant' }), chartExpression);
@@ -103,9 +110,11 @@ async function main() {
         assert.doesNotMatch(popupLabels, /unverified/i);
         assert.doesNotMatch(await page.locator('#run-health').innerText(), /unverified|SYM-H/i);
         await page.locator('#station-selector').selectOption('KAK');
-        assert.match(await page.locator('.observation-tag').innerText(), /Historical observation/);
+        assert.match(await page.locator('.observation-tag').last().innerText(), /observation/i);
         assert.doesNotMatch(await page.locator('#selected-station-plot').innerText(), /unverified|SYM-H/i);
         const fixture = await fixturePage({snapshot:data=>{
+            for (const result of Object.values(data.stations)) delete result.data_quality;
+            data.station_quality = Object.fromEntries(Object.keys(data.stations).map(code => [code, 'historical']));
             data.stations.KAK.data_quality = {status:'complete',symh_verified:false};
             data.station_quality.KAK = 'complete';
             data.stations.HON.data_quality = {status:'partial',symh_verified:true};
@@ -114,13 +123,44 @@ async function main() {
         try {
             await ready(fixture.target);
             await fixture.target.locator('#station-selector').selectOption('KAK');
-            assert.equal(await fixture.target.locator('.observation-tag').innerText(),'Complete observation · no anomaly recorded');
+            assert.equal(await fixture.target.locator('.observation-tag').last().innerText(),'Complete observation · no anomaly recorded');
             await fixture.target.locator('#station-selector').selectOption('HON');
-            assert.equal(await fixture.target.locator('.observation-tag').innerText(),'Partial observation · no anomaly recorded');
+            assert.equal(await fixture.target.locator('.observation-tag').last().innerText(),'Partial observation · no anomaly recorded');
             assert.match(await fixture.target.locator('#run-health').innerText(), /1 complete.*1 partial/s);
             assert.deepEqual(fixture.errors,[]);
         } finally { await fixture.isolated.close(); }
     }, 'live and browser-only quality fixtures');
+    await check('14-night policy, recorded baseline provenance and larger responsive map', async () => {
+        assert.match(await page.locator('.method-strip').innerText(), /14 nights.*13 previous \+ observation/);
+        assert.match(await page.locator('.method-info').innerText(), /assumed quiet/);
+        assert.ok((await page.locator('#map-container').boundingBox()).height >= 500);
+        const mapBox = await page.locator('.map-section').boundingBox();
+        const plotBox = await page.locator('.plot-panel-section').boundingBox();
+        assert.ok(Math.abs(mapBox.y - plotBox.y) < 2, 'Fallback notice must span both columns above the map and plot');
+        assert.ok(mapBox.width > plotBox.width * 1.5, 'Desktop map should be wider than the detail panel');
+        const states = [];
+        for (const day of metadata.available_dates) {
+            await page.locator('#date-selector').selectOption(day); await waitDate(day);
+            const [station, result] = Object.entries(snapshots[day].stations).find(([, result]) => result.baseline_window_days === 14) || [];
+            if (!station) continue;
+            await page.locator('#station-selector').selectOption(station);
+            const used = result.baseline_historical_nights + (result.baseline_includes_observation ? 1 : 0);
+            await page.waitForFunction(label => document.querySelector('.station-footnote')?.textContent.includes(label), `${used}/14 nights used`);
+            assert.match(await page.locator('.station-footnote').innerText(), new RegExp(`${result.baseline_samples} quiet hours`));
+            states.push({day, station, used, samples: result.baseline_samples});
+        }
+        assert.ok(states.length > 0, 'No newly calculated observations were published');
+        const oldDay = metadata.available_dates.find(day => Object.values(snapshots[day].stations).some(result => !result.baseline_window_days));
+        if (oldDay) {
+            const station = Object.keys(snapshots[oldDay].stations).find(code => !snapshots[oldDay].stations[code].baseline_window_days);
+            await page.locator('#date-selector').selectOption(oldDay); await waitDate(oldDay);
+            await page.locator('#station-selector').selectOption(station);
+            await page.waitForFunction(() => document.querySelector('.station-footnote')?.textContent.includes('historical settings'));
+        }
+        await page.locator('#date-selector').selectOption(metadata.available_dates[0]); await waitDate(metadata.available_dates[0]);
+        await page.locator('#station-selector').selectOption('KAK');
+        return states;
+    });
     for (const date of metadata.available_dates) {
         await check(`All 51 station selections and chart values on ${date}`, async () => {
             await page.locator('#date-selector').selectOption(date);
@@ -150,7 +190,7 @@ async function main() {
     await page.locator('#date-selector').selectOption(metadata.available_dates[0]);
     await waitDate(metadata.available_dates[0]);
     await page.locator('#station-selector').selectOption('KAK');
-    await check('Summary metrics, quality coverage and diagnostic charts match all five daily payloads', async () => {
+    await check('Summary metrics, quality coverage and diagnostic charts match every daily payload', async () => {
         const history = await (await context.request.get(base + 'data/anomaly_history.json')).json();
         const falseNegatives = await (await context.request.get(base + 'data/false_negative_history.json')).json();
         const falsePositives = new Set((history.entries || []).filter(entry => entry.status === 'FP' && entry.has_correlated_eq !== true).map(entry => `${entry.station}_${entry.date}`)).size;
@@ -165,7 +205,7 @@ async function main() {
                 trend: charts.trend.data.datasets[0].data, success: charts.successRate.data.datasets[0].data,
                 coverage: document.querySelector('.health-item .health-value').textContent }));
             const usable = Object.keys(snapshots[day].stations).length;
-            assert.deepEqual(observed.metrics, [51, 0, stats.global_count, falsePositives, falseNegatives.entries.length]);
+            assert.deepEqual(observed.metrics, [51, 0, stats.global_count ?? NaN, falsePositives, falseNegatives.entries.length]);
             assert.deepEqual(observed.distribution, [usable,0,0,51-usable]);
             assert.deepEqual(observed.magnitude, bins);
             assert.deepEqual(observed.success, [0,0]);
@@ -174,7 +214,7 @@ async function main() {
         }
         await page.locator('#date-selector').selectOption(metadata.available_dates[0]); await waitDate(metadata.available_dates[0]);
         await page.locator('#station-selector').selectOption('KAK');
-        return { dailyPayloads: 5, summaryCardsPerDate: 5, diagnosticsPerDate: 4 };
+        return { dailyPayloads: metadata.available_dates.length, summaryCardsPerDate: 5, diagnosticsPerDate: 4 };
     });
     await check('Every original scientific-figure link returns an actual image', async () => {
         const figures = new Set();
@@ -191,11 +231,13 @@ async function main() {
         return { images: figures.size };
     });
     await check('Original figure opens in a separate browser tab', async () => {
+        await page.locator('#date-selector').selectOption(metadata.available_dates[0]); await waitDate(metadata.available_dates[0]);
+        await page.locator('#station-selector').selectOption('KAK');
         const tabPromise = context.waitForEvent('page');
         await page.getByRole('link', { name: 'Original figure' }).click();
         const tab = await tabPromise;
         await tab.waitForLoadState('domcontentloaded');
-        assert.match(tab.url(), /PRA_KAK_20261017\.png/);
+        assert.ok(tab.url().endsWith(`PRA_KAK_${snapshots[metadata.available_dates[0]].stations.KAK.date.replaceAll('-', '')}.png`));
         assert.equal(await tab.locator('img').count(), 1);
         await tab.close();
     });
@@ -238,6 +280,7 @@ async function main() {
         assert.ok(await page.evaluate(() => map.getZoom()) > old);
     });
     await check('Earthquake popup, magnitude and radius lifecycle', async () => {
+        await dateWithEarthquakes();
         await page.locator('#map-container').scrollIntoViewIfNeeded();
         await page.evaluate(() => { map.closePopup(); map.setView(markers.earthquakes[0].getLatLng(), 8, { animate: false }); });
         const location = await page.evaluate(() => { const p = map.latLngToContainerPoint(markers.earthquakes[0].getLatLng()); const b = map.getContainer().getBoundingClientRect(); return {x:b.left+p.x,y:b.top+p.y}; });
@@ -246,13 +289,17 @@ async function main() {
         assert.match(text, /Earthquake M5/);assert.match(text, /UTC/);
         await page.locator('.leaflet-popup-close-button').click();
         assert.equal(await page.evaluate(() => markers.earthquakeCircles.some(circle => map.hasLayer(circle))), false);
+        await page.locator('#date-selector').selectOption(metadata.available_dates[0]); await waitDate(metadata.available_dates[0]);
         return text;
     });
     await check('Chart hover tooltips expose the recorded numerical values', async () => {
+        const day = await dateWithEarthquakes();
+        await page.locator('#station-selector').selectOption('KAK');
         const stationTip = await tooltip(page, 'stationCharts[0]');
-        assert.equal(stationTip[0].raw, snapshots[metadata.available_dates[0]].stations.KAK.P[0]);
+        assert.equal(stationTip[0].raw, snapshots[day].stations.KAK.P[0]);
         const magnitudeTip = await tooltip(page, 'charts.magnitude');
         assert.equal(typeof magnitudeTip[0]?.raw, 'number');
+        await page.locator('#date-selector').selectOption(metadata.available_dates[0]); await waitDate(metadata.available_dates[0]);
         return { station: stationTip, magnitude: magnitudeTip };
     });
     await check('Chart legend can hide and restore a station-status series', async () => {
@@ -470,22 +517,23 @@ async function main() {
             assert.equal(await fixture.target.locator('.metric-card .value').nth(1).innerText(),'1');
             assert.equal(await fixture.target.evaluate(()=>charts.successRate.data.datasets[0].data[1]),100);
             assert.equal(await fixture.target.evaluate(()=>map===window.__previousMap&&Object.values(charts).every((chart,i)=>chart===window.__previousCharts[i])),true);
-            assert.match(await fixture.target.locator('.observation-tag').innerText(),/Anomaly/);
+            assert.match(await fixture.target.locator('.observation-tag').last().innerText(),/Anomaly/);
             assert.deepEqual(fixture.errors,[]);
         } finally { await fixture.isolated.close(); }
     }, 'browser-only refresh simulation');
     await check('Refresh discovers a newly available date while preserving the selected night', async () => {
         let updated = false;
+        const nextDate = new Date(new Date(`${metadata.available_dates[0]}T00:00:00Z`).getTime() + 86400000).toISOString().slice(0,10);
         const fixture = await fixturePage({route: target => target.route('**/data/stations.json', route => {
             const copy = structuredClone(metadata);
-            if (updated) { copy.available_dates.unshift('2026-10-18'); copy.most_recent_date='2026-10-18'; }
+            if (updated) { copy.available_dates.unshift(nextDate); copy.most_recent_date=nextDate; }
             return route.fulfill({json:copy});
         })});
         try {
             await ready(fixture.target); updated = true;
             await fixture.target.evaluate(()=>renderDashboard(selectedDate,{refresh:true}));
-            assert.equal(await fixture.target.locator('#date-selector').inputValue(),'2026-10-17');
-            assert.equal(await fixture.target.locator('#date-selector option[value="2026-10-18"]').count(),1);
+            assert.equal(await fixture.target.locator('#date-selector').inputValue(),metadata.available_dates[0]);
+            assert.equal(await fixture.target.locator(`#date-selector option[value="${nextDate}"]`).count(),1);
             assert.deepEqual(fixture.errors,[]);
         } finally { await fixture.isolated.close(); }
     }, 'browser-only refresh simulation');
@@ -544,19 +592,21 @@ async function main() {
         try{
             await ready(fixture.target);
             const labels=await fixture.target.evaluate(()=>({selected:selectedDate,date:formatDate(selectedDate),option:document.getElementById('date-selector').selectedOptions[0].textContent,trend:charts.trend.data.labels.at(-1)}));
-            assert.match(labels.date,/Oct 17, 2026/,JSON.stringify(labels));
-            assert.equal(labels.trend,'Oct 17');
+            const date = new Date(`${metadata.available_dates[0]}T00:00:00Z`);
+            assert.equal(labels.date,date.toLocaleDateString('en-US',{timeZone:'UTC',month:'short',day:'numeric',year:'numeric'}));
+            assert.equal(labels.trend,date.toLocaleDateString('en-US',{timeZone:'UTC',month:'short',day:'numeric'}));
         }finally{await fixture.isolated.close();}
     },'browser-only locale simulation');
     await check('Earthquake UTC times are independent of browser time zone',async()=>{
         const texts=[];
+        let day;
         for(const timezoneId of ['Asia/Kuala_Lumpur','America/Los_Angeles']){
             const fixture=await fixturePage({}, {timezoneId});
-            try{await ready(fixture.target);texts.push(await fixture.target.evaluate(()=>markers.earthquakes[0].getPopup().getContent().match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} UTC/)[0]));}
+            try{await ready(fixture.target);day=await dateWithEarthquakes(fixture.target);texts.push(await fixture.target.evaluate(()=>markers.earthquakes[0].getPopup().getContent().match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} UTC/)[0]));}
             finally{await fixture.isolated.close();}
         }
         assert.equal(texts[0],texts[1],JSON.stringify(texts));
-        const source = await (await context.request.get(base + 'data/recent_earthquakes_2026-10-17.csv')).text();
+        const source = await (await context.request.get(base + `data/recent_earthquakes_${day}.csv`)).text();
         const firstTime = source.trim().split(/\r?\n/)[1].split(',')[0].slice(0,19).replace('T',' ') + ' UTC';
         assert.equal(texts[0],firstTime);
     },'browser-only locale simulation');
