@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+from functools import lru_cache
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -140,7 +141,7 @@ def download_data(station_code, date, out_folder):
     out_file = out_folder / f'{station_code}_{date.strftime("%Y%m%d")}.iaga2002'
     
     # Check if file already exists and is not empty
-    if out_file.exists() and iaga_data_header(out_file.read_text(errors='replace')):
+    if out_file.exists() and iaga_file_header(out_file):
         print(f'[SKIP] Data already exists for {station_code} on {date_str}')
         return out_file
     
@@ -182,7 +183,17 @@ def iaga_data_header(text):
     return None
 
 
-def read_iaga2002(file_path, station_timezone):
+def iaga_file_header(file_path):
+    """Scan through the header without allocating a second copy of the raw file."""
+    with Path(file_path).open(encoding='utf-8', errors='replace') as source:
+        for number, line in enumerate(source):
+            columns = line.strip().rstrip('|').split()
+            if len(columns) >= 6 and columns[:3] == ['DATE', 'TIME', 'DOY']:
+                return number, columns
+    return None
+
+
+def read_iaga2002(file_path, station_timezone, start_utc=None, end_utc=None):
     """Read IAGA2002 format file and return DataFrame
     
     Args:
@@ -190,32 +201,60 @@ def read_iaga2002(file_path, station_timezone):
         station_timezone: ZoneInfo object for the station's local timezone
     """
     try:
-        text = Path(file_path).read_text(encoding='utf-8', errors='replace')
-        header = iaga_data_header(text)
+        header = iaga_file_header(file_path)
         if header is None:
             raise ValueError('Missing IAGA2002 DATE/TIME header')
         number, columns = header
-        df = pd.read_csv(
-            file_path, skiprows=number + 1, sep=r'\s+', header=None,
-            names=columns, usecols=range(len(columns))
-        )
-        df['dt'] = pd.to_datetime(df['DATE'] + ' ' + df['TIME'], utc=True,
-                                  errors='coerce').dt.tz_convert(station_timezone)
         components = {column[-1].upper(): column for column in columns[3:]}
         if not all(component in components for component in ('X', 'Y', 'Z')):
             # Request explicit XYZ data below; do not silently interpret native
             # HDZ/other orientations as Cartesian components.
             raise ValueError('Expected XYZ components in IAGA2002 header')
-        result = pd.DataFrame({'dt': df['dt']})
-        for component in ('X', 'Y', 'Z'):
-            values = pd.to_numeric(df[components[component]], errors='coerce')
-            result[component] = values.mask(values.abs() >= 99999)
+        required = ['DATE', 'TIME'] + [components[c] for c in ('X', 'Y', 'Z')]
+        chunks = []
+        timestamp_chunks = []
+        # Bound parser memory for backfills and retain only the required UTC night.
+        with pd.read_csv(file_path, skiprows=number + 1, sep=r'\s+', header=None,
+                         names=columns, usecols=required, chunksize=16384) as reader:
+            for df in reader:
+                stamps = pd.to_datetime(df['DATE'] + ' ' + df['TIME'], utc=True, errors='coerce')
+                timestamp_chunks.append(stamps)
+                keep = stamps.notna()
+                if start_utc is not None:
+                    keep &= stamps >= pd.Timestamp(start_utc).tz_convert('UTC')
+                if end_utc is not None:
+                    keep &= stamps < pd.Timestamp(end_utc).tz_convert('UTC')
+                if not keep.any():
+                    continue
+                result = pd.DataFrame({'dt': stamps[keep].dt.tz_convert(station_timezone)})
+                for component in ('X', 'Y', 'Z'):
+                    values = pd.to_numeric(df.loc[keep, components[component]], errors='coerce')
+                    result[component] = values.mask(values.abs() >= 99999)
+                chunks.append(result)
+        if not chunks:
+            return pd.DataFrame(columns=['dt', 'X', 'Y', 'Z'])
+        result = pd.concat(chunks)
+        # Preserve the original whole-file timestamp sort and duplicate winner,
+        # even for duplicate measurements with different values across chunks.
+        order = pd.concat(timestamp_chunks).dropna().sort_values().index
+        result = result.loc[order[order.isin(result.index)]]
         # Preserve missing measurements on their original timestamps. They are
         # screened per hour before spectral analysis, never time-compressed.
-        return result.dropna(subset=['dt']).sort_values('dt').drop_duplicates('dt')
+        return result.drop_duplicates('dt')
     except Exception as e:
         print(f'Error reading {file_path}: {e}')
         return pd.DataFrame()
+
+@lru_cache(maxsize=8)
+def spectral_setup(N, nw, Fs):
+    """Bounded, immutable setup cache; FFT/weighting/normalization stay unchanged."""
+    k = int(2 * nw - 1)
+    tapers, eigenvalues = windows.dpss(N, nw, k, return_ratios=True)
+    frequencies = np.fft.fftfreq(N, 1/Fs)
+    for array in (tapers, eigenvalues, frequencies):
+        array.setflags(write=False)
+    return tapers, eigenvalues, frequencies
+
 
 def multitaper_psd(data, NW=3.5, Fs=1.0):
     """Compute multitaper power spectral density"""
@@ -224,7 +263,7 @@ def multitaper_psd(data, NW=3.5, Fs=1.0):
     k = int(2 * nw - 1)  # Number of tapers
     
     # Generate DPSS (Slepian) sequences
-    tapers, eigenvalues = windows.dpss(N, nw, k, return_ratios=True)
+    tapers, eigenvalues, f = spectral_setup(N, nw, Fs)
     
     # Compute multitaper estimate
     psd = np.zeros(N)
@@ -237,9 +276,8 @@ def multitaper_psd(data, NW=3.5, Fs=1.0):
     psd /= Fs  # Normalize by sampling frequency
     
     # Frequency vector
-    f = np.fft.fftfreq(N, 1/Fs)
     
-    return psd, f
+    return psd, f.copy()  # Preserve the public function's independently owned output.
 
 def compute_pseries(recXYZ, tUTC_start, tLocal_start, sUTC, eUTC, GI, f_low, f_high, opts):
     """Compute P series per hour using multitaper method"""
@@ -850,7 +888,7 @@ def process_station(station_code):
     dates_to_get = [datetime.combine(first_utc_day + timedelta(days=i), datetime.min.time(),
                                     tzinfo=ZoneInfo('UTC'))
                     for i in range((last_utc_day - first_utc_day).days + 1)]
-    data_all = pd.DataFrame()
+    daily_frames = []
     downloaded_files = []
     download_failed = False
     
@@ -858,9 +896,9 @@ def process_station(station_code):
         file_path = download_data(station_code, date_dt, out_folder)
         if file_path and file_path.exists():
             downloaded_files.append(file_path)
-            df = read_iaga2002(file_path, station_tz)
+            df = read_iaga2002(file_path, station_tz, start_time, end_time)
             if not df.empty:
-                data_all = pd.concat([data_all, df], ignore_index=True)
+                daily_frames.append(df)
         elif file_path is None:
             # Download failed - this might be an error or data not available yet
             # Check if this date is in the future for this station
@@ -869,6 +907,7 @@ def process_station(station_code):
             else:
                 download_failed = True
     
+    data_all = pd.concat(daily_frames, ignore_index=True) if daily_frames else pd.DataFrame()
     if data_all.empty:
         if download_failed:
             print(f'[ERROR] No data available for {station_code} - download failed')

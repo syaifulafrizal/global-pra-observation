@@ -1,0 +1,202 @@
+{
+  "baseline_commit": "7946d38905a36a765ae3f3df9d3f2069906effb9",
+  "checks": [
+    "All analysis options unchanged",
+    "PSD and frequency arrays bit-identical across three configurations",
+    "Full analyze_row outputs, threshold provenance and anomaly flags identical in five scenarios",
+    "Full parser and selected eight-hour window match baseline timestamps, powers, NaNs and values exactly",
+    "Full process_station produces identical saved JSON, series CSV and coverage CSV; both figures generated",
+    "All five published aggregate payloads identical excluding assembly timestamp",
+    "Earthquake matching and registered/daily workflow scripts unchanged"
+  ],
+  "measurements": {
+    "parser_before": {
+      "median_ms": 574.3379999999992,
+      "runs": 3
+    },
+    "parser_after_window": {
+      "median_ms": 586.5477999999999,
+      "runs": 3
+    },
+    "parser_tracked_peak_bytes_before": 51891191,
+    "parser_tracked_peak_bytes_after_window": 13110534,
+    "psd_before": {
+      "median_ms": 12.739799999998525,
+      "runs": 25
+    },
+    "psd_after_warm": {
+      "median_ms": 0.6100999999993917,
+      "runs": 25
+    },
+    "metadata_before": {
+      "median_ms": 47.684699999997804,
+      "runs": 9
+    },
+    "metadata_after_warm": {
+      "median_ms": 27.581500000000148,
+      "runs": 9
+    },
+    "aggregate_route_before": {
+      "median_ms": 80.74990000000071,
+      "runs": 9
+    },
+    "aggregate_route_after_warm": {
+      "median_ms": 46.214599999998995,
+      "runs": 9
+    }
+  },
+  "classification_cases": [
+    {
+      "case": "anomalous",
+      "anomalous": true,
+      "anomalous_hours": 8,
+      "exact_match": true
+    },
+    {
+      "case": "normal",
+      "anomalous": false,
+      "anomalous_hours": 0,
+      "exact_match": true
+    },
+    {
+      "case": "missing_samples",
+      "anomalous": true,
+      "anomalous_hours": 7,
+      "exact_match": true
+    },
+    {
+      "case": "disturbed",
+      "anomalous": true,
+      "anomalous_hours": 5,
+      "exact_match": true
+    },
+    {
+      "case": "unknown_symh",
+      "anomalous": false,
+      "anomalous_hours": 0,
+      "exact_match": true
+    }
+  ],
+  "parser_rows": {
+    "input": 172800,
+    "retained": 28800
+  },
+  "browser_performance": {
+    "baselineRef": "7946d3890",
+    "results": [
+      {
+        "version": "baseline",
+        "site": "http://127.0.0.1:5000/",
+        "runs": [
+          {
+            "coldReadyMs": 2479,
+            "dateSwitchMs": 1850,
+            "refreshMs": 1799,
+            "coldRequests": 13,
+            "dateSwitchRequests": 11,
+            "refreshRequests": 11
+          },
+          {
+            "coldReadyMs": 2431,
+            "dateSwitchMs": 1849,
+            "refreshMs": 1784,
+            "coldRequests": 13,
+            "dateSwitchRequests": 11,
+            "refreshRequests": 11
+          },
+          {
+            "coldReadyMs": 2440,
+            "dateSwitchMs": 1851,
+            "refreshMs": 1816,
+            "coldRequests": 13,
+            "dateSwitchRequests": 11,
+            "refreshRequests": 11
+          }
+        ],
+        "medians": {
+          "coldReadyMs": 2440,
+          "dateSwitchMs": 1850,
+          "refreshMs": 1799,
+          "coldRequests": 13,
+          "dateSwitchRequests": 11,
+          "refreshRequests": 11
+        }
+      },
+      {
+        "version": "optimized",
+        "site": "http://127.0.0.1:5001/",
+        "runs": [
+          {
+            "coldReadyMs": 2248,
+            "dateSwitchMs": 210,
+            "refreshMs": 260,
+            "coldRequests": 10,
+            "dateSwitchRequests": 4,
+            "refreshRequests": 9
+          },
+          {
+            "coldReadyMs": 723,
+            "dateSwitchMs": 218,
+            "refreshMs": 235,
+            "coldRequests": 10,
+            "dateSwitchRequests": 4,
+            "refreshRequests": 9
+          },
+          {
+            "coldReadyMs": 1105,
+            "dateSwitchMs": 210,
+            "refreshMs": 232,
+            "coldRequests": 10,
+            "dateSwitchRequests": 4,
+            "refreshRequests": 9
+          }
+        ],
+        "medians": {
+          "coldReadyMs": 1105,
+          "dateSwitchMs": 210,
+          "refreshMs": 235,
+          "coldRequests": 10,
+          "dateSwitchRequests": 4,
+          "refreshRequests": 9
+        }
+      }
+    ],
+    "notes": "Three fresh contexts per version, no throttling. Network/CDN variability applies. Browser readiness includes charts and markers, not all map tiles."
+  },
+  "scheduler_rehearsal": [
+    {
+      "entrypoint": "deploy_all.bat",
+      "exit_code": 0,
+      "stages": [
+        "ensure_station_data.py",
+        "pra_nighttime.py",
+        "integrate_earthquakes.py",
+        "upload_results.py",
+        "deploy_to_github.ps1"
+      ],
+      "fixture_only": true
+    },
+    {
+      "entrypoint": "run_daily_analysis.bat",
+      "exit_code": 0,
+      "stages": [
+        "pra_nighttime.py",
+        "integrate_earthquakes.py",
+        "upload_results.py"
+      ],
+      "fixture_only": true
+    }
+  ],
+  "preservation": {
+    "files_checked": 2936,
+    "changed": []
+  },
+  "regression_tests": {
+    "python_passed": 28,
+    "javascript_passed": 12
+  },
+  "local_browser_results": {
+    "passed": 42,
+    "failed": 0
+  }
+}

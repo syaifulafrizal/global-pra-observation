@@ -8,9 +8,13 @@ from flask import Flask, render_template, jsonify, send_from_directory
 from pathlib import Path
 import json
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import os
+from snapshot_cache import SnapshotCache, file_revisions
+
+_metadata_cache = SnapshotCache(max_entries=2, max_bytes=1024 * 1024)
+_snapshot_cache = SnapshotCache()
 
 app = Flask(__name__, static_folder=None)
 
@@ -31,15 +35,29 @@ def serve_data_file(filename):
     # preserved and remain available as a compatibility fallback.
     from upload_results import (build_aggregated_data, merge_history,
                                 station_correlation_status)
-    metadata = local_metadata()
-    if filename == 'stations.json' and metadata['stations']:
-        return jsonify(metadata)
+    if filename == 'stations.json':
+        metadata = local_metadata()
+        if metadata['stations']:
+            return jsonify(metadata)
     import re
     match = re.fullmatch(r'aggregated_(\d{4}-\d{2}-\d{2})\.json', filename)
+    if match:
+        metadata = local_metadata()
     if match and metadata['stations']:
         try:
-            snapshot = build_aggregated_data(metadata['stations'], match.group(1),
-                Path('web_output/data'), source_folder=Path('INTERMAGNET_DOWNLOADS'))
+            source = Path('INTERMAGNET_DOWNLOADS')
+            dependencies = [Path('stations.json')]
+            day = match.group(1)
+            previous_day = (datetime.strptime(day, '%Y-%m-%d') - timedelta(days=1)).strftime('%Y%m%d')
+            for station in metadata['stations']:
+                folder = source / station
+                dependencies.extend([folder / f'PRA_Night_{station}_{day.replace("-", "")}.json',
+                                     folder / f'PRA_Night_{station}_{previous_day}.json',
+                                     folder / 'earthquake_correlations.csv', folder / 'false_negatives.csv'])
+            revision = (file_revisions(dependencies), tuple(metadata['stations']))
+            snapshot = _snapshot_cache.get((str(Path.cwd()), match.group(1)), revision,
+                lambda: build_aggregated_data(metadata['stations'], match.group(1),
+                    Path('web_output/data'), source_folder=source))
         except ValueError:
             return 'Invalid date', 404
         return jsonify(snapshot)
@@ -122,6 +140,13 @@ TZ = ZoneInfo('Asia/Tokyo')
 RUN_TIMEZONE = ZoneInfo('Asia/Singapore')
 
 def local_metadata():
+    dependencies = list(Path('INTERMAGNET_DOWNLOADS').glob('*/PRA_Night_*.json'))
+    dependencies.append(Path('stations.json'))
+    revision = (file_revisions(dependencies), os.getenv('INTERMAGNET_STATIONS', ''))
+    return _metadata_cache.get(str(Path.cwd()), revision, _discover_metadata)
+
+
+def _discover_metadata():
     """Discover canonical result dates without regenerating or deleting files."""
     from upload_results import load_station_metadata
     import re

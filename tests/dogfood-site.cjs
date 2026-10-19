@@ -379,16 +379,17 @@ async function main() {
         }finally{await fixture.isolated.close();}
     },'browser-only fault injection');
     await check('Late statistics and chart responses cannot overwrite a newer date', async () => {
-        for (const stage of ['statistics', 'trend', 'map']) {
+        for (const stage of ['statistics', 'trend', 'earthquakes']) {
             const fixture = await fixturePage();
             try {
                 await ready(fixture.target);
+                await fixture.target.evaluate(() => { if (typeof invalidateDataRequests === 'function') invalidateDataRequests(); });
                 let notify, intercepted = false, earthquakeRequests = 0;
                 const reached = new Promise(resolve => { notify = resolve; });
                 const pattern = stage === 'statistics' ? '**/data/earthquake_stats_2026-10-16.json' : stage === 'trend' ? '**/data/aggregated_2026-10-13.json' : '**/data/recent_earthquakes_2026-10-16.csv';
                 await fixture.target.route(pattern, async route => {
                     earthquakeRequests++;
-                    if (!intercepted && (stage !== 'map' || earthquakeRequests === 2)) {
+                    if (!intercepted) {
                         intercepted = true; notify(); await pause(1400);
                     }
                     await route.continue();
@@ -407,6 +408,58 @@ async function main() {
             } finally { await fixture.isolated.close(); }
         }
     }, 'browser-only fault injection');
+    await check('Repeated refresh revalidates inputs and retains unchanged map, charts and markers', async () => {
+        const fixture = await fixturePage();
+        try {
+            await ready(fixture.target);
+            const observations = [];
+            fixture.target.on('request', request => { if (request.url().includes('/data/stations.json')) observations.push(request.url()); });
+            const state = await fixture.target.evaluate(async () => {
+                const before = {map,charts:Object.values(charts),stationCharts:[...stationCharts],marker:markers.KAK};
+                map.setView([35,140],4,{animate:false});
+                for (let i=0;i<12;i++) await renderDashboard(selectedDate,{refresh:true});
+                return {mapSame:map===before.map,chartsSame:Object.values(charts).every((chart,i)=>chart===before.charts[i]),
+                    stationChartsSame:stationCharts.every((chart,i)=>chart===before.stationCharts[i]),markerSame:markers.KAK===before.marker,
+                    zoom:map.getZoom(),lat:map.getCenter().lat,canvases:document.querySelectorAll('canvas').length,cacheSize:dataRequests.size};
+            });
+            assert.equal(state.mapSame,true); assert.equal(state.chartsSame,true); assert.equal(state.stationChartsSame,true);
+            assert.equal(state.markerSame,true); assert.equal(state.zoom,4); assert.ok(Math.abs(state.lat-35)<1);
+            assert.equal(state.canvases,6); assert.ok(state.cacheSize<=32); assert.equal(observations.length,12);
+            assert.deepEqual(fixture.errors,[]);
+        } finally { await fixture.isolated.close(); }
+    }, 'browser-only refresh simulation');
+    await check('Changed refresh updates classifications while retaining map and chart instances', async () => {
+        let changed = false;
+        const fixture = await fixturePage({snapshot:data=>{
+            if (changed) { const station=data.stations.KAK;station.is_anomalous=true;station.nAnomHours=1;station.isAnomalous=station.P.map((_,i)=>i===0); }
+        }});
+        try {
+            await ready(fixture.target);
+            await fixture.target.evaluate(()=>{window.__previousMap=map;window.__previousCharts=Object.values(charts);});
+            changed=true;
+            await fixture.target.evaluate(()=>renderDashboard(selectedDate,{refresh:true}));
+            assert.equal(await fixture.target.locator('.metric-card .value').nth(1).innerText(),'1');
+            assert.equal(await fixture.target.evaluate(()=>charts.successRate.data.datasets[0].data[1]),100);
+            assert.equal(await fixture.target.evaluate(()=>map===window.__previousMap&&Object.values(charts).every((chart,i)=>chart===window.__previousCharts[i])),true);
+            assert.match(await fixture.target.locator('.observation-tag').innerText(),/Anomaly/);
+            assert.deepEqual(fixture.errors,[]);
+        } finally { await fixture.isolated.close(); }
+    }, 'browser-only refresh simulation');
+    await check('Refresh discovers a newly available date while preserving the selected night', async () => {
+        let updated = false;
+        const fixture = await fixturePage({route: target => target.route('**/data/stations.json', route => {
+            const copy = structuredClone(metadata);
+            if (updated) { copy.available_dates.unshift('2026-10-18'); copy.most_recent_date='2026-10-18'; }
+            return route.fulfill({json:copy});
+        })});
+        try {
+            await ready(fixture.target); updated = true;
+            await fixture.target.evaluate(()=>renderDashboard(selectedDate,{refresh:true}));
+            assert.equal(await fixture.target.locator('#date-selector').inputValue(),'2026-10-17');
+            assert.equal(await fixture.target.locator('#date-selector option[value="2026-10-18"]').count(),1);
+            assert.deepEqual(fixture.errors,[]);
+        } finally { await fixture.isolated.close(); }
+    }, 'browser-only refresh simulation');
     await check('Rapid station switching preserves the last station selection', async () => {
         const fixture = await fixturePage();
         try {

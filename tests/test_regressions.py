@@ -240,7 +240,8 @@ class LocalFixture(unittest.TestCase):
         Path('static/assets').mkdir(parents=True)
         for name in ('app.js', 'style.css'):
             Path('static', name).write_bytes((ROOT / 'static' / name).read_bytes())
-        Path('static/assets/gempra-field-emblem.png').write_bytes(b'fixture asset')
+        for name in ('gempra-field-emblem.png', 'gempra-emblem-96.png', 'gempra-favicon-32.png'):
+            Path('static/assets', name).write_bytes(b'fixture asset')
         destination = Path('unpublished')
         manifest = build_preview(destination)
         self.assertEqual(manifest['publication_status'], 'unpublished_preview')
@@ -312,6 +313,28 @@ class LocalFixture(unittest.TestCase):
     def test_station_failure_returns_nonzero_workflow_status(self):
         with patch.object(pra, 'process_station', return_value=False):
             self.assertEqual(pra.main(), 1)
+
+    def test_flask_cache_revalidates_results_metadata_and_correlation_files(self):
+        path = self.result('2026-04-11')
+        client = server.app.test_client()
+        route = '/data/aggregated_2026-04-11.json'
+        first = client.get(route).get_json()
+        repeated = client.get(route).get_json()
+        self.assertEqual(first, repeated)
+        changed = json.loads(path.read_text())
+        changed['P'][0] = 1.5
+        path.write_text(json.dumps(changed))
+        self.assertEqual(client.get(route).get_json()['stations']['KAK']['P'][0], 1.5)
+        pd.DataFrame([{'anomaly_date':'2026-04-11', 'status':'TP', 'earthquake_magnitude':5.5,
+                       'earthquake_distance_km':100, 'days_after_anomaly':2,
+                       'detection_time_utc':'2026-04-11T04:00:00Z',
+                       'earthquake_time':'2026-04-13T04:00:00Z'}]).to_csv(
+            self.station / 'earthquake_correlations.csv', index=False)
+        self.assertEqual(client.get(route).get_json()['earthquake_correlations']['KAK'][0]['status'], 'TP')
+        self.result('2026-04-12')
+        self.assertEqual(client.get('/data/stations.json').get_json()['most_recent_date'], '2026-04-12')
+        path.unlink()
+        self.assertNotIn('KAK', client.get(route).get_json()['stations'])
 
 
 if __name__ == '__main__':

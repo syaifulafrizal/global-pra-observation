@@ -63,7 +63,7 @@ test('no anomalies renders N/A rather than a fabricated failure percentage', () 
     assert.equal(configuration.data.datasets[0].data.join(','), '0,0');
     let label;
     const context = { save() {}, restore() {}, fillText(value) { label = value; } };
-    configuration.plugins[0].afterDraw({ ctx: context, chartArea: { left: 0, right: 100, top: 0, bottom: 100 } });
+    configuration.plugins[0].afterDraw({ ctx: context, data: configuration.data, chartArea: { left: 0, right: 100, top: 0, bottom: 100 } });
     assert.equal(label, 'N/A');
 });
 
@@ -140,4 +140,34 @@ test('downloaded CSV preserves zero-valued fields and quotes text', async () => 
     assert.equal(clicked, true);
     assert.equal(revoked, true);
     assert.match(await blob.text(), /KAK,"a,""quoted"" timestamp",0,0,0,0$/);
+});
+
+test('concurrent reads share requests and refresh invalidates cached data', async () => {
+    const page = dashboard();
+    let calls = 0;
+    page.fetch = async () => ({ok: true, json: async () => ({version: ++calls})});
+    const first = await Promise.all([page.cachedData('test.json'), page.cachedData('test.json')]);
+    assert.equal(calls, 1);
+    assert.equal(first[0], first[1]);
+    page.invalidateDataRequests();
+    assert.equal((await page.cachedData('test.json')).version, 2);
+});
+
+test('failed requests are retried, cache is bounded and parallel reads preserve order', async () => {
+    const page = dashboard();
+    let fail = true;
+    page.fetch = async () => ({ok: !fail, status: 503, json: async () => ({ok:true})});
+    await assert.rejects(page.cachedData('retry.json'), /503/);
+    fail = false;
+    await page.cachedData('retry.json');
+    for (let i = 0; i < 50; i++) await page.cachedData(`${i}.json`);
+    assert.equal(vm.runInContext('dataRequests.size', page), 32);
+    let active = 0, peak = 0;
+    const values = await page.parallelMap([1,2,3,4,5,6], async value => {
+        peak = Math.max(peak, ++active);
+        await new Promise(resolve => setImmediate(resolve)); active--;
+        return value * 2;
+    }, 3);
+    assert.equal(peak, 3);
+    assert.deepEqual(Array.from(values), [2,4,6,8,10,12]);
 });

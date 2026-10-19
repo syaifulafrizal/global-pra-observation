@@ -60,7 +60,8 @@ def build_preview(destination):
         'source_files': {},
     }
     for name in ('templates/index.html', 'static/style.css', 'static/app.js',
-                 'static/assets/gempra-field-emblem.png'):
+                 'static/assets/gempra-field-emblem.png',
+                 'static/assets/gempra-emblem-96.png', 'static/assets/gempra-favicon-32.png'):
         manifest['source_files'][name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
     (destination / 'preview-manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
     return manifest
