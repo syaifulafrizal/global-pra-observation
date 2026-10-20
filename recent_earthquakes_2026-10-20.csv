@@ -1,1 +1,8 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-20 10:40:40.968,54.6088,-160.3291,35.0,5.0,"81 km S of Sand Point, Alaska",earthquake,
+2026-10-20 06:41:23.116,37.9037,95.6436,10.0,5.1,"263 km WSW of Yanglong, China",earthquake,
+2026-10-20 06:29:22.432,-13.857,165.5874,10.0,5.2,"206 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-20 04:20:38.737,-13.9906,165.5892,16.0,6.3,"197 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-20 04:20:37.000,-13.869,165.713,10.0,6.6,"195 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-20 02:54:15.972,18.2529,146.0345,129.361,5.0,"Pagan region, Northern Mariana Islands",earthquake,
+2026-10-20 00:38:28.008,-13.9476,165.5285,10.0,5.0,"205 km NW of Port-Olry, Vanuatu",earthquake,
