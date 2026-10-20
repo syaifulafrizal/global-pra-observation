@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-20",
+  "station": "NUR",
+  "timestamps": [
+    "2026-10-20T00:29:59"
+  ],
+  "P": [
+    6.311004759316595
+  ],
+  "nZ": [
+    1.1608670144851122e-05
+  ],
+  "nG": [
+    1.8394329568067383e-06
+  ],
+  "isAnomalous": [
+    false
+  ],
+  "isQuiet": [
+    true
+  ],
+  "threshold": 27.574999358118596,
+  "nAnomHours": 0,
+  "is_anomalous": false,
+  "analysis_version": 3,
+  "threshold_method": "k_sigma",
+  "baseline_samples": 37,
+  "baseline_source": "historical_and_current",
+  "baseline_window_days": 14,
+  "baseline_historical_nights": 5,
+  "baseline_includes_observation": true,
+  "quiet_policy": "assume_quiet_when_symh_unavailable",
+  "nz_guard_method": "fixed_power",
+  "data_quality": {
+    "status": "partial",
+    "expected_hours": 8,
+    "valid_hours": 1,
+    "invalid_samples": 25200,
+    "symh_verified": false,
+    "symh_covered_hours": 0,
+    "assumed_quiet_hours": 1
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-20",
+  "station": "LYC",
+  "timestamps": [
+    "2026-10-20T00:29:59",
+    "2026-10-20T01:29:59"
+  ],
+  "P": [
+    2.124877259292921,
+    1.5418061456051881
+  ],
+  "nZ": [
+    4.3843269254886345e-05,
+    3.823037751437853e-05
+  ],
+  "nG": [
+    2.0633318495523704e-05,
+    2.479583936239428e-05
+  ],
+  "isAnomalous": [
+    false,
+    false
+  ],
+  "isQuiet": [
+    true,
+    true
+  ],
+  "threshold": 35.47838910979188,
+  "nAnomHours": 0,
+  "is_anomalous": false,
+  "analysis_version": 3,
+  "threshold_method": "k_sigma",
+  "baseline_samples": 45,
+  "baseline_source": "historical_and_current",
+  "baseline_window_days": 14,
+  "baseline_historical_nights": 6,
+  "baseline_includes_observation": true,
+  "quiet_policy": "assume_quiet_when_symh_unavailable",
+  "nz_guard_method": "fixed_power",
+  "data_quality": {
+    "status": "partial",
+    "expected_hours": 8,
+    "valid_hours": 2,
+    "invalid_samples": 21600,
+    "symh_verified": false,
+    "symh_covered_hours": 0,
+    "assumed_quiet_hours": 2
+  }
+}
