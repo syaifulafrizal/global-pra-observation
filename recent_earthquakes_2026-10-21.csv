@@ -1,1 +1,10 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-21 21:58:48.618,56.863,-34.1306,10.0,5.0,Reykjanes Ridge,earthquake,
+2026-10-21 21:38:55.441,56.8137,-34.1689,10.0,5.3,Reykjanes Ridge,earthquake,
+2026-10-21 19:06:06.706,57.1591,-33.9973,10.0,5.0,Reykjanes Ridge,earthquake,
+2026-10-21 18:41:04.960,-14.1213,165.5779,10.0,5.0,"190 km WNW of Port-Olry, Vanuatu",earthquake,
+2026-10-21 18:12:35.474,-52.8118,27.4604,10.0,5.1,south of Africa,earthquake,
+2026-10-21 14:56:27.447,-14.105,165.5402,10.0,5.0,"194 km WNW of Port-Olry, Vanuatu",earthquake,
+2026-10-21 08:37:41.317,13.0297,125.5898,10.0,5.2,"68 km NE of Cabatuan, Philippines",earthquake,
+2026-10-21 07:44:16.055,-7.5619,128.1355,122.687,5.1,"164 km NE of Lospalos, Timor Leste",earthquake,
+2026-10-21 01:20:02.961,4.5985,-82.7031,10.0,5.0,south of Panama,earthquake,

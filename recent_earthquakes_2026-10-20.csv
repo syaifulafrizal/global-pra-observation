@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-20 18:07:18.131,37.9575,-26.2588,10.0,5.1,"39 km W of Mosteiros, Portugal",earthquake,
+2026-10-20 17:05:48.338,6.3226,-82.5693,10.0,5.4,"192 km S of Burica, Panama",earthquake,
+2026-10-20 16:29:38.818,4.0005,95.993,75.876,5.0,"21 km SW of Meulaboh, Indonesia",earthquake,
 2026-10-20 10:40:40.968,54.6088,-160.3291,35.0,5.0,"81 km S of Sand Point, Alaska",earthquake,
 2026-10-20 06:41:23.116,37.9037,95.6436,10.0,5.1,"263 km WSW of Yanglong, China",earthquake,
 2026-10-20 06:29:22.432,-13.857,165.5874,10.0,5.2,"206 km NW of Port-Olry, Vanuatu",earthquake,
