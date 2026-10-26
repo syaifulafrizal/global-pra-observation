@@ -1,0 +1,12 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-25 22:14:16.010,27.8572,139.6916,485.13,5.3,"Bonin Islands, Japan region",earthquake,
+2026-10-25 17:44:23.735,36.274,71.1025,110.025,5.2,"59 km SW of Ashkāsham, Afghanistan",earthquake,
+2026-10-25 11:25:57.101,32.4625,94.0534,7.0,5.9,"218 km ENE of Nagqu, China",earthquake,
+2026-10-25 11:24:14.089,32.3695,93.8872,10.0,5.1,"199 km ENE of Nagqu, China",earthquake,
+2026-10-25 10:30:27.588,-4.3644,143.0843,72.349,5.4,"33 km ESE of Ambunti, Papua New Guinea",earthquake,
+2026-10-25 08:41:00.034,-13.8848,165.5769,10.0,5.4,"205 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-25 03:29:10.551,-6.1737,147.1659,80.779,5.2,"63 km NNE of Lae, Papua New Guinea",earthquake,
+2026-10-25 02:24:00.476,-14.9964,167.3039,116.0,6.1,"25 km ENE of Port-Olry, Vanuatu",earthquake,
+2026-10-25 02:09:23.818,27.7953,139.6184,492.376,6.5,"Bonin Islands, Japan region",earthquake,
+2026-10-25 02:06:10.299,-14.4542,165.7028,10.0,5.1,"161 km WNW of Port-Olry, Vanuatu",earthquake,
+2026-10-25 01:46:23.382,-14.3846,165.6863,10.0,5.1,"166 km WNW of Port-Olry, Vanuatu",earthquake,

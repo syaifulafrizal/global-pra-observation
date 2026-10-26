@@ -1,3 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-10-22 15:12:04.462,32.4401,93.8669,10,5.2,"201 km ENE of Nagqu, China",earthquake,
-2026-10-22 14:33:40.353,32.3805,93.7797,18,7.0,"191 km ENE of Nagqu, China",earthquake,
+2026-10-22 20:05:04.207,-5.728,152.2646,10.0,5.0,"153 km S of Kokopo, Papua New Guinea",earthquake,
+2026-10-22 18:06:44.294,32.3707,93.9886,10.0,5.0,"207 km ENE of Nagqu, China",earthquake,
+2026-10-22 15:12:04.462,32.4401,93.8669,10.0,5.2,"201 km ENE of Nagqu, China",earthquake,
+2026-10-22 14:33:40.353,32.3805,93.7797,18.0,7.0,"191 km ENE of Nagqu, China",earthquake,
+2026-10-22 00:25:38.898,-55.9673,-27.0602,60.915,5.0,South Sandwich Islands region,earthquake,
