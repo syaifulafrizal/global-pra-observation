@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-26",
+  "station": "NGK",
+  "timestamps": [
+    "2026-10-26T00:29:59",
+    "2026-10-26T01:29:59",
+    "2026-10-26T02:29:59"
+  ],
+  "P": [
+    1.2694354918893676,
+    0.9474179093775983,
+    0.9959678285370792
+  ],
+  "nZ": [
+    0.00013292775089388025,
+    0.00011907070462395724,
+    0.00011338147641354252
+  ],
+  "nG": [
+    0.00010471406522283137,
+    0.0001256791785814775,
+    0.00011384050083232323
+  ],
+  "isAnomalous": [
+    false,
+    false,
+    false
+  ],
+  "isQuiet": [
+    true,
+    true,
+    true
+  ],
+  "threshold": 7.884986701066666,
+  "nAnomHours": 0,
+  "is_anomalous": false,
+  "analysis_version": 3,
+  "threshold_method": "k_sigma",
+  "baseline_samples": 46,
+  "baseline_source": "historical_and_current",
+  "baseline_window_days": 14,
+  "baseline_historical_nights": 9,
+  "baseline_includes_observation": true,
+  "quiet_policy": "assume_quiet_when_symh_unavailable",
+  "nz_guard_method": "fixed_power",
+  "data_quality": {
+    "status": "partial",
+    "expected_hours": 8,
+    "valid_hours": 3,
+    "invalid_samples": 18000,
+    "symh_verified": false,
+    "symh_covered_hours": 0,
+    "assumed_quiet_hours": 3
+  }
+}
