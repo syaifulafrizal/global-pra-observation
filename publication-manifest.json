@@ -1,0 +1,27 @@
+{
+  "publication_status": "validated_recovery_export",
+  "source_commit": "24c5ada2a2767604ae795606bb137c9325400a08",
+  "published_at": "2026-10-27T17:03:14.664353+00:00",
+  "dates": [
+    "2026-10-28",
+    "2026-10-27",
+    "2026-10-26",
+    "2026-10-25",
+    "2026-10-24",
+    "2026-10-23",
+    "2026-10-22"
+  ],
+  "sha256": {
+    "index.html": "e0508df73bead96626c14683be21188a001ca8f1244aa0c341c138d89d4427bf",
+    "static/app.js": "9df48ee1546683bab29cdd0d68286e99ff3bf7f45f01b2d0728ad45545b87d24",
+    "static/style.css": "0d2f876f4c941f720ebe50fbf8fcd755486c0cb90490f3d61b442f5c0481749b",
+    "data/stations.json": "921b3f707e176446559c16b8ad85b37c1630709a7e6e3a1314b2e23ad396d353",
+    "data/aggregated_2026-10-28.json": "4d8f8b60ed7aa90d806f37d7214c7906c7ffe947da63bd77768be9ca2825d2cd",
+    "data/aggregated_2026-10-27.json": "2cb0a0cc045beb147e03ea0192868b2de54559ea0ce4ae4e5caef154c3d14661",
+    "data/aggregated_2026-10-26.json": "847a5da54ea104e78009175917449a28f4d9fc7689a99614d41f670f9ec38c78",
+    "data/aggregated_2026-10-25.json": "d99d9141ccf16f43241813f26e9263b60cc79660f16d2278df9d4d9d4a1fd19f",
+    "data/aggregated_2026-10-24.json": "2a8b633c23c1ec6564bf5253f26c19b46e79d89e989ddfd9929a8d49c501ee2a",
+    "data/aggregated_2026-10-23.json": "91fc3ebc61bea56a75d723cd60a6d9cc7ab01261c76e8f8eb43ee39e2dcaa95c",
+    "data/aggregated_2026-10-22.json": "80a1da2ba3605d3f75d9103e1ae6b0b2b4daad23cb8e03d84293fe531095bd87"
+  }
+}

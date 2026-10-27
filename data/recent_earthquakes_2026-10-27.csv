@@ -1,1 +1,9 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-27 15:31:42.073,-23.7469,-179.7358,509.065,5.0,south of the Fiji Islands,earthquake,
+2026-10-27 15:26:02.987,7.706,-81.584,10.0,5.0,"27 km W of Río Grande, Panama",earthquake,
+2026-10-27 14:44:00.933,-9.1162,110.3305,10.0,5.4,"128 km S of Pundong, Indonesia",earthquake,
+2026-10-27 10:50:35.418,-14.0067,165.6479,10.0,5.2,"191 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-27 10:06:31.916,-13.9437,165.7876,10.0,5.0,"184 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-27 09:20:55.730,-13.9006,165.5556,10.0,5.0,"206 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-27 09:07:45.122,-15.1739,-173.4094,10.0,5.0,"95 km NNE of Hihifo, Tonga",earthquake,
+2026-10-27 08:55:23.290,-13.9141,165.6671,11.0,5.8,"196 km NW of Port-Olry, Vanuatu",earthquake,
