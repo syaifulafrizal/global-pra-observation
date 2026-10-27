@@ -29,3 +29,13 @@ The previous performance and threshold-update reports remain historical records 
 - Live processing first ran in an independent copy of the current data. TUC completed successfully. KNY reproduced the same connection reset, retried the identical request, then completed successfully. Both recovered October 27 observations contain eight valid hours, no invalid magnetic samples, and no anomalies.
 
 Detailed evidence, input hashes and recovery/deployment logs are retained under ignored `output/dogfood/deployment-2026-10-28/`. Further full-run and publication results are recorded there after validation.
+
+## Full recovery run
+
+- The corrected analysis completed in the independent copy with exit 0: 17 successful station results, 43 unavailable/no-usable-window outcomes, and **zero failed/error stations**. Existing successful observations were reused. Live connection resets at KNY and SPT both recovered on their second attempt.
+- Earthquake integration completed with exit 0. Eight individual station/historical catalogue requests timed out during that unchanged integration; its existing query-failure handling remained in effect. All seven final global daily queries succeeded. The exporter and publication validator passed with actual observation dates **22–28 October**.
+- The final static-export browser check passed all **357 station/date selections** and **65 scientific-figure links**, plus baseline labels, five viewport widths, theme and refresh/view preservation. No uncaught JavaScript errors or normal-use failed requests were recorded.
+- All 1,665 original input files matched their recorded hashes before importing recovered results. Import added only the new KNY/TUC October 27 JSON, CSV and figure files, and appended one date row to each of their existing coverage ledgers. Existing raw measurements and earlier result artifacts were not overwritten or deleted. Coverage-ledger originals and the exact import journal are retained in the evidence folder. Earlier uncommitted station data and retention changes were preserved.
+- The recovered KNY baseline uses eight historical nights plus the observation night (68 quiet hours); TUC uses nine plus the observation night (80 quiet hours). These actual counts are retained in their results and displayed by the existing dashboard. Both observations contain eight valid hours and no anomalies.
+
+`candidate-browser/results.json` records the export checks. Publication commit/build checks, hosted-file hashes and public-browser results are recorded separately in the same evidence folder after deployment. This is a recovery run and isolated workflow rehearsal, not a claim that the next scheduled midnight trigger has already executed.
