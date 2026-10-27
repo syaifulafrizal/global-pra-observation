@@ -67,7 +67,7 @@ def attach_stdout_logger(logger: logging.Logger) -> None:
         normalized = text.upper()
         if normalized.startswith("[ERROR") or normalized.startswith("ERROR"):
             level = logging.ERROR
-        elif normalized.startswith("[WARNING"):
+        elif normalized.startswith(("[WARNING", "WARNING:")):
             level = logging.WARNING
         elif normalized.startswith("[SKIP]"):
             level = logging.INFO
@@ -76,7 +76,8 @@ def attach_stdout_logger(logger: logging.Logger) -> None:
         elif normalized.startswith("[INFO]"):
             level = logging.INFO
         else:
-            level = logging.DEBUG
+            # Operational summaries and retry diagnostics must survive INFO logging.
+            level = logging.INFO
         logger.log(level, text)
 
     builtins.print = _logged_print

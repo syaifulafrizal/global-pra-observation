@@ -5,7 +5,9 @@
 # 3. Prepare web output (upload_results.py)
 # 4. Deploy to GitHub Pages (deploy_to_github.ps1)
 #
-# Usage: Just double-click this file or run: .\deploy_all.ps1
+# Usage: .\deploy_all.ps1 (unattended), or .\deploy_all.ps1 -Interactive to wait for input.
+
+param([switch]$Interactive)
 
 $ErrorActionPreference = "Continue"
 
@@ -52,7 +54,7 @@ Write-Log "Preflight: Checking station data availability (today vs yesterday)...
 if ($LASTEXITCODE -ne 0) {
     Write-Log "WARNING: Data availability pre-check encountered issues. Review logs above." "Yellow"
 } else {
-    Write-Log "Preflight check complete - raw data is up to date." "Green"
+    Write-Log "Preflight check finished. Any unavailable data or download warnings are listed above." "Green"
 }
 Write-Log ""
 
@@ -64,7 +66,7 @@ Write-Log "This may take several minutes for all stations..." "Gray"
 if ($LASTEXITCODE -ne 0) {
     Write-Log "ERROR: PRA analysis failed!" "Red"
     Write-Log "Please check the error messages above" "Red"
-    Read-Host "Press Enter to exit"
+    if ($Interactive) { Read-Host "Press Enter to exit" }
     exit 1
 }
 Write-Log "PRA analysis completed" "Green"
@@ -213,7 +215,7 @@ if (Test-Path $uploadResultsPath) {
 if ($LASTEXITCODE -ne 0) {
     Write-Log "ERROR: Web output preparation failed!" "Red"
     Write-Log "Please check the error messages above" "Red"
-    Read-Host "Press Enter to exit"
+    if ($Interactive) { Read-Host "Press Enter to exit" }
     exit 1
 }
 Write-Log "Web output prepared" "Green"
@@ -234,7 +236,7 @@ if (Test-Path $stationsJson) {
     }
 } else {
     Write-Log "ERROR: stations.json not found in web_output/data/" "Red"
-    Read-Host "Press Enter to exit"
+    if ($Interactive) { Read-Host "Press Enter to exit" }
     exit 1
 }
 Write-Log ""
@@ -396,7 +398,8 @@ if ($env:GITHUB_REPO) {
     if ($LASTEXITCODE -eq 0) {
         Write-Log "Deployment completed successfully!" "Green"
     } else {
-        Write-Log "WARNING: Deployment had issues, but web output is ready locally" "Yellow"
+        Write-Log "ERROR: Deployment failed; web output is ready locally but was not published" "Red"
+        exit 1
     }
 } else {
     Write-Log "Step 4/4: Skipping GitHub deployment (GITHUB_REPO not set)" "Yellow"
@@ -423,8 +426,8 @@ if ($env:GITHUB_REPO) {
 }
 Write-Log ""
 
-# Keep window open if run by double-clicking
-if ($Host.Name -eq "ConsoleHost") {
+# Wait only when explicitly requested; scheduled runs must always return.
+if ($Interactive -and $Host.Name -eq "ConsoleHost") {
     Write-Log "Press Enter to close this window..." "Gray"
     Read-Host
 }

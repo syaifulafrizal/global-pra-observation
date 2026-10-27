@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import re
+import time
 from pathlib import Path
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -161,25 +162,39 @@ def download_data(station_code, date, out_folder):
     url = BASE_URL + "?" + "&".join(params)
     print(f'Downloading {station_code} data for: {date_str}')
     
-    try:
-        response = requests.get(url, timeout=30)
-        if response.status_code == 400 and re.search(
-                rf'Unable to find observatory:\s*{re.escape(station_code)}\b', response.text):
-            _unavailable_observatories.add(station_code)
-            print(f'[WARNING] INTERMAGNET does not provide observatory {station_code}; leaving its observation unavailable')
-            return None
-        response.raise_for_status()
-        if iaga_data_header(response.text) is None:
-            raise ValueError('Response is not IAGA2002 data (possibly an error page)')
-        out_file.parent.mkdir(parents=True, exist_ok=True)
-        temporary = out_file.with_suffix('.iaga2002.tmp')
-        with open(temporary, 'wb') as f:
-            f.write(response.content)
-        temporary.replace(out_file)
-        return out_file
-    except Exception as e:
-        print(f'Warning: Download failed for {date_str}: {e}')
-        return None
+    attempts = 3
+    for attempt in range(1, attempts + 1):
+        response = None
+        try:
+            response = requests.get(url, timeout=30)
+            if response.status_code == 400 and re.search(
+                    rf'Unable to find observatory:\s*{re.escape(station_code)}\b', response.text):
+                _unavailable_observatories.add(station_code)
+                print(f'[WARNING] INTERMAGNET does not provide observatory {station_code}; leaving its observation unavailable')
+                return None
+            response.raise_for_status()
+            if iaga_data_header(response.text) is None:
+                raise ValueError('Response is not IAGA2002 data (possibly an error page)')
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            temporary = out_file.with_suffix('.iaga2002.tmp')
+            with open(temporary, 'wb') as f:
+                f.write(response.content)
+            temporary.replace(out_file)
+            return out_file
+        except Exception as e:
+            transient = isinstance(e, (requests.ConnectionError, requests.Timeout,
+                                       requests.exceptions.ChunkedEncodingError))
+            if isinstance(e, requests.HTTPError) and response is not None:
+                transient = response.status_code in (408, 429, 500, 502, 503, 504)
+            if not transient or attempt == attempts:
+                print(f'[WARNING] Download failed for {station_code} on {date_str} after {attempt} attempt(s): {e}')
+                return None
+            delay = 2 ** (attempt - 1)
+            print(f'[WARNING] {station_code} {date_str}: transient download failure (attempt {attempt}/{attempts}); retrying in {delay}s: {e}')
+            time.sleep(delay)
+        finally:
+            if response is not None:
+                response.close()
 
 def iaga_data_header(text):
     """Locate the actual data header instead of assuming a fixed header length."""

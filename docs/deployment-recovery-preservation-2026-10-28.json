@@ -1,0 +1,54 @@
+{
+  "baseline_commit": "90ee18aa7db910135594d27c5241dd9d8ccc0c8a",
+  "changed_analysis_functions": [
+    "download_data"
+  ],
+  "preserved_analysis_functions": [
+    "get_data_folder",
+    "get_station_timezone",
+    "download_symh_data",
+    "iaga_data_header",
+    "iaga_file_header",
+    "read_iaga2002",
+    "spectral_setup",
+    "multitaper_psd",
+    "compute_pseries",
+    "disturbed_mask",
+    "apply_guard",
+    "compute_quiet_flags",
+    "fit_evt_threshold",
+    "fit_ksigma_threshold",
+    "nz_guard",
+    "persistence_rule",
+    "load_historical_quiet_p_values",
+    "analyze_row",
+    "cleanup_downloaded_files",
+    "cleanup_old_data_files",
+    "historical_z_stats",
+    "process_station",
+    "save_plot",
+    "log_anomaly",
+    "get_all_stations",
+    "main"
+  ],
+  "preserved_constants": [
+    "OPTS",
+    "THRESHOLD_DAYS",
+    "FS",
+    "WIN_LEN",
+    "STEP",
+    "F_LOW",
+    "F_HIGH",
+    "MT_NW"
+  ],
+  "preserved_files": [
+    "earthquake_integration.py",
+    "integrate_earthquakes.py",
+    "upload_results.py",
+    "validate_pages_output.py",
+    "static/app.js",
+    "static/style.css",
+    "templates/index.html",
+    "deploy_to_github.ps1"
+  ]
+}

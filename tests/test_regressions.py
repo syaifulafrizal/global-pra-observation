@@ -112,6 +112,47 @@ class LocalFixture(unittest.TestCase):
             self.assertFalse(pra.process_station('KAK'))
         self.assertFalse(list(self.station.glob('PRA_Night_*.json')))
 
+    def test_transient_download_failures_retry_identical_request_and_save_valid_data(self):
+        content = b'DATE TIME DOY KAKX KAKY KAKZ\n2026-04-10 20:00:00 100 3 4 5\n'
+        for failure in (pra.requests.ConnectionError('reset 10054'), pra.requests.Timeout('timed out'),
+                        pra.requests.exceptions.ChunkedEncodingError('truncated body')):
+            with self.subTest(failure=type(failure).__name__):
+                folder = self.station / type(failure).__name__
+                response = Mock(status_code=200, text=content.decode(), content=content)
+                with patch.object(pra.requests, 'get', side_effect=[failure, response]) as request, \
+                     patch.object(pra.time, 'sleep') as sleep:
+                    path = pra.download_data('KAK', datetime(2026, 4, 10), folder)
+                self.assertEqual(path.read_bytes(), content)
+                self.assertEqual(request.call_count, 2)
+                self.assertEqual(request.call_args_list[0], request.call_args_list[1])
+                sleep.assert_called_once_with(1)
+                response.close.assert_called_once()
+                self.assertFalse(path.with_suffix('.iaga2002.tmp').exists())
+
+    def test_http_retries_are_bounded_and_permanent_errors_are_not_retried(self):
+        for status, expected in ((429, 3), (503, 3), (400, 1), (404, 1)):
+            with self.subTest(status=status):
+                response = Mock(status_code=status, text='Provider error')
+                response.raise_for_status.side_effect = pra.requests.HTTPError(str(status))
+                with patch.object(pra.requests, 'get', return_value=response) as request, \
+                     patch.object(pra.time, 'sleep') as sleep:
+                    self.assertIsNone(pra.download_data('KAK', datetime(2026, 4, 10), self.station))
+                self.assertEqual(request.call_count, expected)
+                self.assertEqual(response.close.call_count, expected)
+                self.assertEqual([call.args[0] for call in sleep.call_args_list], [1, 2] if expected == 3 else [])
+                self.assertFalse(list(self.station.glob('*.iaga2002*')))
+
+    def test_exhausted_connection_retries_preserve_existing_file(self):
+        path = self.station / 'KAK_20260410.iaga2002'
+        path.write_bytes(b'previous invalid download retained until valid replacement')
+        original = path.read_bytes()
+        with patch.object(pra.requests, 'get', side_effect=pra.requests.ConnectionError('reset')) as request, \
+             patch.object(pra.time, 'sleep'):
+            self.assertIsNone(pra.download_data('KAK', datetime(2026, 4, 10), self.station))
+        self.assertEqual(request.call_count, 3)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertFalse(path.with_suffix('.iaga2002.tmp').exists())
+
     def test_native_non_xyz_is_not_silently_misread(self):
         path = Path('hdz.iaga2002')
         path.write_text('DATE TIME DOY KAKH KAKD KAKZ\n2026-04-10 20:00:00 100 3 4 5\n')
