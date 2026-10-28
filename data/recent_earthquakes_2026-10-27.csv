@@ -1,7 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
-2026-10-27 15:31:42.073,-23.7469,-179.7358,509.065,5.0,south of the Fiji Islands,earthquake,
-2026-10-27 15:26:02.987,7.706,-81.584,10.0,5.0,"27 km W of Río Grande, Panama",earthquake,
-2026-10-27 14:44:00.933,-9.1162,110.3305,10.0,5.4,"128 km S of Pundong, Indonesia",earthquake,
+2026-10-27 23:43:51.480,5.6402,125.3536,57.848,5.1,"7 km N of Balangonan, Philippines",earthquake,
+2026-10-27 23:14:17.420,12.6676,142.9938,100.998,5.4,"193 km WSW of Merizo Village, Guam",earthquake,
+2026-10-27 18:57:53.135,32.5388,93.9028,10.0,5.4,"210 km ENE of Nagqu, China",earthquake,
+2026-10-27 15:26:03.024,7.684,-81.6012,10.0,5.0,"29 km W of Río Grande, Panama",earthquake,
+2026-10-27 14:44:01.219,-9.0977,110.3861,10.0,5.4,"126 km S of Pundong, Indonesia",earthquake,
 2026-10-27 10:50:35.418,-14.0067,165.6479,10.0,5.2,"191 km NW of Port-Olry, Vanuatu",earthquake,
 2026-10-27 10:06:31.916,-13.9437,165.7876,10.0,5.0,"184 km NW of Port-Olry, Vanuatu",earthquake,
 2026-10-27 09:20:55.730,-13.9006,165.5556,10.0,5.0,"206 km NW of Port-Olry, Vanuatu",earthquake,
