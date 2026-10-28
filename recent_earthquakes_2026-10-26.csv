@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-26 12:13:30.652,-13.8613,165.6029,10.0,5.2,"205 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-26 11:17:55.055,-13.9396,165.3858,10.0,5.0,"218 km NW of Port-Olry, Vanuatu",earthquake,
+2026-10-26 10:13:01.234,-18.283,-178.0109,641.812,5.5,"283 km E of Levuka, Fiji",earthquake,
+2026-10-26 04:53:40.479,-8.443,121.5729,10.0,5.0,"45 km NNW of Ende, Indonesia",earthquake,
