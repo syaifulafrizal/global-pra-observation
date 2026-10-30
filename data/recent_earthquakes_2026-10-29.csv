@@ -1,1 +1,13 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-29 21:46:44.786,-15.1891,167.4523,142.833,6.2,"43 km ESE of Port-Olry, Vanuatu",earthquake,
+2026-10-29 20:32:11.667,-4.4698,132.4922,10.0,5.0,"131 km NNW of Tual, Indonesia",earthquake,
+2026-10-29 20:14:32.548,53.5843,-163.0279,15.602,5.0,"143 km S of False Pass, Alaska",earthquake,
+2026-10-29 08:49:42.448,13.3785,91.6593,10.0,5.1,"218 km NNW of Bamboo Flat, India",earthquake,
+2026-10-29 07:49:50.928,-36.4058,-98.0489,10.0,6.4,southeast of Easter Island,earthquake,
+2026-10-29 07:31:30.432,8.4677,127.4269,10.0,5.4,"114 km ENE of Barcelona, Philippines",earthquake,
+2026-10-29 05:33:36.298,-61.3277,161.1643,10.0,5.1,Balleny Islands region,earthquake,
+2026-10-29 05:06:48.289,-60.2079,-27.9532,8.561,5.4,South Sandwich Islands region,earthquake,
+2026-10-29 03:26:42.275,-5.6991,141.9018,10.0,5.7,"82 km NE of Kiunga, Papua New Guinea",earthquake,
+2026-10-29 03:19:05.288,8.3638,127.4204,10.0,5.8,"110 km ENE of Barcelona, Philippines",earthquake,
+2026-10-29 03:17:54.507,8.3695,127.4427,10.0,5.4,"113 km ENE of Barcelona, Philippines",earthquake,
+2026-10-29 00:08:20.933,-15.1213,168.0994,10.0,5.4,"109 km ENE of Luganville, Vanuatu",earthquake,

@@ -1,4 +1,7 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-10-28 22:06:45.820,-6.3231,130.3957,142.0,5.7,"271 km WSW of Tual, Indonesia",earthquake,
+2026-10-28 19:56:47.901,2.4345,126.7433,35.0,5.3,"161 km WNW of Tobelo, Indonesia",earthquake,
+2026-10-28 19:45:32.912,58.1064,-32.1058,10.0,5.2,Reykjanes Ridge,earthquake,
 2026-10-28 15:07:52.050,35.7015,140.7059,41.356,5.5,"5 km ESE of Asahi, Japan",earthquake,
 2026-10-28 12:47:08.927,58.2153,-32.3348,10.0,5.0,Reykjanes Ridge,earthquake,
 2026-10-28 11:56:17.454,58.3556,-32.2398,10.0,5.0,Reykjanes Ridge,earthquake,
