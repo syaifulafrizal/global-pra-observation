@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-04 07:40:12.288,4.3895,127.0325,49.074,5,"207 km ESE of Sarangani, Philippines",earthquake,
