@@ -1,1 +1,2 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-06 10:39:27.869,34.9677,142.1175,29,6.1,"144 km SE of Hasaki, Japan",earthquake,

@@ -1,5 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-11-03 21:34:08.654,39.3619,73.3023,10.0,5.2,"91 km ESE of Kyzyl-Eshme, Kyrgyzstan",earthquake,
 2026-11-03 18:21:13.036,-35.5195,78.3027,10.0,5.2,Mid-Indian Ridge,earthquake,
-2026-11-03 16:48:13.110,24.1441,141.6725,139.456,5.2,"Volcano Islands, Japan region",earthquake,
+2026-11-03 16:48:12.006,24.1773,141.6688,129.171,5.2,"Volcano Islands, Japan region",earthquake,
+2026-11-03 13:34:04.565,-58.7979,-26.2903,133.113,5.0,South Sandwich Islands region,earthquake,
 2026-11-03 09:13:14.972,3.7386,-75.7198,10.0,5.4,"24 km NNW of Rioblanco, Colombia",earthquake,
