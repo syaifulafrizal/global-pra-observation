@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-08",
+  "station": "CNB",
+  "timestamps": [
+    "2026-11-07T19:29:59",
+    "2026-11-07T20:29:59",
+    "2026-11-07T21:29:59",
+    "2026-11-07T22:29:59",
+    "2026-11-07T23:29:59",
+    "2026-11-08T00:29:59",
+    "2026-11-08T01:29:59",
+    "2026-11-08T02:29:59"
+  ],
+  "P": [
+    0.45719643920888453,
+    0.30380903402221593,
+    0.22052970646979853,
+    0.22728028633601716,
+    0.1950920310937021,
+    0.07513898456699745,
+    0.22302832296554903,
+    0.36234751974549934
+  ],
+  "nZ": [
+    0.00024893008973767564,
+    2.879154120382933e-05,
+    6.006255152961242e-05,
+    9.805533731205057e-05,
+    4.922307265846088e-05,
+    1.831701993741657e-05,
+    6.741952557755224e-05,
+    0.0002019121702167004
+  ],
+  "nG": [
+    0.000544470753465217,
+    9.476854859333761e-05,
+    0.00027235583128950463,
+    0.00043142913489242524,
+    0.00025230693628290325,
+    0.0002437751859833061,
+    0.00030229131744835146,
+    0.000557233482261771
+  ],
+  "isAnomalous": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "isQuiet": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "threshold": 2.257222369452158,
+  "nAnomHours": 0,
+  "is_anomalous": false,
+  "analysis_version": 3,
+  "threshold_method": "k_sigma",
+  "baseline_samples": 96,
+  "baseline_source": "historical_and_current",
+  "baseline_window_days": 14,
+  "baseline_historical_nights": 12,
+  "baseline_includes_observation": true,
+  "quiet_policy": "assume_quiet_when_symh_unavailable",
+  "nz_guard_method": "fixed_power",
+  "data_quality": {
+    "status": "complete",
+    "expected_hours": 8,
+    "valid_hours": 8,
+    "invalid_samples": 0,
+    "symh_verified": false,
+    "symh_covered_hours": 0,
+    "assumed_quiet_hours": 8
+  }
+}
