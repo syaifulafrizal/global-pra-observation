@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-09 10:23:53.528,-4.9495,-75.0002,11.49,5.3,"80 km ENE of Lagunas, Peru",earthquake,
+2026-11-09 09:48:27.794,-3.0627,130.3905,10.0,5.4,"160 km E of Masohi, Indonesia",earthquake,
+2026-11-09 04:52:51.519,36.2471,141.8299,24.173,5.7,"106 km ENE of Hasaki, Japan",earthquake,
+2026-11-09 03:34:59.466,-10.8669,165.5616,17.0,6.4,"30 km WSW of Lata, Solomon Islands",earthquake,
+2026-11-09 00:46:59.021,-23.6774,179.2119,535.494,5.1,south of the Fiji Islands,earthquake,
