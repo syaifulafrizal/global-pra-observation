@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-10 15:51:35.737,-0.9226,128.7092,10,5.2,"140 km ESE of Labuha, Indonesia",earthquake,
+2026-11-10 14:54:17.647,13.5381,-90.8798,35,5.6,"43 km S of Puerto San José, Guatemala",earthquake,
+2026-11-10 08:34:07.131,-0.4928,132.859,35,5.0,"58 km NE of Fef, Indonesia",earthquake,
+2026-11-10 03:37:46.152,-10.7818,165.6239,10,5.2,"19 km WSW of Lata, Solomon Islands",earthquake,
+2026-11-10 01:53:24.195,-7.8742,130.2935,10,5.4,"Pulau Pulau Tanimbar, Indonesia",earthquake,
