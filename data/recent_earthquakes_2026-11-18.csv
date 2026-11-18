@@ -1,0 +1,10 @@
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-18 09:37:00.617,38.7192,137.8725,10.0,5.2,"86 km NW of Ryōtsu-minato, Japan",earthquake,
+2026-11-18 06:07:42.780,-15.1438,-75.9238,21.895,5.9,"85 km WNW of San Juan, Peru",earthquake,
+2026-11-18 05:25:43.280,0.4346,-103.0838,10.0,5.2,Galapagos Triple Junction region,earthquake,
+2026-11-18 04:41:32.015,-8.2501,120.5285,10.0,5.8,"40 km N of Ruteng, Indonesia",earthquake,
+2026-11-18 04:21:35.658,-8.151,120.6489,10.0,5.2,"54 km NNE of Ruteng, Indonesia",earthquake,
+2026-11-18 03:42:34.269,-5.7009,146.5479,52.291,5.8,"99 km ESE of Madang, Papua New Guinea",earthquake,
+2026-11-18 02:22:56.671,12.1387,143.8866,10.0,5.8,"150 km SW of Merizo Village, Guam",earthquake,
+2026-11-18 00:48:56.089,45.6863,26.452,130.266,5.3,"16 km ESE of Comandău, Romania",earthquake,
+2026-11-18 00:46:31.418,39.1912,71.5875,10.0,5.3,"7 km SE of Karakenja, Tajikistan",earthquake,
