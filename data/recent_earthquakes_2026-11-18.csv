@@ -1,4 +1,9 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-18 21:28:47.088,51.3379,172.8596,10.0,5.2,"169 km S of Attu Station, Alaska",earthquake,
+2026-11-18 19:14:23.713,-57.7514,-146.746,10.0,6.1,Pacific-Antarctic Ridge,earthquake,
+2026-11-18 18:08:00.785,-5.4599,35.1065,10.0,5.0,"46 km NNE of Kilimatinde, Tanzania",earthquake,
+2026-11-18 17:22:23.454,32.2779,130.4609,10.0,5.3,"4 km NNW of Tsunagi, Japan",earthquake,
+2026-11-18 16:06:51.220,12.0918,143.9927,10.0,5.3,"149 km SSW of Merizo Village, Guam",earthquake,
 2026-11-18 09:37:00.617,38.7192,137.8725,10.0,5.2,"86 km NW of Ryōtsu-minato, Japan",earthquake,
 2026-11-18 06:07:42.780,-15.1438,-75.9238,21.895,5.9,"85 km WNW of San Juan, Peru",earthquake,
 2026-11-18 05:25:43.280,0.4346,-103.0838,10.0,5.2,Galapagos Triple Junction region,earthquake,
