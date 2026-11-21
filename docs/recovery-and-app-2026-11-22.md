@@ -55,3 +55,11 @@ Import added only 54 new JSON/CSV/figure artifacts and appended one row to each 
 The final recovered-data export passed the publication gate and all 357 station/date selections and 100 available scientific-figure links, with zero uncaught browser errors or failed site requests. Offline/date/API checks also passed against that export. The registered `GEMPRA` task remains Ready, next trigger November 23 at 00:00 local time. Its prior interrupted run is not represented as a successful scheduler execution.
 
 See `recovery-validation-2026-11-22.json` for the scientific preservation and import summary.
+
+## Publication verification
+
+Functional source revision `6ebfcc26e8520f9949e5498bbe569df8f5702055` was published as Pages revision `477a9fd08c19aac97b8b0888563b114edc762e68` on the existing `gh-pages` branch. [GitHub's Pages build completed successfully](https://github.com/syaifulafrizal/global-pra-observation/actions/runs/44928874889).
+
+All 16 hosted manifest hashes matched the reviewed bundle, including HTML, CSS, JavaScript, PWA assets, API status/latest and advertised aggregates. All 111 PNGs in the publication tree were validated as ordinary browser-readable Git blobs. The public-site sweep passed all 357 station/date selections and 100 figure links, five responsive widths, theme and refresh preservation, with zero uncaught errors or failed site requests. The public PWA check passed the actual `/global-pra-observation/` installation scope, icon signatures, API/dashboard equality, no permission prompt on load, offline date retention/cached labeling and online recovery.
+
+The task is enabled and Ready, still invoking the same local `deploy_all.bat`. No analysis/integration recovery subprocess remains running. Main source and Pages publication were both pushed without changing the registered deployment target. Public screenshots and reports are in `output/dogfood/network-2026-11-22/public-browser/` and `public-pwa/`.
