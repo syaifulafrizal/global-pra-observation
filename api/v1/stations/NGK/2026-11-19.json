@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "station": "NGK",
+  "observation_date": "2026-11-19",
+  "metadata": {
+    "name": "Niemegk",
+    "country": "Germany",
+    "latitude": 52.073,
+    "longitude": 12.675,
+    "timezone": "Europe/Berlin"
+  },
+  "observation": {
+    "date": "2026-11-19",
+    "station": "NGK",
+    "timestamps": [
+      "2026-11-19T00:29:59",
+      "2026-11-19T01:29:59",
+      "2026-11-19T02:29:59"
+    ],
+    "P": [
+      0.34008032327052257,
+      0.43993999070477213,
+      0.6639426209076845
+    ],
+    "nZ": [
+      0.0003734482512442522,
+      0.00015840666026534136,
+      9.368971008664758e-05
+    ],
+    "nG": [
+      0.001098117784801053,
+      0.00036006424424289804,
+      0.0001411111549949349
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true
+    ],
+    "threshold": 1.8354376283914124,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 42,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 13,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "partial",
+      "expected_hours": 8,
+      "valid_hours": 3,
+      "invalid_samples": 18000,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 3
+    }
+  }
+}

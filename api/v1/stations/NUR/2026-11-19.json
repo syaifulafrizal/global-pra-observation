@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "NUR",
+  "observation_date": "2026-11-19",
+  "metadata": {
+    "name": "Nurmij\u00e4rvi",
+    "country": "Finland",
+    "latitude": 60.508,
+    "longitude": 24.655,
+    "timezone": "Europe/Helsinki"
+  },
+  "observation": {
+    "date": "2026-11-19",
+    "station": "NUR",
+    "timestamps": [
+      "2026-11-18T18:29:59",
+      "2026-11-18T19:29:59",
+      "2026-11-18T20:29:59",
+      "2026-11-18T21:29:59",
+      "2026-11-18T22:29:59",
+      "2026-11-18T23:29:59",
+      "2026-11-19T00:29:59",
+      "2026-11-19T01:29:59"
+    ],
+    "P": [
+      0.7660019678342432,
+      1.898765327891747,
+      5.618240722833206,
+      4.810274211548705,
+      0.9346136617592098,
+      2.6560913496716756,
+      0.995153432852883,
+      23.314801622342817
+    ],
+    "nZ": [
+      0.0001342650787786425,
+      0.00013490939552477938,
+      7.295087760093205e-05,
+      3.617049317687033e-05,
+      4.7688680167750005e-05,
+      5.559848415418562e-05,
+      0.0018878736058221667,
+      0.0010033480040248345
+    ],
+    "nG": [
+      0.0001752803314047052,
+      7.105111597680853e-05,
+      1.2984647899555268e-05,
+      7.519424379182109e-06,
+      5.102501934113213e-05,
+      2.0932444270434544e-05,
+      0.0018970678726496013,
+      4.303480768471629e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 15.171856820935444,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 97,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

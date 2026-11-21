@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "LRM",
+  "observation_date": "2026-11-18",
+  "metadata": {
+    "name": "L'Aquila",
+    "country": "Italy",
+    "latitude": 42.383,
+    "longitude": 13.317,
+    "timezone": "Europe/Rome"
+  },
+  "observation": {
+    "date": "2026-11-18",
+    "station": "LRM",
+    "timestamps": [
+      "2026-11-17T19:29:59",
+      "2026-11-17T20:29:59",
+      "2026-11-17T21:29:59",
+      "2026-11-17T22:29:59",
+      "2026-11-17T23:29:59",
+      "2026-11-18T00:29:59",
+      "2026-11-18T01:29:59",
+      "2026-11-18T02:29:59"
+    ],
+    "P": [
+      0.49991398922837815,
+      0.7410277223832966,
+      0.9851592315229866,
+      1.1899536546951348,
+      1.946460160652996,
+      0.7465824108124665,
+      0.9871572615275412,
+      2.9827587249525966
+    ],
+    "nZ": [
+      2.1624890330363042e-05,
+      2.1443886475092637e-05,
+      4.470119406997362e-05,
+      5.6217266184582474e-05,
+      7.308916241242871e-05,
+      4.326366366453641e-05,
+      5.363525327392433e-05,
+      8.920972183025414e-05
+    ],
+    "nG": [
+      4.325722183478254e-05,
+      2.8938035416711152e-05,
+      4.537458782258857e-05,
+      4.724324007306427e-05,
+      3.7549785960124067e-05,
+      5.794894580687326e-05,
+      5.4333038274903005e-05,
+      2.9908460608617246e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 4.274513692554457,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 107,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 13,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "ASP",
+  "observation_date": "2026-11-18",
+  "metadata": {
+    "name": "Alice Springs",
+    "country": "Australia",
+    "latitude": -23.796,
+    "longitude": 133.888,
+    "timezone": "Australia/Darwin"
+  },
+  "observation": {
+    "date": "2026-11-18",
+    "station": "ASP",
+    "timestamps": [
+      "2026-11-17T10:59:59",
+      "2026-11-17T11:59:59",
+      "2026-11-17T12:59:59",
+      "2026-11-17T13:59:59",
+      "2026-11-17T14:59:59",
+      "2026-11-17T15:59:59",
+      "2026-11-17T16:59:59",
+      "2026-11-17T17:59:59"
+    ],
+    "P": [
+      1.1478147304635458,
+      1.31589391935206,
+      1.4078979882841294,
+      1.147100320089522,
+      1.3520034342525915,
+      0.8386862967946745,
+      0.6368312013620752,
+      0.6110229905259492
+    ],
+    "nZ": [
+      1.9885168580473905e-05,
+      1.903594678652493e-05,
+      1.799169451102706e-05,
+      1.6637683349151923e-05,
+      2.4621622837511726e-05,
+      2.6313627938212668e-05,
+      2.2845512821787103e-05,
+      1.916281465900259e-05
+    ],
+    "nG": [
+      1.73243713055009e-05,
+      1.4466171251781558e-05,
+      1.2779117990611218e-05,
+      1.4504122314126357e-05,
+      1.821121323639458e-05,
+      3.1374815635809436e-05,
+      3.5873733530838915e-05,
+      3.136185537389984e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 2.527612464451281,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 101,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

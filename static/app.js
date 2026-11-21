@@ -787,7 +787,7 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
 function getEarthquakeColor(magnitude) {
     // Color gradient based on magnitude
     if (magnitude >= 8.0) return '#c0392b';  // Dark red for M8.0+
-    if (magnitude >= 7.0) return '#e74c3c';  // Red for M7.0-7.9
+    if (magnitude >= 7.0) return '#bd382c';  // Red for M7.0-7.9
     if (magnitude >= 6.0) return '#e67e22';  // Orange for M6.0-6.9
     return '#f1c40f';  // Yellow for M5.0-5.9
 }
@@ -1052,7 +1052,7 @@ function addEarthquakeMarkers(earthquakes) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: white;
+                color: ${mag < 7 ? '#172e3b' : '#ffffff'};
                 font-weight: bold;
                 font-size: ${Math.max(10, Math.min(14, mag * 2))}px;
             ">${mag.toFixed(1)}</div>`,
@@ -1063,13 +1063,13 @@ function addEarthquakeMarkers(earthquakes) {
         // Source earthquake timestamps are UTC even when the CSV omits its suffix.
         const times = earthquakeTimes(time, lon);
         const timeStr = times
-            ? `${times.utc}<br><small style="color: #666;">Local (approx): ${times.local}</small>`
+            ? `${times.utc}<br><small style="color: var(--text-secondary);">Local (approx): ${times.local}</small>`
             : 'Unknown';
 
         const popupContent = `
             <div style="min-width: 200px; font-family: Arial, sans-serif;">
-                <strong style="color: #e74c3c; font-size: 1.2em;">🌋 Earthquake M${mag.toFixed(1)}</strong><br>
-                <span style="color: #555;">${place}</span><br>
+                <strong style="color: var(--text-primary); font-size: 1.2em;">🌋 Earthquake M${mag.toFixed(1)}</strong><br>
+                <span style="color: var(--text-secondary);">${place}</span><br>
                 <small>📅 ${timeStr}</small><br>
                 <small>📍 ${lat.toFixed(3)}, ${lon.toFixed(3)}</small>
             </div>
@@ -1152,6 +1152,18 @@ function createStandaloneLegend() {
 
 function refreshChartTheme() {
     const colors = getChartColors();
+    if (charts.trend) charts.trend.data.datasets[0].backgroundColor = colors.primary;
+    if (charts.distribution) charts.distribution.data.datasets[0].backgroundColor = [colors.gray, colors.warning, colors.danger, colors.unknown];
+    if (charts.successRate) charts.successRate.data.datasets[0].backgroundColor = [colors.success, colors.grid];
+    if (charts.magnitude) charts.magnitude.data.datasets[0].backgroundColor = [colors.primary, colors.success, colors.warning, colors.danger];
+    if (stationCharts[0]) {
+        stationCharts[0].data.datasets[0].borderColor = colors.primary;
+        stationCharts[0].data.datasets[1].borderColor = colors.warning;
+    }
+    if (stationCharts[1]) {
+        stationCharts[1].data.datasets[0].borderColor = colors.primary;
+        stationCharts[1].data.datasets[1].borderColor = colors.text;
+    }
     [...Object.values(charts), ...stationCharts].forEach(chart => {
         if (chart.options.scales) Object.values(chart.options.scales).forEach(scale => {
             if (scale.ticks) scale.ticks.color = colors.text;
@@ -1827,7 +1839,7 @@ function drawStationCharts(station, data) {
     stationCharts[1] = updateChart(stationCharts[1], document.getElementById('station-power-chart'), {
         type: 'line', data: {labels, datasets: [
             {label: 'Vertical S_Z', data: recordedValues(data.nZ), borderColor: colors.primary, borderWidth: 1.3, pointRadius: 0, tension: 0},
-            {label: 'Horizontal S_G', data: recordedValues(data.nG), borderColor: '#8b9eab', borderWidth: 1.3, pointRadius: 0, borderDash: [3, 3], tension: 0}
+            {label: 'Horizontal S_G', data: recordedValues(data.nG), borderColor: colors.text, borderWidth: 1.3, pointRadius: 0, borderDash: [3, 3], tension: 0}
         ]}, options: powerOptions
     });
 }

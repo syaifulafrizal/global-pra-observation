@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "MMB",
+  "observation_date": "2026-11-16",
+  "metadata": {
+    "name": "Memambetsu",
+    "country": "Japan",
+    "latitude": 43.91,
+    "longitude": 144.189,
+    "timezone": "Asia/Tokyo"
+  },
+  "observation": {
+    "date": "2026-11-16",
+    "station": "MMB",
+    "timestamps": [
+      "2026-11-15T11:29:59",
+      "2026-11-15T12:29:59",
+      "2026-11-15T13:29:59",
+      "2026-11-15T14:29:59",
+      "2026-11-15T15:29:59",
+      "2026-11-15T16:29:59",
+      "2026-11-15T17:29:59",
+      "2026-11-15T18:29:59"
+    ],
+    "P": [
+      8.039972379036863,
+      6.00684535796913,
+      6.957563747929263,
+      7.6064896578149925,
+      6.45062178196512,
+      6.494248081718136,
+      2.3689283449176854,
+      2.961100454625992
+    ],
+    "nZ": [
+      0.00020747418475907265,
+      0.00018848140020695194,
+      0.00016445280431227189,
+      0.00014027735304468088,
+      0.00010578928078102151,
+      7.456443968964462e-05,
+      3.8716097123475407e-05,
+      2.3082912015096663e-05
+    ],
+    "nG": [
+      2.5805335513344976e-05,
+      3.1377768025424265e-05,
+      2.3636550130240196e-05,
+      1.8441798957888328e-05,
+      1.6399857929477586e-05,
+      1.1481612459423886e-05,
+      1.634329599142886e-05,
+      7.795382956034228e-06
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 13.762208376330062,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 101,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

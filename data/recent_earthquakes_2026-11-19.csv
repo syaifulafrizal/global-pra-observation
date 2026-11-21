@@ -1,3 +1,6 @@
 time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-19 20:07:49.383,-55.0035,-33.5069,10.0,5.3,South Georgia Island region,earthquake,
+2026-11-19 20:07:09.754,-9.1894,-109.9127,10.0,5.0,central East Pacific Rise,earthquake,
+2026-11-19 18:09:46.530,-31.8465,-72.1843,10.0,5.1,"99 km WSW of Illapel, Chile",earthquake,
 2026-11-19 10:53:07.767,-4.2965,151.8945,194.803,5.0,"31 km WSW of Rabaul, Papua New Guinea",earthquake,
 2026-11-19 01:34:48.394,0.5027,96.6318,10.0,5.2,"130 km W of Teluk Dalam, Indonesia",earthquake,

@@ -7,13 +7,15 @@
     <meta name="description" content="GEMPRA geomagnetic observation network. Nighttime polarization ratio analysis, station observations, and earthquake correlation research.">
     <meta name="theme-color" content="#102b3b">
     <link rel="icon" type="image/png" sizes="32x32" href="static/assets/gempra-favicon-32.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="static/assets/gempra-icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="static/vendor/leaflet/leaflet.css">
+    <script src="static/vendor/leaflet/leaflet.js"></script>
+    <script src="static/vendor/chart/chart.umd.min.js"></script>
 </head>
 <body class="light-mode">
     <a class="skip-link" href="#overview">Skip to observations</a>
@@ -28,7 +30,7 @@
     <main class="container" id="overview">
         <header class="page-heading">
             <div class="heading-copy"><p class="eyebrow">EARTH OBSERVATION / POLARIZATION RATIO ANALYSIS</p><h1>Geomagnetic observation network<span>.</span></h1><p class="subtitle">Nighttime magnetic-field observations. A clearer view of the signals.</p></div>
-            <div class="header-controls"><div class="date-selector-container"><label for="date-selector">Observation date</label><select id="date-selector"><option value="">Loading dates…</option></select></div><p class="timestamp">Snapshot updated <span id="timestamp">Loading…</span></p></div>
+            <div class="header-controls"><div class="date-selector-container"><label for="date-selector">Observation date</label><select id="date-selector"><option value="">Loading dates…</option></select></div><p class="timestamp">Snapshot updated <span id="timestamp">Loading…</span></p><div class="app-actions" aria-label="App tools"><button type="button" class="app-action" id="install-app-btn" hidden>Install app</button><button type="button" class="app-action" id="enable-alerts-btn" aria-pressed="false">Enable alerts</button><a class="app-action" href="#data-api">Data API</a></div><p id="app-status" class="app-status" role="status" aria-live="polite">Alerts are optional and check for new observations while the app is open.</p><p id="offline-status" class="app-status" role="status" aria-live="polite" hidden></p></div>
         </header>
         <div class="method-strip" aria-label="Analysis configuration"><span><b>BAND</b> 0.095–0.110 <small>Hz</small></span><span><b>WINDOW</b> 20:00–04:00 <small>local time</small></span><span><b>ESTIMATOR</b> Multitaper <small>NW 3.5</small></span><span><b>THRESHOLD POLICY</b> 14 nights <small>13 previous + observation</small></span></div>
         <section class="summary-stats" id="summary-stats" aria-label="Observation summary" aria-live="polite"></section>
@@ -54,6 +56,10 @@
         </section>
         <footer id="methodology"><div class="footer-main"><div><p class="section-index">THE SCIENCE BEHIND THE SIGNAL</p><h2>Observation first. Context always.</h2><p class="method-info">Polarization Ratio Analysis compares vertical and horizontal spectral band powers. New analyses fit adaptive thresholds from 13 previous nights plus the observation night, using available quiet hours. Hours without sufficient SYM-H context are assumed quiet; covered hours retain disturbance screening. Existing snapshots retain their recorded calculations. Forward earthquake matching evaluates subsequent events; this dashboard displays completed observations.</p><div class="method-tags"><span>Multitaper · NW 3.5</span><span>EVT / k-sigma fallback</span><span>14-night threshold</span><span>200 km · 14-day matching</span></div></div><div class="data-partners"><p class="section-index">RESEARCH &amp; DATA PARTNERS</p><a href="https://www.intermagnet.org" target="_blank" rel="noopener noreferrer">INTERMAGNET <span>Geomagnetic observatories ↗</span></a><a href="https://earthquake.usgs.gov" target="_blank" rel="noopener noreferrer">USGS <span>Earthquake catalog ↗</span></a><a href="https://www.upm.edu.my" target="_blank" rel="noopener noreferrer">Universiti Putra Malaysia <span>Research institution ↗</span></a></div></div><div class="copyright-line"><span>GEMPRA · Geomagnetic Earthquake Monitoring using PRA</span><span>Developed by Nur Syaiful Afrizal · © Universiti Putra Malaysia</span></div></footer>
     </main>
+    <section class="container" aria-label="Data access"><details class="api-panel" id="data-api"><summary>Open observation data · API v1</summary><p>Read-only JSON snapshots of completed nighttime observations. Actual station dates, thresholds and quality fields are preserved. Updates follow the daily processing run.</p><ul class="api-endpoints"><li><a href="api/v1/index.json" target="_blank" rel="noopener noreferrer">API catalog</a></li><li><a href="api/v1/status.json" target="_blank" rel="noopener noreferrer">Network status</a></li><li><a href="api/v1/latest.json" target="_blank" rel="noopener noreferrer">Latest observations</a></li><li><a href="api/v1/stations.json" target="_blank" rel="noopener noreferrer">Stations &amp; dates</a></li></ul><pre class="api-code"><code>GET api/v1/latest.json
+GET api/v1/observations/YYYY-MM-DD.json
+GET api/v1/stations/KAK/latest.json</code></pre><p>Browser alerts require your permission and an open dashboard. Offline snapshots retain their recorded dates and are labelled as cached.</p></details></section>
     <script src="static/app.js"></script>
+    <script src="static/pwa.js" defer></script>
 </body>
 </html>

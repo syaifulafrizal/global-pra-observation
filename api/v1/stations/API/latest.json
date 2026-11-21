@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "API",
+  "observation_date": "2026-11-22",
+  "metadata": {
+    "name": "Apia",
+    "country": "Samoa",
+    "latitude": -13.806,
+    "longitude": -171.778,
+    "timezone": "Pacific/Apia"
+  },
+  "observation": {
+    "date": "2026-11-22",
+    "station": "API",
+    "timestamps": [
+      "2026-11-21T07:29:59",
+      "2026-11-21T08:29:59",
+      "2026-11-21T09:29:59",
+      "2026-11-21T10:29:59",
+      "2026-11-21T11:29:59",
+      "2026-11-21T12:29:59",
+      "2026-11-21T13:29:59",
+      "2026-11-21T14:29:59"
+    ],
+    "P": [
+      18.23138256783198,
+      23.849830943714515,
+      29.60627921747546,
+      66.26771362321483,
+      33.581425276170165,
+      35.34416880808353,
+      14.443045884528656,
+      63.207350266364415
+    ],
+    "nZ": [
+      0.00037444424493912967,
+      0.0003316428973041183,
+      0.00037334066609633987,
+      0.0014873588054636169,
+      0.0004742938861360389,
+      0.0004137151409143649,
+      0.0002527347587595689,
+      0.0012194936074164666
+    ],
+    "nG": [
+      2.0538444824245572e-05,
+      1.3905461136676145e-05,
+      1.2610185270291279e-05,
+      2.2444697789340463e-05,
+      1.412369731884502e-05,
+      1.1705329474879165e-05,
+      1.749871604508974e-05,
+      1.9293541056180236e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 108.09339109836745,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 8,
+    "baseline_source": "warmup",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 0,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

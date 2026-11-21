@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "SJG",
+  "observation_date": "2026-11-16",
+  "metadata": {
+    "name": "San Juan",
+    "country": "Puerto Rico",
+    "latitude": 18.113,
+    "longitude": -66.151,
+    "timezone": "America/Puerto_Rico"
+  },
+  "observation": {
+    "date": "2026-11-16",
+    "station": "SJG",
+    "timestamps": [
+      "2026-11-16T00:29:59",
+      "2026-11-16T01:29:59",
+      "2026-11-16T02:29:59",
+      "2026-11-16T03:29:59",
+      "2026-11-16T04:29:59",
+      "2026-11-16T05:29:59",
+      "2026-11-16T06:29:59",
+      "2026-11-16T07:29:59"
+    ],
+    "P": [
+      1.030034593324727,
+      0.642843161496565,
+      1.1138422553390217,
+      0.8346222234280605,
+      0.8730203597770705,
+      0.6000851472805152,
+      0.7690819174741733,
+      0.6383432087110265
+    ],
+    "nZ": [
+      1.656650692187254e-05,
+      1.6570602978879398e-05,
+      2.2130921033087634e-05,
+      1.5503422208813813e-05,
+      1.3738440495358903e-05,
+      1.4814880868894205e-05,
+      1.45243386559613e-05,
+      1.1961115741725572e-05
+    ],
+    "nG": [
+      1.6083447128119718e-05,
+      2.5777054142261327e-05,
+      1.9868990359278134e-05,
+      1.8575376707723284e-05,
+      1.5736678236080396e-05,
+      2.4687964593079415e-05,
+      1.8885294694825593e-05,
+      1.8737750442866052e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 1.665785574154488,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 112,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 13,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

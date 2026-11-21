@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "KAK",
+  "observation_date": "2026-11-21",
+  "metadata": {
+    "name": "Kakioka",
+    "country": "Japan",
+    "latitude": 36.232,
+    "longitude": 140.186,
+    "timezone": "Asia/Tokyo"
+  },
+  "observation": {
+    "date": "2026-11-21",
+    "station": "KAK",
+    "timestamps": [
+      "2026-11-20T11:29:59",
+      "2026-11-20T12:29:59",
+      "2026-11-20T13:29:59",
+      "2026-11-20T14:29:59",
+      "2026-11-20T15:29:59",
+      "2026-11-20T16:29:59",
+      "2026-11-20T17:29:59",
+      "2026-11-20T18:29:59"
+    ],
+    "P": [
+      3.951115338721459,
+      3.5136806442867234,
+      2.542128083321334,
+      1.37655424558482,
+      2.484515823430637,
+      0.5069861916443884,
+      0.8645945076304529,
+      1.281367142499309
+    ],
+    "nZ": [
+      1.1806494902462212e-05,
+      1.2215785731956537e-05,
+      1.3786336548007129e-05,
+      1.664852157545921e-05,
+      7.420192551040995e-06,
+      1.5013627938315328e-05,
+      5.054390981834411e-07,
+      2.0903626955644117e-06
+    ],
+    "nG": [
+      2.9881423067448784e-06,
+      3.4766351779349993e-06,
+      5.423147888754308e-06,
+      1.2094344722598414e-05,
+      2.98657488153774e-06,
+      2.9613484914883495e-05,
+      5.845967025266799e-07,
+      1.631353439801145e-06
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 8.226450811330658,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 92,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 11,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

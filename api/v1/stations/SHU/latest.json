@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "SHU",
+  "observation_date": "2026-11-21",
+  "metadata": {
+    "name": "Shumagin",
+    "country": "USA",
+    "latitude": 55.348,
+    "longitude": -160.464,
+    "timezone": "America/Anchorage"
+  },
+  "observation": {
+    "date": "2026-11-21",
+    "station": "SHU",
+    "timestamps": [
+      "2026-11-21T05:29:59",
+      "2026-11-21T06:29:59",
+      "2026-11-21T07:29:59",
+      "2026-11-21T08:29:59",
+      "2026-11-21T09:29:59",
+      "2026-11-21T10:29:59",
+      "2026-11-21T11:29:59",
+      "2026-11-21T12:29:59"
+    ],
+    "P": [
+      0.912517040219352,
+      1.0306511691143985,
+      0.6937153958033014,
+      0.052177572617188944,
+      0.37889264096908776,
+      0.24339307191975282,
+      0.48959204664172795,
+      0.7630489574226907
+    ],
+    "nZ": [
+      1.716017491536285e-05,
+      2.0895389031190812e-05,
+      2.229545715255316e-05,
+      2.6974541645007515e-05,
+      3.3705525359969256e-05,
+      2.2875502137015254e-05,
+      1.70131406875118e-05,
+      2.067314894817827e-05
+    ],
+    "nG": [
+      1.8805319965573317e-05,
+      2.027396820317535e-05,
+      3.2139198996348776e-05,
+      0.0005169757865685237,
+      8.895798364877492e-05,
+      9.398583927054979e-05,
+      3.4749626355678155e-05,
+      2.709282117100959e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 3.0048069209750965,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 98,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

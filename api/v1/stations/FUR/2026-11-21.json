@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "FUR",
+  "observation_date": "2026-11-21",
+  "metadata": {
+    "name": "F\u00fcrstenfeldbruck",
+    "country": "Germany",
+    "latitude": 48.167,
+    "longitude": 11.275,
+    "timezone": "Europe/Berlin"
+  },
+  "observation": {
+    "date": "2026-11-21",
+    "station": "FUR",
+    "timestamps": [
+      "2026-11-20T19:29:59",
+      "2026-11-20T20:29:59",
+      "2026-11-20T21:29:59",
+      "2026-11-20T22:29:59",
+      "2026-11-20T23:29:59",
+      "2026-11-21T00:29:59",
+      "2026-11-21T01:29:59",
+      "2026-11-21T02:29:59"
+    ],
+    "P": [
+      2.442956131180098,
+      1.2294122502793536,
+      2.555783308732724,
+      1.8965652721453161,
+      1.4796244372446021,
+      0.13362888278344565,
+      0.2926899037690283,
+      1.8690880243776107
+    ],
+    "nZ": [
+      2.9588629391754e-05,
+      3.1607412215791284e-05,
+      4.1031310238080845e-05,
+      3.374965426528052e-05,
+      1.93778080573274e-05,
+      3.668039642819952e-05,
+      1.820682494001226e-05,
+      1.8778268056595003e-05
+    ],
+    "nG": [
+      1.2111813640084022e-05,
+      2.5709368203065552e-05,
+      1.6054299321027364e-05,
+      1.779514512943934e-05,
+      1.309643688597986e-05,
+      0.00027449452292168384,
+      6.220516903917497e-05,
+      1.0046754252169582e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 5.439408797476294,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 96,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}
