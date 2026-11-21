@@ -29,6 +29,7 @@ import matplotlib.dates as mdates
 
 from logging_utils import configure_logger, attach_stdout_logger
 from result_validation import result_is_usable
+from intermagnet_hapi import download_iaga as download_hapi, download_legacy, HapiUnavailable, NoAdjustedData
 
 # Configuration
 BASE_URL = 'https://imag-data.bgs.ac.uk:443/GIN_V1/GINServices'
@@ -46,6 +47,7 @@ F_HIGH = 0.110  # Hz
 MT_NW = 3.5  # Multitaper time-half bandwidth product
 THRESHOLD_DAYS = 14  # 13 previous nights plus the observation night
 _unavailable_observatories = set()  # Provider lookup failures, scoped to this run.
+_no_adjusted_data = set()  # Explicit, date-specific no-data responses; never cached as measurements.
 
 # Analysis options
 OPTS = {
@@ -128,14 +130,23 @@ def get_station_timezone(station_code):
         _station_timezones[station_code] = default_tz
         return default_tz
 
-def download_symh_data(start_date, end_date, cache_folder):
-    """Download SYM-H geomagnetic index data from OMNIWeb"""
+@lru_cache(maxsize=8)
+def _symh_day_range(start_day, end_day, cache_folder):
+    """One request per global UTC date range per run, including unavailable responses."""
     from download_symh import download_symh_omniweb
-    
-    cache_file = cache_folder / f'SYMH_{start_date.strftime("%Y%m%d")}_{end_date.strftime("%Y%m%d")}.csv'
-    
-    # The downloader validates provenance and UTC timestamps before cache reuse.
-    return download_symh_omniweb(start_date, end_date, cache_file)
+    start = pd.Timestamp(start_day, tz='UTC')
+    end = pd.Timestamp(end_day, tz='UTC') + pd.Timedelta(hours=23, minutes=59)
+    cache_file = Path(cache_folder) / f'SYMH_{start:%Y%m%d}_{end:%Y%m%d}.csv'
+    return download_symh_omniweb(start, end, cache_file)
+
+
+def download_symh_data(start_date, end_date, cache_folder):
+    """Reuse identical OMNI date queries, then return the original requested UTC slice."""
+    start, end = pd.Timestamp(start_date), pd.Timestamp(end_date)
+    start = start.tz_localize('UTC') if start.tzinfo is None else start.tz_convert('UTC')
+    end = end.tz_localize('UTC') if end.tzinfo is None else end.tz_convert('UTC')
+    data = _symh_day_range(start.strftime('%Y-%m-%d'), end.strftime('%Y-%m-%d'), str(Path(cache_folder).resolve()))
+    return data.loc[(data.index >= start) & (data.index <= end)].copy()
 
 
 def download_data(station_code, date, out_folder):
@@ -147,6 +158,28 @@ def download_data(station_code, date, out_folder):
     if out_file.exists() and iaga_file_header(out_file):
         print(f'[SKIP] Data already exists for {station_code} on {date_str}')
         return out_file
+
+    _no_adjusted_data.discard((station_code, date_str))
+    # The official HAPI endpoint exposes the same adjusted/PT1S/XYZ product in
+    # bounded intervals, avoiding the GIN whole-day transfers that repeatedly reset.
+    if os.getenv('INTERMAGNET_TRANSPORT', 'auto').lower() != 'gin':
+        try:
+            return download_hapi(station_code, date, out_file)
+        except NoAdjustedData as error:
+            _no_adjusted_data.add((station_code, date_str))
+            print(f'[INFO] {error}')
+            return None
+        except HapiUnavailable as error:
+            print(f'[WARNING] HAPI unavailable for {station_code} {date_str}; trying the original GIN service: {error}')
+            try:
+                return download_legacy(station_code, date, out_file)
+            except NoAdjustedData as missing:
+                _no_adjusted_data.add((station_code, date_str))
+                print(f'[INFO] {missing}')
+                return None
+            except HapiUnavailable as failure:
+                print(f'[WARNING] Both INTERMAGNET download routes failed for {station_code} {date_str}: {failure}')
+                return None
     
     params = [
         "Request=GetData",
@@ -920,7 +953,9 @@ def process_station(station_code):
         elif file_path is None:
             # Download failed - this might be an error or data not available yet
             # Check if this date is in the future for this station
-            if date_dt.date() > now_station_tz.date():
+            if (station_code, date_dt.strftime('%Y-%m-%d')) in _no_adjusted_data:
+                print(f'[INFO] No adjusted measurements published for {station_code} on {date_dt.date()}')
+            elif date_dt.date() > now_station_tz.date():
                 print(f'[SKIP] Data for {date_dt.date()} is in the future for {station_code} ({station_tz})')
             else:
                 download_failed = True

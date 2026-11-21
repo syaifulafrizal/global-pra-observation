@@ -12,10 +12,61 @@ let availableDates = [];
 let selectedDate = null;
 let mostRecentDate = null;
 let isAggregatedDataLoaded = false;
+let stationCharts = [];
+let dashboardGeneration = 0;
+let stationPlotGeneration = 0;
+let displayedDate = null;
+let displayedSnapshotSignature = null;
+const dataRequests = new Map();
+const DATA_CACHE_LIMIT = 32;
+let requestEpoch = 0;
+
+function invalidateDataRequests() {
+    requestEpoch++;
+    dataRequests.clear();
+}
+
+async function cachedData(url, kind = 'json') {
+    const existing = dataRequests.get(url);
+    if (existing) {
+        dataRequests.delete(url); dataRequests.set(url, existing);
+        return existing;
+    }
+    const epoch = requestEpoch;
+    const pending = (async () => {
+        const response = await fetch(url, {cache: 'no-cache'});
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
+        return kind === 'text' ? response.text() : response.json();
+    })();
+    dataRequests.set(url, pending);
+    while (dataRequests.size > DATA_CACHE_LIMIT) dataRequests.delete(dataRequests.keys().next().value);
+    try { return await pending; }
+    catch (error) {
+        if (epoch === requestEpoch && dataRequests.get(url) === pending) dataRequests.delete(url);
+        throw error;
+    }
+}
+
+async function parallelMap(values, operation, limit = 3) {
+    const results = new Array(values.length);
+    let next = 0;
+    await Promise.all(Array.from({length: Math.min(limit, values.length)}, async () => {
+        while (next < values.length) {
+            const index = next++;
+            results[index] = await operation(values[index]);
+        }
+    }));
+    return results;
+}
 
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof Chart !== 'undefined') {
+        Chart.defaults.font.family = 'DM Sans, sans-serif';
+        Chart.defaults.font.size = 10;
+        Chart.defaults.animation = false;
+    }
     // Set up dark mode toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     if (darkModeToggle) {
@@ -34,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('dark-mode');
                 localStorage.setItem('darkMode', 'false');
             }
+            refreshChartTheme();
         });
     }
 
@@ -69,18 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         // Auto-refresh with current selected date
         const currentDate = document.getElementById('date-selector')?.value || selectedDate;
-        renderDashboard(currentDate);
+        renderDashboard(currentDate, {refresh: true});
     }, 300000); // Auto-refresh every 5 minutes
 });
 
-async function loadData(date = null) {
+async function loadData(date = null, isCurrent = () => true) {
     try {
         // First, load stations.json to get available dates
-        const response = await fetch(DATA_URL);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const metadata = await response.json();
+        const metadata = await cachedData(DATA_URL);
+        if (!isCurrent()) return null;
 
         // Extract available dates and most recent date
         availableDates = metadata.available_dates || [];
@@ -112,10 +161,9 @@ async function loadData(date = null) {
         const aggregatedUrl = `data/aggregated_${date}.json`;
 
         try {
-            const aggregatedResponse = await fetch(aggregatedUrl, { cache: 'no-cache' });
-
-            if (aggregatedResponse.ok) {
-                const aggregatedData = await aggregatedResponse.json();
+            {
+                const aggregatedData = await cachedData(aggregatedUrl);
+                if (!isCurrent()) return null;
                 console.log(`✓ Loaded aggregated data for ${date} (${Object.keys(aggregatedData.stations || {}).length} stations)`);
                 isAggregatedDataLoaded = true;
 
@@ -125,7 +173,7 @@ async function loadData(date = null) {
 
                 // Track which date each station is using (all using same date from aggregated file)
                 for (const station of Object.keys(dateData)) {
-                    stationDates[station] = aggregatedData.date || date;
+                    stationDates[station] = dateData[station]?.date || aggregatedData.date || date;
                 }
 
                 // Store earthquake correlations and false negatives for later use
@@ -139,19 +187,18 @@ async function loadData(date = null) {
                     available_dates: availableDates,
                     most_recent_date: mostRecentDate,
                     selected_date: date,
-                    station_dates: stationDates
+                    station_dates: stationDates,
+                    station_quality: aggregatedData.station_quality || {},
+                    is_hybrid_aggregation: aggregatedData.is_hybrid_aggregation || Object.values(stationDates).some(day => day !== date),
+                    last_updated: metadata.last_updated || aggregatedData.generated_at
                 };
-            } else {
-                console.warn(`Aggregated data not found for ${date}, falling back to individual files`);
-                isAggregatedDataLoaded = false;
-                // Fall back to old method if aggregated file doesn't exist
-                return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
             }
         } catch (error) {
+            if (!isCurrent()) return null;
             console.warn(`Error loading aggregated data for ${date}:`, error);
             isAggregatedDataLoaded = false;
             // Fall back to old method on error
-            return await loadDataFallback(date, metadata, availableDates, mostRecentDate);
+            return await loadDataFallback(date, metadata, availableDates, mostRecentDate, isCurrent);
         }
     } catch (error) {
         console.error('Error loading data:', error);
@@ -160,28 +207,53 @@ async function loadData(date = null) {
 }
 
 // Fallback function for loading individual station files (kept for compatibility)
-async function loadDataFallback(date, metadata, availableDates, mostRecentDate) {
+function stationResultUsable(data) {
+    const powers = data?.P;
+    if (data?.data_quality?.status === 'invalid' || !Array.isArray(powers) || !powers.length ||
+        !powers.every(value => value !== null && value !== '' && Number.isFinite(Number(value)))) return false;
+    const vertical = data.nZ || [], horizontal = data.nG || [];
+    const close = (a, b) => Math.abs(Number(a) - Number(b)) <= 1e-12 * Math.max(Math.abs(a), Math.abs(b));
+    return !(vertical.length === powers.length && horizontal.length === powers.length &&
+        powers.every(value => Math.abs(Number(value) - 0.5) <= 1e-12) &&
+        vertical.every(value => close(value, vertical[0])) && horizontal.every((value, i) => close(value, 2 * vertical[i])));
+}
+
+async function loadDataFallback(date, metadata, availableDates, mostRecentDate, isCurrent = () => true) {
     console.log('Using fallback method: loading individual station files...');
+    window.earthquakeCorrelations = {};
+    window.falseNegatives = {};
 
     const dateData = {};
     const stationDates = {};
+    const stationQuality = {};
     let hasAnyData = false;
+    const previous = new Date(new Date(`${date}T00:00:00Z`).getTime() - 86400000).toISOString().slice(0, 10);
 
-    // Only try the selected date (no complex fallback logic)
-    for (const station of (metadata.stations || [])) {
-        try {
-            const stationResponse = await fetch(`data/${station}_${date}.json`, { cache: 'no-cache' });
-            if (stationResponse.ok) {
+    // Match the aggregate's one-previous-night fallback and actual-date provenance.
+    await parallelMap(metadata.stations || [], async station => {
+        if (!isCurrent()) return null;
+        stationQuality[station] = 'missing';
+        for (const day of [date, previous]) {
+            try {
+                const stationResponse = await fetch(`data/${station}_${day}.json`, { cache: 'no-cache' });
+                if (!stationResponse.ok) continue;
                 const stationData = await stationResponse.json();
+                if (!isCurrent()) return null;
+                if (stationData.date !== day || !stationResultUsable(stationData)) {
+                    stationQuality[station] = 'invalid';
+                    break;
+                }
                 dateData[station] = stationData;
-                stationDates[station] = stationData?.date || date;
+                stationDates[station] = day;
+                stationQuality[station] = stationData.data_quality?.status || 'historical';
                 hasAnyData = true;
+                break;
+            } catch (error) {
+                console.debug(`Station ${station}: No data for ${day}`);
             }
-        } catch (error) {
-            // Silently skip stations without data
-            console.debug(`Station ${station}: No data for ${date}`);
         }
-    }
+    });
+    if (!isCurrent()) return null;
 
     if (!hasAnyData) {
         return null;
@@ -194,8 +266,23 @@ async function loadDataFallback(date, metadata, availableDates, mostRecentDate) 
         available_dates: availableDates,
         most_recent_date: mostRecentDate,
         selected_date: date,
-        station_dates: stationDates
+        station_dates: stationDates,
+        station_quality: stationQuality,
+        is_hybrid_aggregation: Object.values(stationDates).some(day => day !== date),
+        last_updated: metadata.last_updated
     };
+}
+
+function isConfirmedCorrelation(event) {
+    return event?.status === 'TP' && Number(event.earthquake_magnitude || event.magnitude) >= 5;
+}
+
+function isCorrelationVisible(event) {
+    return isConfirmedCorrelation(event) || ['FP', 'Pending', 'Unknown'].includes(event?.status);
+}
+
+function isConfirmedFalsePositive(entry) {
+    return entry?.status === 'FP' && entry.has_correlated_eq !== true;
 }
 
 async function loadEarthquakeCorrelations(station, date = null) {
@@ -203,7 +290,7 @@ async function loadEarthquakeCorrelations(station, date = null) {
     if (window.earthquakeCorrelations && window.earthquakeCorrelations[station]) {
         const correlations = window.earthquakeCorrelations[station];
         // Filter by magnitude >= 5.0 for reliability
-        return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
+        return correlations.filter(isCorrelationVisible);
     }
 
     // If we loaded aggregated data successfully but found no correlations for this station,
@@ -223,7 +310,7 @@ async function loadEarthquakeCorrelations(station, date = null) {
                     // Handle both array and object formats
                     const correlations = Array.isArray(data) ? data : (data.correlations || []);
                     // Filter by magnitude >= 5.0 for reliability
-                    return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
+                    return correlations.filter(isCorrelationVisible);
                 }
             } catch (error) {
                 // Fallback to CSV
@@ -239,7 +326,7 @@ async function loadEarthquakeCorrelations(station, date = null) {
         const text = await response.text();
         const correlations = parseCSV(text);
         // Filter by magnitude >= 5.0 for reliability
-        return correlations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
+        return correlations.filter(isCorrelationVisible).filter(eq => !date || String(eq.anomaly_date || '').slice(0, 10) === date);
     } catch (error) {
         // Silently return empty array - CSV files are optional
         return [];
@@ -297,11 +384,7 @@ async function loadRecentEarthquakes(date = null) {
 
     // Only try the specified date
     try {
-        const response = await fetch(`data/recent_earthquakes_${date}.csv`);
-        if (response.ok) {
-            const text = await response.text();
-            return parseCSV(text);
-        }
+        return parseCSV(await cachedData(`data/recent_earthquakes_${date}.csv`, 'text'));
     } catch (error) {
         // Return empty array if file doesn't exist
     }
@@ -310,35 +393,79 @@ async function loadRecentEarthquakes(date = null) {
 }
 
 function parseCSV(csvText) {
-    const lines = csvText.split('\n').filter(line => line.trim());
-    if (lines.length < 2) return [];
-
-    const headers = lines[0].split(',').map(h => h.trim());
-    const data = [];
-
-    for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',').map(v => v.trim());
-        const row = {};
-        headers.forEach((header, idx) => {
-            row[header] = values[idx] || '';
-        });
-        data.push(row);
+    // Preserve quoted place names, commas, newlines and escaped quotes.
+    const rows = [];
+    let row = [], field = '', quoted = false;
+    for (let i = 0; i < csvText.length; i++) {
+        const character = csvText[i];
+        if (character === '"') {
+            if (quoted && csvText[i + 1] === '"') { field += '"'; i++; }
+            else quoted = !quoted;
+        } else if (character === ',' && !quoted) {
+            row.push(field.trim()); field = '';
+        } else if ((character === '\n' || character === '\r') && !quoted) {
+            if (character === '\r' && csvText[i + 1] === '\n') i++;
+            row.push(field.trim());
+            if (row.some(value => value !== '')) rows.push(row);
+            row = []; field = '';
+        } else field += character;
     }
-
-    return data;
+    row.push(field.trim());
+    if (row.some(value => value !== '')) rows.push(row);
+    const headers = rows.shift() || [];
+    return rows.map(values => Object.fromEntries(headers.map((header, index) => [header, values[index] || ''])));
 }
 
 function formatDate(dateStr) {
-    const date = new Date(dateStr);
+    const date = new Date(`${String(dateStr).split(/[T ]/)[0]}T00:00:00Z`);
+    if (!Number.isFinite(date.getTime())) return 'Unknown Date';
     return date.toLocaleDateString('en-US', {
+        timeZone: 'UTC',
         year: 'numeric',
         month: 'short',
         day: 'numeric'
     });
 }
 
+function parseUtcTimestamp(value) {
+    const stamp = String(value || '').trim().replace(' ', 'T');
+    return new Date(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(stamp) ? stamp : `${stamp}Z`);
+}
+
+function earthquakeTimes(value, longitude) {
+    const date = parseUtcTimestamp(value);
+    if (!Number.isFinite(date.getTime())) return null;
+    const offset = Math.round(longitude / 15);
+    const local = new Date(date.getTime() + offset * 3600000);
+    return {
+        utc: date.toISOString().slice(0, 19).replace('T', ' ') + ' UTC',
+        local: local.toISOString().slice(0, 19).replace('T', ' ') + ` UTC${offset >= 0 ? '+' : ''}${offset}`
+    };
+}
+
+function validEventCount(value) {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : null;
+}
+
 function formatDateForSelector(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00');
+    if (!dateStr) return 'Unknown Date';
+
+    // Clean date string to ensure YYYY-MM-DD format
+    let cleanDateStr = dateStr;
+    if (dateStr.includes('T')) {
+        cleanDateStr = dateStr.split('T')[0];
+    } else if (dateStr.includes(' ')) {
+        cleanDateStr = dateStr.split(' ')[0];
+    }
+
+    // Add T00:00:00 to force local time parsing (prevent timezone shifts)
+    const date = new Date(cleanDateStr + 'T00:00:00');
+
+    // Fallback if parsing failed
+    if (isNaN(date.getTime())) {
+        return dateStr;
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const yesterday = new Date(today);
@@ -364,10 +491,7 @@ function formatDateForSelector(dateStr) {
 
 async function fetchHistoryFile(filename) {
     try {
-        const response = await fetch(`data/${filename}`, { cache: 'no-cache' });
-        if (response.ok) {
-            return await response.json();
-        }
+        return await cachedData(`data/${filename}`);
     } catch (error) {
         console.debug(`Failed to load ${filename}:`, error);
     }
@@ -384,12 +508,7 @@ async function getFalseNegativeHistory() {
 
 async function populateDateSelectorFromMetadata() {
     try {
-        const response = await fetch(DATA_URL);
-        if (!response.ok) {
-            console.error('Failed to load stations.json:', response.status);
-            return;
-        }
-        const metadata = await response.json();
+        const metadata = await cachedData(DATA_URL);
 
         const dateSelector = document.getElementById('date-selector');
         if (dateSelector && metadata.available_dates && metadata.available_dates.length > 0) {
@@ -429,10 +548,13 @@ function initMap() {
 
     try {
         map = L.map('map-container', {
-            minZoom: 2,  // Prevent zooming out too far
+            minZoom: 0,
+            zoomSnap: 0.25,
             maxZoom: 10, // Limit maximum zoom
             zoomControl: true
         }).setView([20, 0], 2);
+        map.fitBounds([[-57, -178], [78, 178]], { padding: [12, 12], maxZoom: 2 });
+        map.on('resize', () => map.fitBounds([[-57, -178], [78, 178]], { padding: [12, 12], maxZoom: 2, animate: false }));
 
         // Set max bounds to prevent panning too far
         const southWest = L.latLng(-85, -180);
@@ -442,10 +564,31 @@ function initMap() {
 
         // Add OpenStreetMap tiles with earthquake-themed styling
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            minZoom: 2,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+            minZoom: 0,
             maxZoom: 10
         }).addTo(map);
+
+        // Define addEarthquakeCircle function
+        window.addEarthquakeCircle = function (lat, lng) {
+            if (!map) return;
+            // Create a dashed red circle with 200km radius centered on station
+            const circle = L.circle([lat, lng], {
+                color: '#e74c3c',       // Red color
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#e74c3c',
+                fillOpacity: 0.1,
+                radius: 200000,         // 200km in meters
+                dashArray: '10, 10'     // Dashed line pattern
+            }).addTo(map);
+
+            if (!markers.earthquakeCircles) {
+                markers.earthquakeCircles = [];
+            }
+            markers.earthquakeCircles.push(circle);
+            return circle;
+        };
 
         // Legend is now outside the map - see createStandaloneLegend() function
 
@@ -477,7 +620,16 @@ function initMap() {
     }
 }
 
-function addStationToMap(stationCode, stationData, eqCorrelations, dataContext = null) {
+function clearMapObservations() {
+    if (!map) return;
+    map.closePopup();
+    map.eachLayer(layer => {
+        if (layer instanceof L.Marker || layer instanceof L.Circle) map.removeLayer(layer);
+    });
+    markers = {};
+}
+
+function addStationToMap(stationCode, stationData, eqCorrelations, dataContext = null, falseNegatives = []) {
     if (!map) {
         console.warn('Map not initialized, skipping marker for', stationCode);
         return;
@@ -489,21 +641,30 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         return;
     }
 
+    // Determine status
     const hasAnomaly = stationData && stationData.is_anomalous;
     const hasEQ = eqCorrelations && eqCorrelations.length > 0;
+    const hasFN = falseNegatives && falseNegatives.length > 0;
 
     // Earthquake-themed colors
     let color = 'gray'; // No anomaly
     if (hasAnomaly) {
-        color = hasEQ ? 'eq-reliable' : 'eq-false'; // Orange if EQ found, red if false alarm
+        // Check if we have a True Positive or False Positive
+        const isTP = hasEQ && eqCorrelations.some(isConfirmedCorrelation);
+        const isFP = hasEQ && eqCorrelations.every(eq => eq.status === 'FP');
+
+        if (isTP) color = 'eq-reliable'; // Orange/Red
+        else if (isFP) color = 'eq-false'; // Red (Alarm without EQ)
+        // Pending/unknown forecasts retain a neutral marker until evaluated.
     }
+    // False Negatives (Missed EQ) will remain 'gray' but show info in popup
 
     // Create custom icon with earthquake theme (triangle shape for stations)
     const icon = L.divIcon({
         className: 'station-marker',
         html: `<div class="marker-triangle marker-${color}"></div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 20] // Anchor at bottom center of triangle
+        iconSize: [18, 18],
+        iconAnchor: [9, 16] // Anchor at bottom center of triangle
     });
 
     // Get the date being used for this station (from stationData or station_dates)
@@ -511,7 +672,7 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
     const isUsingFallback = dataContext?.selected_date && stationDateUsed !== dataContext.selected_date;
 
     // Create popup content with earthquake info
-    let popupContent = `<div style="min-width: 220px; font-family: Arial, sans-serif;"><strong style="color: #c0392b; font-size: 1.1em;">${metadata.name || stationCode} (${stationCode})</strong><br>`;
+    let popupContent = `<div style="min-width: 240px; font-family: Arial, sans-serif;"><strong style="color: #c0392b; font-size: 1.1em;">${metadata.name || stationCode} (${stationCode})</strong><br>`;
     popupContent += `<span style="color: #7f8c8d;">${metadata.country || 'Unknown'}</span><br>`;
     popupContent += `<small>📍 ${metadata.latitude ? metadata.latitude.toFixed(3) : 'N/A'}, ${metadata.longitude ? metadata.longitude.toFixed(3) : 'N/A'}</small><br>`;
 
@@ -532,25 +693,60 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         popupContent += `⏱️ Anomaly Hours: ${stationData.nAnomHours || 0}<br>`;
 
         // Filter by magnitude >= 5.0 for display
-        const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || 0) >= 5.0);
+        const reliableCorrelations = eqCorrelations.filter(isConfirmedCorrelation);
+
         if (hasEQ && reliableCorrelations.length > 0) {
-            popupContent += `<hr style="margin: 8px 0; border-color: #e67e22;"><strong style="color: #e67e22;">🌋 EQ Correlation Found (M≥5.0): ${reliableCorrelations.length}</strong><br>`;
+            // Check status (TP/FP)
+            const status = reliableCorrelations[0].status || 'TP';
+            const statusLabel = status === 'TP' ? 'True Positive' : (status === 'FP' ? 'False Positive' : status);
+            const statusColor = status === 'TP' ? '#e67e22' : '#e74c3c';
+
+            popupContent += `<hr style="margin: 8px 0; border-color: ${statusColor};"><strong style="color: ${statusColor};">${statusLabel}</strong><br>`;
+            popupContent += `<span style="font-size: 0.9em;">Correlation Found (M≥5.0): ${reliableCorrelations.length}</span><br>`;
+
             reliableCorrelations.slice(0, 3).forEach((eq) => {
                 const mag = eq.earthquake_magnitude || 'N/A';
                 const dist = parseFloat(eq.earthquake_distance_km || 0).toFixed(1);
-                const days = parseFloat(eq.days_before_anomaly || 0).toFixed(1);
-                popupContent += `🔴 M${mag} @ ${dist}km (${days} days before)<br>`;
+                const days = parseFloat(eq.days_after_anomaly ?? -Number(eq.days_before_anomaly || 0)).toFixed(1);
+                popupContent += `🔴 M${mag} @ ${dist}km (${days} days after detection)<br>`;
             });
             if (reliableCorrelations.length > 3) {
                 popupContent += `... and ${reliableCorrelations.length - 3} more<br>`;
             }
         } else {
-            popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">⚠️ False Alarm</strong><br>`;
-            popupContent += `No EQ M≥5.0 within 200km within 14 days`;
+            // Anomaly but no EQ -> Check if 14 days passed for FP
+            // We can check backend status if available, or infer
+            // For now, if no reliable correlations, it's a False Positive or Pending.
+            // The backend usually sets 'FP' or 'Pending' in the correlations list even if empty EQ?
+            // No, my backend change ADDS an entry for FP/Pending. So 'reliableCorrelations' should handle it.
+            // Wait, reliableCorrelations filters by mag >= 5.0. If backend added an FP entry with no mag, it might be filtered out?
+            // Need to check backend change again.
+            // Backend sets: earthquake_magnitude: None. parseFloat(None) = NaN. NaN >= 5.0 is false.
+            // So reliableCorrelations will be EMPTY for FP/Pending entries.
+            // I need to check eqCorrelations for non-EQ entries (status entries).
+            const statusEntry = eqCorrelations.find(eq => eq.status);
+            if (statusEntry) {
+                const status = statusEntry.status;
+                const label = status === 'FP' ? 'False Positive' : (status === 'Pending' ? 'Pending' : 'Evaluation unavailable');
+                popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">${label}</strong><br>`;
+                popupContent += status === 'FP' ? `No EQ M≥5.0 within 200km within 14 days` : (status === 'Pending' ? `Monitoring for upcoming EQ...` : `Earthquake evaluation unavailable`);
+            } else {
+                popupContent += `<hr style="margin: 8px 0; border-color: #e74c3c;"><strong style="color: #e74c3c;">Evaluation unavailable</strong><br>`;
+                popupContent += `No completed earthquake evaluation recorded`;
+            }
         }
     } else {
-        popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);"><span style="color: var(--text-secondary);">✅ Status: Normal</span><br>`;
-        popupContent += `No anomalies detected`;
+        popupContent += `<hr style="margin: 8px 0; border-color: var(--text-secondary);"><span>Status: ${!stationData ? 'Data unavailable or invalid' : `${observationRecordLabel(stationData)} · no anomaly recorded`}</span><br>`;
+        if (hasFN) {
+            popupContent += `<hr style="margin: 8px 0; border-color: #c0392b;"><strong style="color: #c0392b;">❌ False Negative</strong><br>`;
+            popupContent += `${falseNegatives.length} EQ(s) missed:<br>`;
+            falseNegatives.forEach(eq => {
+                const time = typeof eq.earthquake_time === 'string' ? eq.earthquake_time.split('T')[0] : eq.earthquake_time;
+                popupContent += `🔴 M${eq.earthquake_magnitude} on ${time}<br>`;
+            });
+        } else {
+            popupContent += `No anomalies detected`;
+        }
     }
     popupContent += `</div>`;
 
@@ -560,12 +756,38 @@ function addStationToMap(stationCode, stationData, eqCorrelations, dataContext =
         .bindPopup(popupContent);
 
     markers[stationCode] = marker;
+
+    // Add 200km red dashed circle on hover
+    let hoverCircle = null;
+
+    marker.on('mouseover', function () {
+        if (hoverCircle) {
+            map.removeLayer(hoverCircle);
+        }
+        hoverCircle = L.circle([metadata.latitude, metadata.longitude], {
+            color: '#e74c3c',
+            weight: 2,
+            opacity: 0.8,
+            fillColor: '#e74c3c',
+            fillOpacity: 0.1,
+            radius: 200000,
+            dashArray: '10, 10',
+            interactive: false // Allow events to pass through
+        }).addTo(map);
+    });
+
+    marker.on('mouseout', function () {
+        if (hoverCircle) {
+            map.removeLayer(hoverCircle);
+            hoverCircle = null;
+        }
+    });
 }
 
 function getEarthquakeColor(magnitude) {
     // Color gradient based on magnitude
     if (magnitude >= 8.0) return '#c0392b';  // Dark red for M8.0+
-    if (magnitude >= 7.0) return '#e74c3c';  // Red for M7.0-7.9
+    if (magnitude >= 7.0) return '#bd382c';  // Red for M7.0-7.9
     if (magnitude >= 6.0) return '#e67e22';  // Orange for M6.0-6.9
     return '#f1c40f';  // Yellow for M5.0-5.9
 }
@@ -573,6 +795,14 @@ function getEarthquakeColor(magnitude) {
 
 // ===== CHART FUNCTIONS =====
 let charts = {};
+
+function updateChart(existing, canvas, configuration) {
+    if (!existing) return new Chart(canvas, configuration);
+    existing.data = configuration.data;
+    existing.options = configuration.options;
+    existing.update('none');
+    return existing;
+}
 
 function destroyCharts() {
     Object.values(charts).forEach(chart => {
@@ -584,59 +814,39 @@ function destroyCharts() {
 function getChartColors() {
     const isDark = document.body.classList.contains('dark-mode');
     return {
-        text: isDark ? '#f9fafb' : '#1f2937',
-        grid: isDark ? '#374151' : '#e5e7eb',
-        primary: isDark ? '#06b6d4' : '#0891b2',
-        success: isDark ? '#34d399' : '#10b981',
-        warning: isDark ? '#fbbf24' : '#f59e0b',
-        danger: isDark ? '#f87171' : '#ef4444',
-        gray: isDark ? '#9ca3af' : '#6b7280'
+        text: isDark ? '#b3c7d0' : '#657b87',
+        grid: isDark ? '#2a3c49' : '#e7edf0',
+        unknown: isDark ? '#2f4553' : '#e1e8ec',
+        primary: isDark ? '#73ced0' : '#147d83',
+        success: isDark ? '#34c38f' : '#1f8a5b',
+        warning: isDark ? '#d9b16f' : '#b88943',
+        danger: isDark ? '#f87171' : '#dc2626',
+        gray: isDark ? '#94a3b8' : '#94a3b8'
     };
 }
 
-async function create7DayTrendChart(data) {
+async function create7DayTrendChart(data, isCurrent = () => true) {
     const ctx = document.getElementById('trend-chart');
     if (!ctx) return;
 
     const colors = getChartColors();
-    const dates = data.available_dates.slice(-7);
-    const anomalyCounts = [];
-
-    for (const date of dates) {
-        let count = 0;
+    const dates = data.available_dates.filter(date => !data.selected_date || date <= data.selected_date).slice(0, 7).sort();
+    const anomalyCounts = await parallelMap(dates, async date => {
         try {
-            // OPTIMIZATION: Load aggregated data instead of 50+ individual requests
-            const response = await fetch(`data/aggregated_${date}.json`);
-            if (response.ok) {
-                const aggregatedData = await response.json();
-                const stationsData = aggregatedData.stations || {};
-
-                // Count anomalies in the aggregated data
-                Object.values(stationsData).forEach(stationData => {
-                    if (stationData && stationData.is_anomalous) {
-                        count++;
-                    }
-                });
-            } else {
-                // Fallback: If aggregated file missing (rare), try to use current loaded data 
-                // if it matches the date, otherwise skip (don't spam individual requests)
-                if (data.data && (data.selected_date === date || data.station_dates)) {
-                    // logic to count from current data if it matches? 
-                    // actually, simpler to just skip or accept 0 to avoid performance penalty.
-                    // The aggregated files SHOULD exist for all valid dates now.
-                    console.warn(`Aggregated file missing for trend chart: ${date}`);
-                }
-            }
-        } catch (e) {
-            console.error(`Error loading trend data for ${date}:`, e);
+            const snapshot = await cachedData(`data/aggregated_${date}.json`);
+            return Object.values(snapshot.stations || {}).filter(station =>
+                station.date === date && station.is_anomalous).length;
+        } catch (error) {
+            console.warn(`Trend data unavailable: ${date}`, error);
+            return null;
         }
-        anomalyCounts.push(count);
-    }
+    });
 
-    charts.trend = new Chart(ctx, {
+    if (!isCurrent()) return;
+    charts.trend = updateChart(charts.trend, ctx, {
         type: 'bar',
         data: {
-            labels: dates.map(d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+            labels: dates.map(d => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })),
             datasets: [{
                 label: 'Anomalies',
                 data: anomalyCounts,
@@ -646,7 +856,7 @@ async function create7DayTrendChart(data) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false }
             },
@@ -665,25 +875,25 @@ async function create7DayTrendChart(data) {
     });
 }
 
-function createStationDistributionChart(normalCount, withEqCount, falseAlarmCount) {
+function createStationDistributionChart(normalCount, withEqCount, falseAlarmCount, unresolved = 0) {
     const ctx = document.getElementById('distribution-chart');
     if (!ctx) return;
 
     const colors = getChartColors();
 
-    charts.distribution = new Chart(ctx, {
+    charts.distribution = updateChart(charts.distribution, ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Normal', 'With EQ', 'False Alarm'],
+            labels: ['No anomaly', 'Matched', 'False positive', 'Unresolved'],
             datasets: [{
-                data: [normalCount, withEqCount, falseAlarmCount],
-                backgroundColor: [colors.gray, colors.warning, colors.danger],
+                data: [normalCount, withEqCount, falseAlarmCount, unresolved],
+                backgroundColor: [colors.gray, colors.warning, colors.danger, colors.unknown],
                 borderWidth: 0
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'bottom',
@@ -700,19 +910,19 @@ function createDetectionRateChart(successRate) {
 
     const colors = getChartColors();
 
-    charts.successRate = new Chart(ctx, {
+    charts.successRate = updateChart(charts.successRate, ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Success', 'Failed'],
+            labels: ['Matched anomalies', 'Unmatched anomalies'],
             datasets: [{
-                data: [successRate, 100 - successRate],
+                data: successRate === null ? [0, 0] : [successRate, 100 - successRate],
                 backgroundColor: [colors.success, colors.grid],
                 borderWidth: 0
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             cutout: '70%',
             plugins: {
                 legend: { display: false },
@@ -729,23 +939,25 @@ function createDetectionRateChart(successRate) {
                 const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
                 const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
                 ctx.save();
-                ctx.font = 'bold 24px Inter';
-                ctx.fillStyle = colors.text;
+                ctx.font = '500 23px \"IBM Plex Mono\", monospace';
+                ctx.fillStyle = getChartColors().text;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(Math.round(successRate) + '%', centerX, centerY);
+                const rate = chart.data.datasets[0].data.reduce((a, b) => a + b, 0) === 0 ? null : chart.data.datasets[0].data[0];
+                ctx.fillText(rate === null ? 'N/A' : Math.round(rate) + '%', centerX, centerY);
                 ctx.restore();
             }
         }]
     });
 }
 
-async function createMagnitudeDistributionChart(selectedDate) {
+async function createMagnitudeDistributionChart(selectedDate, isCurrent = () => true) {
     const ctx = document.getElementById('magnitude-chart');
     if (!ctx) return;
 
     const colors = getChartColors();
     const earthquakes = await loadRecentEarthquakes(selectedDate);
+    if (!isCurrent()) return;
 
     const magRanges = { 'M5-5.9': 0, 'M6-6.9': 0, 'M7-7.9': 0, 'M8+': 0 };
     earthquakes.forEach(eq => {
@@ -756,21 +968,21 @@ async function createMagnitudeDistributionChart(selectedDate) {
         else if (mag >= 5.0) magRanges['M5-5.9']++;
     });
 
-    charts.magnitude = new Chart(ctx, {
+    charts.magnitude = updateChart(charts.magnitude, ctx, {
         type: 'bar',
         data: {
             labels: Object.keys(magRanges),
             datasets: [{
                 label: 'Count',
                 data: Object.values(magRanges),
-                backgroundColor: ['#f1c40f', '#e67e22', '#e74c3c', '#c0392b'],
+                backgroundColor: [colors.primary, colors.success, colors.warning, colors.danger],
                 borderRadius: 6
             }]
         },
         options: {
             indexAxis: 'y',
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false }
             },
@@ -789,12 +1001,12 @@ async function createMagnitudeDistributionChart(selectedDate) {
     });
 }
 
-async function createAnalyticsCharts(data, normalCount, withEqCount, falseAlarmCount, successRate) {
-    destroyCharts();
-    await create7DayTrendChart(data);
-    createStationDistributionChart(normalCount, withEqCount, falseAlarmCount);
+async function createAnalyticsCharts(data, normalCount, withEqCount, falseAlarmCount, successRate, unresolved = 0, isCurrent = () => true) {
+    await create7DayTrendChart(data, isCurrent);
+    if (!isCurrent()) return;
+    createStationDistributionChart(normalCount, withEqCount, falseAlarmCount, unresolved);
     createDetectionRateChart(successRate);
-    await createMagnitudeDistributionChart(data.selected_date);
+    await createMagnitudeDistributionChart(data.selected_date, isCurrent);
 }
 
 function addEarthquakeMarkers(earthquakes) {
@@ -840,7 +1052,7 @@ function addEarthquakeMarkers(earthquakes) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: white;
+                color: ${mag < 7 ? '#172e3b' : '#ffffff'};
                 font-weight: bold;
                 font-size: ${Math.max(10, Math.min(14, mag * 2))}px;
             ">${mag.toFixed(1)}</div>`,
@@ -848,44 +1060,16 @@ function addEarthquakeMarkers(earthquakes) {
             iconAnchor: [Math.max(10, Math.min(20, mag * 2.5)), Math.max(10, Math.min(20, mag * 2.5))]
         });
 
-        // Create popup with UTC and local time
-        let timeStr = 'Unknown';
-        let utcTimeStr = '';
-        let localTimeStr = '';
-
-        if (time) {
-            try {
-                // Parse time (could be ISO string or timestamp)
-                const eqTime = new Date(time);
-                if (!isNaN(eqTime.getTime())) {
-                    // Format UTC time
-                    utcTimeStr = eqTime.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
-
-                    // Format local time (at earthquake location - approximate using longitude)
-                    // Rough timezone estimate: 1 hour per 15 degrees longitude
-                    const localOffset = Math.round(lon / 15);
-                    const localTime = new Date(eqTime.getTime() + localOffset * 3600000);
-                    localTimeStr = localTime.toLocaleString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        timeZoneName: 'short'
-                    });
-
-                    timeStr = `${utcTimeStr}<br><small style="color: #666;">Local (approx): ${localTimeStr}</small>`;
-                }
-            } catch (e) {
-                timeStr = time;
-            }
-        }
+        // Source earthquake timestamps are UTC even when the CSV omits its suffix.
+        const times = earthquakeTimes(time, lon);
+        const timeStr = times
+            ? `${times.utc}<br><small style="color: var(--text-secondary);">Local (approx): ${times.local}</small>`
+            : 'Unknown';
 
         const popupContent = `
             <div style="min-width: 200px; font-family: Arial, sans-serif;">
-                <strong style="color: #e74c3c; font-size: 1.2em;">🌋 Earthquake M${mag.toFixed(1)}</strong><br>
-                <span style="color: #555;">${place}</span><br>
+                <strong style="color: var(--text-primary); font-size: 1.2em;">🌋 Earthquake M${mag.toFixed(1)}</strong><br>
+                <span style="color: var(--text-secondary);">${place}</span><br>
                 <small>📅 ${timeStr}</small><br>
                 <small>📍 ${lat.toFixed(3)}, ${lon.toFixed(3)}</small>
             </div>
@@ -961,79 +1145,104 @@ function addEarthquakeMarkers(earthquakes) {
 }
 
 function createStandaloneLegend() {
-    const legendDiv = document.getElementById('map-legend');
-    if (!legendDiv) return;
-
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    const textColor = isDarkMode ? '#ecf0f1' : '#2c3e50';
-    const bgColor = isDarkMode ? 'var(--bg-tertiary)' : 'var(--bg-tertiary)';
-
-    legendDiv.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 16px; background: ${bgColor}; border-radius: 8px;">
-            <div>
-                <h4 style="margin: 0 0 12px 0; color: ${textColor}; font-size: 0.9rem; font-weight: bold;">Station Markers</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span class="marker-triangle marker-gray" style="display: inline-block;"></span>
-                        <span>Normal Station</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span class="marker-triangle marker-eq-reliable" style="display: inline-block;"></span>
-                        <span>Anomaly with EQ (M≥5.0)</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span class="marker-triangle marker-eq-false" style="display: inline-block;"></span>
-                        <span>False Alarm (No EQ)</span>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h4 style="margin: 0 0 12px 0; color: ${textColor}; font-size: 0.9rem; font-weight: bold;">Earthquake Magnitude Scale</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span style="display: inline-block; width: 16px; height: 16px; background: #f1c40f; border-radius: 50%; border: 2px solid white;"></span>
-                        <span>M 5.0-5.9 (Moderate)</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span style="display: inline-block; width: 16px; height: 16px; background: #e67e22; border-radius: 50%; border: 2px solid white;"></span>
-                        <span>M 6.0-6.9 (Strong)</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span style="display: inline-block; width: 16px; height: 16px; background: #e74c3c; border-radius: 50%; border: 2px solid white;"></span>
-                        <span>M 7.0-7.9 (Major)</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; color: ${textColor}; font-size: 0.85rem;">
-                        <span style="display: inline-block; width: 16px; height: 16px; background: #c0392b; border-radius: 50%; border: 2px solid white;"></span>
-                        <span>M 8.0+ (Great)</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Update legend when dark mode changes
-    const observer = new MutationObserver(() => {
-        createStandaloneLegend(); // Recreate legend with new colors
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    const legend = document.getElementById('map-legend');
+    if (!legend) return;
+    legend.innerHTML = `<div class="legend-row"><span><i class="legend-dot"></i>No anomaly / unavailable</span><span><i class="legend-dot matched"></i>Matched anomaly</span><span><i class="legend-dot false"></i>False positive</span><span class="legend-scale">EVENTS M ≥ 5.0</span></div>`;
 }
 
-async function renderDashboard(date = null) {
+function refreshChartTheme() {
+    const colors = getChartColors();
+    if (charts.trend) charts.trend.data.datasets[0].backgroundColor = colors.primary;
+    if (charts.distribution) charts.distribution.data.datasets[0].backgroundColor = [colors.gray, colors.warning, colors.danger, colors.unknown];
+    if (charts.successRate) charts.successRate.data.datasets[0].backgroundColor = [colors.success, colors.grid];
+    if (charts.magnitude) charts.magnitude.data.datasets[0].backgroundColor = [colors.primary, colors.success, colors.warning, colors.danger];
+    if (stationCharts[0]) {
+        stationCharts[0].data.datasets[0].borderColor = colors.primary;
+        stationCharts[0].data.datasets[1].borderColor = colors.warning;
+    }
+    if (stationCharts[1]) {
+        stationCharts[1].data.datasets[0].borderColor = colors.primary;
+        stationCharts[1].data.datasets[1].borderColor = colors.text;
+    }
+    [...Object.values(charts), ...stationCharts].forEach(chart => {
+        if (chart.options.scales) Object.values(chart.options.scales).forEach(scale => {
+            if (scale.ticks) scale.ticks.color = colors.text;
+            if (scale.grid) scale.grid.color = colors.grid;
+        });
+        if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = colors.text;
+        chart.update('none');
+    });
+}
+
+function resetObservationDisplay(message = 'Loading observations…') {
+    // Invalidate pending station selections as well as the old visible snapshot.
+    stationPlotGeneration++;
+    stationCharts.forEach(chart => chart.destroy());
+    stationCharts = [];
+    destroyCharts();
+    if (map) { map.remove(); map = null; }
+    markers = {};
+    allStationsData = {};
+    document.querySelectorAll('.fallback-notice').forEach(notice => notice.remove());
+    const summary = document.getElementById('summary-stats');
+    if (summary) { summary.innerHTML = ''; summary.setAttribute('aria-busy', 'false'); }
+    const health = document.getElementById('run-health');
+    if (health) { health.innerHTML = ''; health.style.display = 'none'; }
+    const panel = document.getElementById('selected-station-plot');
+    if (panel) panel.innerHTML = `<div class="empty-state">${escapeText(message)}</div>`;
+    const legend = document.getElementById('map-legend');
+    if (legend) legend.innerHTML = '';
+    const timestamp = document.getElementById('timestamp');
+    if (timestamp) timestamp.textContent = message;
+    const stationSelector = document.getElementById('station-selector');
+    if (stationSelector) stationSelector.disabled = true;
+    const download = document.getElementById('download-anomalies-btn');
+    if (download) download.disabled = true;
+}
+
+async function renderDashboard(date = null, {refresh = false} = {}) {
+    const generation = ++dashboardGeneration;
+    const isCurrent = () => generation === dashboardGeneration;
+    if (refresh) invalidateDataRequests();
+    else if (displayedDate) {
+        // Revalidate current observations; historical trend snapshots remain bounded.
+        dataRequests.delete(DATA_URL);
+        if (date) dataRequests.delete(`data/aggregated_${date}.json`);
+    }
+    const preserveView = Boolean(map && displayedDate);
+    stationPlotGeneration++;
+    if (!preserveView) resetObservationDisplay();
+    const summarySection = document.getElementById('summary-stats');
+    if (summarySection) summarySection.setAttribute('aria-busy', 'true');
+    const healthSection = document.getElementById('run-health');
+    if (preserveView && healthSection) healthSection.setAttribute('aria-label', 'Previous observations; loading selected date');
+    if (preserveView) {
+        const timestamp = document.getElementById('timestamp');
+        if (timestamp) timestamp.textContent = 'Loading selected observations… previous values remain visible';
+    }
+    const exportControl = document.getElementById('download-anomalies-btn');
+    if (exportControl) exportControl.disabled = true;
+    const stationControl = document.getElementById('station-selector');
+    if (stationControl) stationControl.disabled = true;
     console.log('renderDashboard called with date:', date);
     // The template already has the structure, we just need to update it
     // Show loading state
     const mapContainer = document.getElementById('map-container');
-    if (mapContainer) {
+    if (mapContainer && !preserveView) {
         mapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-primary);"><p>Loading map data...</p></div>';
     }
 
     let data;
     try {
         console.log('Loading data...');
-        data = await loadData(date);
+        data = await loadData(date, isCurrent);
+        if (!isCurrent()) return;
         console.log('Data loaded:', data ? 'Success' : 'Failed', data);
 
         if (!data) {
+            displayedSnapshotSignature = null;
+            displayedDate = null;
+            resetObservationDisplay('Observations unavailable. Select another date or retry.');
             const dateStr = date || selectedDate || 'selected date';
             console.warn('No data available for date:', dateStr);
             if (mapContainer) {
@@ -1041,7 +1250,7 @@ async function renderDashboard(date = null) {
                     <div class="no-data" style="text-align: center; padding: 40px; color: var(--text-primary);">
                         <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ No Data Available</h2>
                         <p style="font-size: 1.1em; margin-bottom: 10px;">
-                            No data is available for <strong>${dateStr}</strong> or any previous days (within 7 days).
+                            Observations could not be loaded for <strong>${escapeText(dateStr)}</strong>.
                         </p>
                         <p style="color: var(--text-secondary); font-size: 0.9em;">
                             Please select a different date from the dropdown above.
@@ -1052,13 +1261,15 @@ async function renderDashboard(date = null) {
             return;
         }
     } catch (error) {
+        if (!isCurrent()) return;
+        resetObservationDisplay('Observations unavailable. Select another date or retry.');
         console.error('Error in renderDashboard:', error);
         if (mapContainer) {
             mapContainer.innerHTML = `
                 <div class="error" style="text-align: center; padding: 40px; color: #e74c3c;">
                     <h2 style="margin-bottom: 20px;">❌ Error Loading Data</h2>
                     <p style="font-size: 1.1em; margin-bottom: 10px;">
-                        ${error.message || 'Unknown error occurred'}
+                        ${escapeText(error.message || 'Unknown error occurred')}
                     </p>
                     <p style="color: var(--text-secondary); font-size: 0.9em;">
                         Please check the browser console for details.
@@ -1066,6 +1277,30 @@ async function renderDashboard(date = null) {
                 </div>
             `;
         }
+        return;
+    }
+
+    // Revalidate every dependency on a scheduled refresh, then avoid allocating
+    // new UI objects when the values and classifications are unchanged.
+    const trendDates = data.available_dates.filter(day => day <= data.selected_date).slice(0, 7);
+    const contextValues = await Promise.all([
+        getAnomalyHistory(), getFalseNegativeHistory(),
+        cachedData(`data/earthquake_stats_${data.selected_date}.json`).catch(() => null),
+        loadRecentEarthquakes(data.selected_date),
+        parallelMap(trendDates, day => cachedData(`data/aggregated_${day}.json`).catch(() => null))
+    ]);
+    if (!isCurrent()) return;
+    const comparableContext = [...contextValues.slice(0, 4), contextValues[4].map(snapshot =>
+        snapshot ? {date: snapshot.date, stations: snapshot.stations} : null)];
+    const snapshotSignature = JSON.stringify([data.data, data.station_quality, data.metadata,
+        window.earthquakeCorrelations, window.falseNegatives, data.selected_date,
+        data.available_dates, data.most_recent_date, data.station_dates, data.is_hybrid_aggregation, comparableContext]);
+    if (preserveView && snapshotSignature === displayedSnapshotSignature) {
+        if (summarySection) summarySection.setAttribute('aria-busy', 'false');
+        if (healthSection) healthSection.setAttribute('aria-label', 'Data quality and availability');
+        if (exportControl) exportControl.disabled = false;
+        if (stationControl) stationControl.disabled = false;
+        updateSnapshotTimestamp(data);
         return;
     }
 
@@ -1124,7 +1359,7 @@ async function renderDashboard(date = null) {
                 noticeHTML += `</p>`;
             } else {
                 noticeHTML += `<p style="margin-top: 12px; font-size: 0.9em; color: #bdc3c7; font-style: italic;">`;
-                noticeHTML += `Note: EVT threshold calculation requires 7 days of data. Stations without data for the selected date are showing the most recent available data.`;
+                noticeHTML += `Some stations are showing previous-night observations. Their actual dates are listed above; this is separate from threshold calibration.`;
                 noticeHTML += `</p>`;
             }
 
@@ -1149,7 +1384,7 @@ async function renderDashboard(date = null) {
             const option = document.createElement('option');
             option.value = date;
             option.textContent = formatDateForSelector(date);
-            if (date === data.selected_date || date === data.most_recent_date) {
+            if (date === data.selected_date) {
                 option.selected = true;
             }
             dateSelector.appendChild(option);
@@ -1193,19 +1428,29 @@ async function renderDashboard(date = null) {
             anomalousStations.push(station);
             // Load correlations for the selected date
             const eqCorrelations = await loadEarthquakeCorrelations(station, data.selected_date);
+            if (!isCurrent()) return;
             // Filter by magnitude >= 5.0 for reliability
-            const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
+            const reliableCorrelations = eqCorrelations.filter(isConfirmedCorrelation);
             if (reliableCorrelations.length > 0) {
                 withEQ++;
             }
+
+            // Allow FP/Pending status entries to pass through to map
+            let mapCorrelations = reliableCorrelations;
+            const statusEntries = eqCorrelations.filter(eq => ['FP', 'Pending', 'Unknown'].includes(eq.status));
+            if (statusEntries.length > 0) {
+                mapCorrelations = [...reliableCorrelations, ...statusEntries];
+            }
+
             // Note: False positives are collected in the cumulative loop below (lines 983-1037)
             // to avoid double-counting when the same date is processed multiple times
-            stationDataMap[station] = { stationData, eqCorrelations: reliableCorrelations };
+            stationDataMap[station] = { stationData, eqCorrelations: mapCorrelations };
         } else {
             // Note: False negatives are collected in the cumulative loop below (lines 978-1032)
             // to avoid double-counting when the same date is processed multiple times
             const fn = await loadFalseNegatives(station, data.selected_date);
-            stationDataMap[station] = { stationData: null, eqCorrelations: [], falseNegatives: fn };
+            if (!isCurrent()) return;
+            stationDataMap[station] = { stationData, eqCorrelations: [], falseNegatives: fn };
         }
     }
 
@@ -1213,6 +1458,7 @@ async function renderDashboard(date = null) {
     const ANALYSIS_START_DATE = '2025-11-18';
     let falseAlarms = 0;
     let falseNegatives = 0;
+    let unverifiedFalseNegatives = 0;
     let latestFalsePositiveDate = null;
     let latestFalseNegativeDate = null;
     try {
@@ -1220,12 +1466,13 @@ async function renderDashboard(date = null) {
             getAnomalyHistory(),
             getFalseNegativeHistory()
         ]);
+        if (!isCurrent()) return;
 
         const anomalyEntries = Array.isArray(anomalyHistory?.entries) ? anomalyHistory.entries : [];
         const falseNegativeEntries = Array.isArray(falseNegativeHistory?.entries) ? falseNegativeHistory.entries : [];
 
         // Deduplicate false positives by station+date to fix inflated count
-        const falsePositiveEntries = anomalyEntries.filter(entry => entry && entry.has_correlated_eq !== true);
+        const falsePositiveEntries = anomalyEntries.filter(isConfirmedFalsePositive);
         const uniqueFalsePositives = new Map();
         falsePositiveEntries.forEach(entry => {
             const key = `${entry.station}_${entry.date}`;
@@ -1242,6 +1489,7 @@ async function renderDashboard(date = null) {
         }
 
         falseNegatives = falseNegativeEntries.length;
+        unverifiedFalseNegatives = falseNegativeEntries.filter(entry => entry.coverage_verified !== true).length;
         if (falseNegativeEntries.length > 0) {
             const sortedFN = [...falseNegativeEntries].sort((a, b) => {
                 const aTime = (a.earthquake_time || a.date || '').toString();
@@ -1259,23 +1507,22 @@ async function renderDashboard(date = null) {
     }
 
     // Load earthquake statistics for selected date only (no fallback)
-    let eqStats = { global: 0, within200km: 0 };
-    let eqDateUsed = data.selected_date;
+    let eqStats = { global: null, within200km: null };
 
     // Only try the selected date
     try {
-        const statsResponse = await fetch(`data/earthquake_stats_${data.selected_date}.json`);
-        if (statsResponse.ok) {
-            const statsData = await statsResponse.json();
+        const statsData = contextValues[2];
+        if (statsData) {
             eqStats = {
-                global: statsData.global_count || statsData.global || 0,
-                within200km: statsData.within_200km_count || statsData.within200km || 0
+                global: validEventCount(statsData.global_count ?? statsData.global),
+                within200km: validEventCount(statsData.within_200km_count ?? statsData.within200km)
             };
-            eqDateUsed = data.selected_date;
         }
     } catch (error) {
         console.debug('Could not load earthquake statistics for selected date:', error);
     }
+    if (!isCurrent()) return;
+    displayedDate = data.selected_date;
 
     // Create summary stats boxes (like before, but better styled)
     const summaryStatsEl = document.getElementById('summary-stats');
@@ -1293,10 +1540,10 @@ async function renderDashboard(date = null) {
             </div>
             <div class="metric-card">
                 <h3>Events (24h)</h3>
-                <div class="value">${eqStats.global}</div>
-                <div class="label">🌍 Global M≥5.0</div>
+                <div class="value">${eqStats.global ?? 'N/A'}</div>
+                <div class="label">Global · M ≥ 5.0</div>
                 <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
-                    ${eqStats.within200km} within 200km of stations
+                    ${eqStats.within200km === null ? 'Event statistics unavailable' : `${eqStats.within200km} within 200km of stations`}
                 </div>
             </div>
             <div class="metric-card ${falseAlarms > 0 ? 'warning' : ''}">
@@ -1312,7 +1559,7 @@ async function renderDashboard(date = null) {
                 <div class="value">${falseNegatives}</div>
                 <div class="label">EQ M≥5.0 without anomaly</div>
                 <div class="sub-label" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
-                    Since: ${formatDateForSelector(ANALYSIS_START_DATE)}${latestFalseNegativeDate ? `<br>Latest: ${formatDateForSelector(latestFalseNegativeDate)}` : ''}
+                    Since: ${formatDateForSelector(ANALYSIS_START_DATE)}${latestFalseNegativeDate ? `<br>Latest: ${formatDateForSelector(latestFalseNegativeDate)}` : ''}${unverifiedFalseNegatives ? `<br>${unverifiedFalseNegatives} historical records · coverage not established` : ''}
                 </div>
             </div>
         `;
@@ -1323,6 +1570,7 @@ async function renderDashboard(date = null) {
     // Update station selector dropdown
     const stationSelector = document.getElementById('station-selector');
     if (stationSelector) {
+        const previousStation = stationSelector.value;
         stationSelector.innerHTML = '<option value="">Select a station...</option>';
 
         // Add anomalous stations first
@@ -1330,7 +1578,7 @@ async function renderDashboard(date = null) {
             const metadata = stationMetadata[station] || {};
             const stationData = allStationsData[station];
             const eqCorrelations = stationDataMap[station]?.eqCorrelations || [];
-            const hasEQ = eqCorrelations.length > 0;
+            const hasEQ = eqCorrelations.some(isConfirmedCorrelation);
             const label = `${station} - ${metadata.name || station}${hasEQ ? ' 🌋' : ' ⚠️'}`;
             const option = document.createElement('option');
             option.value = station;
@@ -1346,7 +1594,7 @@ async function renderDashboard(date = null) {
             const metadata = stationMetadata[station] || {};
             const option = document.createElement('option');
             option.value = station;
-            option.textContent = `${station} - ${metadata.name || station} (Normal)`;
+            option.textContent = `${station} - ${metadata.name || station} (${observationRecordLabel(allStationsData[station])})`;
             stationSelector.appendChild(option);
         });
 
@@ -1365,19 +1613,29 @@ async function renderDashboard(date = null) {
         }
 
         // Load first anomalous station by default
-        if (anomalousStations.length > 0 && !stationSelector.value) {
-            stationSelector.value = anomalousStations[0];
-            await renderStationPlot(anomalousStations[0]);
+        const defaultStation = previousStation && allStations.includes(previousStation) ? previousStation : (anomalousStations[0] || (allStationsData.KAK ? 'KAK' : Object.keys(allStationsData)[0]));
+        if (defaultStation) {
+            stationSelector.value = defaultStation;
+            await renderStationPlot(defaultStation);
+            if (!isCurrent()) return;
         }
 
         // Create analytics charts
-        const normalStations = totalStations - anomalousCount;
-        const detectionRate = anomalousCount > 0 ? Math.round((withEQ / anomalousCount) * 100) : 0;
-        await createAnalyticsCharts(data, normalStations, withEQ, falseAlarms, detectionRate);
+        const loaded = Object.keys(allStationsData).length;
+        const normalStations = loaded - anomalousCount;
+        const currentFalseAlarms = Object.values(stationDataMap).filter(item => item.eqCorrelations.some(eq => eq.status === 'FP')).length;
+        const unresolved = totalStations - loaded + anomalousCount - withEQ - currentFalseAlarms;
+        const detectionRate = anomalousCount > 0 ? Math.round((withEQ / anomalousCount) * 100) : null;
+        await createAnalyticsCharts(data, normalStations, withEQ, currentFalseAlarms, detectionRate, unresolved, isCurrent);
+        if (!isCurrent()) return;
+        stationSelector.disabled = false;
     }
+    const download = document.getElementById('download-anomalies-btn');
+    if (download) download.disabled = false;
 
     // Initialize map - wait a bit for DOM to be ready
-    setTimeout(async () => {
+    await (async () => {
+        if (!isCurrent()) return;
         const mapEl = document.getElementById('map-container');
         if (!mapEl) {
             console.error('Map container not found');
@@ -1385,7 +1643,7 @@ async function renderDashboard(date = null) {
         }
 
         // Clear any loading message
-        mapEl.innerHTML = '';
+        if (!map) mapEl.innerHTML = '';
 
         // Ensure container has dimensions
         if (mapEl.offsetHeight === 0) {
@@ -1395,7 +1653,8 @@ async function renderDashboard(date = null) {
 
         try {
             console.log('Initializing map...');
-            initMap();
+            if (!map) initMap();
+            else clearMapObservations();
 
             if (!map) {
                 console.error('Map initialization failed');
@@ -1404,18 +1663,20 @@ async function renderDashboard(date = null) {
             }
 
             // Wait for map to be ready
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => map.whenReady(resolve));
+            if (!isCurrent()) return;
 
             console.log('Adding station markers...', allStations.length);
             // Add all station markers
             for (const station of allStations) {
-                const { stationData, eqCorrelations } = stationDataMap[station] || { stationData: allStationsData[station], eqCorrelations: [] };
-                addStationToMap(station, stationData, eqCorrelations, data);
+                const mapData = stationDataMap[station] || { stationData: allStationsData[station], eqCorrelations: [], falseNegatives: [] };
+                addStationToMap(station, mapData.stationData, mapData.eqCorrelations, data, mapData.falseNegatives);
             }
 
             console.log('Loading earthquakes...');
             // Add earthquake markers
-            const recentEarthquakes = await loadRecentEarthquakes(data.selected_date);
+            const recentEarthquakes = contextValues[3];
+            if (!isCurrent()) return;
             console.log('Loaded earthquakes for map:', recentEarthquakes.length, recentEarthquakes);
             addEarthquakeMarkers(recentEarthquakes);
 
@@ -1423,17 +1684,17 @@ async function renderDashboard(date = null) {
             createStandaloneLegend();
 
             // Invalidate map size to ensure it renders correctly
-            setTimeout(() => {
-                if (map) {
-                    map.invalidateSize();
-                    console.log('Map size invalidated');
-                }
-            }, 100);
+            if (isCurrent() && map) map.invalidateSize();
         } catch (error) {
+            if (!isCurrent()) return;
             console.error('Error initializing map:', error);
             mapEl.innerHTML = `<div style="padding: 20px; color: #e74c3c;">Error loading map: ${error.message}<br><small>${error.stack}</small></div>`;
         }
-    }, 500);
+    })();
+    if (!isCurrent()) return;
+    displayedSnapshotSignature = snapshotSignature;
+    if (summarySection) summarySection.setAttribute('aria-busy', 'false');
+    if (healthSection) healthSection.setAttribute('aria-label', 'Data quality and availability');
 
     // Setup mobile plot panel toggle
     const togglePlotBtn = document.getElementById('toggle-plot-panel');
@@ -1499,7 +1760,15 @@ async function renderDashboard(date = null) {
         });
     }
 
+    // Update Run Health / Data Availability
+    const availableStationsCount = allStations.filter(s => allStationsData[s]).length;
+    updateRunHealth(data, allStations.length, availableStationsCount);
+
     // Update timestamp (UTC-based)
+    updateSnapshotTimestamp(data);
+}
+
+function updateSnapshotTimestamp(data) {
     const timestampEl = document.getElementById('timestamp');
     if (timestampEl) {
         if (data.last_updated) {
@@ -1514,8 +1783,8 @@ async function renderDashboard(date = null) {
                 timeZoneName: 'short'
             });
         } else {
-            // Fallback to current time in UTC
-            timestampEl.textContent = new Date().toLocaleString('en-US', {
+            // Do not label an old snapshot with the current clock time.
+            timestampEl.textContent = new Date(data.generated_at || 0).toLocaleString('en-US', {
                 timeZone: 'UTC',
                 year: 'numeric',
                 month: '2-digit',
@@ -1529,106 +1798,113 @@ async function renderDashboard(date = null) {
     }
 }
 
+function escapeText(value) {
+    return String(value ?? '').replace(/[&<>"']/g, character => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[character]));
+}
+
+function stationHour(stamp, timezone = 'UTC') {
+    const utc = /(?:Z|[+-]\d{2}:\d{2})$/.test(stamp) ? stamp : `${stamp}Z`;
+    const date = new Date(utc);
+    if (!Number.isFinite(date.getTime())) return '';
+    // Hourly windows are saved one second before their midpoint.
+    date.setSeconds(date.getSeconds() + 1);
+    return new Intl.DateTimeFormat('en-GB', {hour: '2-digit', minute: '2-digit', timeZone: timezone}).format(date);
+}
+
+function recordedValues(values = []) {
+    return values.map(value => value === null || value === undefined || !Number.isFinite(Number(value)) ? null : Number(value));
+}
+
+function drawStationCharts(station, data) {
+    if (typeof Chart === 'undefined') return;
+    const colors = getChartColors();
+    const labels = (data.timestamps || []).map(stamp => stationHour(stamp, stationMetadata[station]?.timezone || 'UTC'));
+    const axes = {
+        x: { grid: {display: false}, border: {display: false}, ticks: {maxTicksLimit: 5, color: colors.text, font: {family: 'IBM Plex Mono', size: 8}, maxRotation: 0} },
+        y: { grid: {color: colors.grid, drawTicks: false}, border: {display: false}, ticks: {maxTicksLimit: 4, color: colors.text, font: {family: 'IBM Plex Mono', size: 8}} }
+    };
+    const options = {responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: {mode: 'index', intersect: false},
+        plugins: {legend: {display: false}, tooltip: {backgroundColor: '#183542', titleFont: {family: 'DM Sans'}, bodyFont: {family: 'IBM Plex Mono', size: 10}}},
+        scales: axes};
+    const threshold = Number.isFinite(Number(data.threshold)) ? Number(data.threshold) : null;
+    stationCharts[0] = updateChart(stationCharts[0], document.getElementById('station-ratio-chart'), {
+        type: 'line', data: {labels, datasets: [
+            {label: 'Polarization ratio P', data: recordedValues(data.P), borderColor: colors.primary, backgroundColor: 'rgba(20,125,131,.045)', fill: true, borderWidth: 1.6, pointRadius: 2.2, pointHoverRadius: 4, tension: 0},
+            {label: 'Threshold', data: labels.map(() => threshold), borderColor: colors.warning, borderDash: [4, 4], borderWidth: 1, pointRadius: 0}
+        ]}, options: structuredClone(options)
+    });
+    const powerOptions = structuredClone(options);
+    powerOptions.scales.y.ticks.callback = value => Math.abs(value) > 0 && (Math.abs(value) < .01 || Math.abs(value) >= 10000) ? Number(value).toExponential(0) : value;
+    stationCharts[1] = updateChart(stationCharts[1], document.getElementById('station-power-chart'), {
+        type: 'line', data: {labels, datasets: [
+            {label: 'Vertical S_Z', data: recordedValues(data.nZ), borderColor: colors.primary, borderWidth: 1.3, pointRadius: 0, tension: 0},
+            {label: 'Horizontal S_G', data: recordedValues(data.nG), borderColor: colors.text, borderWidth: 1.3, pointRadius: 0, borderDash: [3, 3], tension: 0}
+        ]}, options: powerOptions
+    });
+}
+
+function observationRecordLabel(data) {
+    if (!data) return 'Unavailable';
+    const quality = data.data_quality?.status;
+    if (quality === 'complete') return 'Complete observation';
+    if (quality === 'partial') return 'Partial observation';
+    return 'Historical observation';
+}
+
+function observationStatusText(data) {
+    const record = observationRecordLabel(data);
+    return record === 'Historical observation'
+        ? `${record} · no anomaly recorded; coverage not recorded`
+        : `${record} · no anomaly recorded`;
+}
+
+function thresholdBaselineLabel(data) {
+    if (data.baseline_window_days !== 14) return 'Recorded threshold · historical settings';
+    const nights = Number(data.baseline_historical_nights || 0) + (data.baseline_includes_observation ? 1 : 0);
+    return `14-night threshold · ${nights}/14 nights used · ${data.baseline_samples || 0} quiet hours`;
+}
+
 async function renderStationPlot(stationCode) {
-    const plotDiv = document.getElementById('selected-station-plot');
-    if (!plotDiv) return;
-
-    plotDiv.innerHTML = '<div class="loading">Loading station data...</div>';
-
-    const stationData = allStationsData[stationCode];
+    const generation = ++stationPlotGeneration;
+    const dashboard = dashboardGeneration;
+    const panel = document.getElementById('selected-station-plot');
+    if (!panel) return;
+    const data = allStationsData[stationCode];
     const metadata = stationMetadata[stationCode] || {};
-    const eqCorrelations = await loadEarthquakeCorrelations(stationCode, selectedDate);
-    // Filter by magnitude >= 5.0 for reliability
-    const reliableCorrelations = eqCorrelations.filter(eq => parseFloat(eq.earthquake_magnitude || eq.magnitude || 0) >= 5.0);
-    const hasEQ = reliableCorrelations.length > 0;
-    const hasAnomaly = stationData && stationData.is_anomalous;
-    const falseNegatives = await loadFalseNegatives(stationCode, selectedDate);
-
-    // Get the date being used for this station
-    const stationDateUsed = stationData?.date || selectedDate || mostRecentDate;
-    const isUsingFallback = selectedDate && stationDateUsed !== selectedDate;
-
-    let html = `<div class="station-plot-card">`;
-    html += `<div class="plot-header">`;
-    html += `<h3>${stationCode} - ${metadata.name || stationCode}</h3>`;
-    html += `<p class="plot-location">${metadata.country || ''} | 📍 ${metadata.latitude ? metadata.latitude.toFixed(3) : 'N/A'}, ${metadata.longitude ? metadata.longitude.toFixed(3) : 'N/A'}</p>`;
-
-    // Show date indicator
-    if (isUsingFallback && selectedDate) {
-        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(243, 156, 18, 0.15); border-left: 3px solid #f39c12; border-radius: 4px; font-size: 0.9em; color: var(--accent-warning);">`;
-        html += `📅 Showing data from <strong>${formatDate(stationDateUsed)}</strong> (selected: ${formatDateForSelector(selectedDate)})`;
-        html += `</div>`;
-    } else if (stationData) {
-        html += `<div style="margin-top: 8px; padding: 8px 12px; background: rgba(149, 165, 166, 0.1); border-left: 3px solid #95a5a6; border-radius: 4px; font-size: 0.9em; color: var(--text-secondary);">`;
-        html += `📅 Data from: <strong>${formatDate(stationDateUsed)}</strong>`;
-        html += `</div>`;
+    if (!data) {
+        stationCharts.forEach(chart => chart.destroy());
+        stationCharts = [];
+        panel.innerHTML = `<div class="empty-state"><strong>${escapeText(stationCode)} · Observation unavailable</strong><br>No usable measurements for this observation date. Select another station.</div>`;
+        return;
     }
-
-    if (hasAnomaly) {
-        html += `<div class="plot-status ${hasEQ ? 'status-eq' : 'status-false'}">`;
-        html += hasEQ ? `🌋 EQ Correlation Found (M≥5.0): ${reliableCorrelations.length}` : `⚠️ False Alarm (No EQ M≥5.0)`;
-        html += `</div>`;
-    } else {
-        html += `<div class="plot-status status-normal">✅ Normal</div>`;
-        if (falseNegatives.length > 0) {
-            html += `<div class="plot-status status-false-negative" style="margin-top: 8px;">❌ False Negative: ${falseNegatives.length} EQ M≥5.0 without anomaly</div>`;
-        }
+    const correlations = await loadEarthquakeCorrelations(stationCode, data.date);
+    if (generation !== stationPlotGeneration || dashboard !== dashboardGeneration) return;
+    const matched = correlations.some(isConfirmedCorrelation);
+    const hasAnomaly = data.is_anomalous;
+    const complete = data.data_quality?.status === 'complete';
+    const status = hasAnomaly ? (matched ? 'Matched anomaly' : (correlations.some(row => row.status === 'FP') ? 'False positive · 14-day window complete' : 'Anomaly · evaluation pending or unavailable')) : observationStatusText(data);
+    const coordinates = Number.isFinite(metadata.latitude) && Number.isFinite(metadata.longitude) ? `${metadata.latitude.toFixed(2)}°, ${metadata.longitude.toFixed(2)}°` : '';
+    const threshold = Number.isFinite(Number(data.threshold)) ? Number(data.threshold).toPrecision(4) : 'N/A';
+    const figure = `figures/${encodeURIComponent(stationCode)}/PRA_${encodeURIComponent(stationCode)}_${data.date.replace(/-/g, '')}.png`;
+    const method = data.threshold_method === 'evt' ? 'EVT GPD' : (data.threshold_method === 'k_sigma' ? 'k-sigma fallback' : 'Threshold method not recorded');
+    const replacement = document.createElement('div');
+    replacement.innerHTML = `
+        <div class="station-identity"><h3><b>${escapeText(stationCode)}</b> ${escapeText(metadata.name || stationCode)}</h3><span class="coordinates">${escapeText(coordinates)}</span></div>
+        <div class="observation-tag ${complete ? 'verified' : ''}">${escapeText(status)}</div>
+        <div class="plot-label"><b>Polarization ratio</b><span class="series-key"><span><i></i>P</span><span><i class="threshold"></i>Threshold ${escapeText(threshold)}</span></span></div>
+        <div class="station-chart"><canvas id="station-ratio-chart" role="img" aria-label="Hourly polarization ratio and threshold at ${escapeText(stationCode)}"></canvas></div>
+        <hr class="station-separator">
+        <div class="plot-label"><b>Spectral band powers</b><span class="series-key"><span><i></i>S<sub>Z</sub></span><span><i class="horizontal"></i>S<sub>G</sub></span></span></div>
+        <div class="station-chart power"><canvas id="station-power-chart" role="img" aria-label="Recorded vertical and horizontal band powers"></canvas></div>
+        <div class="station-footnote"><span>${escapeText(data.date)} · ${escapeText(metadata.timezone || 'UTC')}<br>${escapeText(method)}${data.baseline_source === 'warmup' ? ' · warmup' : ''}<br>${escapeText(thresholdBaselineLabel(data))}</span><a href="${figure}" target="_blank" rel="noopener noreferrer">Original figure ↗</a></div>`;
+    if (data.date !== selectedDate) replacement.insertAdjacentHTML('afterbegin', `<div class="observation-tag">Showing ${escapeText(data.date)}; selected ${escapeText(selectedDate)}</div>`);
+    for (const canvas of replacement.querySelectorAll('canvas')) {
+        const existing = panel.querySelector(`#${canvas.id}`);
+        if (existing) canvas.replaceWith(existing);
     }
-    html += `</div>`;
-
-    // Load and display figure
-    // Use the date from stationData (which should match selectedDate)
-    // This ensures the figure matches the data being displayed
-    const plotDate = stationData?.date || selectedDate || mostRecentDate;
-    console.log(`[renderStationPlot] Loading figure for ${stationCode} with date: ${plotDate} (stationData.date: ${stationData?.date}, selectedDate: ${selectedDate})`);
-    const figures = await loadStationFigures(stationCode, plotDate);
-    if (figures.length > 0) {
-        html += `<div class="plot-image-container">`;
-        html += `<img src="figures/${stationCode}/${figures[0]}" alt="PRA Plot for ${stationCode}" class="plot-image" onerror="this.parentElement.innerHTML='<p class=\\'error\\'>Plot not available</p>'">`;
-        html += `</div>`;
-    } else {
-        html += `<div class="no-plot">Plot not available for this station</div>`;
-    }
-
-    // Add station info
-    if (stationData) {
-        html += `<div class="plot-info">`;
-        html += `<div class="info-row"><span class="info-label">Date:</span><span class="info-value">${formatDate(stationData.date)}</span></div>`;
-        html += `<div class="info-row"><span class="info-label">Threshold:</span><span class="info-value">${parseFloat(stationData.threshold || 0).toFixed(2)}</span> <span style="font-size: 0.8em; color: var(--text-secondary);">(EVT GPD, 7-day)</span></div>`;
-        html += `<div class="info-row"><span class="info-label">Anomaly Hours:</span><span class="info-value">${stationData.nAnomHours || 0}</span></div>`;
-        // Show reliable correlations (M>=5.0)
-        if (hasEQ && reliableCorrelations.length > 0) {
-            html += `<div class="eq-info">`;
-            html += `<h4>🌋 Earthquake Correlations (M≥5.0):</h4>`;
-            reliableCorrelations.slice(0, 5).forEach((eq) => {
-                const mag = eq.earthquake_magnitude || 'N/A';
-                const dist = parseFloat(eq.earthquake_distance_km || 0).toFixed(1);
-                const days = parseFloat(eq.days_before_anomaly || 0).toFixed(1);
-                html += `<div class="eq-item">M${mag} @ ${dist}km (${days} days before)</div>`;
-            });
-            html += `</div>`;
-        }
-
-        // Show false negatives if any
-        if (falseNegatives.length > 0) {
-            html += `<div class="fn-info">`;
-            html += `<h4>❌ False Negatives (M≥5.0, no anomaly detected):</h4>`;
-            falseNegatives.slice(0, 3).forEach((fn) => {
-                const mag = fn.earthquake_magnitude || 'N/A';
-                const dist = parseFloat(fn.earthquake_distance_km || 0).toFixed(1);
-                const date = fn.earthquake_time ? formatDate(fn.earthquake_time) : 'Unknown';
-                html += `<div class="fn-item">M${mag} @ ${dist}km on ${date}</div>`;
-            });
-            if (falseNegatives.length > 3) {
-                html += `<div class="fn-item">... and ${falseNegatives.length - 3} more</div>`;
-            }
-            html += `</div>`;
-        }
-        html += `</div>`;
-    }
-
-    html += `</div>`;
-    plotDiv.innerHTML = html;
+    panel.replaceChildren(...replacement.childNodes);
+    drawStationCharts(stationCode, data);
 }
 
 async function loadStationFigures(station, date = null) {
@@ -1691,7 +1967,7 @@ async function renderStationsList(stations, stationsData) {
         const data = stationsData && stationsData[station];
         const hasAnomaly = data && data.is_anomalous;
         const eqCorrelations = await loadEarthquakeCorrelations(station, selectedDate);
-        const hasEQ = eqCorrelations.length > 0;
+        const hasEQ = eqCorrelations.some(isConfirmedCorrelation);
 
         html += '<tr>';
         html += `<td><strong>${station}</strong></td>`;
@@ -1700,9 +1976,9 @@ async function renderStationsList(stations, stationsData) {
 
         if (hasAnomaly) {
             html += `<td><span class="badge badge-danger">⚠️ Anomaly</span></td>`;
-            html += `<td>${hasEQ ? '<span class="badge badge-eq">🌋 Yes (' + eqCorrelations.length + ')</span>' : '<span class="badge badge-warning">⚠️ No (False Alarm)</span>'}</td>`;
+            html += `<td>${hasEQ ? '<span class="badge badge-eq">🌋 Yes (' + eqCorrelations.length + ')</span>' : '<span class="badge badge-warning">' + (eqCorrelations.some(eq => eq.status === 'FP') ? 'False Positive' : 'Evaluation pending / unavailable') + '</span>'}</td>`;
         } else {
-            html += `<td><span class="badge badge-secondary">✅ Normal</span></td>`;
+            html += `<td><span class="badge badge-secondary">${observationRecordLabel(data)}</span></td>`;
             html += `<td>-</td>`;
         }
 
@@ -1734,12 +2010,12 @@ async function downloadAnomaliesCSV() {
                                 AnomalyValue: stationData.P ? stationData.P[i] : '',
                                 nZ: stationData.nZ ? stationData.nZ[i] : '',
                                 nG: stationData.nG ? stationData.nG[i] : '',
-                                Threshold: stationData.threshold || ''
+                                Threshold: stationData.threshold ?? ''
                             };
                             allAnomalies.push(anomaly);
                         }
                     }
-                } else {
+                } else if (!isAggregatedDataLoaded) {
                     // Fallback: try to load from CSV if JSON doesn't have anomaly info
                     try {
                         const response = await fetch(`data/${station}_anomalies.csv`);
@@ -1773,7 +2049,7 @@ async function downloadAnomaliesCSV() {
             headers.join(','),
             ...allAnomalies.map(row =>
                 headers.map(header => {
-                    const value = row[header] || '';
+                    const value = row[header] ?? '';
                     // Escape commas and quotes in CSV
                     if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
                         return `"${value.replace(/"/g, '""')}"`;
@@ -1794,10 +2070,39 @@ async function downloadAnomaliesCSV() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
 
         console.log(`Downloaded ${allAnomalies.length} anomalies`);
     } catch (error) {
         console.error('Error downloading anomalies CSV:', error);
         alert('Error downloading anomalies CSV. Please try again.');
     }
+}
+
+function updateRunHealth(data, totalStationsCount, loadedStationsCount) {
+    const healthEl = document.getElementById('run-health');
+    if (!healthEl) return;
+
+    if (!data) {
+        healthEl.style.display = 'none';
+        return;
+    }
+
+    healthEl.style.display = 'flex';
+
+    // Calculate availability percentage
+    const availabilityPct = totalStationsCount > 0 ? Math.round((loadedStationsCount / totalStationsCount) * 100) : 0;
+    const isHybrid = data.is_hybrid_aggregation || false;
+    const qualities = Object.values(data.station_quality || {});
+    const completeCount = qualities.filter(value => value === 'complete').length;
+    const historicalCount = qualities.filter(value => ['unverified', 'historical'].includes(value)).length;
+    const partialCount = qualities.filter(value => value === 'partial').length;
+
+    healthEl.innerHTML = `
+        <div class="health-heading"><h3><i class="status-dot ${availabilityPct < 90 ? 'partial' : ''}"></i>Data availability</h3><p>Observation quality &amp; provenance</p></div>
+        <div class="health-grid">
+            <div class="health-item"><div class="health-label">Usable observations</div><div class="health-value"><b>${loadedStationsCount} / ${totalStationsCount}</b> stations <span class="health-meta">· ${availabilityPct}%</span></div><div class="coverage-meter"><span style="width:${availabilityPct}%"></span></div></div>
+            <div class="health-item"><div class="health-label">Observation records</div><div class="health-value">${completeCount} complete <span class="health-meta">/ ${partialCount} partial / ${historicalCount} historical</span></div><div class="health-meta">Historical completeness not recorded · invalid records excluded</div></div>
+            <div class="health-item"><div class="health-label">Observation window</div><div class="health-value">${formatDate(data.selected_date)}</div><div class="health-meta">${isHybrid ? 'Includes clearly dated previous-night data' : 'Canonical station-night snapshots'}</div></div>
+        </div>`;
 }

@@ -16,6 +16,18 @@ def validate_pages_output(folder):
         raise ValueError('Available dates must be nonempty, unique and newest first')
     if metadata.get('most_recent_date') != dates[0]:
         raise ValueError('Default date must match the latest available observation')
+    if (folder / 'manifest.webmanifest').exists():
+        manifest = json.loads((folder / 'manifest.webmanifest').read_text(encoding='utf-8'))
+        for name in ('service-worker.js','static/pwa.js','static/vendor/leaflet/leaflet.js',
+                     'static/vendor/leaflet/leaflet.css','static/vendor/chart/chart.umd.min.js'):
+            if not (folder / name).is_file():
+                raise ValueError(f'Missing app asset: {name}')
+        for icon in manifest['icons']:
+            if (folder / icon['src']).read_bytes()[:8] != b'\x89PNG\r\n\x1a\n':
+                raise ValueError(f'Invalid app icon: {icon["src"]}')
+        status = json.loads((folder / 'api/v1/status.json').read_text(encoding='utf-8'))
+        if status['latest_observation_date'] != dates[0]:
+            raise ValueError('API latest date differs from dashboard')
     for day in dates:
         path = folder / 'data' / f'aggregated_{day}.json'
         if not path.is_file():

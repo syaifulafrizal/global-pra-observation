@@ -15,6 +15,17 @@ function dashboard() {
     return context;
 }
 
+test('theme refresh updates datasets without changing recorded values', () => {
+    const page = dashboard();
+    vm.runInContext(`charts.trend={data:{datasets:[{data:[1,2]}]},options:{},update(){}};
+        stationCharts=[{data:{datasets:[{data:[1.3,null]},{data:[2,2]}]},options:{},update(){}}];`,page);
+    page.document.body.classList.contains = () => true;
+    page.refreshChartTheme();
+    const actual=vm.runInContext('({color:charts.trend.data.datasets[0].backgroundColor,values:stationCharts[0].data.datasets[0].data})',page);
+    assert.equal(actual.color,page.getChartColors().primary);
+    assert.equal(JSON.stringify(actual.values),'[1.3,null]');
+});
+
 test('quoted earthquake place names retain their CSV columns', () => {
     const page = dashboard();
     const result = page.parseCSV('place,magnitude,status\r\n"Coast, Japan",5.5,TP\r\n"A ""quoted"" place",6.1,TP\r\n');

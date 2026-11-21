@@ -1,8 +1,8 @@
 time,latitude,longitude,depth,magnitude,place,type,id
 2026-11-18 21:28:47.088,51.3379,172.8596,10.0,5.2,"169 km S of Attu Station, Alaska",earthquake,
-2026-11-18 19:14:23.713,-57.7514,-146.746,10.0,6.1,Pacific-Antarctic Ridge,earthquake,
-2026-11-18 18:08:00.785,-5.4599,35.1065,10.0,5.0,"46 km NNE of Kilimatinde, Tanzania",earthquake,
-2026-11-18 17:22:23.454,32.2779,130.4609,10.0,5.3,"4 km NNW of Tsunagi, Japan",earthquake,
+2026-11-18 19:21:15.136,-57.9547,-146.5262,10.0,5.2,Pacific-Antarctic Ridge,earthquake,
+2026-11-18 19:14:23.203,-57.5192,-146.8744,10.0,6.0,Pacific-Antarctic Ridge,earthquake,
+2026-11-18 17:22:23.552,32.3069,130.4701,10.0,5.3,"7 km N of Tsunagi, Japan",earthquake,
 2026-11-18 16:06:51.220,12.0918,143.9927,10.0,5.3,"149 km SSW of Merizo Village, Guam",earthquake,
 2026-11-18 09:37:00.617,38.7192,137.8725,10.0,5.2,"86 km NW of Ryōtsu-minato, Japan",earthquake,
 2026-11-18 06:07:42.780,-15.1438,-75.9238,21.895,5.9,"85 km WNW of San Juan, Peru",earthquake,
@@ -11,5 +11,5 @@ time,latitude,longitude,depth,magnitude,place,type,id
 2026-11-18 04:21:35.658,-8.151,120.6489,10.0,5.2,"54 km NNE of Ruteng, Indonesia",earthquake,
 2026-11-18 03:42:34.269,-5.7009,146.5479,52.291,5.8,"99 km ESE of Madang, Papua New Guinea",earthquake,
 2026-11-18 02:22:56.671,12.1387,143.8866,10.0,5.8,"150 km SW of Merizo Village, Guam",earthquake,
-2026-11-18 00:48:56.089,45.6863,26.452,130.266,5.3,"16 km ESE of Comandău, Romania",earthquake,
+2026-11-18 00:48:56.305,45.6816,26.4521,132.362,5.3,"17 km ESE of Comandău, Romania",earthquake,
 2026-11-18 00:46:31.418,39.1912,71.5875,10.0,5.3,"7 km SE of Karakenja, Tajikistan",earthquake,

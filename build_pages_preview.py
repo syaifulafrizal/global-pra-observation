@@ -19,6 +19,9 @@ def build_preview(destination):
     data_dir = destination / 'data'
     data_dir.mkdir()
     shutil.copytree('static', destination / 'static')
+    for name in ('manifest.webmanifest', 'service-worker.js'):
+        if (Path('static') / name).is_file():
+            shutil.copy(Path('static') / name, destination / name)
     (destination / '.nojekyll').write_text('', encoding='utf-8')
     written_figures = set()
 
@@ -53,6 +56,8 @@ def build_preview(destination):
                     save_response(client, f'/figures/{figure}', destination / 'figures' / figure)
                     written_figures.add(figure)
 
+    from public_api import export_api
+    export_api(destination, metadata)
     manifest = {
         'publication_status': 'unpublished_preview',
         'observation_dates': metadata['available_dates'],

@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-20 17:53:15.442,-14.835,167.29,94.53,5.1,"32 km NE of Port-Olry, Vanuatu",earthquake,
+2026-11-20 13:09:04.057,5.4441,125.2986,73.392,5.1,"15 km SSW of Balangonan, Philippines",earthquake,
+2026-11-20 10:30:01.069,-24.7463,171.4327,10.0,5.0,southeast of the Loyalty Islands,earthquake,
+2026-11-20 08:44:11.644,9.7949,57.7485,10.0,5.4,Carlsberg Ridge,earthquake,
+2026-11-20 00:49:14.102,-24.6996,171.2326,10.0,5.6,southeast of the Loyalty Islands,earthquake,

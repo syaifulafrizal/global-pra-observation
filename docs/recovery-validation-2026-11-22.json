@@ -1,0 +1,92 @@
+{
+  "baseline_commit": "1c85b462f72c48464988a629f32513574f82b116",
+  "original_source_files_checked": 1490,
+  "original_source_files_changed": [],
+  "preserved_functions": [
+    "get_data_folder",
+    "get_station_timezone",
+    "iaga_data_header",
+    "iaga_file_header",
+    "read_iaga2002",
+    "spectral_setup",
+    "multitaper_psd",
+    "compute_pseries",
+    "disturbed_mask",
+    "apply_guard",
+    "compute_quiet_flags",
+    "fit_evt_threshold",
+    "fit_ksigma_threshold",
+    "nz_guard",
+    "persistence_rule",
+    "load_historical_quiet_p_values",
+    "analyze_row",
+    "cleanup_downloaded_files",
+    "cleanup_old_data_files",
+    "historical_z_stats",
+    "save_plot",
+    "log_anomaly",
+    "get_all_stations",
+    "main"
+  ],
+  "changed_functions": [
+    "download_symh_data",
+    "download_data",
+    "process_station"
+  ],
+  "new_functions": [
+    "_symh_day_range"
+  ],
+  "preserved_constants": [
+    "FS",
+    "WIN_LEN",
+    "STEP",
+    "F_LOW",
+    "F_HIGH",
+    "MT_NW",
+    "THRESHOLD_DAYS",
+    "OPTS"
+  ],
+  "original_raw_files_checked": 1122,
+  "original_raw_fingerprints_changed": [],
+  "new_result_artifacts": 54,
+  "coverage_rows_appended": 18,
+  "operational_context_updates": 15,
+  "original_files_changed_only_as_journaled": [
+    "INTERMAGNET_DOWNLOADS\\API\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\ASP\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\BOU\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\CNB\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\EYR\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\FUR\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\GUA\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\HON\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\KAK\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\KNY\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\LRM\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\LYC\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\MMB\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\NGK\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\NUR\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\SHU\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\SIT\\analysis_coverage.csv",
+    "INTERMAGNET_DOWNLOADS\\TUC\\analysis_coverage.csv",
+    "data\\history\\anomaly_history.json",
+    "data\\history\\false_negative_history.json",
+    "data\\run_reports\\run_report_latest.json",
+    "data\\run_reports\\run_report_manual.json"
+  ],
+  "historical_generated_files_retained": 567,
+  "tests": {
+    "python": 66,
+    "javascript": 18,
+    "candidate_station_date_selections": 357,
+    "candidate_scientific_figures": 100,
+    "visual_layouts": 10
+  },
+  "full_analysis": {
+    "success": 18,
+    "unavailable": 42,
+    "failed": 0
+  },
+  "latest_observation_date": "2026-11-22"
+}

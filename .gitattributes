@@ -32,3 +32,4 @@
 
 # Browser assets must remain ordinary Git blobs for static hosting.
 static/assets/*.png -filter -diff -merge -text
+static/vendor/**/images/*.png -filter -diff -merge -text

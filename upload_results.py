@@ -652,6 +652,14 @@ def prepare_web_output():
     assets_dir = Path('static/assets')
     if assets_dir.exists():
         shutil.copytree(assets_dir, static_dir / 'assets', dirs_exist_ok=True)
+    if Path('static/vendor').exists():
+        shutil.copytree('static/vendor', static_dir / 'vendor', dirs_exist_ok=True)
+    for name in ('pwa.js',):
+        if (Path('static') / name).exists():
+            shutil.copy(Path('static') / name, static_dir / name)
+    for name in ('service-worker.js', 'manifest.webmanifest'):
+        if (Path('static') / name).exists():
+            shutil.copy(Path('static') / name, OUTPUT_DIR / name)
     
     # Create data and figures directories
     data_dir = OUTPUT_DIR / 'data'
@@ -834,6 +842,11 @@ def prepare_web_output():
         print('[OK] Copied index.html from template')
     else:
         raise FileNotFoundError(f"Template not found: {template_path}")
+
+    from public_api import export_api
+    export_api(OUTPUT_DIR, stations_json)
+    (OUTPUT_DIR / '.nojekyll').write_text('', encoding='utf-8')
+    (OUTPUT_DIR / '.gitattributes').write_text('* -filter\n*.png -filter -diff -merge -text\n', encoding='utf-8')
     
     print(f'[OK] Web output prepared in {OUTPUT_DIR}')
     return OUTPUT_DIR, anomaly_history, false_negative_history, run_report

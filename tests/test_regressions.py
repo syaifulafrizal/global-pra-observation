@@ -40,7 +40,8 @@ class LocalFixture(unittest.TestCase):
         self.previous = Path.cwd()
         os.chdir(self.directory)
         self.environment = patch.dict(os.environ, {'PROCESS_DATE': '2026-04-11',
-                                                  'INTERMAGNET_STATIONS': 'KAK', 'FORCE_RERUN': ''})
+                                                  'INTERMAGNET_STATIONS': 'KAK', 'FORCE_RERUN': '',
+                                                  'INTERMAGNET_TRANSPORT': 'gin'})
         self.environment.start()
         Path('stations.json').write_text(json.dumps({'stations': [{
             'code': 'KAK', 'timezone': 'UTC', 'latitude': 36., 'longitude': 140.,
@@ -158,6 +159,28 @@ class LocalFixture(unittest.TestCase):
         path.write_text('DATE TIME DOY KAKH KAKD KAKZ\n2026-04-10 20:00:00 100 3 4 5\n')
         self.assertTrue(pra.read_iaga2002(path, ZoneInfo('UTC')).empty)
 
+    def test_explicit_hapi_no_data_skips_without_a_synthetic_observation(self):
+        with patch.dict(os.environ, {'INTERMAGNET_TRANSPORT': 'auto'}), \
+             patch.object(pra, '_no_adjusted_data', set()), \
+             patch.object(pra, 'get_station_timezone', return_value=ZoneInfo('UTC')), \
+             patch.object(pra, 'download_symh_data', return_value=symh.empty_symh()), \
+             patch.object(pra, 'download_hapi', side_effect=pra.NoAdjustedData('no adjusted samples')), \
+             patch.object(pra.requests, 'get') as request:
+            self.assertIsNone(pra.process_station('KAK'))
+        request.assert_not_called()
+        self.assertFalse(list(self.station.glob('PRA_Night_*.json')))
+
+    def test_both_transport_failures_still_fail_the_station(self):
+        with patch.dict(os.environ, {'INTERMAGNET_TRANSPORT': 'auto'}), \
+             patch.object(pra, '_no_adjusted_data', set()), \
+             patch.object(pra, '_unavailable_observatories', set()), \
+             patch.object(pra, 'get_station_timezone', return_value=ZoneInfo('UTC')), \
+             patch.object(pra, 'download_symh_data', return_value=symh.empty_symh()), \
+             patch.object(pra, 'download_hapi', side_effect=pra.HapiUnavailable('HAPI offline')), \
+             patch.object(pra, 'download_legacy', side_effect=pra.HapiUnavailable('GIN offline')):
+            self.assertFalse(pra.process_station('KAK'))
+        self.assertFalse(list(self.station.glob('PRA_Night_*.json')))
+
     def test_legacy_constant_fill_spectra_are_not_usable(self):
         data = sample_result('2026-04-11', P=[.5, .5], nZ=[20., 20.], nG=[40., 40.])
         self.assertFalse(result_is_usable(data))
@@ -168,6 +191,30 @@ class LocalFixture(unittest.TestCase):
                                                    symh.empty_symh(), .05, False, .02, -30)
         self.assertTrue(quiet.all())
         self.assertTrue(np.isnan(fractions).all())
+
+    def test_global_symh_query_is_reused_but_each_station_gets_its_exact_utc_slice(self):
+        pra._symh_day_range.cache_clear()
+        full = pd.DataFrame({'SYMH':0.}, index=pd.date_range('2026-04-10', periods=2881, freq='min', tz='UTC'))
+        start, end = pd.Timestamp('2026-04-10T02:00Z'), pd.Timestamp('2026-04-11T02:00Z')
+        with patch.object(symh, 'download_symh_omniweb', return_value=full) as download:
+            first = pra.download_symh_data(start, end, Path('cache'))
+            second = pra.download_symh_data(start + pd.Timedelta(hours=1), end + pd.Timedelta(hours=1), Path('cache'))
+            first.iloc[0,0] = 999.
+            third = pra.download_symh_data(start, end, Path('cache'))
+        self.assertEqual(download.call_count,1)
+        self.assertEqual(download.call_args.args[0],pd.Timestamp('2026-04-10T00:00Z'))
+        self.assertEqual(download.call_args.args[1],pd.Timestamp('2026-04-11T23:59Z'))
+        pd.testing.assert_frame_equal(second,full.loc[start+pd.Timedelta(hours=1):end+pd.Timedelta(hours=1)])
+        pd.testing.assert_frame_equal(third,full.loc[start:end])
+        pra._symh_day_range.cache_clear()
+
+    def test_unavailable_global_symh_is_cached_within_the_run(self):
+        pra._symh_day_range.cache_clear()
+        with patch.object(symh,'download_symh_omniweb',return_value=symh.empty_symh()) as download:
+            for _ in range(3):
+                self.assertTrue(pra.download_symh_data(pd.Timestamp('2026-04-10T00:00Z'),pd.Timestamp('2026-04-11T00:00Z'),Path('cache')).empty)
+        self.assertEqual(download.call_count,1)
+        pra._symh_day_range.cache_clear()
 
     def test_naive_disturbed_symh_and_sparse_coverage(self):
         times = pd.Series(pd.to_datetime(['2026-04-10T20:30:00Z']))

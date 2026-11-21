@@ -18,6 +18,33 @@ _snapshot_cache = SnapshotCache()
 
 app = Flask(__name__, static_folder=None)
 
+
+@app.route('/manifest.webmanifest')
+@app.route('/service-worker.js')
+def pwa_asset():
+    from flask import request
+    response = send_from_directory(str(Path(app.root_path) / 'static'), request.path.lstrip('/'))
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
+
+
+@app.route('/api/v1/', defaults={'resource': 'index.json'})
+@app.route('/api/v1/<path:resource>')
+def api_v1(resource):
+    from public_api import payload, json_safe
+    from upload_results import build_aggregated_data
+    metadata = local_metadata()
+    try:
+        result = payload(resource, metadata, lambda day: build_aggregated_data(
+            metadata['stations'], day, Path('web_output/data'), Path('INTERMAGNET_DOWNLOADS')))
+        response = jsonify(json_safe(result))
+    except (KeyError, ValueError, OSError):
+        response = jsonify({'schema_version': '1.0', 'error': 'Observation resource unavailable'})
+        response.status_code = 404
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
+
 # Serve static files from web_output/static
 @app.route('/static/<path:filename>')
 def serve_static(filename):
