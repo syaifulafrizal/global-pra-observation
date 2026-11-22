@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "BOU",
+  "observation_date": "2026-11-22",
+  "metadata": {
+    "name": "Boulder",
+    "country": "USA",
+    "latitude": 40.137,
+    "longitude": -105.238,
+    "timezone": "America/Denver"
+  },
+  "observation": {
+    "date": "2026-11-22",
+    "station": "BOU",
+    "timestamps": [
+      "2026-11-22T03:29:59",
+      "2026-11-22T04:29:59",
+      "2026-11-22T05:29:59",
+      "2026-11-22T06:29:59",
+      "2026-11-22T07:29:59",
+      "2026-11-22T08:29:59",
+      "2026-11-22T09:29:59",
+      "2026-11-22T10:29:59"
+    ],
+    "P": [
+      2.1000784922203932,
+      1.5346721121102203,
+      2.099074196629572,
+      1.7007186537420271,
+      0.818997877200765,
+      1.2453176964697483,
+      1.290286976124943,
+      2.2619698550100296
+    ],
+    "nZ": [
+      2.5216451624423003e-05,
+      1.9812089347198435e-05,
+      2.232773590140372e-05,
+      2.1239991168561744e-05,
+      2.615561823749598e-05,
+      1.663960794312056e-05,
+      2.5281244368935464e-05,
+      2.2872995624748194e-05
+    ],
+    "nG": [
+      1.2007385303852089e-05,
+      1.2909656200083167e-05,
+      1.0636944581213363e-05,
+      1.2488832954132768e-05,
+      3.1936124580557764e-05,
+      1.336173732236429e-05,
+      1.9593505039368385e-05,
+      1.0111980747261893e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 4.269402444503011,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 96,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 11,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

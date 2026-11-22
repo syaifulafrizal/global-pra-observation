@@ -1,1 +1,4 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-22 09:08:28.009,43.4743,87.9381,10.0,5.1,"45 km SE of Ürümqi, China",earthquake,
+2026-11-22 07:54:40.056,3.0314,126.3861,43.705,5.4,"224 km NE of Bitung, Indonesia",earthquake,
+2026-11-22 05:51:58.624,-10.7957,-75.9635,108.134,5.0,"15 km NNE of Carhuamayo, Peru",earthquake,
