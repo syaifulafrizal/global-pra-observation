@@ -4,15 +4,15 @@
   "description": "Completed nighttime observations. Dates are station-local night-end dates; recorded timestamps retain their source meaning.",
   "read_only": true,
   "available_dates": [
+    "2026-11-24",
     "2026-11-23",
     "2026-11-22",
     "2026-11-21",
     "2026-11-19",
     "2026-11-18",
-    "2026-11-17",
-    "2026-11-16"
+    "2026-11-17"
   ],
-  "latest_observation_date": "2026-11-23",
+  "latest_observation_date": "2026-11-24",
   "endpoints": {
     "status": "status.json",
     "stations": "stations.json",

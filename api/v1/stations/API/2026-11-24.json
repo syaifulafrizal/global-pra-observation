@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "station": "API",
+  "observation_date": "2026-11-24",
+  "metadata": {
+    "name": "Apia",
+    "country": "Samoa",
+    "latitude": -13.806,
+    "longitude": -171.778,
+    "timezone": "Pacific/Apia"
+  },
+  "observation": {
+    "date": "2026-11-24",
+    "station": "API",
+    "timestamps": [
+      "2026-11-23T13:29:59",
+      "2026-11-23T14:29:59"
+    ],
+    "P": [
+      0.07339869236988704,
+      0.33573763708879095
+    ],
+    "nZ": [
+      0.1885056431883057,
+      1.3108061146907528
+    ],
+    "nG": [
+      2.568242527242121,
+      3.904257282730831
+    ],
+    "isAnomalous": [
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true
+    ],
+    "threshold": 112.71376796530672,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 18,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 2,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "partial",
+      "expected_hours": 8,
+      "valid_hours": 2,
+      "invalid_samples": 21601,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 2
+    }
+  }
+}

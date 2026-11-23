@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "station": "EYR",
-  "observation_date": "2026-11-23",
+  "observation_date": "2026-11-24",
   "metadata": {
     "name": "Eyrewell",
     "country": "New Zealand",
@@ -10,53 +10,33 @@
     "timezone": "Pacific/Auckland"
   },
   "observation": {
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "station": "EYR",
     "timestamps": [
-      "2026-11-22T07:29:59",
-      "2026-11-22T08:29:59",
-      "2026-11-22T09:29:59",
-      "2026-11-22T10:29:59",
-      "2026-11-22T11:29:59",
-      "2026-11-22T12:29:59",
-      "2026-11-22T13:29:59",
-      "2026-11-22T14:29:59"
+      "2026-11-23T07:29:59",
+      "2026-11-23T08:29:59",
+      "2026-11-23T13:29:59",
+      "2026-11-23T14:29:59"
     ],
     "P": [
-      0.3966611872761703,
-      1.22351716189167,
-      1.0591103568174458,
-      1.9513757171312371,
-      2.1482236082148636,
-      1.4706138333940695,
-      2.1348828279908774,
-      2.8789393499354157
+      1.4337646365760564,
+      2.1797425585221832,
+      2.554678678992216,
+      1.8316900698873737
     ],
     "nZ": [
-      9.103920106088773e-05,
-      0.0002584086796265592,
-      0.00015063973977305232,
-      0.00037659389033696967,
-      0.0002255156977590183,
-      0.0004062317268979126,
-      0.00044078162054077085,
-      0.0006876124627021592
+      0.0001168694919902026,
+      0.00026906772484822897,
+      0.0005316395217829182,
+      0.0004751085405823389
     ],
     "nG": [
-      0.0002295137613186814,
-      0.00021120151614958602,
-      0.00014223233566114341,
-      0.00019298891906403812,
-      0.00010497775785381017,
-      0.00027623276598749203,
-      0.0002064664227758051,
-      0.00023884228846904494
+      8.151232706457052e-05,
+      0.00012344013920187477,
+      0.00020810426225212887,
+      0.00025938260429153945
     ],
     "isAnomalous": [
-      false,
-      false,
-      false,
-      false,
       false,
       false,
       false,
@@ -66,32 +46,28 @@
       true,
       true,
       true,
-      true,
-      true,
-      true,
-      true,
       true
     ],
-    "threshold": 4.6873073889426955,
+    "threshold": 4.582497141022866,
     "nAnomHours": 0,
     "is_anomalous": false,
     "analysis_version": 3,
     "threshold_method": "k_sigma",
-    "baseline_samples": 16,
+    "baseline_samples": 20,
     "baseline_source": "historical_and_current",
     "baseline_window_days": 14,
-    "baseline_historical_nights": 1,
+    "baseline_historical_nights": 2,
     "baseline_includes_observation": true,
     "quiet_policy": "assume_quiet_when_symh_unavailable",
     "nz_guard_method": "fixed_power",
     "data_quality": {
       "status": "partial",
       "expected_hours": 8,
-      "valid_hours": 8,
-      "invalid_samples": 1,
+      "valid_hours": 4,
+      "invalid_samples": 14401,
       "symh_verified": false,
       "symh_covered_hours": 0,
-      "assumed_quiet_hours": 8
+      "assumed_quiet_hours": 4
     }
   }
 }

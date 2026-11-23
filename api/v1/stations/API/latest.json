@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "station": "API",
-  "observation_date": "2026-11-23",
+  "observation_date": "2026-11-24",
   "metadata": {
     "name": "Apia",
     "country": "Samoa",
@@ -10,88 +10,52 @@
     "timezone": "Pacific/Apia"
   },
   "observation": {
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "station": "API",
     "timestamps": [
-      "2026-11-22T07:29:59",
-      "2026-11-22T08:29:59",
-      "2026-11-22T09:29:59",
-      "2026-11-22T10:29:59",
-      "2026-11-22T11:29:59",
-      "2026-11-22T12:29:59",
-      "2026-11-22T13:29:59",
-      "2026-11-22T14:29:59"
+      "2026-11-23T13:29:59",
+      "2026-11-23T14:29:59"
     ],
     "P": [
-      66.59402547483778,
-      23.768862726452877,
-      0.0006080594262376484,
-      9.482582262061669,
-      10.46168494818256,
-      0.11144395390613773,
-      0.006090436722744018,
-      0.004186478874317219
+      0.07339869236988704,
+      0.33573763708879095
     ],
     "nZ": [
-      0.0016660765231601075,
-      0.00038015861231445377,
-      0.0005612982232856515,
-      0.0004197167382442518,
-      0.00015257420882149503,
-      0.00021654339208393534,
-      0.00023718207944867635,
-      0.0002691762632603979
+      0.1885056431883057,
+      1.3108061146907528
     ],
     "nG": [
-      2.5018408352407322e-05,
-      1.599397567689964e-05,
-      0.9230976432002204,
-      4.4261861025289806e-05,
-      1.45840951603117e-05,
-      0.0019430698974151283,
-      0.03894336157585348,
-      0.06429657746793202
+      2.568242527242121,
+      3.904257282730831
     ],
     "isAnomalous": [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
       false,
       false
     ],
     "isQuiet": [
       true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
       true
     ],
-    "threshold": 115.23510063987479,
+    "threshold": 112.71376796530672,
     "nAnomHours": 0,
     "is_anomalous": false,
     "analysis_version": 3,
     "threshold_method": "k_sigma",
-    "baseline_samples": 16,
+    "baseline_samples": 18,
     "baseline_source": "historical_and_current",
     "baseline_window_days": 14,
-    "baseline_historical_nights": 1,
+    "baseline_historical_nights": 2,
     "baseline_includes_observation": true,
     "quiet_policy": "assume_quiet_when_symh_unavailable",
     "nz_guard_method": "fixed_power",
     "data_quality": {
       "status": "partial",
       "expected_hours": 8,
-      "valid_hours": 8,
-      "invalid_samples": 1,
+      "valid_hours": 2,
+      "invalid_samples": 21601,
       "symh_verified": false,
       "symh_covered_hours": 0,
-      "assumed_quiet_hours": 8
+      "assumed_quiet_hours": 2
     }
   }
 }
