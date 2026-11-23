@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-23 08:01:26.457,-60.6317,153.8482,10.0,5.5,west of Macquarie Island,earthquake,
+2026-11-23 07:36:21.052,-7.4408,128.2414,119.267,5.4,"181 km NE of Lospalos, Timor Leste",earthquake,
+2026-11-23 04:18:19.641,-4.7591,153.6467,98.944,5.0,"159 km ESE of Kokopo, Papua New Guinea",earthquake,
+2026-11-23 02:40:58.052,-13.5846,172.2672,598.0,6.5,Vanuatu region,earthquake,
