@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-24 11:55:13.018,13.5637,144.4957,107.571,5.0,"24 km WNW of Piti Village, Guam",earthquake,
+2026-11-24 11:51:44.702,14.442,-93.2417,35.0,5.2,"93 km WSW of Puerto Madero, Mexico",earthquake,
+2026-11-24 11:06:14.036,-17.7049,65.6995,10.0,6.4,Mauritius - Reunion region,earthquake,
+2026-11-24 01:32:42.417,27.8328,87.9467,10.0,5.3,"67 km WNW of Mangan, India",earthquake,

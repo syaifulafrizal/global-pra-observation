@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "station": "FUR",
+  "observation_date": "2026-11-24",
+  "metadata": {
+    "name": "F\u00fcrstenfeldbruck",
+    "country": "Germany",
+    "latitude": 48.167,
+    "longitude": 11.275,
+    "timezone": "Europe/Berlin"
+  },
+  "observation": {
+    "date": "2026-11-24",
+    "station": "FUR",
+    "timestamps": [
+      "2026-11-23T19:29:59",
+      "2026-11-23T20:29:59",
+      "2026-11-23T21:29:59",
+      "2026-11-23T22:29:59",
+      "2026-11-23T23:29:59",
+      "2026-11-24T00:29:59",
+      "2026-11-24T02:29:59"
+    ],
+    "P": [
+      2.0507182534161927,
+      1.9888653192494834,
+      0.41233053221006183,
+      0.808348512574023,
+      1.8239333337682426,
+      0.7054410350250004,
+      4.022471425682872
+    ],
+    "nZ": [
+      4.2575453570689414e-05,
+      4.204683078685002e-05,
+      3.127400186317048e-05,
+      2.619975447507327e-05,
+      2.856938607842102e-05,
+      3.051354671876491e-05,
+      2.076616183382483e-05
+    ],
+    "nG": [
+      2.0761239872793357e-05,
+      2.1141115177530863e-05,
+      7.584692235994286e-05,
+      3.2411458755141925e-05,
+      1.5663613109913796e-05,
+      4.32545672902109e-05,
+      5.162538060863783e-06
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 6.562916407458621,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 98,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "partial",
+      "expected_hours": 8,
+      "valid_hours": 7,
+      "invalid_samples": 300,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 7
+    }
+  }
+}

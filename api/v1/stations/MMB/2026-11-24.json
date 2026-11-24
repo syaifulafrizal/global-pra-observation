@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "station": "MMB",
+  "observation_date": "2026-11-24",
+  "metadata": {
+    "name": "Memambetsu",
+    "country": "Japan",
+    "latitude": 43.91,
+    "longitude": 144.189,
+    "timezone": "Asia/Tokyo"
+  },
+  "observation": {
+    "date": "2026-11-24",
+    "station": "MMB",
+    "timestamps": [
+      "2026-11-23T11:29:59",
+      "2026-11-23T12:29:59",
+      "2026-11-23T13:29:59",
+      "2026-11-23T14:29:59",
+      "2026-11-23T15:29:59",
+      "2026-11-23T17:29:59",
+      "2026-11-23T18:29:59"
+    ],
+    "P": [
+      1.3059634048072204,
+      1.004517125237654,
+      7.1821439719472355,
+      8.260561440923214,
+      3.588498263012856,
+      7.752564942001643,
+      6.844046111053887
+    ],
+    "nZ": [
+      0.000804074941897032,
+      0.001190695775933713,
+      0.00021289664016003044,
+      0.00021947608643141335,
+      0.0002030530010850849,
+      0.0001602075773312619,
+      0.00013450982844347216
+    ],
+    "nG": [
+      0.0006156948494400772,
+      0.0011853414401989534,
+      2.9642491293906706e-05,
+      2.656914884067303e-05,
+      5.6584394418684845e-05,
+      2.066510613323514e-05,
+      1.9653553798567195e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 14.171905337111628,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 92,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 11,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "partial",
+      "expected_hours": 8,
+      "valid_hours": 7,
+      "invalid_samples": 300,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 7
+    }
+  }
+}
