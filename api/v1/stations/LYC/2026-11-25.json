@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "LYC",
+  "observation_date": "2026-11-25",
+  "metadata": {
+    "name": "Lyon",
+    "country": "France",
+    "latitude": 45.759,
+    "longitude": 4.829,
+    "timezone": "Europe/Paris"
+  },
+  "observation": {
+    "date": "2026-11-25",
+    "station": "LYC",
+    "timestamps": [
+      "2026-11-24T19:29:59",
+      "2026-11-24T20:29:59",
+      "2026-11-24T21:29:59",
+      "2026-11-24T22:29:59",
+      "2026-11-24T23:29:59",
+      "2026-11-25T00:29:59",
+      "2026-11-25T01:29:59",
+      "2026-11-25T02:29:59"
+    ],
+    "P": [
+      4.362223814816222,
+      0.6521406944799609,
+      0.3837962485912178,
+      0.30443537816924837,
+      0.20776568187958372,
+      3.290020849080997,
+      0.5157647244430785,
+      0.2095540757765558
+    ],
+    "nZ": [
+      0.00017782848799809145,
+      3.289231775358317e-05,
+      0.0002764512122655336,
+      7.822016733436377e-05,
+      0.00018479077572011087,
+      0.0004912667822138481,
+      0.00028225801124858065,
+      7.049714845053413e-05
+    ],
+    "nG": [
+      4.076555801518021e-05,
+      5.0437456260589014e-05,
+      0.000720307228849395,
+      0.00025693520840037814,
+      0.0008894191478032999,
+      0.0001493202641409017,
+      0.000547261179122636,
+      0.00033641506703837215
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 7.1304474773321385,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 96,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 11,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

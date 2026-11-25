@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "CNB",
+  "observation_date": "2026-11-25",
+  "metadata": {
+    "name": "Chambon-la-For\u00eat",
+    "country": "France",
+    "latitude": 48.025,
+    "longitude": 2.267,
+    "timezone": "Europe/Paris"
+  },
+  "observation": {
+    "date": "2026-11-25",
+    "station": "CNB",
+    "timestamps": [
+      "2026-11-24T19:29:59",
+      "2026-11-24T20:29:59",
+      "2026-11-24T21:29:59",
+      "2026-11-24T22:29:59",
+      "2026-11-24T23:29:59",
+      "2026-11-25T00:29:59",
+      "2026-11-25T01:29:59",
+      "2026-11-25T02:29:59"
+    ],
+    "P": [
+      0.18715376765135422,
+      0.24819890048301887,
+      0.9585162287182796,
+      0.08576843853004901,
+      0.3681982222357279,
+      1.4112922358852957,
+      0.1193833943943974,
+      0.6773793464595617
+    ],
+    "nZ": [
+      3.6910260532502896e-06,
+      4.1249856007957855e-06,
+      8.538572211580026e-06,
+      3.869693107903474e-06,
+      5.580678749787354e-06,
+      9.402542888035776e-06,
+      5.931711733480877e-06,
+      6.404586293501585e-06
+    ],
+    "nG": [
+      1.9721890184579363e-05,
+      1.6619677173299993e-05,
+      8.90811439155051e-06,
+      4.5117914867340456e-05,
+      1.5156723777483344e-05,
+      6.662364214125796e-06,
+      4.968623788568747e-05,
+      9.45494769950729e-06
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 3.566347630594678,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 101,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

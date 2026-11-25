@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "SIT",
+  "observation_date": "2026-11-25",
+  "metadata": {
+    "name": "Sitka",
+    "country": "USA",
+    "latitude": 57.058,
+    "longitude": -135.331,
+    "timezone": "America/Anchorage"
+  },
+  "observation": {
+    "date": "2026-11-25",
+    "station": "SIT",
+    "timestamps": [
+      "2026-11-25T05:29:59",
+      "2026-11-25T06:29:59",
+      "2026-11-25T07:29:59",
+      "2026-11-25T08:29:59",
+      "2026-11-25T09:29:59",
+      "2026-11-25T10:29:59",
+      "2026-11-25T11:29:59",
+      "2026-11-25T12:29:59"
+    ],
+    "P": [
+      0.37336367241658214,
+      0.22014029084795558,
+      4.941116812211404,
+      1.3467821627594856,
+      0.5787498994530604,
+      0.7656777899927107,
+      0.9610968258756234,
+      0.9208735454462562
+    ],
+    "nZ": [
+      2.429608137428189e-05,
+      1.2383576257853464e-05,
+      0.00010211385522360102,
+      0.00016539457995047178,
+      3.080177327420601e-05,
+      9.591300909552284e-06,
+      1.3266110917848941e-05,
+      1.0364038866131985e-05
+    ],
+    "nG": [
+      6.507350117119438e-05,
+      5.625311118720396e-05,
+      2.0666148788718845e-05,
+      0.0001228072248978907,
+      5.322121576749266e-05,
+      1.252654972484391e-05,
+      1.380309513119308e-05,
+      1.1254573353075923e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 10.290934820954213,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 104,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

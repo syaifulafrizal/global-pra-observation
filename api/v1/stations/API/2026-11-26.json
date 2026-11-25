@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "API",
+  "observation_date": "2026-11-26",
+  "metadata": {
+    "name": "Apia",
+    "country": "Samoa",
+    "latitude": -13.806,
+    "longitude": -171.778,
+    "timezone": "Pacific/Apia"
+  },
+  "observation": {
+    "date": "2026-11-26",
+    "station": "API",
+    "timestamps": [
+      "2026-11-25T07:29:59",
+      "2026-11-25T08:29:59",
+      "2026-11-25T09:29:59",
+      "2026-11-25T10:29:59",
+      "2026-11-25T11:29:59",
+      "2026-11-25T12:29:59",
+      "2026-11-25T13:29:59",
+      "2026-11-25T14:29:59"
+    ],
+    "P": [
+      1.8549008696558584,
+      0.9645190210141789,
+      1.2027992704084152,
+      1.201452844016612,
+      1.7166032700497025,
+      1.7363221639479722,
+      3.3774049672333897,
+      2.009399178842471
+    ],
+    "nZ": [
+      7.58402636451977e-05,
+      5.07634166973858e-05,
+      5.910740713869842e-05,
+      4.720550049750638e-05,
+      5.288533102437918e-05,
+      4.958423846983645e-05,
+      7.669978178700746e-05,
+      5.8895827300225495e-05
+    ],
+    "nG": [
+      4.0886424113472126e-05,
+      5.263080933749626e-05,
+      4.914153890252051e-05,
+      3.929034812526832e-05,
+      3.080812669245815e-05,
+      2.855704977991758e-05,
+      2.2709678741852594e-05,
+      2.9310167895138116e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 89.94635371803241,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 34,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 4,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "partial",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 1,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

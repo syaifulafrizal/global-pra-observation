@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "GUA",
+  "observation_date": "2026-11-25",
+  "metadata": {
+    "name": "Guam",
+    "country": "USA",
+    "latitude": 13.588,
+    "longitude": 144.867,
+    "timezone": "Pacific/Guam"
+  },
+  "observation": {
+    "date": "2026-11-25",
+    "station": "GUA",
+    "timestamps": [
+      "2026-11-24T10:29:59",
+      "2026-11-24T11:29:59",
+      "2026-11-24T12:29:59",
+      "2026-11-24T13:29:59",
+      "2026-11-24T14:29:59",
+      "2026-11-24T15:29:59",
+      "2026-11-24T16:29:59",
+      "2026-11-24T17:29:59"
+    ],
+    "P": [
+      1.012239781684527,
+      0.5577362752415629,
+      0.611862212384751,
+      0.3043674266856262,
+      0.6998163476816955,
+      1.0455929767190655,
+      0.515079240330387,
+      0.7976736521210428
+    ],
+    "nZ": [
+      1.3741737067303173e-05,
+      1.2179127319109135e-05,
+      1.1951354192894362e-05,
+      1.4386618357834128e-05,
+      1.2914160198792906e-05,
+      1.3766310417226827e-05,
+      1.079783560209744e-05,
+      1.2407084263693669e-05
+    ],
+    "nG": [
+      1.3575574993145151e-05,
+      2.1836713622104276e-05,
+      1.9532754190381535e-05,
+      4.726727335607341e-05,
+      1.84536417898411e-05,
+      1.3166031834322104e-05,
+      2.0963445537372833e-05,
+      1.555408559716469e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 1.9859738933095938,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 94,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 11,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}
