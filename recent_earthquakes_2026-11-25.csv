@@ -1,1 +1,5 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-25 12:08:12.731,-0.3849,123.0018,106.384,5.0,"67 km NNE of Luwuk, Indonesia",earthquake,
+2026-11-25 08:47:16.394,21.8162,121.5241,10.0,5.3,"83 km ESE of Hengchun, Taiwan",earthquake,
+2026-11-25 06:34:08.672,-36.0191,178.3688,25.327,5.2,"175 km N of Hicks Bay, New Zealand",earthquake,
+2026-11-25 01:38:45.672,-63.0918,170.9371,10.0,5.9,Balleny Islands region,earthquake,
