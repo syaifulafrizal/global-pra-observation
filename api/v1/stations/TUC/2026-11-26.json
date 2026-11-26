@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "TUC",
+  "observation_date": "2026-11-26",
+  "metadata": {
+    "name": "Tucson",
+    "country": "USA",
+    "latitude": 32.174,
+    "longitude": -110.734,
+    "timezone": "America/Phoenix"
+  },
+  "observation": {
+    "date": "2026-11-26",
+    "station": "TUC",
+    "timestamps": [
+      "2026-11-26T03:29:59",
+      "2026-11-26T04:29:59",
+      "2026-11-26T05:29:59",
+      "2026-11-26T06:29:59",
+      "2026-11-26T07:29:59",
+      "2026-11-26T08:29:59",
+      "2026-11-26T09:29:59",
+      "2026-11-26T10:29:59"
+    ],
+    "P": [
+      0.8572964735035068,
+      1.0676465989026425,
+      0.6276895004031384,
+      0.8659103568787168,
+      0.8068407531205863,
+      0.9268518519129844,
+      0.963588402240334,
+      0.8955743394191815
+    ],
+    "nZ": [
+      2.4712874479582436e-05,
+      1.8756173246268454e-05,
+      1.5696483669779876e-05,
+      1.7695646765055004e-05,
+      1.955770838533779e-05,
+      2.0840899162650878e-05,
+      1.795077257204857e-05,
+      1.8204441576499637e-05
+    ],
+    "nG": [
+      2.8826520630125218e-05,
+      1.756777314286074e-05,
+      2.5006764745465217e-05,
+      2.043588764643167e-05,
+      2.4239861843486723e-05,
+      2.2485685408769602e-05,
+      1.862908740943041e-05,
+      2.0327113870084755e-05
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 1.7838959509586774,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 104,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 12,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

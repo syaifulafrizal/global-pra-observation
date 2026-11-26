@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "station": "KNY",
+  "observation_date": "2026-11-26",
+  "metadata": {
+    "name": "Kanozan",
+    "country": "Japan",
+    "latitude": 35.26,
+    "longitude": 139.951,
+    "timezone": "Asia/Tokyo"
+  },
+  "observation": {
+    "date": "2026-11-26",
+    "station": "KNY",
+    "timestamps": [
+      "2026-11-25T11:29:59",
+      "2026-11-25T12:29:59",
+      "2026-11-25T13:29:59",
+      "2026-11-25T14:29:59",
+      "2026-11-25T15:29:59",
+      "2026-11-25T16:29:59",
+      "2026-11-25T17:29:59",
+      "2026-11-25T18:29:59"
+    ],
+    "P": [
+      0.38955070756627597,
+      1.1442261604063322,
+      1.1310318558712626,
+      1.271945569771477,
+      0.7006126432370269,
+      0.3794381789744638,
+      0.5619804622876529,
+      0.19689634284990618
+    ],
+    "nZ": [
+      2.6547124164827502e-06,
+      1.5483826514036228e-06,
+      1.7044090758837314e-06,
+      1.4491135595537384e-06,
+      1.1834004871645558e-06,
+      6.966544343228816e-07,
+      2.0054901843921814e-06,
+      1.252047856583172e-06
+    ],
+    "nG": [
+      6.814805787590804e-06,
+      1.353213818196368e-06,
+      1.5069505487719281e-06,
+      1.1392889711578556e-06,
+      1.68909382179704e-06,
+      1.8360156487303996e-06,
+      3.5686119339957766e-06,
+      6.358918801948528e-06
+    ],
+    "isAnomalous": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "isQuiet": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "threshold": 31.873320807946655,
+    "nAnomHours": 0,
+    "is_anomalous": false,
+    "analysis_version": 3,
+    "threshold_method": "k_sigma",
+    "baseline_samples": 95,
+    "baseline_source": "historical_and_current",
+    "baseline_window_days": 14,
+    "baseline_historical_nights": 11,
+    "baseline_includes_observation": true,
+    "quiet_policy": "assume_quiet_when_symh_unavailable",
+    "nz_guard_method": "fixed_power",
+    "data_quality": {
+      "status": "complete",
+      "expected_hours": 8,
+      "valid_hours": 8,
+      "invalid_samples": 0,
+      "symh_verified": false,
+      "symh_covered_hours": 0,
+      "assumed_quiet_hours": 8
+    }
+  }
+}

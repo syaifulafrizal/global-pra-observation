@@ -1,1 +1,6 @@
-time,latitude,longitude,magnitude,place,depth,type,id
+time,latitude,longitude,depth,magnitude,place,type,id
+2026-11-26 15:26:44.294,19.8135,-109.2958,10.0,5.7,Revilla Gigedo Islands region,earthquake,
+2026-11-26 09:22:45.352,-20.5363,-177.7629,493.861,5.2,"265 km WNW of Houma, Tonga",earthquake,
+2026-11-26 09:08:40.640,-10.5618,117.1955,15.139,5.5,"204 km S of Taliwang, Indonesia",earthquake,
+2026-11-26 02:09:17.972,-35.934,178.26,10.0,5.0,"184 km N of Hicks Bay, New Zealand",earthquake,
+2026-11-26 01:48:44.213,-35.9665,178.6429,12.687,5.2,"183 km N of Hicks Bay, New Zealand",earthquake,
